@@ -127,7 +127,7 @@ package bull.modules.perload.services
 		}
 		private function protoLoaded():void{
 			trace("protoLoaded");
-			loadHall();
+			//loadHall();
 		}
 
 		private function onProgress(scenceName:String,e:ScenceManagerEvent):void{

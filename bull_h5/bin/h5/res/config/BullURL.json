@@ -4,6 +4,8 @@
     "tipText": { "url": "res/config/TipText.json", "type":"json"},
     "smallLoading": { "url": "res/atlas/smallLoading.json","type":"atlas"},    
     "comp": { "url": "res/atlas/comp.json","type":"atlas"},
+    "msg_proto": { "url": "res/config/msg_cs.proto"},
+    "conf_proto": { "url": "res/config/conf_game.proto"},
     "hall": { "url": "res/atlas/hall.json","type":"atlas"},
     "room": { "url": "res/atlas/room.json","type":"atlas"},
     "proto": { "url": "res/config/carProto.proto"},
@@ -28,7 +30,7 @@
             "assets":["room","assetsIn","alert"]
         },
         "config":{
-            "assets":["language","error_code"]
+            "assets":["language","error_code","msg_proto","conf_proto"]
         },
         "common":{
             "assets":["alert"]
