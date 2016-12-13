@@ -71,8 +71,8 @@ package bull.modules.common.services
 			}
 			
 			
-			appModel.userInfoModel.user_id = param.uid;
-			appModel.assess_token = param.access_token;
+			//appModel.userInfoModel.user_id = param.uid;
+			//appModel.assess_token = param.access_token;
 			
 			
 //			//調試數據
