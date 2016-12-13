@@ -12,14 +12,15 @@ package bull.modules.perload.services
 	import laya.utils.Handler;
 	
 	import bull.events.BullNotification;
-	//import light.car.modules.common.model.CarProtoModel;
+	
 	import bull.modules.common.model.data.ConfigData;
 	import bull.view.alert.MusicSetPanel;
-	import bull.view.alert.RulePanel;
-	//import light.car.view.hall.Hall;
-	//import light.car.view.room.CarScene;
+	import bull.view.alert.RulePanel;	
 	import bull.view.smallLoading.SmallLoading;
 	import bull.view.tipsLoad.TipsLoadPanel;
+	import bull.modules.common.model.BullProtoModel;
+	//import light.car.view.hall.Hall;
+	//import light.car.view.room.CarScene;
 	
 	public class PreLoadService extends Model implements IModel
 	{
@@ -122,8 +123,8 @@ package bull.modules.perload.services
 		
 		private function loadProto():void{
 			trace("loadProto")
-			//var carProto:CarProtoModel = getModel(CarProtoModel.NAME) as CarProtoModel;
-			//carProto.loadProtoFile(new Handler(this,protoLoaded));
+			var bullProto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;			
+			bullProto.loadProtoFile(new Handler(this,protoLoaded));
 		}
 		private function protoLoaded():void{
 			trace("protoLoaded");
@@ -131,7 +132,7 @@ package bull.modules.perload.services
 		}
 
 		private function onProgress(scenceName:String,e:ScenceManagerEvent):void{
-			trace("onProgress",scenceName,e.data);
+			//trace("onProgress",scenceName,e.data);
 			switch(scenceName)
 			{				
 				case "config":
@@ -165,8 +166,7 @@ package bull.modules.perload.services
 					break;
 				case "config":
 					trace("config",Light.loader.getRes("error_code"));
-					trace("language",Light.loader.getRes("language"));
-					//trace("clipConfig",Light.loader.getRes("clipConfig"));
+					trace("language",Light.loader.getRes("language"));					
 					Light.error.init(Light.loader.getRes("error_code"));
 					Light.language.init(Light.loader.getRes("language"));
 					Light.scence.removeScence("config");

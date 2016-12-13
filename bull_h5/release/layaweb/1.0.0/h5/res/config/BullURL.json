@@ -1,12 +1,15 @@
 {
     "version": "0.0.1",
     "tipLoading": { "url": "res/tipLoading/loading.jpg"},
+    "tipText": { "url": "res/config/TipText.json", "type":"json"},
     "smallLoading": { "url": "res/atlas/smallLoading.json","type":"atlas"},    
+    "comp": { "url": "res/atlas/comp.json","type":"atlas"},
+    "msg_proto": { "url": "res/config/msg_cs.proto"},
+    "conf_proto": { "url": "res/config/conf_game.proto"},
     "hall": { "url": "res/atlas/hall.json","type":"atlas"},
     "room": { "url": "res/atlas/room.json","type":"atlas"},
     "proto": { "url": "res/config/carProto.proto"},
-    "alert": { "url": "res/atlas/alert.json","type":"atlas"},
-    "jiesuan": { "url": "res/atlas/room/jiesuan.json","type":"atlas"},
+    "alert": { "url": "res/atlas/alert.json","type":"atlas"},    
     "error_code": { "url": "res/config/error_code.json", "type":"json"},
     "language": { "url": "res/config/language.json", "type":"json"},  
     "group":{
@@ -18,16 +21,16 @@
             "assets":["smallLoading"]
         },
         "tipsLoadPanel":{
-            "assets":["tipLoading"]
+            "assets":["tipLoading","tipText","comp"]
         },
         "hall":{
             "assets":["hall","proto","alert"]
         },
         "room":{
-            "assets":["room","jiesuan","assetsIn","alert"]
+            "assets":["room","assetsIn","alert"]
         },
         "config":{
-            "assets":["language","error_code"]
+            "assets":["language","error_code","msg_proto","conf_proto"]
         },
         "common":{
             "assets":["alert"]

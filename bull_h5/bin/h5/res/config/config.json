@@ -1,5 +1,6 @@
 {
 	"ip":"10.63.7.63",
-	"port":56400,	
+	"port":56400,
+	"zone":"bull",
 	"debug":false
 }

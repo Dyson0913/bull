@@ -29,8 +29,7 @@ package bull
 	//import light.car.modules.common.mediator.AssetInMediator;
 	//import light.car.modules.common.mediator.MusicSetMediator;
 	//import light.car.modules.common.mediator.RuleMediator;
-	
-	//import light.car.modules.common.model.CarProtoModel;
+		
 	
 	//import light.car.modules.common.model.data.CarData;
 	//import light.car.modules.common.model.data.HallData;
@@ -52,6 +51,7 @@ package bull
 	//import light.car.view.room.CarScene;
 	import bull.view.smallLoading.SmallLoading;
 	import bull.view.tipsLoad.TipsLoadPanel;
+	import bull.modules.common.model.BullProtoModel;
 	
 	import msg.ENCSType;
 	
@@ -130,9 +130,10 @@ package bull
 		
 		private function initModel():void{
 			registerModel(new PreLoadService(PreLoadService.NAME));
+			registerModel(new BullProtoModel(BullProtoModel.NAME));
 			//registerModel(new HallSocketService(HallSocketService.NAME));
 			//registerModel(new RoomSocketService(RoomSocketService.NAME));
-			//registerModel(new CarProtoModel(CarProtoModel.NAME));
+			
 			//registerModel(new WebService(WebService.NAME));
 			//registerModel(new CarModel(CarModel.NAME,new CarData()));
 			

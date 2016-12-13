@@ -194,9 +194,11 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('laya.runtime.IMarket');
 	Laya.interface('laya.filters.IFilter');
 	Laya.interface('laya.display.ILayout');
+	Laya.interface('com.IProtobuf.Builder');
 	Laya.interface('laya.resource.IDispose');
 	Laya.interface('laya.runtime.IConchNode');
 	Laya.interface('laya.webgl.shapes.IShape');
+	Laya.interface('com.IProtobuf.ByteBuffer');
 	Laya.interface('laya.webgl.submit.ISubmit');
 	Laya.interface('laya.filters.IFilterAction');
 	Laya.interface('laya.webgl.text.ICharSegment');
@@ -208,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.lightMVC.interfaces.INotification');
+	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
 	Laya.interface('com.lightMVC.interfaces.IModel','com.lightMVC.interfaces.INode');
@@ -1043,6 +1045,496 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
+	//class conf.conf_game
+	var conf_game=(function(){
+		function conf_game(){
+			this.ProtoBuf=Browser.window.dcodeIO.ProtoBuf;
+			this.builder
+		}
+
+		__class(conf_game,'conf.conf_game');
+		var __proto=conf_game.prototype;
+		__proto.loadProtoFile=function(protoPath){
+			this.builder=this.ProtoBuf.loadProtoFile(protoPath)
+		}
+
+		__proto.Scope_Builer=function(){
+			return this.builder.build("conf")["Scope"];
+		}
+
+		__proto.getScope=function(){
+			var clazz=this.builder.build("conf")["Scope"];
+			return new clazz();
+		}
+
+		__proto.Scope64_Builer=function(){
+			return this.builder.build("conf")["Scope64"];
+		}
+
+		__proto.getScope64=function(){
+			var clazz=this.builder.build("conf")["Scope64"];
+			return new clazz();
+		}
+
+		__proto.ENMoneyType_Builer=function(){
+			return this.builder.build("conf")["ENMoneyType"];
+		}
+
+		__proto.getENMoneyType=function(){
+			var clazz=this.builder.build("conf")["ENMoneyType"];
+			return new clazz();
+		}
+
+		__proto.Money_Builer=function(){
+			return this.builder.build("conf")["Money"];
+		}
+
+		__proto.getMoney=function(){
+			var clazz=this.builder.build("conf")["Money"];
+			return new clazz();
+		}
+
+		__proto.Prop_Builer=function(){
+			return this.builder.build("conf")["Prop"];
+		}
+
+		__proto.getProp=function(){
+			var clazz=this.builder.build("conf")["Prop"];
+			return new clazz();
+		}
+
+		__proto.ENTableType_Builer=function(){
+			return this.builder.build("conf")["ENTableType"];
+		}
+
+		__proto.getENTableType=function(){
+			var clazz=this.builder.build("conf")["ENTableType"];
+			return new clazz();
+		}
+
+		__proto.Table_Builer=function(){
+			return this.builder.build("conf")["Table"];
+		}
+
+		__proto.getTable=function(){
+			var clazz=this.builder.build("conf")["Table"];
+			return new clazz();
+		}
+
+		__proto.DirtyWord_Builer=function(){
+			return this.builder.build("conf")["DirtyWord"];
+		}
+
+		__proto.getDirtyWord=function(){
+			var clazz=this.builder.build("conf")["DirtyWord"];
+			return new clazz();
+		}
+
+		__proto.ENNoticeType_Builer=function(){
+			return this.builder.build("conf")["ENNoticeType"];
+		}
+
+		__proto.getENNoticeType=function(){
+			var clazz=this.builder.build("conf")["ENNoticeType"];
+			return new clazz();
+		}
+
+		__proto.ENNoticeLocation_Builer=function(){
+			return this.builder.build("conf")["ENNoticeLocation"];
+		}
+
+		__proto.getENNoticeLocation=function(){
+			var clazz=this.builder.build("conf")["ENNoticeLocation"];
+			return new clazz();
+		}
+
+		__proto.Notice_Builer=function(){
+			return this.builder.build("conf")["Notice"];
+		}
+
+		__proto.getNotice=function(){
+			var clazz=this.builder.build("conf")["Notice"];
+			return new clazz();
+		}
+
+		__proto.ENMailType_Builer=function(){
+			return this.builder.build("conf")["ENMailType"];
+		}
+
+		__proto.getENMailType=function(){
+			var clazz=this.builder.build("conf")["ENMailType"];
+			return new clazz();
+		}
+
+		__proto.Mail_Builer=function(){
+			return this.builder.build("conf")["Mail"];
+		}
+
+		__proto.getMail=function(){
+			var clazz=this.builder.build("conf")["Mail"];
+			return new clazz();
+		}
+
+		__proto.Integer2DTable_Builer=function(){
+			return this.builder.build("conf")["Integer2DTable"];
+		}
+
+		__proto.getInteger2DTable=function(){
+			var clazz=this.builder.build("conf")["Integer2DTable"];
+			return new clazz();
+		}
+
+		__proto.String2DTable_Builer=function(){
+			return this.builder.build("conf")["String2DTable"];
+		}
+
+		__proto.getString2DTable=function(){
+			var clazz=this.builder.build("conf")["String2DTable"];
+			return new clazz();
+		}
+
+		__proto.Double2DTable_Builer=function(){
+			return this.builder.build("conf")["Double2DTable"];
+		}
+
+		__proto.getDouble2DTable=function(){
+			var clazz=this.builder.build("conf")["Double2DTable"];
+			return new clazz();
+		}
+
+		__proto.SNetAddress_Builer=function(){
+			return this.builder.build("conf")["SNetAddress"];
+		}
+
+		__proto.getSNetAddress=function(){
+			var clazz=this.builder.build("conf")["SNetAddress"];
+			return new clazz();
+		}
+
+		__proto.ENRoomType_Builer=function(){
+			return this.builder.build("conf")["ENRoomType"];
+		}
+
+		__proto.getENRoomType=function(){
+			var clazz=this.builder.build("conf")["ENRoomType"];
+			return new clazz();
+		}
+
+		__proto.SDealInfo_Builer=function(){
+			return this.builder.build("conf")["SDealInfo"];
+		}
+
+		__proto.getSDealInfo=function(){
+			var clazz=this.builder.build("conf")["SDealInfo"];
+			return new clazz();
+		}
+
+		__proto.SRoomConfig_Builer=function(){
+			return this.builder.build("conf")["SRoomConfig"];
+		}
+
+		__proto.getSRoomConfig=function(){
+			var clazz=this.builder.build("conf")["SRoomConfig"];
+			return new clazz();
+		}
+
+		__proto.STimeConfig_Builer=function(){
+			return this.builder.build("conf")["STimeConfig"];
+		}
+
+		__proto.getSTimeConfig=function(){
+			var clazz=this.builder.build("conf")["STimeConfig"];
+			return new clazz();
+		}
+
+		__proto.Game_Builer=function(){
+			return this.builder.build("conf")["Game"];
+		}
+
+		__proto.getGame=function(){
+			var clazz=this.builder.build("conf")["Game"];
+			return new clazz();
+		}
+
+		__proto.SRoomInfo_Builer=function(){
+			return this.builder.build("conf")["SRoomInfo"];
+		}
+
+		__proto.getSRoomInfo=function(){
+			var clazz=this.builder.build("conf")["SRoomInfo"];
+			return new clazz();
+		}
+
+		__proto.SRoomInfos_Builer=function(){
+			return this.builder.build("conf")["SRoomInfos"];
+		}
+
+		__proto.getSRoomInfos=function(){
+			var clazz=this.builder.build("conf")["SRoomInfos"];
+			return new clazz();
+		}
+
+		__proto.SUserInfo_Builer=function(){
+			return this.builder.build("conf")["SUserInfo"];
+		}
+
+		__proto.getSUserInfo=function(){
+			var clazz=this.builder.build("conf")["SUserInfo"];
+			return new clazz();
+		}
+
+		__proto.SBetInfo_Builer=function(){
+			return this.builder.build("conf")["SBetInfo"];
+		}
+
+		__proto.getSBetInfo=function(){
+			var clazz=this.builder.build("conf")["SBetInfo"];
+			return new clazz();
+		}
+
+		__proto.SBankerCalcInfo_Builer=function(){
+			return this.builder.build("conf")["SBankerCalcInfo"];
+		}
+
+		__proto.getSBankerCalcInfo=function(){
+			var clazz=this.builder.build("conf")["SBankerCalcInfo"];
+			return new clazz();
+		}
+
+		__proto.ENMoveType_Builer=function(){
+			return this.builder.build("conf")["ENMoveType"];
+		}
+
+		__proto.getENMoveType=function(){
+			var clazz=this.builder.build("conf")["ENMoveType"];
+			return new clazz();
+		}
+
+		__proto.ENBetPosition_Builer=function(){
+			return this.builder.build("conf")["ENBetPosition"];
+		}
+
+		__proto.getENBetPosition=function(){
+			var clazz=this.builder.build("conf")["ENBetPosition"];
+			return new clazz();
+		}
+
+		__proto.ENBankerType_Builer=function(){
+			return this.builder.build("conf")["ENBankerType"];
+		}
+
+		__proto.getENBankerType=function(){
+			var clazz=this.builder.build("conf")["ENBankerType"];
+			return new clazz();
+		}
+
+		__proto.ENBullType_Builer=function(){
+			return this.builder.build("conf")["ENBullType"];
+		}
+
+		__proto.getENBullType=function(){
+			var clazz=this.builder.build("conf")["ENBullType"];
+			return new clazz();
+		}
+
+		__proto.ENBullStatus_Builer=function(){
+			return this.builder.build("conf")["ENBullStatus"];
+		}
+
+		__proto.getENBullStatus=function(){
+			var clazz=this.builder.build("conf")["ENBullStatus"];
+			return new clazz();
+		}
+
+		__proto.SBullMoney_Builer=function(){
+			return this.builder.build("conf")["SBullMoney"];
+		}
+
+		__proto.getSBullMoney=function(){
+			var clazz=this.builder.build("conf")["SBullMoney"];
+			return new clazz();
+		}
+
+		__proto.SResultInfo_Builer=function(){
+			return this.builder.build("conf")["SResultInfo"];
+		}
+
+		__proto.getSResultInfo=function(){
+			var clazz=this.builder.build("conf")["SResultInfo"];
+			return new clazz();
+		}
+
+		__proto.SCountInfo_Builer=function(){
+			return this.builder.build("conf")["SCountInfo"];
+		}
+
+		__proto.getSCountInfo=function(){
+			var clazz=this.builder.build("conf")["SCountInfo"];
+			return new clazz();
+		}
+
+		return conf_game;
+	})()
+
+
+	//class com.IProtobuf.Message
+	var Message=(function(){
+		function Message(){};
+		__class(Message,'com.IProtobuf.Message');
+		var __proto=Message.prototype;
+		__proto.encode=function(){return null}
+		return Message;
+	})()
+
+
+	//class conf.ENBankerType
+	var ENBankerType=(function(){
+		function ENBankerType(){};
+		__class(ENBankerType,'conf.ENBankerType');
+		ENBankerType.BANKER_TYPE_UP=1;
+		ENBankerType.BANKER_TYPE_DOWN=2;
+		return ENBankerType;
+	})()
+
+
+	//class conf.ENBetPosition
+	var ENBetPosition=(function(){
+		function ENBetPosition(){};
+		__class(ENBetPosition,'conf.ENBetPosition');
+		ENBetPosition.BET_POSITION_BANKER=0;
+		ENBetPosition.BET_POSITION_1=1;
+		ENBetPosition.BET_POSITION_2=2;
+		ENBetPosition.BET_POSITION_3=3;
+		ENBetPosition.BET_POSITION_4=4;
+		ENBetPosition.BET_POSITION_REPEAT=10;
+		ENBetPosition.BET_POSITION_CANCEL=11;
+		return ENBetPosition;
+	})()
+
+
+	//class conf.ENBullStatus
+	var ENBullStatus=(function(){
+		function ENBullStatus(){};
+		__class(ENBullStatus,'conf.ENBullStatus');
+		ENBullStatus.BULL_STATUS_NIL=0;
+		ENBullStatus.BULL_STATUS_START=1;
+		ENBullStatus.BULL_STATUS_BANKER=2;
+		ENBullStatus.BULL_STATUS_BET=3;
+		ENBullStatus.BULL_STATUS_SURE=4;
+		ENBullStatus.BULL_STATUS_DEAL=5;
+		ENBullStatus.BULL_STATUS_END=6;
+		return ENBullStatus;
+	})()
+
+
+	//class conf.ENBullType
+	var ENBullType=(function(){
+		function ENBullType(){};
+		__class(ENBullType,'conf.ENBullType');
+		ENBullType.BULL_TYPE_NOP=0;
+		ENBullType.BULL_TYPE_SINGLE1=1;
+		ENBullType.BULL_TYPE_SINGLE2=2;
+		ENBullType.BULL_TYPE_SINGLE3=3;
+		ENBullType.BULL_TYPE_SINGLE4=4;
+		ENBullType.BULL_TYPE_SINGLE5=5;
+		ENBullType.BULL_TYPE_SINGLE6=6;
+		ENBullType.BULL_TYPE_SINGLE7=7;
+		ENBullType.BULL_TYPE_SINGLE8=8;
+		ENBullType.BULL_TYPE_SINGLE9=9;
+		ENBullType.BULL_TYPE_DOUBLE=10;
+		ENBullType.BULL_TYPE_FLOWER=11;
+		ENBullType.BULL_TYPE_FOUR1=12;
+		ENBullType.BULL_TYPE_FOUR2=13;
+		ENBullType.BULL_TYPE_FOUR3=14;
+		ENBullType.BULL_TYPE_FOUR4=15;
+		ENBullType.BULL_TYPE_FOUR5=16;
+		ENBullType.BULL_TYPE_FOUR6=17;
+		ENBullType.BULL_TYPE_FOUR7=18;
+		ENBullType.BULL_TYPE_FOUR8=19;
+		ENBullType.BULL_TYPE_FOUR9=20;
+		ENBullType.BULL_TYPE_FOUR10=21;
+		ENBullType.BULL_TYPE_FOUR11=22;
+		ENBullType.BULL_TYPE_FOUR12=23;
+		ENBullType.BULL_TYPE_FOUR13=24;
+		ENBullType.BULL_TYPE_MINI=25;
+		return ENBullType;
+	})()
+
+
+	//class conf.ENMailType
+	var ENMailType=(function(){
+		function ENMailType(){};
+		__class(ENMailType,'conf.ENMailType');
+		ENMailType.MAIL_TYPE_DISCONNECT_NOTICE=1;
+		return ENMailType;
+	})()
+
+
+	//class conf.ENMoneyType
+	var ENMoneyType=(function(){
+		function ENMoneyType(){};
+		__class(ENMoneyType,'conf.ENMoneyType');
+		ENMoneyType.MONEY_TYPE_CASH=1;
+		ENMoneyType.MONEY_TYPE_COIN=2;
+		ENMoneyType.MONEY_TYPE_NM=3;
+		return ENMoneyType;
+	})()
+
+
+	//class conf.ENMoveType
+	var ENMoveType=(function(){
+		function ENMoveType(){};
+		__class(ENMoveType,'conf.ENMoveType');
+		ENMoveType.MOVE_TYPE_MOVE_IN=1;
+		ENMoveType.MOVE_TYPE_MOVE_OUT=2;
+		return ENMoveType;
+	})()
+
+
+	//class conf.ENNoticeLocation
+	var ENNoticeLocation=(function(){
+		function ENNoticeLocation(){};
+		__class(ENNoticeLocation,'conf.ENNoticeLocation');
+		ENNoticeLocation.NOTICE_LOCATION_GAME=1;
+		ENNoticeLocation.NOTICE_LOCATION_MATCH=2;
+		return ENNoticeLocation;
+	})()
+
+
+	//class conf.ENNoticeType
+	var ENNoticeType=(function(){
+		function ENNoticeType(){};
+		__class(ENNoticeType,'conf.ENNoticeType');
+		ENNoticeType.NOTICE_TYPE_MTT_START=1;
+		ENNoticeType.NOTICE_TYPE_MTT_CHAMPION=2;
+		ENNoticeType.NOTICE_TYPE_SERVER_STOP=3;
+		ENNoticeType.NOTICE_TYPE_GM=4;
+		return ENNoticeType;
+	})()
+
+
+	//class conf.ENRoomType
+	var ENRoomType=(function(){
+		function ENRoomType(){};
+		__class(ENRoomType,'conf.ENRoomType');
+		ENRoomType.ROOM_TYPE_COIN=1;
+		ENRoomType.ROOM_TYPE_CASH=2;
+		ENRoomType.ROOM_TYPE_CASH_NM=3;
+		return ENRoomType;
+	})()
+
+
+	//class conf.ENTableType
+	var ENTableType=(function(){
+		function ENTableType(){};
+		__class(ENTableType,'conf.ENTableType');
+		ENTableType.TABLE_TYPE_COIN=1;
+		ENTableType.TABLE_TYPE_CASH=2;
+		ENTableType.TABLE_TYPE_CASH_NM=3;
+		return ENTableType;
+	})()
+
+
 	//class Main
 	var Main=(function(){
 		function Main(){
@@ -1061,6 +1553,546 @@ var Laya=window.Laya=(function(window,document){
 
 		__class(Main,'Main');
 		return Main;
+	})()
+
+
+	//class msg.ENConnOperationType
+	var ENConnOperationType=(function(){
+		function ENConnOperationType(){};
+		__class(ENConnOperationType,'msg.ENConnOperationType');
+		ENConnOperationType.CONN_OPERATION_TYPE_STOP_SERVER=1;
+		ENConnOperationType.CONN_OPERATION_TYPE_START_SERVER=2;
+		return ENConnOperationType;
+	})()
+
+
+	//class msg.ENCSType
+	var ENCSType=(function(){
+		function ENCSType(){};
+		__class(ENCSType,'msg.ENCSType');
+		ENCSType.CS_TYPE_NONE=1;
+		ENCSType.CS_TYPE_HEART_BEAT_REQ=3;
+		ENCSType.CS_TYPE_HEART_BEAT_RSP=4;
+		ENCSType.CS_TYPE_CONN_OPERATION_NOTIFY=5;
+		ENCSType.CS_TYPE_TIME_SYNC_REQ=6;
+		ENCSType.CS_TYPE_TIME_SYNC_RSP=7;
+		ENCSType.CS_TYPE_LOGIN_REQ=8;
+		ENCSType.CS_TYPE_LOGIN_RSP=9;
+		ENCSType.CS_TYPE_GET_ROOM_LIST_REQ=11;
+		ENCSType.CS_TYPE_GET_ROOM_LIST_RSP=12;
+		ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ=13;
+		ENCSType.CS_TYPE_TRY_ENTER_TABLE_RSP=14;
+		ENCSType.CS_TYPE_ENTER_TABLE_REQ=21;
+		ENCSType.CS_TYPE_ENTER_TABLE_RSP=22;
+		ENCSType.CS_TYPE_CARRY_IN_REQ=23;
+		ENCSType.CS_TYPE_CARRY_IN_RSP=24;
+		ENCSType.CS_TYPE_BANKER_REQ=25;
+		ENCSType.CS_TYPE_BANKER_RSP=26;
+		ENCSType.CS_TYPE_BET_REQ=27;
+		ENCSType.CS_TYPE_BET_RSP=28;
+		ENCSType.CS_TYPE_EXIT_TABLE_REQ=29;
+		ENCSType.CS_TYPE_EXIT_TABLE_RSP=30;
+		ENCSType.CS_TYPE_GET_HISTORY_NOTIFY=31;
+		ENCSType.CS_TYPE_TIMER_NOTIFY=32;
+		ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY=33;
+		ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY=34;
+		ENCSType.CS_TYPE_BET_NOTIFY=35;
+		ENCSType.CS_TYPE_DEAL_CARD_NOTIFY=36;
+		ENCSType.CS_TYPE_CALCULATE_NOTIFY=37;
+		ENCSType.CS_TYPE_BANKER_LIST_NOTIFY=38;
+		ENCSType.CS_TYPE_BANKER_NOTIFY=39;
+		ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY=40;
+		ENCSType.CS_TYPE_PUSH_NOTICE_NOTIFY=138;
+		ENCSType.CS_TYPE_KICK_PLAYER_NOTIFY=143;
+		return ENCSType;
+	})()
+
+
+	//class msg.ENError
+	var ENError=(function(){
+		function ENError(){};
+		__class(ENError,'msg.ENError');
+		ENError.ERROR_OK=0;
+		ENError.ERROR_INVALID_ROOM_ID=1;
+		ENError.ERROR_INVALID_TABLE_ID=2;
+		ENError.ERROR_INVALID_CONN_ID=3;
+		ENError.ERROR_INVALID_USER_INFO=4;
+		ENError.ERROR_INVALID_ROOM_TYPE=5;
+		ENError.ERROR_INVALID_UID=6;
+		ENError.ERROR_INVALID_SPEED=7;
+		ENError.ERROR_INVALID_VERIFY_SIG=10;
+		ENError.ERROR_INVALID_CARRY_IN_TYPE=12;
+		ENError.ERROR_INVALID_POSITION=13;
+		ENError.ERROR_INVALID_STATUS=14;
+		ENError.ERROR_INVALID_MONEY=15;
+		ENError.ERROR_INVALID_BANKER_TYPE=16;
+		ENError.ERROR_ROOM_LIMIT=17;
+		ENError.ERROR_PLAYER_LIMIT=18;
+		ENError.ERROR_MAX_BET=19;
+		ENError.ERROR_NOT_HISTORY_BET=20;
+		ENError.ERROR_ALREADY_BET=21;
+		ENError.ERROR_NOT_ENOUGH_MONEY=22;
+		ENError.ERROR_ALREADY_IN_OTHER_TABLE=23;
+		ENError.ERROR_SERVER_FULL=24;
+		ENError.ERROR_ALREADY_IN_BANKER=25;
+		ENError.ERROR_BANKER_FULL=26;
+		ENError.ERROR_NOT_IN_BANKER=27;
+		ENError.ERROR_MIN_BET=28;
+		ENError.ERROR_CANT_COMPENSATE=29;
+		ENError.ERROR_SERVER_STOPPING=58;
+		ENError.ERROR_FORBBIDEN=59;
+		ENError.ERROR_SERVER_STOPPED=62;
+		ENError.ERROR_DBSVR_QUERY=500;
+		ENError.ERROR_DBSVR_UPDATE=501;
+		ENError.ERROR_DBSVR_DELETE=502;
+		ENError.ERROR_DBSVR_INSERT=503;
+		ENError.ERROR_DBSVR_QUERY_TIMEOUT=504;
+		ENError.ERROR_DBSVR_UPDATE_TIMEOUT=505;
+		ENError.ERROR_DBSVR_DELETE_TIMEOUT=506;
+		ENError.ERROR_DBSVR_INSERT_TIMEOUT=507;
+		ENError.ERROR_DBSVR_PARSE=508;
+		ENError.ERROR_DBSVR_PACK=509;
+		ENError.ERROR_ROOMSVR=510;
+		ENError.ERROR_ROOMSVR_TIMEOUT=511;
+		ENError.ERROR_HTTPSVR=512;
+		ENError.ERROR_HTTPSVR_TIMEOUT=513;
+		ENError.ERROR_MATCHSVR_TIMEOUT=514;
+		ENError.ERROR_CONFSVR_TIMEOUT=515;
+		return ENError;
+	})()
+
+
+	//class msg.ENKickReason
+	var ENKickReason=(function(){
+		function ENKickReason(){};
+		__class(ENKickReason,'msg.ENKickReason');
+		ENKickReason.KICK_REASON_FORBID_PLAYER=1;
+		ENKickReason.KICK_REASON_OTHER_LOGIN=2;
+		ENKickReason.KICK_REASON_SERVER_CLOSE=3;
+		return ENKickReason;
+	})()
+
+
+	//class msg.ENPlatformType
+	var ENPlatformType=(function(){
+		function ENPlatformType(){};
+		__class(ENPlatformType,'msg.ENPlatformType');
+		ENPlatformType.PLATFORM_TYPE_WEB=1;
+		ENPlatformType.PLATFORM_TYPE_MOBILE=2;
+		return ENPlatformType;
+	})()
+
+
+	//class msg.msg_cs
+	var msg_cs=(function(){
+		function msg_cs(){
+			this.ProtoBuf=Browser.window.dcodeIO.ProtoBuf;
+			this.builder
+		}
+
+		__class(msg_cs,'msg.msg_cs');
+		var __proto=msg_cs.prototype;
+		__proto.loadProtoFile=function(protoPath){
+			this.builder=this.ProtoBuf.loadProtoFile(protoPath)
+		}
+
+		__proto.ConnHead_Builer=function(){
+			return this.builder.build("msg")["ConnHead"];
+		}
+
+		__proto.getConnHead=function(){
+			var clazz=this.builder.build("msg")["ConnHead"];
+			return new clazz();
+		}
+
+		__proto.ENPlatformType_Builer=function(){
+			return this.builder.build("msg")["ENPlatformType"];
+		}
+
+		__proto.getENPlatformType=function(){
+			var clazz=this.builder.build("msg")["ENPlatformType"];
+			return new clazz();
+		}
+
+		__proto.ENError_Builer=function(){
+			return this.builder.build("msg")["ENError"];
+		}
+
+		__proto.getENError=function(){
+			var clazz=this.builder.build("msg")["ENError"];
+			return new clazz();
+		}
+
+		__proto.ConnSvrInfo_Builer=function(){
+			return this.builder.build("msg")["ConnSvrInfo"];
+		}
+
+		__proto.getConnSvrInfo=function(){
+			var clazz=this.builder.build("msg")["ConnSvrInfo"];
+			return new clazz();
+		}
+
+		__proto.LoginReq_Builer=function(){
+			return this.builder.build("msg")["LoginReq"];
+		}
+
+		__proto.getLoginReq=function(){
+			var clazz=this.builder.build("msg")["LoginReq"];
+			return new clazz();
+		}
+
+		__proto.LoginRsp_Builer=function(){
+			return this.builder.build("msg")["LoginRsp"];
+		}
+
+		__proto.getLoginRsp=function(){
+			var clazz=this.builder.build("msg")["LoginRsp"];
+			return new clazz();
+		}
+
+		__proto.HeartBeatReq_Builer=function(){
+			return this.builder.build("msg")["HeartBeatReq"];
+		}
+
+		__proto.getHeartBeatReq=function(){
+			var clazz=this.builder.build("msg")["HeartBeatReq"];
+			return new clazz();
+		}
+
+		__proto.HeartBeatRsp_Builer=function(){
+			return this.builder.build("msg")["HeartBeatRsp"];
+		}
+
+		__proto.getHeartBeatRsp=function(){
+			var clazz=this.builder.build("msg")["HeartBeatRsp"];
+			return new clazz();
+		}
+
+		__proto.TimeSyncReq_Builer=function(){
+			return this.builder.build("msg")["TimeSyncReq"];
+		}
+
+		__proto.getTimeSyncReq=function(){
+			var clazz=this.builder.build("msg")["TimeSyncReq"];
+			return new clazz();
+		}
+
+		__proto.TimeSyncRsp_Builer=function(){
+			return this.builder.build("msg")["TimeSyncRsp"];
+		}
+
+		__proto.getTimeSyncRsp=function(){
+			var clazz=this.builder.build("msg")["TimeSyncRsp"];
+			return new clazz();
+		}
+
+		__proto.ENConnOperationType_Builer=function(){
+			return this.builder.build("msg")["ENConnOperationType"];
+		}
+
+		__proto.getENConnOperationType=function(){
+			var clazz=this.builder.build("msg")["ENConnOperationType"];
+			return new clazz();
+		}
+
+		__proto.ConnOperationNotify_Builer=function(){
+			return this.builder.build("msg")["ConnOperationNotify"];
+		}
+
+		__proto.getConnOperationNotify=function(){
+			var clazz=this.builder.build("msg")["ConnOperationNotify"];
+			return new clazz();
+		}
+
+		__proto.ExitTableReq_Builer=function(){
+			return this.builder.build("msg")["ExitTableReq"];
+		}
+
+		__proto.getExitTableReq=function(){
+			var clazz=this.builder.build("msg")["ExitTableReq"];
+			return new clazz();
+		}
+
+		__proto.ExitTableRsp_Builer=function(){
+			return this.builder.build("msg")["ExitTableRsp"];
+		}
+
+		__proto.getExitTableRsp=function(){
+			var clazz=this.builder.build("msg")["ExitTableRsp"];
+			return new clazz();
+		}
+
+		__proto.SGetRoomListReq_Builer=function(){
+			return this.builder.build("msg")["SGetRoomListReq"];
+		}
+
+		__proto.getSGetRoomListReq=function(){
+			var clazz=this.builder.build("msg")["SGetRoomListReq"];
+			return new clazz();
+		}
+
+		__proto.SGetRoomListRsp_Builer=function(){
+			return this.builder.build("msg")["SGetRoomListRsp"];
+		}
+
+		__proto.getSGetRoomListRsp=function(){
+			var clazz=this.builder.build("msg")["SGetRoomListRsp"];
+			return new clazz();
+		}
+
+		__proto.STryEnterTableReq_Builer=function(){
+			return this.builder.build("msg")["STryEnterTableReq"];
+		}
+
+		__proto.getSTryEnterTableReq=function(){
+			var clazz=this.builder.build("msg")["STryEnterTableReq"];
+			return new clazz();
+		}
+
+		__proto.STryEnterTableRsp_Builer=function(){
+			return this.builder.build("msg")["STryEnterTableRsp"];
+		}
+
+		__proto.getSTryEnterTableRsp=function(){
+			var clazz=this.builder.build("msg")["STryEnterTableRsp"];
+			return new clazz();
+		}
+
+		__proto.SEnterTableReq_Builer=function(){
+			return this.builder.build("msg")["SEnterTableReq"];
+		}
+
+		__proto.getSEnterTableReq=function(){
+			var clazz=this.builder.build("msg")["SEnterTableReq"];
+			return new clazz();
+		}
+
+		__proto.SEnterTableRsp_Builer=function(){
+			return this.builder.build("msg")["SEnterTableRsp"];
+		}
+
+		__proto.getSEnterTableRsp=function(){
+			var clazz=this.builder.build("msg")["SEnterTableRsp"];
+			return new clazz();
+		}
+
+		__proto.SCarryInReq_Builer=function(){
+			return this.builder.build("msg")["SCarryInReq"];
+		}
+
+		__proto.getSCarryInReq=function(){
+			var clazz=this.builder.build("msg")["SCarryInReq"];
+			return new clazz();
+		}
+
+		__proto.SCarryInRsp_Builer=function(){
+			return this.builder.build("msg")["SCarryInRsp"];
+		}
+
+		__proto.getSCarryInRsp=function(){
+			var clazz=this.builder.build("msg")["SCarryInRsp"];
+			return new clazz();
+		}
+
+		__proto.SBankerReq_Builer=function(){
+			return this.builder.build("msg")["SBankerReq"];
+		}
+
+		__proto.getSBankerReq=function(){
+			var clazz=this.builder.build("msg")["SBankerReq"];
+			return new clazz();
+		}
+
+		__proto.SBankerRsp_Builer=function(){
+			return this.builder.build("msg")["SBankerRsp"];
+		}
+
+		__proto.getSBankerRsp=function(){
+			var clazz=this.builder.build("msg")["SBankerRsp"];
+			return new clazz();
+		}
+
+		__proto.SBetReq_Builer=function(){
+			return this.builder.build("msg")["SBetReq"];
+		}
+
+		__proto.getSBetReq=function(){
+			var clazz=this.builder.build("msg")["SBetReq"];
+			return new clazz();
+		}
+
+		__proto.SBetRsp_Builer=function(){
+			return this.builder.build("msg")["SBetRsp"];
+		}
+
+		__proto.getSBetRsp=function(){
+			var clazz=this.builder.build("msg")["SBetRsp"];
+			return new clazz();
+		}
+
+		__proto.SExitTableReq_Builer=function(){
+			return this.builder.build("msg")["SExitTableReq"];
+		}
+
+		__proto.getSExitTableReq=function(){
+			var clazz=this.builder.build("msg")["SExitTableReq"];
+			return new clazz();
+		}
+
+		__proto.SExitTableRsp_Builer=function(){
+			return this.builder.build("msg")["SExitTableRsp"];
+		}
+
+		__proto.getSExitTableRsp=function(){
+			var clazz=this.builder.build("msg")["SExitTableRsp"];
+			return new clazz();
+		}
+
+		__proto.SHistroyNotify_Builer=function(){
+			return this.builder.build("msg")["SHistroyNotify"];
+		}
+
+		__proto.getSHistroyNotify=function(){
+			var clazz=this.builder.build("msg")["SHistroyNotify"];
+			return new clazz();
+		}
+
+		__proto.STimerNotify_Builer=function(){
+			return this.builder.build("msg")["STimerNotify"];
+		}
+
+		__proto.getSTimerNotify=function(){
+			var clazz=this.builder.build("msg")["STimerNotify"];
+			return new clazz();
+		}
+
+		__proto.SAllUserInfoNotify_Builer=function(){
+			return this.builder.build("msg")["SAllUserInfoNotify"];
+		}
+
+		__proto.getSAllUserInfoNotify=function(){
+			var clazz=this.builder.build("msg")["SAllUserInfoNotify"];
+			return new clazz();
+		}
+
+		__proto.SOneUserInfoNotify_Builer=function(){
+			return this.builder.build("msg")["SOneUserInfoNotify"];
+		}
+
+		__proto.getSOneUserInfoNotify=function(){
+			var clazz=this.builder.build("msg")["SOneUserInfoNotify"];
+			return new clazz();
+		}
+
+		__proto.SBetNotify_Builer=function(){
+			return this.builder.build("msg")["SBetNotify"];
+		}
+
+		__proto.getSBetNotify=function(){
+			var clazz=this.builder.build("msg")["SBetNotify"];
+			return new clazz();
+		}
+
+		__proto.SDealCardNotify_Builer=function(){
+			return this.builder.build("msg")["SDealCardNotify"];
+		}
+
+		__proto.getSDealCardNotify=function(){
+			var clazz=this.builder.build("msg")["SDealCardNotify"];
+			return new clazz();
+		}
+
+		__proto.SCalculateNotify_Builer=function(){
+			return this.builder.build("msg")["SCalculateNotify"];
+		}
+
+		__proto.getSCalculateNotify=function(){
+			var clazz=this.builder.build("msg")["SCalculateNotify"];
+			return new clazz();
+		}
+
+		__proto.SBankerListNotify_Builer=function(){
+			return this.builder.build("msg")["SBankerListNotify"];
+		}
+
+		__proto.getSBankerListNotify=function(){
+			var clazz=this.builder.build("msg")["SBankerListNotify"];
+			return new clazz();
+		}
+
+		__proto.SBankerNotify_Builer=function(){
+			return this.builder.build("msg")["SBankerNotify"];
+		}
+
+		__proto.getSBankerNotify=function(){
+			var clazz=this.builder.build("msg")["SBankerNotify"];
+			return new clazz();
+		}
+
+		__proto.SBankerCalculateNotify_Builer=function(){
+			return this.builder.build("msg")["SBankerCalculateNotify"];
+		}
+
+		__proto.getSBankerCalculateNotify=function(){
+			var clazz=this.builder.build("msg")["SBankerCalculateNotify"];
+			return new clazz();
+		}
+
+		__proto.NoticeInfo_Builer=function(){
+			return this.builder.build("msg")["NoticeInfo"];
+		}
+
+		__proto.getNoticeInfo=function(){
+			var clazz=this.builder.build("msg")["NoticeInfo"];
+			return new clazz();
+		}
+
+		__proto.PushNoticeNotify_Builer=function(){
+			return this.builder.build("msg")["PushNoticeNotify"];
+		}
+
+		__proto.getPushNoticeNotify=function(){
+			var clazz=this.builder.build("msg")["PushNoticeNotify"];
+			return new clazz();
+		}
+
+		__proto.ENKickReason_Builer=function(){
+			return this.builder.build("msg")["ENKickReason"];
+		}
+
+		__proto.getENKickReason=function(){
+			var clazz=this.builder.build("msg")["ENKickReason"];
+			return new clazz();
+		}
+
+		__proto.KickPlayerNotify_Builer=function(){
+			return this.builder.build("msg")["KickPlayerNotify"];
+		}
+
+		__proto.getKickPlayerNotify=function(){
+			var clazz=this.builder.build("msg")["KickPlayerNotify"];
+			return new clazz();
+		}
+
+		__proto.ENCSType_Builer=function(){
+			return this.builder.build("msg")["ENCSType"];
+		}
+
+		__proto.getENCSType=function(){
+			var clazz=this.builder.build("msg")["ENCSType"];
+			return new clazz();
+		}
+
+		__proto.CS_Builer=function(){
+			return this.builder.build("msg")["CS"];
+		}
+
+		__proto.getCS=function(){
+			var clazz=this.builder.build("msg")["CS"];
+			return new clazz();
+		}
+
+		return msg_cs;
 	})()
 
 
@@ -12149,6 +13181,23 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
+	//class com.IProtobuf.Long
+	var Long=(function(){
+		function Long(){}
+		__class(Long,'com.IProtobuf.Long');
+		var __proto=Long.prototype;
+		__proto.toNumber=function(){}
+		Long.fromNumber=function(value){
+			return com.IProtobuf.Long.Long.fromNumber(value);
+		}
+
+		__static(Long,
+		['Long',function(){return this.Long=Browser.window.dcodeIO.Long;}
+		]);
+		return Long;
+	})()
+
+
 	//class com.lightMVC.core.Proxy
 	var Proxy=(function(){
 		var SingleInfo;
@@ -13805,6 +14854,1058 @@ var Laya=window.Laya=(function(window,document){
 		Node.PROP_EMPTY={};
 		return Node;
 	})(EventDispatcher1)
+
+
+	//class conf.DirtyWord extends com.IProtobuf.Message
+	var DirtyWord=(function(_super){
+		function DirtyWord(){
+			this.word="1";
+			DirtyWord.__super.call(this);
+		}
+
+		__class(DirtyWord,'conf.DirtyWord',_super);
+		var __proto=DirtyWord.prototype;
+		__proto.writeTo=function(value){}
+		return DirtyWord;
+	})(Message)
+
+
+	//class conf.Double2DTable extends com.IProtobuf.Message
+	var Double2DTable=(function(_super){
+		function Double2DTable(){
+			this.fields=null;
+			Double2DTable.__super.call(this);
+		}
+
+		__class(Double2DTable,'conf.Double2DTable',_super);
+		var __proto=Double2DTable.prototype;
+		__proto.writeTo=function(value){}
+		return Double2DTable;
+	})(Message)
+
+
+	//class conf.Game extends com.IProtobuf.Message
+	var Game=(function(_super){
+		function Game(){
+			this.dirty_words=null;
+			this.notices=null;
+			this.mails=null;
+			this.room_config=null;
+			this.time_config=null;
+			Game.__super.call(this);
+		}
+
+		__class(Game,'conf.Game',_super);
+		var __proto=Game.prototype;
+		__proto.writeTo=function(value){}
+		return Game;
+	})(Message)
+
+
+	//class conf.Integer2DTable extends com.IProtobuf.Message
+	var Integer2DTable=(function(_super){
+		function Integer2DTable(){
+			this.fields=null;
+			Integer2DTable.__super.call(this);
+		}
+
+		__class(Integer2DTable,'conf.Integer2DTable',_super);
+		var __proto=Integer2DTable.prototype;
+		__proto.writeTo=function(value){}
+		return Integer2DTable;
+	})(Message)
+
+
+	//class conf.Mail extends com.IProtobuf.Message
+	var Mail=(function(_super){
+		function Mail(){
+			this.type=1;
+			this.mail_type=2;
+			this.sender="3";
+			this.title="4";
+			this.content="5";
+			Mail.__super.call(this);
+		}
+
+		__class(Mail,'conf.Mail',_super);
+		var __proto=Mail.prototype;
+		__proto.writeTo=function(value){}
+		return Mail;
+	})(Message)
+
+
+	//class conf.Money extends com.IProtobuf.Message
+	var Money=(function(_super){
+		function Money(){
+			this.type=1;
+			this.num=null;
+			Money.__super.call(this);
+		}
+
+		__class(Money,'conf.Money',_super);
+		var __proto=Money.prototype;
+		__proto.writeTo=function(value){}
+		return Money;
+	})(Message)
+
+
+	//class conf.Notice extends com.IProtobuf.Message
+	var Notice=(function(_super){
+		function Notice(){
+			this.type=1;
+			this.locations=3;
+			this.duration=4;
+			this.content="6";
+			Notice.__super.call(this);
+		}
+
+		__class(Notice,'conf.Notice',_super);
+		var __proto=Notice.prototype;
+		__proto.writeTo=function(value){}
+		return Notice;
+	})(Message)
+
+
+	//class conf.Prop extends com.IProtobuf.Message
+	var Prop=(function(_super){
+		function Prop(){
+			this.id=1;
+			this.num=2;
+			Prop.__super.call(this);
+		}
+
+		__class(Prop,'conf.Prop',_super);
+		var __proto=Prop.prototype;
+		__proto.writeTo=function(value){}
+		return Prop;
+	})(Message)
+
+
+	//class conf.SBankerCalcInfo extends com.IProtobuf.Message
+	var SBankerCalcInfo=(function(_super){
+		function SBankerCalcInfo(){
+			this.banker_type=1;
+			this._1_type=2;
+			this._2_type=3;
+			this._3_type=4;
+			this._4_type=5;
+			this.win_money=null;
+			this.round_id="7";
+			SBankerCalcInfo.__super.call(this);
+		}
+
+		__class(SBankerCalcInfo,'conf.SBankerCalcInfo',_super);
+		var __proto=SBankerCalcInfo.prototype;
+		__proto.writeTo=function(value){}
+		return SBankerCalcInfo;
+	})(Message)
+
+
+	//class conf.SBetInfo extends com.IProtobuf.Message
+	var SBetInfo=(function(_super){
+		function SBetInfo(){
+			this.money=null;
+			this.user_info_s=null;
+			this.light_bet=null;
+			SBetInfo.__super.call(this);
+		}
+
+		__class(SBetInfo,'conf.SBetInfo',_super);
+		var __proto=SBetInfo.prototype;
+		__proto.writeTo=function(value){}
+		return SBetInfo;
+	})(Message)
+
+
+	//class conf.SBullMoney extends com.IProtobuf.Message
+	var SBullMoney=(function(_super){
+		function SBullMoney(){
+			this.gb=null;
+			this.cash=null;
+			this.nm=null;
+			SBullMoney.__super.call(this);
+		}
+
+		__class(SBullMoney,'conf.SBullMoney',_super);
+		var __proto=SBullMoney.prototype;
+		__proto.writeTo=function(value){}
+		return SBullMoney;
+	})(Message)
+
+
+	//class conf.Scope extends com.IProtobuf.Message
+	var Scope=(function(_super){
+		function Scope(){
+			this.min=1;
+			this.max=2;
+			Scope.__super.call(this);
+		}
+
+		__class(Scope,'conf.Scope',_super);
+		var __proto=Scope.prototype;
+		__proto.writeTo=function(value){}
+		return Scope;
+	})(Message)
+
+
+	//class conf.Scope64 extends com.IProtobuf.Message
+	var Scope64=(function(_super){
+		function Scope64(){
+			this.min=null;
+			this.max=null;
+			Scope64.__super.call(this);
+		}
+
+		__class(Scope64,'conf.Scope64',_super);
+		var __proto=Scope64.prototype;
+		__proto.writeTo=function(value){}
+		return Scope64;
+	})(Message)
+
+
+	//class conf.SCountInfo extends com.IProtobuf.Message
+	var SCountInfo=(function(_super){
+		function SCountInfo(){
+			this._1=1;
+			this._2=2;
+			this._3=3;
+			this._4=4;
+			SCountInfo.__super.call(this);
+		}
+
+		__class(SCountInfo,'conf.SCountInfo',_super);
+		var __proto=SCountInfo.prototype;
+		__proto.writeTo=function(value){}
+		return SCountInfo;
+	})(Message)
+
+
+	//class conf.SDealInfo extends com.IProtobuf.Message
+	var SDealInfo=(function(_super){
+		function SDealInfo(){
+			this.card1=1;
+			this.card2=2;
+			this.card3=3;
+			this.card4=4;
+			this.card5=5;
+			this.bull_type=6;
+			this.max_card=7;
+			this.odds=8;
+			this.player_win=null;
+			SDealInfo.__super.call(this);
+		}
+
+		__class(SDealInfo,'conf.SDealInfo',_super);
+		var __proto=SDealInfo.prototype;
+		__proto.writeTo=function(value){}
+		return SDealInfo;
+	})(Message)
+
+
+	//class conf.SNetAddress extends com.IProtobuf.Message
+	var SNetAddress=(function(_super){
+		function SNetAddress(){
+			this.ip="1";
+			this.port=2;
+			SNetAddress.__super.call(this);
+		}
+
+		__class(SNetAddress,'conf.SNetAddress',_super);
+		var __proto=SNetAddress.prototype;
+		__proto.writeTo=function(value){}
+		return SNetAddress;
+	})(Message)
+
+
+	//class conf.SResultInfo extends com.IProtobuf.Message
+	var SResultInfo=(function(_super){
+		function SResultInfo(){
+			this._1=1;
+			this._2=2;
+			this._3=3;
+			this._4=4;
+			SResultInfo.__super.call(this);
+		}
+
+		__class(SResultInfo,'conf.SResultInfo',_super);
+		var __proto=SResultInfo.prototype;
+		__proto.writeTo=function(value){}
+		return SResultInfo;
+	})(Message)
+
+
+	//class conf.SRoomConfig extends com.IProtobuf.Message
+	var SRoomConfig=(function(_super){
+		function SRoomConfig(){
+			this.room_id=1;
+			this.room_type=2;
+			this.min_bet=3;
+			this.max_bet=4;
+			this.room_name="5";
+			this.max_player=6;
+			this.room_limit=7;
+			this.player_limit=8;
+			this.banker_limit=9;
+			this.banker_times=10;
+			this.pump_rate=11;
+			this.is_robbery=12;
+			this.is_multi=13;
+			this.water_level=14;
+			this.time_id=15;
+			SRoomConfig.__super.call(this);
+		}
+
+		__class(SRoomConfig,'conf.SRoomConfig',_super);
+		var __proto=SRoomConfig.prototype;
+		__proto.writeTo=function(value){}
+		return SRoomConfig;
+	})(Message)
+
+
+	//class conf.SRoomInfo extends com.IProtobuf.Message
+	var SRoomInfo=(function(_super){
+		function SRoomInfo(){
+			this.config=null;
+			this.cur_player=20;
+			SRoomInfo.__super.call(this);
+		}
+
+		__class(SRoomInfo,'conf.SRoomInfo',_super);
+		var __proto=SRoomInfo.prototype;
+		__proto.writeTo=function(value){}
+		return SRoomInfo;
+	})(Message)
+
+
+	//class conf.SRoomInfos extends com.IProtobuf.Message
+	var SRoomInfos=(function(_super){
+		function SRoomInfos(){
+			this.roominfo=null;
+			SRoomInfos.__super.call(this);
+		}
+
+		__class(SRoomInfos,'conf.SRoomInfos',_super);
+		var __proto=SRoomInfos.prototype;
+		__proto.writeTo=function(value){}
+		return SRoomInfos;
+	})(Message)
+
+
+	//class conf.STimeConfig extends com.IProtobuf.Message
+	var STimeConfig=(function(_super){
+		function STimeConfig(){
+			this.time_id=1;
+			this.start_time=2;
+			this.banker_time=3;
+			this.bet_time=4;
+			this.sure_time=5;
+			this.deal_time=6;
+			this.end_time=7;
+			STimeConfig.__super.call(this);
+		}
+
+		__class(STimeConfig,'conf.STimeConfig',_super);
+		var __proto=STimeConfig.prototype;
+		__proto.writeTo=function(value){}
+		return STimeConfig;
+	})(Message)
+
+
+	//class conf.String2DTable extends com.IProtobuf.Message
+	var String2DTable=(function(_super){
+		function String2DTable(){
+			this.fields="1";
+			String2DTable.__super.call(this);
+		}
+
+		__class(String2DTable,'conf.String2DTable',_super);
+		var __proto=String2DTable.prototype;
+		__proto.writeTo=function(value){}
+		return String2DTable;
+	})(Message)
+
+
+	//class conf.SUserInfo extends com.IProtobuf.Message
+	var SUserInfo=(function(_super){
+		function SUserInfo(){
+			this.uid=null;
+			this.money=null;
+			this.is_lamp=3;
+			this.vip=4;
+			this.win_money=null;
+			this.bet_money=null;
+			SUserInfo.__super.call(this);
+		}
+
+		__class(SUserInfo,'conf.SUserInfo',_super);
+		var __proto=SUserInfo.prototype;
+		__proto.writeTo=function(value){}
+		return SUserInfo;
+	})(Message)
+
+
+	//class conf.Table extends com.IProtobuf.Message
+	var Table=(function(_super){
+		function Table(){
+			this.table_id=1;
+			this.table_name="2";
+			this.table_type=3;
+			this.min_bet=null;
+			this.max_bet=null;
+			this.max_player=6;
+			this.bet_time=7;
+			this.confirm_time=8;
+			this.cashing_time=9;
+			Table.__super.call(this);
+		}
+
+		__class(Table,'conf.Table',_super);
+		var __proto=Table.prototype;
+		__proto.writeTo=function(value){}
+		return Table;
+	})(Message)
+
+
+	//class msg.ConnHead extends com.IProtobuf.Message
+	var ConnHead=(function(_super){
+		function ConnHead(){
+			this.uid=null;
+			this.uname="5";
+			this.verify_sig="2";
+			this.client_version=null;
+			this.platform=4;
+			this.conn_id=11;
+			this.conn_ids=16;
+			this.conn_ip="12";
+			this.conn_port=13;
+			this.is_new_conn=14;
+			this.is_close_conn=15;
+			this.is_login=21;
+			ConnHead.__super.call(this);
+		}
+
+		__class(ConnHead,'msg.ConnHead',_super);
+		var __proto=ConnHead.prototype;
+		__proto.writeTo=function(value){}
+		return ConnHead;
+	})(Message)
+
+
+	//class msg.ConnOperationNotify extends com.IProtobuf.Message
+	var ConnOperationNotify=(function(_super){
+		function ConnOperationNotify(){
+			this.op=1;
+			ConnOperationNotify.__super.call(this);
+		}
+
+		__class(ConnOperationNotify,'msg.ConnOperationNotify',_super);
+		var __proto=ConnOperationNotify.prototype;
+		__proto.writeTo=function(value){}
+		return ConnOperationNotify;
+	})(Message)
+
+
+	//class msg.ConnSvrInfo extends com.IProtobuf.Message
+	var ConnSvrInfo=(function(_super){
+		function ConnSvrInfo(){
+			this.listen_addresses=null;
+			ConnSvrInfo.__super.call(this);
+		}
+
+		__class(ConnSvrInfo,'msg.ConnSvrInfo',_super);
+		var __proto=ConnSvrInfo.prototype;
+		__proto.writeTo=function(value){}
+		return ConnSvrInfo;
+	})(Message)
+
+
+	//class msg.CS extends com.IProtobuf.Message
+	var CS=(function(_super){
+		function CS(){
+			this.msg_type=1;
+			this.conn_head=null;
+			this.heart_beat_req=null;
+			this.heart_beat_rsp=null;
+			this.conn_operation_notify=null;
+			this.time_sync_req=null;
+			this.time_sync_rsp=null;
+			this.login_req=null;
+			this.login_rsp=null;
+			this.get_room_list_req=null;
+			this.get_room_list_rsp=null;
+			this.try_enter_table_req=null;
+			this.try_enter_table_rsp=null;
+			this.enter_table_req=null;
+			this.enter_table_rsp=null;
+			this.carry_in_req=null;
+			this.carry_in_rsp=null;
+			this.banker_req=null;
+			this.banker_rsp=null;
+			this.bet_req=null;
+			this.bet_rsp=null;
+			this.exit_table_req=null;
+			this.exit_table_rsp=null;
+			this.histroy_notify=null;
+			this.timer_notify=null;
+			this.all_user_info_notify=null;
+			this.one_user_info_notify=null;
+			this.bet_notify=null;
+			this.deal_card_notify=null;
+			this.calculate_notify=null;
+			this.banker_list_notify=null;
+			this.banker_notify=null;
+			this.banker_calc_notify=null;
+			this.push_notice_notify=null;
+			this.kick_player_notify=null;
+			CS.__super.call(this);
+		}
+
+		__class(CS,'msg.CS',_super);
+		var __proto=CS.prototype;
+		__proto.writeTo=function(value){}
+		return CS;
+	})(Message)
+
+
+	//class msg.ExitTableReq extends com.IProtobuf.Message
+	var ExitTableReq=(function(_super){
+		function ExitTableReq(){ExitTableReq.__super.call(this);;
+		};
+
+		__class(ExitTableReq,'msg.ExitTableReq',_super);
+		var __proto=ExitTableReq.prototype;
+		__proto.writeTo=function(value){}
+		return ExitTableReq;
+	})(Message)
+
+
+	//class msg.ExitTableRsp extends com.IProtobuf.Message
+	var ExitTableRsp=(function(_super){
+		function ExitTableRsp(){
+			this.result=1;
+			ExitTableRsp.__super.call(this);
+		}
+
+		__class(ExitTableRsp,'msg.ExitTableRsp',_super);
+		var __proto=ExitTableRsp.prototype;
+		__proto.writeTo=function(value){}
+		return ExitTableRsp;
+	})(Message)
+
+
+	//class msg.HeartBeatReq extends com.IProtobuf.Message
+	var HeartBeatReq=(function(_super){
+		function HeartBeatReq(){HeartBeatReq.__super.call(this);;
+		};
+
+		__class(HeartBeatReq,'msg.HeartBeatReq',_super);
+		var __proto=HeartBeatReq.prototype;
+		__proto.writeTo=function(value){}
+		return HeartBeatReq;
+	})(Message)
+
+
+	//class msg.HeartBeatRsp extends com.IProtobuf.Message
+	var HeartBeatRsp=(function(_super){
+		function HeartBeatRsp(){HeartBeatRsp.__super.call(this);;
+		};
+
+		__class(HeartBeatRsp,'msg.HeartBeatRsp',_super);
+		var __proto=HeartBeatRsp.prototype;
+		__proto.writeTo=function(value){}
+		return HeartBeatRsp;
+	})(Message)
+
+
+	//class msg.KickPlayerNotify extends com.IProtobuf.Message
+	var KickPlayerNotify=(function(_super){
+		function KickPlayerNotify(){
+			this.reason=1;
+			KickPlayerNotify.__super.call(this);
+		}
+
+		__class(KickPlayerNotify,'msg.KickPlayerNotify',_super);
+		var __proto=KickPlayerNotify.prototype;
+		__proto.writeTo=function(value){}
+		return KickPlayerNotify;
+	})(Message)
+
+
+	//class msg.LoginReq extends com.IProtobuf.Message
+	var LoginReq=(function(_super){
+		function LoginReq(){
+			this.uid=null;
+			this.verify_sig="3";
+			this.client_version=null;
+			this.platform=5;
+			LoginReq.__super.call(this);
+		}
+
+		__class(LoginReq,'msg.LoginReq',_super);
+		var __proto=LoginReq.prototype;
+		__proto.writeTo=function(value){}
+		return LoginReq;
+	})(Message)
+
+
+	//class msg.LoginRsp extends com.IProtobuf.Message
+	var LoginRsp=(function(_super){
+		function LoginRsp(){
+			this.result=1;
+			this.source=2;
+			this.currency="3";
+			LoginRsp.__super.call(this);
+		}
+
+		__class(LoginRsp,'msg.LoginRsp',_super);
+		var __proto=LoginRsp.prototype;
+		__proto.writeTo=function(value){}
+		return LoginRsp;
+	})(Message)
+
+
+	//class msg.NoticeInfo extends com.IProtobuf.Message
+	var NoticeInfo=(function(_super){
+		function NoticeInfo(){
+			this.id=1;
+			this.type=7;
+			this.start_time=3;
+			this.end_time=4;
+			this.content="6";
+			this.server_address=null;
+			this.match_id=null;
+			NoticeInfo.__super.call(this);
+		}
+
+		__class(NoticeInfo,'msg.NoticeInfo',_super);
+		var __proto=NoticeInfo.prototype;
+		__proto.writeTo=function(value){}
+		return NoticeInfo;
+	})(Message)
+
+
+	//class msg.PushNoticeNotify extends com.IProtobuf.Message
+	var PushNoticeNotify=(function(_super){
+		function PushNoticeNotify(){
+			this.notices=null;
+			PushNoticeNotify.__super.call(this);
+		}
+
+		__class(PushNoticeNotify,'msg.PushNoticeNotify',_super);
+		var __proto=PushNoticeNotify.prototype;
+		__proto.writeTo=function(value){}
+		return PushNoticeNotify;
+	})(Message)
+
+
+	//class msg.SAllUserInfoNotify extends com.IProtobuf.Message
+	var SAllUserInfoNotify=(function(_super){
+		function SAllUserInfoNotify(){
+			this.player_count=1;
+			this.user_info_s=null;
+			SAllUserInfoNotify.__super.call(this);
+		}
+
+		__class(SAllUserInfoNotify,'msg.SAllUserInfoNotify',_super);
+		var __proto=SAllUserInfoNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SAllUserInfoNotify;
+	})(Message)
+
+
+	//class msg.SBankerCalculateNotify extends com.IProtobuf.Message
+	var SBankerCalculateNotify=(function(_super){
+		function SBankerCalculateNotify(){
+			this.total_win_money=null;
+			this.banker_calc_info_s=null;
+			SBankerCalculateNotify.__super.call(this);
+		}
+
+		__class(SBankerCalculateNotify,'msg.SBankerCalculateNotify',_super);
+		var __proto=SBankerCalculateNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SBankerCalculateNotify;
+	})(Message)
+
+
+	//class msg.SBankerListNotify extends com.IProtobuf.Message
+	var SBankerListNotify=(function(_super){
+		function SBankerListNotify(){
+			this.player_count=1;
+			this.user_info_s=null;
+			SBankerListNotify.__super.call(this);
+		}
+
+		__class(SBankerListNotify,'msg.SBankerListNotify',_super);
+		var __proto=SBankerListNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SBankerListNotify;
+	})(Message)
+
+
+	//class msg.SBankerNotify extends com.IProtobuf.Message
+	var SBankerNotify=(function(_super){
+		function SBankerNotify(){
+			this.banker_id=null;
+			this.hand_money=null;
+			this.banker_time=3;
+			this.max_time=4;
+			SBankerNotify.__super.call(this);
+		}
+
+		__class(SBankerNotify,'msg.SBankerNotify',_super);
+		var __proto=SBankerNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SBankerNotify;
+	})(Message)
+
+
+	//class msg.SBankerReq extends com.IProtobuf.Message
+	var SBankerReq=(function(_super){
+		function SBankerReq(){
+			this.type=1;
+			SBankerReq.__super.call(this);
+		}
+
+		__class(SBankerReq,'msg.SBankerReq',_super);
+		var __proto=SBankerReq.prototype;
+		__proto.writeTo=function(value){}
+		return SBankerReq;
+	})(Message)
+
+
+	//class msg.SBankerRsp extends com.IProtobuf.Message
+	var SBankerRsp=(function(_super){
+		function SBankerRsp(){
+			this.error_code=1;
+			SBankerRsp.__super.call(this);
+		}
+
+		__class(SBankerRsp,'msg.SBankerRsp',_super);
+		var __proto=SBankerRsp.prototype;
+		__proto.writeTo=function(value){}
+		return SBankerRsp;
+	})(Message)
+
+
+	//class msg.SBetNotify extends com.IProtobuf.Message
+	var SBetNotify=(function(_super){
+		function SBetNotify(){
+			this.m1=null;
+			this.m2=null;
+			this.m3=null;
+			this.m4=null;
+			this.uid=null;
+			this.position=6;
+			this.value=7;
+			this.light_pos=8;
+			SBetNotify.__super.call(this);
+		}
+
+		__class(SBetNotify,'msg.SBetNotify',_super);
+		var __proto=SBetNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SBetNotify;
+	})(Message)
+
+
+	//class msg.SBetReq extends com.IProtobuf.Message
+	var SBetReq=(function(_super){
+		function SBetReq(){
+			this.position=1;
+			this.bet_money=2;
+			SBetReq.__super.call(this);
+		}
+
+		__class(SBetReq,'msg.SBetReq',_super);
+		var __proto=SBetReq.prototype;
+		__proto.writeTo=function(value){}
+		return SBetReq;
+	})(Message)
+
+
+	//class msg.SBetRsp extends com.IProtobuf.Message
+	var SBetRsp=(function(_super){
+		function SBetRsp(){
+			this.error_code=1;
+			this.position=2;
+			this.hand_money=null;
+			this.bet_money=4;
+			SBetRsp.__super.call(this);
+		}
+
+		__class(SBetRsp,'msg.SBetRsp',_super);
+		var __proto=SBetRsp.prototype;
+		__proto.writeTo=function(value){}
+		return SBetRsp;
+	})(Message)
+
+
+	//class msg.SCalculateNotify extends com.IProtobuf.Message
+	var SCalculateNotify=(function(_super){
+		function SCalculateNotify(){
+			this.banker_id=null;
+			this.win_money=null;
+			this.hand_money=null;
+			this.user_info_s=null;
+			SCalculateNotify.__super.call(this);
+		}
+
+		__class(SCalculateNotify,'msg.SCalculateNotify',_super);
+		var __proto=SCalculateNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SCalculateNotify;
+	})(Message)
+
+
+	//class msg.SCarryInReq extends com.IProtobuf.Message
+	var SCarryInReq=(function(_super){
+		function SCarryInReq(){
+			this.money=null;
+			this.token="2";
+			SCarryInReq.__super.call(this);
+		}
+
+		__class(SCarryInReq,'msg.SCarryInReq',_super);
+		var __proto=SCarryInReq.prototype;
+		__proto.writeTo=function(value){}
+		return SCarryInReq;
+	})(Message)
+
+
+	//class msg.SCarryInRsp extends com.IProtobuf.Message
+	var SCarryInRsp=(function(_super){
+		function SCarryInRsp(){
+			this.error_code=1;
+			this.money=null;
+			SCarryInRsp.__super.call(this);
+		}
+
+		__class(SCarryInRsp,'msg.SCarryInRsp',_super);
+		var __proto=SCarryInRsp.prototype;
+		__proto.writeTo=function(value){}
+		return SCarryInRsp;
+	})(Message)
+
+
+	//class msg.SDealCardNotify extends com.IProtobuf.Message
+	var SDealCardNotify=(function(_super){
+		function SDealCardNotify(){
+			this.banker=null;
+			this._1=null;
+			this._2=null;
+			this._3=null;
+			this._4=null;
+			SDealCardNotify.__super.call(this);
+		}
+
+		__class(SDealCardNotify,'msg.SDealCardNotify',_super);
+		var __proto=SDealCardNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SDealCardNotify;
+	})(Message)
+
+
+	//class msg.SEnterTableReq extends com.IProtobuf.Message
+	var SEnterTableReq=(function(_super){
+		function SEnterTableReq(){
+			this.room_id=1;
+			this.token=null;
+			SEnterTableReq.__super.call(this);
+		}
+
+		__class(SEnterTableReq,'msg.SEnterTableReq',_super);
+		var __proto=SEnterTableReq.prototype;
+		__proto.writeTo=function(value){}
+		return SEnterTableReq;
+	})(Message)
+
+
+	//class msg.SEnterTableRsp extends com.IProtobuf.Message
+	var SEnterTableRsp=(function(_super){
+		function SEnterTableRsp(){
+			this.error_code=1;
+			this.serverinfo="2";
+			this.room_id=3;
+			this.table_id=4;
+			this.room_type=5;
+			SEnterTableRsp.__super.call(this);
+		}
+
+		__class(SEnterTableRsp,'msg.SEnterTableRsp',_super);
+		var __proto=SEnterTableRsp.prototype;
+		__proto.writeTo=function(value){}
+		return SEnterTableRsp;
+	})(Message)
+
+
+	//class msg.SExitTableReq extends com.IProtobuf.Message
+	var SExitTableReq=(function(_super){
+		function SExitTableReq(){SExitTableReq.__super.call(this);;
+		};
+
+		__class(SExitTableReq,'msg.SExitTableReq',_super);
+		var __proto=SExitTableReq.prototype;
+		__proto.writeTo=function(value){}
+		return SExitTableReq;
+	})(Message)
+
+
+	//class msg.SExitTableRsp extends com.IProtobuf.Message
+	var SExitTableRsp=(function(_super){
+		function SExitTableRsp(){
+			this.error_code=1;
+			SExitTableRsp.__super.call(this);
+		}
+
+		__class(SExitTableRsp,'msg.SExitTableRsp',_super);
+		var __proto=SExitTableRsp.prototype;
+		__proto.writeTo=function(value){}
+		return SExitTableRsp;
+	})(Message)
+
+
+	//class msg.SGetRoomListReq extends com.IProtobuf.Message
+	var SGetRoomListReq=(function(_super){
+		function SGetRoomListReq(){SGetRoomListReq.__super.call(this);;
+		};
+
+		__class(SGetRoomListReq,'msg.SGetRoomListReq',_super);
+		var __proto=SGetRoomListReq.prototype;
+		__proto.writeTo=function(value){}
+		return SGetRoomListReq;
+	})(Message)
+
+
+	//class msg.SGetRoomListRsp extends com.IProtobuf.Message
+	var SGetRoomListRsp=(function(_super){
+		function SGetRoomListRsp(){
+			this.error_code=1;
+			this.room_infos=null;
+			this.room_type=3;
+			this.room_id=4;
+			this.net_address=null;
+			this.token=null;
+			SGetRoomListRsp.__super.call(this);
+		}
+
+		__class(SGetRoomListRsp,'msg.SGetRoomListRsp',_super);
+		var __proto=SGetRoomListRsp.prototype;
+		__proto.writeTo=function(value){}
+		return SGetRoomListRsp;
+	})(Message)
+
+
+	//class msg.SHistroyNotify extends com.IProtobuf.Message
+	var SHistroyNotify=(function(_super){
+		function SHistroyNotify(){
+			this.win_info=null;
+			this.lose_info=null;
+			this.result_info=null;
+			SHistroyNotify.__super.call(this);
+		}
+
+		__class(SHistroyNotify,'msg.SHistroyNotify',_super);
+		var __proto=SHistroyNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SHistroyNotify;
+	})(Message)
+
+
+	//class msg.SOneUserInfoNotify extends com.IProtobuf.Message
+	var SOneUserInfoNotify=(function(_super){
+		function SOneUserInfoNotify(){
+			this.user_info=null;
+			this.type=2;
+			SOneUserInfoNotify.__super.call(this);
+		}
+
+		__class(SOneUserInfoNotify,'msg.SOneUserInfoNotify',_super);
+		var __proto=SOneUserInfoNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SOneUserInfoNotify;
+	})(Message)
+
+
+	//class msg.STimerNotify extends com.IProtobuf.Message
+	var STimerNotify=(function(_super){
+		function STimerNotify(){
+			this.timeStamp=1;
+			this.timeLeft=2;
+			this.status=3;
+			this.bet_area=4;
+			this.sure_area=5;
+			this.deal_area=6;
+			this.end_area=7;
+			this.order_id="8";
+			STimerNotify.__super.call(this);
+		}
+
+		__class(STimerNotify,'msg.STimerNotify',_super);
+		var __proto=STimerNotify.prototype;
+		__proto.writeTo=function(value){}
+		return STimerNotify;
+	})(Message)
+
+
+	//class msg.STryEnterTableReq extends com.IProtobuf.Message
+	var STryEnterTableReq=(function(_super){
+		function STryEnterTableReq(){
+			this.room_type=1;
+			this.room_id=2;
+			STryEnterTableReq.__super.call(this);
+		}
+
+		__class(STryEnterTableReq,'msg.STryEnterTableReq',_super);
+		var __proto=STryEnterTableReq.prototype;
+		__proto.writeTo=function(value){}
+		return STryEnterTableReq;
+	})(Message)
+
+
+	//class msg.STryEnterTableRsp extends com.IProtobuf.Message
+	var STryEnterTableRsp=(function(_super){
+		function STryEnterTableRsp(){
+			this.error_code=1;
+			this.room_type=2;
+			this.room_id=3;
+			this.net_address=null;
+			this.token=null;
+			STryEnterTableRsp.__super.call(this);
+		}
+
+		__class(STryEnterTableRsp,'msg.STryEnterTableRsp',_super);
+		var __proto=STryEnterTableRsp.prototype;
+		__proto.writeTo=function(value){}
+		return STryEnterTableRsp;
+	})(Message)
+
+
+	//class msg.TimeSyncReq extends com.IProtobuf.Message
+	var TimeSyncReq=(function(_super){
+		function TimeSyncReq(){TimeSyncReq.__super.call(this);;
+		};
+
+		__class(TimeSyncReq,'msg.TimeSyncReq',_super);
+		var __proto=TimeSyncReq.prototype;
+		__proto.writeTo=function(value){}
+		return TimeSyncReq;
+	})(Message)
+
+
+	//class msg.TimeSyncRsp extends com.IProtobuf.Message
+	var TimeSyncRsp=(function(_super){
+		function TimeSyncRsp(){
+			this.server_time=1;
+			this.server_time_milli=null;
+			TimeSyncRsp.__super.call(this);
+		}
+
+		__class(TimeSyncRsp,'msg.TimeSyncRsp',_super);
+		var __proto=TimeSyncRsp.prototype;
+		__proto.writeTo=function(value){}
+		return TimeSyncRsp;
+	})(Message)
 
 
 	/**
@@ -18442,6 +20543,7 @@ var Laya=window.Laya=(function(window,document){
 		//registerCommand(ENCSType.CS_TYPE_ROUND_CASH_NOTIFY.toString(),SettlementRoundCommand);//开始结算
 		__proto.initModel=function(){
 			this.registerModel(new PreLoadService("perLoadService"));
+			this.registerModel(new BullProtoModel("BullProtoModel"));
 			this.asSingleton("ConfigData",ConfigData);
 		}
 
@@ -18603,6 +20705,35 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
+	var BullProtoModel=(function(_super){
+		function BullProtoModel(modelName,data){
+			this.msg_proto=null;
+			this.conf_proto=null;
+			this._callBack=null;
+			BullProtoModel.__super.call(this,modelName,data);
+			this.msg_proto=new msg_cs();
+			this.conf_proto=new conf_game();
+		}
+
+		__class(BullProtoModel,'bull.modules.common.model.BullProtoModel',_super);
+		var __proto=BullProtoModel.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
+		__proto.loadProtoFile=function(callBack){
+			console.log("msg_proto",this.msg_proto,this.conf_proto,this)
+			this._callBack=callBack;
+			this.msg_proto.loadProtoFile(Light.loader.URLM.getURL("msg_proto"));
+			this.conf_proto.loadProtoFile(Light.loader.URLM.getURL("conf_proto"));
+			this._callBack.run();
+			this.sentNotification("protoCreat");
+		}
+
+		BullProtoModel.NAME="BullProtoModel";
+		return BullProtoModel;
+	})(Model)
+
+
+	//import light.car.view.room.CarScene;
 	//class bull.modules.perload.services.PreLoadService extends com.lightMVC.parrerns.Model
 	var PreLoadService=(function(_super){
 		function PreLoadService(proxyName){
@@ -18684,16 +20815,16 @@ var Laya=window.Laya=(function(window,document){
 		//Light.scence.creat();
 		__proto.loadProto=function(){
 			console.log("loadProto")
+			var bullProto=this.getModel("BullProtoModel");
+			bullProto.loadProtoFile(new Handler(this,this.protoLoaded));
 		}
 
-		//carProto.loadProtoFile(new Handler(this,protoLoaded));
 		__proto.protoLoaded=function(){
 			console.log("protoLoaded");
-			this.loadHall();
 		}
 
+		//loadHall();
 		__proto.onProgress=function(scenceName,e){
-			console.log("onProgress",scenceName,e.data);
 			switch(scenceName){
 				case "config":
 					this.sentNotification("loadDataMessage",{"scenceName":scenceName,"value":e.data});
@@ -24941,495 +27072,6 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
-	*<p><code>Input</code> 类用于创建显示对象以显示和输入文本。</p>
-	*/
-	//class laya.display.Input extends laya.display.Text
-	var Input=(function(_super){
-		function Input(){
-			this._focus=false;
-			this._multiline=false;
-			this._editable=true;
-			this._restrictPattern=null;
-			this._type="text";
-			this._prompt='';
-			this._promptColor="#A9A9A9";
-			this._originColor="#000000";
-			this._content='';
-			Input.__super.call(this);
-			this._maxChars=1E5;
-			this._width=100;
-			this._height=20;
-			this.multiline=false;
-			this.overflow=Text.SCROLL;
-			this.on("mousedown",this,this._onMouseDown);
-			this.on("undisplay",this,this._onUnDisplay);
-		}
-
-		__class(Input,'laya.display.Input',_super);
-		var __proto=Input.prototype;
-		/**
-		*设置光标位置和选取字符。
-		*@param startIndex 光标起始位置。
-		*@param endIndex 光标结束位置。
-		*/
-		__proto.setSelection=function(startIndex,endIndex){
-			laya.display.Input.inputElement.selectionStart=startIndex;
-			laya.display.Input.inputElement.selectionEnd=endIndex;
-		}
-
-		/**@private */
-		__proto._onUnDisplay=function(e){
-			this.focus=false;
-		}
-
-		/**@private */
-		__proto._onMouseDown=function(e){
-			this.focus=true;
-			Laya.stage.on("mousedown",this,this._checkBlur);
-		}
-
-		/**@private */
-		__proto._checkBlur=function(e){
-			if (e.nativeEvent.target !=laya.display.Input.input && e.nativeEvent.target !=laya.display.Input.area && e.target !=this)
-				this.focus=false;
-		}
-
-		/**@inheritDoc*/
-		__proto.render=function(context,x,y){
-			laya.display.Sprite.prototype.render.call(this,context,x,y);
-		}
-
-		/**
-		*在输入期间，如果 Input 实例的位置改变，调用该方法同步输入框的位置。
-		*/
-		__proto._syncInputTransform=function(){
-			var style=this.nativeInput.style;
-			var stage=Laya.stage;
-			var rec;
-			rec=Utils.getGlobalPosAndScale(this);
-			var m=stage._canvasTransform.clone();
-			var tm=m.clone();
-			tm.rotate(-Math.PI / 180 *Laya.stage.canvasDegree);
-			tm.scale(Laya.stage.clientScaleX,Laya.stage.clientScaleY);
-			var perpendicular=(Laya.stage.canvasDegree % 180 !=0);
-			var sx=perpendicular ? tm.d :tm.a;
-			var sy=perpendicular ? tm.a :tm.d;
-			tm.destroy();
-			var tx=this.padding[3];
-			var ty=this.padding[0];
-			if (Laya.stage.canvasDegree==0){
-				tx+=rec.x;
-				ty+=rec.y;
-				tx *=sx;
-				ty *=sy;
-				tx+=m.tx;
-				ty+=m.ty;
-				}else if (Laya.stage.canvasDegree==90){
-				tx+=rec.y;
-				ty+=rec.x;
-				tx *=sx;
-				ty *=sy;
-				tx=m.tx-tx;
-				ty+=m.ty;
-				}else{
-				tx+=rec.y;
-				ty+=rec.x;
-				tx *=sx;
-				ty *=sy;
-				tx+=m.tx;
-				ty=m.ty-ty;
-			};
-			var quarter=0.785;
-			var r=Math.atan2(rec.height,rec.width)-quarter;
-			var sin=Math.sin(r),cos=Math.cos(r);
-			var tsx=cos *rec.width+sin *rec.height;
-			var tsy=cos *rec.height-sin *rec.width;
-			sx *=(perpendicular ? tsy :tsx);
-			sy *=(perpendicular ? tsx :tsy);
-			m.tx=0;
-			m.ty=0;
-			r *=180 / 3.1415;
-			Input.inputContainer.style.transform="scale("+sx+","+sy+") rotate("+(Laya.stage.canvasDegree+r)+"deg)";
-			Input.inputContainer.style.webkitTransform="scale("+sx+","+sy+") rotate("+(Laya.stage.canvasDegree+r)+"deg)";
-			Input.inputContainer.setPos(tx,ty);
-			m.destroy();
-			var inputWid=this._width-this.padding[1]-this.padding[3];
-			var inputHei=this._height-this.padding[0]-this.padding[2];
-			this.nativeInput.setSize(inputWid,inputHei);
-			if (Render.isConchApp){
-				this.nativeInput.setPos(tx,ty);
-				this.nativeInput.setScale(sx,sy);
-			}
-		}
-
-		/**选中所有文本。*/
-		__proto.select=function(){
-			this.nativeInput.select();
-		}
-
-		/**@private 设置输入法（textarea或input）*/
-		__proto._setInputMethod=function(){
-			Input.input.parentElement && (Input.inputContainer.removeChild(Input.input));
-			Input.area.parentElement && (Input.inputContainer.removeChild(Input.area));
-			Input.inputElement=(this._multiline ? Input.area :Input.input);
-			Input.inputContainer.appendChild(Input.inputElement);
-		}
-
-		/**@private */
-		__proto._focusIn=function(){
-			laya.display.Input.isInputting=true;
-			var input=this.nativeInput;
-			this._focus=true;
-			var cssStyle=input.style;
-			cssStyle.whiteSpace=(this.wordWrap ? "pre-wrap" :"nowrap");
-			this._setPromptColor();
-			input.readOnly=!this._editable;
-			input.maxLength=this._maxChars;
-			var padding=this.padding;
-			input.type=this._type;
-			input.value=this._content;
-			input.placeholder=this._prompt;
-			Laya.stage.off("keydown",this,this._onKeyDown);
-			Laya.stage.on("keydown",this,this._onKeyDown);
-			Laya.stage.focus=this;
-			this.event("focus");
-			if (Browser.onPC)input.focus();
-			var temp=this._text;
-			this._text=null;
-			this.typeset();
-			input.setColor(this._originColor);
-			input.setFontSize(this.fontSize);
-			input.setFontFace(this.font);
-			if (Render.isConchApp){
-				input.setMultiAble && input.setMultiAble(this._multiline);
-			}
-			cssStyle.lineHeight=(this.leading+this.fontSize)+"px";
-			cssStyle.fontStyle=(this.italic ? "italic" :"normal");
-			cssStyle.fontWeight=(this.bold ? "bold" :"normal");
-			cssStyle.textAlign=this.align;
-			cssStyle.padding="0 0";
-			this._syncInputTransform();
-			if (!Render.isConchApp && Browser.onPC)
-				Laya.timer.frameLoop(1,this,this._syncInputTransform);
-		}
-
-		// 设置DOM输入框提示符颜色。
-		__proto._setPromptColor=function(){
-			Input.promptStyleDOM=Browser.getElementById("promptStyle");
-			if (!Input.promptStyleDOM){
-				Input.promptStyleDOM=Browser.createElement("style");
-				Browser.document.head.appendChild(Input.promptStyleDOM);
-			}
-			Input.promptStyleDOM.innerText="input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {"+"color:"+this._promptColor+"}"+"input:-moz-placeholder, textarea:-moz-placeholder {"+"color:"+this._promptColor+"}"+"input::-moz-placeholder, textarea::-moz-placeholder {"+"color:"+this._promptColor+"}"+"input:-ms-input-placeholder, textarea:-ms-input-placeholder {"+"color:"+this._promptColor+"}";
-		}
-
-		/**@private */
-		__proto._focusOut=function(){
-			laya.display.Input.isInputting=false;
-			this._focus=false;
-			this._text=null;
-			this._content=this.nativeInput.value;
-			if (!this._content){
-				_super.prototype._$set_text.call(this,this._prompt);
-				_super.prototype._$set_color.call(this,this._promptColor);
-				}else {
-				_super.prototype._$set_text.call(this,this._content);
-				_super.prototype._$set_color.call(this,this._originColor);
-			}
-			Laya.stage.off("keydown",this,this._onKeyDown);
-			Laya.stage.focus=null;
-			this.event("blur");
-			if (Render.isConchApp)this.nativeInput.blur();
-			Browser.onPC && Laya.timer.clear(this,this._syncInputTransform);
-			Laya.stage.off("mousedown",this,this._checkBlur);
-		}
-
-		/**@private */
-		__proto._onKeyDown=function(e){
-			if (e.keyCode===13){
-				if (Browser.onMobile && !this._multiline)
-					this.focus=false;
-				this.event("enter");
-			}
-		}
-
-		__proto.changeText=function(text){
-			this._content=text;
-			if (this._focus){
-				this.nativeInput.value=text || '';
-				this.event("change");
-			}else
-			_super.prototype.changeText.call(this,text);
-		}
-
-		/**@inheritDoc */
-		__getset(0,__proto,'color',_super.prototype._$get_color,function(value){
-			if (this._focus)
-				this.nativeInput.setColor(value);
-			_super.prototype._$set_color.call(this,this._content?value:this._promptColor);
-			this._originColor=value;
-		});
-
-		//[Deprecated]
-		__getset(0,__proto,'inputElementYAdjuster',function(){
-			console.warn("deprecated: 由于即使设置了该值，在各平台和浏览器之间也不一定一致，inputElementYAdjuster已弃用。");
-			return 0;
-			},function(value){
-			console.warn("deprecated: 由于即使设置了该值，在各平台和浏览器之间也不一定一致，inputElementYAdjuster已弃用。");
-		});
-
-		/**表示是否是多行输入框。*/
-		__getset(0,__proto,'multiline',function(){
-			return this._multiline;
-			},function(value){
-			this._multiline=value;
-			this.valign=value ? "top" :"middle";
-		});
-
-		/**
-		*字符数量限制，默认为10000。
-		*设置字符数量限制时，小于等于0的值将会限制字符数量为10000。
-		*/
-		__getset(0,__proto,'maxChars',function(){
-			return this._maxChars;
-			},function(value){
-			if (value <=0)
-				value=1E5;
-			this._maxChars=value;
-		});
-
-		/**@inheritDoc */
-		__getset(0,__proto,'text',function(){
-			if (this._focus)
-				return this.nativeInput.value;
-			else
-			return this._content || "";
-			},function(value){
-			_super.prototype._$set_color.call(this,this._originColor);
-			value+='';
-			if (this._focus){
-				this.nativeInput.value=value || '';
-				this.event("change");
-				}else {
-				if (!this._multiline)
-					value=value.replace(/\r?\n/g,'');
-				this._content=value;
-				if (value)
-					_super.prototype._$set_text.call(this,value);
-				else {
-					_super.prototype._$set_text.call(this,this._prompt);
-					_super.prototype._$set_color.call(this,this.promptColor);
-				}
-			}
-		});
-
-		/**
-		*获取对输入框的引用实例。
-		*/
-		__getset(0,__proto,'nativeInput',function(){
-			return this._multiline ? Input.area :Input.input;
-		});
-
-		/**
-		*设置输入提示符。
-		*/
-		__getset(0,__proto,'prompt',function(){
-			return this._prompt;
-			},function(value){
-			if (!this._text && value)
-				_super.prototype._$set_color.call(this,this._promptColor);
-			this.promptColor=this._promptColor;
-			if (this._text)
-				_super.prototype._$set_text.call(this,(this._text==this._prompt)?value:this._text);
-			else
-			_super.prototype._$set_text.call(this,value);
-			this._prompt=value;
-		});
-
-		// 因此 调用focus接口是无法都在移动平台立刻弹出键盘的
-		/**
-		*表示焦点是否在显示对象上。
-		*/
-		__getset(0,__proto,'focus',function(){
-			return this._focus;
-			},function(value){
-			var input=this.nativeInput;
-			if (this._focus!==value){
-				if (value){
-					input.target && (input.target.focus=false);
-					input.target=this;
-					this._setInputMethod();
-					this._focusIn();
-					}else {
-					input.target=null;
-					this._focusOut();
-					input.blur();
-					if (Render.isConchApp){
-						input.setPos(-10000,-10000);
-					}else if (Input.inputContainer.contains(input))
-					Input.inputContainer.removeChild(input);
-				}
-			}
-		});
-
-		/**限制输入的字符。*/
-		__getset(0,__proto,'restrict',function(){
-			if (this._restrictPattern){
-				return this._restrictPattern.source;
-			}
-			return "";
-			},function(pattern){
-			if (pattern){
-				pattern="[^"+pattern+"]";
-				if (pattern.indexOf("^^")>-1)
-					pattern=pattern.replace("^^","");
-				this._restrictPattern=new RegExp(pattern,"g");
-			}else
-			this._restrictPattern=null;
-		});
-
-		/**
-		*是否可编辑。
-		*/
-		__getset(0,__proto,'editable',function(){
-			return this._editable;
-			},function(value){
-			this._editable=value;
-		});
-
-		/**
-		*设置输入提示符颜色。
-		*/
-		__getset(0,__proto,'promptColor',function(){
-			return this._promptColor;
-			},function(value){
-			this._promptColor=value;
-			if (!this._content)_super.prototype._$set_color.call(this,value);
-		});
-
-		/**
-		*输入框类型为Input静态常量之一。
-		*平台兼容性参见http://www.w3school.com.cn/html5/html_5_form_input_types.asp。
-		*/
-		__getset(0,__proto,'type',function(){
-			return this._type;
-			},function(value){
-			if (value=="password")
-				this._getCSSStyle().password=true;
-			else
-			this._getCSSStyle().password=false;
-			this._type=value;
-		});
-
-		//[Deprecated]
-		__getset(0,__proto,'inputElementXAdjuster',function(){
-			console.warn("deprecated: 由于即使设置了该值，在各平台和浏览器之间也不一定一致，inputElementXAdjuster已弃用。");
-			return 0;
-			},function(value){
-			console.warn("deprecated: 由于即使设置了该值，在各平台和浏览器之间也不一定一致，inputElementXAdjuster已弃用。");
-		});
-
-		//[Deprecated(replacement="Input.type")]
-		__getset(0,__proto,'asPassword',function(){
-			return this._getCSSStyle().password;
-			},function(value){
-			this._getCSSStyle().password=value;
-			this._type="password";
-			console.warn("deprecated: 使用type=\"password\"替代设置asPassword, asPassword将在下次重大更新时删去");
-			this.isChanged=true;
-		});
-
-		Input.__init__=function(){
-			Input._createInputElement();
-			if (Browser.onMobile)
-				Render.canvas.addEventListener(Input.IOS_IFRAME ? "click" :"touchend",Input._popupInputMethod);
-		}
-
-		Input._popupInputMethod=function(e){
-			if (!laya.display.Input.isInputting)return;
-			var input=laya.display.Input.inputElement;
-			input.focus();
-		}
-
-		Input._createInputElement=function(){
-			Input._initInput(Input.area=Browser.createElement("textarea"));
-			Input._initInput(Input.input=Browser.createElement("input"));
-			Input.inputContainer=Browser.createElement("div");
-			Input.inputContainer.style.position="absolute";
-			Input.inputContainer.style.zIndex=1E5;
-			Browser.container.appendChild(Input.inputContainer);
-			Input.inputContainer.setPos=function (x,y){Input.inputContainer.style.left=x+'px';Input.inputContainer.style.top=y+'px';};
-		}
-
-		Input._initInput=function(input){
-			var style=input.style;
-			style.cssText="position:absolute;overflow:hidden;resize:none;transform-origin:0 0;-webkit-transform-origin:0 0;-moz-transform-origin:0 0;-o-transform-origin:0 0;";
-			style.resize='none';
-			style.backgroundColor='transparent';
-			style.border='none';
-			style.outline='none';
-			style.zIndex=1;
-			input.addEventListener('input',Input._processInputting);
-			input.addEventListener('mousemove',Input._stopEvent);
-			input.addEventListener('mousedown',Input._stopEvent);
-			input.addEventListener('touchmove',Input._stopEvent);
-			if(!Render.isConchApp){
-				input.setColor=function (color){input.style.color=color;};
-				input.setFontSize=function (fontSize){input.style.fontSize=fontSize+'px';};
-				input.setSize=function (w,h){input.style.width=w+'px';input.style.height=h+'px';};
-			}
-			input.setFontFace=function (fontFace){input.style.fontFamily=fontFace;};
-		}
-
-		Input._processInputting=function(e){
-			var input=laya.display.Input.inputElement.target;
-			var value=laya.display.Input.inputElement.value;
-			if (input._restrictPattern){
-				value=value.replace(/\u2006|\x27/g,"");
-				if (input._restrictPattern.test(value)){
-					value=value.replace(input._restrictPattern,"");
-					laya.display.Input.inputElement.value=value;
-				}
-			}
-			input._text=value;
-			input.event("input");
-		}
-
-		Input._stopEvent=function(e){
-			if (e.type=='touchmove')
-				e.preventDefault();
-			e.stopPropagation && e.stopPropagation();
-		}
-
-		Input.TYPE_TEXT="text";
-		Input.TYPE_PASSWORD="password";
-		Input.TYPE_EMAIL="email";
-		Input.TYPE_URL="url";
-		Input.TYPE_NUMBER="number";
-		Input.TYPE_RANGE="range";
-		Input.TYPE_DATE="date";
-		Input.TYPE_MONTH="month";
-		Input.TYPE_WEEK="week";
-		Input.TYPE_TIME="time";
-		Input.TYPE_DATE_TIME="datetime";
-		Input.TYPE_DATE_TIME_LOCAL="datetime-local";
-		Input.TYPE_SEARCH="search";
-		Input.input=null
-		Input.area=null
-		Input.inputElement=null
-		Input.inputContainer=null
-		Input.confirmButton=null
-		Input.promptStyleDOM=null
-		Input.inputHeight=45;
-		Input.isInputting=false;
-		__static(Input,
-		['IOS_IFRAME',function(){return this.IOS_IFRAME=(Browser.onIOS && Browser.window.top !=Browser.window.self);}
-		]);
-		return Input;
-	})(Text)
-
-
-	/**
 	*<p> <code>Clip</code> 类是位图切片动画。</p>
 	*<p> <code>Clip</code> 可将一张图片，按横向分割数量 <code>clipX</code> 、竖向分割数量 <code>clipY</code> ，
 	*或横向分割每个切片的宽度 <code>clipWidth</code> 、竖向分割每个切片的高度 <code>clipHeight</code> ，
@@ -28320,6 +29962,495 @@ var Laya=window.Laya=(function(window,document){
 
 		return ProgressBar;
 	})(Component)
+
+
+	/**
+	*<p><code>Input</code> 类用于创建显示对象以显示和输入文本。</p>
+	*/
+	//class laya.display.Input extends laya.display.Text
+	var Input=(function(_super){
+		function Input(){
+			this._focus=false;
+			this._multiline=false;
+			this._editable=true;
+			this._restrictPattern=null;
+			this._type="text";
+			this._prompt='';
+			this._promptColor="#A9A9A9";
+			this._originColor="#000000";
+			this._content='';
+			Input.__super.call(this);
+			this._maxChars=1E5;
+			this._width=100;
+			this._height=20;
+			this.multiline=false;
+			this.overflow=Text.SCROLL;
+			this.on("mousedown",this,this._onMouseDown);
+			this.on("undisplay",this,this._onUnDisplay);
+		}
+
+		__class(Input,'laya.display.Input',_super);
+		var __proto=Input.prototype;
+		/**
+		*设置光标位置和选取字符。
+		*@param startIndex 光标起始位置。
+		*@param endIndex 光标结束位置。
+		*/
+		__proto.setSelection=function(startIndex,endIndex){
+			laya.display.Input.inputElement.selectionStart=startIndex;
+			laya.display.Input.inputElement.selectionEnd=endIndex;
+		}
+
+		/**@private */
+		__proto._onUnDisplay=function(e){
+			this.focus=false;
+		}
+
+		/**@private */
+		__proto._onMouseDown=function(e){
+			this.focus=true;
+			Laya.stage.on("mousedown",this,this._checkBlur);
+		}
+
+		/**@private */
+		__proto._checkBlur=function(e){
+			if (e.nativeEvent.target !=laya.display.Input.input && e.nativeEvent.target !=laya.display.Input.area && e.target !=this)
+				this.focus=false;
+		}
+
+		/**@inheritDoc*/
+		__proto.render=function(context,x,y){
+			laya.display.Sprite.prototype.render.call(this,context,x,y);
+		}
+
+		/**
+		*在输入期间，如果 Input 实例的位置改变，调用该方法同步输入框的位置。
+		*/
+		__proto._syncInputTransform=function(){
+			var style=this.nativeInput.style;
+			var stage=Laya.stage;
+			var rec;
+			rec=Utils.getGlobalPosAndScale(this);
+			var m=stage._canvasTransform.clone();
+			var tm=m.clone();
+			tm.rotate(-Math.PI / 180 *Laya.stage.canvasDegree);
+			tm.scale(Laya.stage.clientScaleX,Laya.stage.clientScaleY);
+			var perpendicular=(Laya.stage.canvasDegree % 180 !=0);
+			var sx=perpendicular ? tm.d :tm.a;
+			var sy=perpendicular ? tm.a :tm.d;
+			tm.destroy();
+			var tx=this.padding[3];
+			var ty=this.padding[0];
+			if (Laya.stage.canvasDegree==0){
+				tx+=rec.x;
+				ty+=rec.y;
+				tx *=sx;
+				ty *=sy;
+				tx+=m.tx;
+				ty+=m.ty;
+				}else if (Laya.stage.canvasDegree==90){
+				tx+=rec.y;
+				ty+=rec.x;
+				tx *=sx;
+				ty *=sy;
+				tx=m.tx-tx;
+				ty+=m.ty;
+				}else{
+				tx+=rec.y;
+				ty+=rec.x;
+				tx *=sx;
+				ty *=sy;
+				tx+=m.tx;
+				ty=m.ty-ty;
+			};
+			var quarter=0.785;
+			var r=Math.atan2(rec.height,rec.width)-quarter;
+			var sin=Math.sin(r),cos=Math.cos(r);
+			var tsx=cos *rec.width+sin *rec.height;
+			var tsy=cos *rec.height-sin *rec.width;
+			sx *=(perpendicular ? tsy :tsx);
+			sy *=(perpendicular ? tsx :tsy);
+			m.tx=0;
+			m.ty=0;
+			r *=180 / 3.1415;
+			Input.inputContainer.style.transform="scale("+sx+","+sy+") rotate("+(Laya.stage.canvasDegree+r)+"deg)";
+			Input.inputContainer.style.webkitTransform="scale("+sx+","+sy+") rotate("+(Laya.stage.canvasDegree+r)+"deg)";
+			Input.inputContainer.setPos(tx,ty);
+			m.destroy();
+			var inputWid=this._width-this.padding[1]-this.padding[3];
+			var inputHei=this._height-this.padding[0]-this.padding[2];
+			this.nativeInput.setSize(inputWid,inputHei);
+			if (Render.isConchApp){
+				this.nativeInput.setPos(tx,ty);
+				this.nativeInput.setScale(sx,sy);
+			}
+		}
+
+		/**选中所有文本。*/
+		__proto.select=function(){
+			this.nativeInput.select();
+		}
+
+		/**@private 设置输入法（textarea或input）*/
+		__proto._setInputMethod=function(){
+			Input.input.parentElement && (Input.inputContainer.removeChild(Input.input));
+			Input.area.parentElement && (Input.inputContainer.removeChild(Input.area));
+			Input.inputElement=(this._multiline ? Input.area :Input.input);
+			Input.inputContainer.appendChild(Input.inputElement);
+		}
+
+		/**@private */
+		__proto._focusIn=function(){
+			laya.display.Input.isInputting=true;
+			var input=this.nativeInput;
+			this._focus=true;
+			var cssStyle=input.style;
+			cssStyle.whiteSpace=(this.wordWrap ? "pre-wrap" :"nowrap");
+			this._setPromptColor();
+			input.readOnly=!this._editable;
+			input.maxLength=this._maxChars;
+			var padding=this.padding;
+			input.type=this._type;
+			input.value=this._content;
+			input.placeholder=this._prompt;
+			Laya.stage.off("keydown",this,this._onKeyDown);
+			Laya.stage.on("keydown",this,this._onKeyDown);
+			Laya.stage.focus=this;
+			this.event("focus");
+			if (Browser.onPC)input.focus();
+			var temp=this._text;
+			this._text=null;
+			this.typeset();
+			input.setColor(this._originColor);
+			input.setFontSize(this.fontSize);
+			input.setFontFace(this.font);
+			if (Render.isConchApp){
+				input.setMultiAble && input.setMultiAble(this._multiline);
+			}
+			cssStyle.lineHeight=(this.leading+this.fontSize)+"px";
+			cssStyle.fontStyle=(this.italic ? "italic" :"normal");
+			cssStyle.fontWeight=(this.bold ? "bold" :"normal");
+			cssStyle.textAlign=this.align;
+			cssStyle.padding="0 0";
+			this._syncInputTransform();
+			if (!Render.isConchApp && Browser.onPC)
+				Laya.timer.frameLoop(1,this,this._syncInputTransform);
+		}
+
+		// 设置DOM输入框提示符颜色。
+		__proto._setPromptColor=function(){
+			Input.promptStyleDOM=Browser.getElementById("promptStyle");
+			if (!Input.promptStyleDOM){
+				Input.promptStyleDOM=Browser.createElement("style");
+				Browser.document.head.appendChild(Input.promptStyleDOM);
+			}
+			Input.promptStyleDOM.innerText="input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {"+"color:"+this._promptColor+"}"+"input:-moz-placeholder, textarea:-moz-placeholder {"+"color:"+this._promptColor+"}"+"input::-moz-placeholder, textarea::-moz-placeholder {"+"color:"+this._promptColor+"}"+"input:-ms-input-placeholder, textarea:-ms-input-placeholder {"+"color:"+this._promptColor+"}";
+		}
+
+		/**@private */
+		__proto._focusOut=function(){
+			laya.display.Input.isInputting=false;
+			this._focus=false;
+			this._text=null;
+			this._content=this.nativeInput.value;
+			if (!this._content){
+				_super.prototype._$set_text.call(this,this._prompt);
+				_super.prototype._$set_color.call(this,this._promptColor);
+				}else {
+				_super.prototype._$set_text.call(this,this._content);
+				_super.prototype._$set_color.call(this,this._originColor);
+			}
+			Laya.stage.off("keydown",this,this._onKeyDown);
+			Laya.stage.focus=null;
+			this.event("blur");
+			if (Render.isConchApp)this.nativeInput.blur();
+			Browser.onPC && Laya.timer.clear(this,this._syncInputTransform);
+			Laya.stage.off("mousedown",this,this._checkBlur);
+		}
+
+		/**@private */
+		__proto._onKeyDown=function(e){
+			if (e.keyCode===13){
+				if (Browser.onMobile && !this._multiline)
+					this.focus=false;
+				this.event("enter");
+			}
+		}
+
+		__proto.changeText=function(text){
+			this._content=text;
+			if (this._focus){
+				this.nativeInput.value=text || '';
+				this.event("change");
+			}else
+			_super.prototype.changeText.call(this,text);
+		}
+
+		/**@inheritDoc */
+		__getset(0,__proto,'color',_super.prototype._$get_color,function(value){
+			if (this._focus)
+				this.nativeInput.setColor(value);
+			_super.prototype._$set_color.call(this,this._content?value:this._promptColor);
+			this._originColor=value;
+		});
+
+		//[Deprecated]
+		__getset(0,__proto,'inputElementYAdjuster',function(){
+			console.warn("deprecated: 由于即使设置了该值，在各平台和浏览器之间也不一定一致，inputElementYAdjuster已弃用。");
+			return 0;
+			},function(value){
+			console.warn("deprecated: 由于即使设置了该值，在各平台和浏览器之间也不一定一致，inputElementYAdjuster已弃用。");
+		});
+
+		/**表示是否是多行输入框。*/
+		__getset(0,__proto,'multiline',function(){
+			return this._multiline;
+			},function(value){
+			this._multiline=value;
+			this.valign=value ? "top" :"middle";
+		});
+
+		/**
+		*字符数量限制，默认为10000。
+		*设置字符数量限制时，小于等于0的值将会限制字符数量为10000。
+		*/
+		__getset(0,__proto,'maxChars',function(){
+			return this._maxChars;
+			},function(value){
+			if (value <=0)
+				value=1E5;
+			this._maxChars=value;
+		});
+
+		/**@inheritDoc */
+		__getset(0,__proto,'text',function(){
+			if (this._focus)
+				return this.nativeInput.value;
+			else
+			return this._content || "";
+			},function(value){
+			_super.prototype._$set_color.call(this,this._originColor);
+			value+='';
+			if (this._focus){
+				this.nativeInput.value=value || '';
+				this.event("change");
+				}else {
+				if (!this._multiline)
+					value=value.replace(/\r?\n/g,'');
+				this._content=value;
+				if (value)
+					_super.prototype._$set_text.call(this,value);
+				else {
+					_super.prototype._$set_text.call(this,this._prompt);
+					_super.prototype._$set_color.call(this,this.promptColor);
+				}
+			}
+		});
+
+		/**
+		*获取对输入框的引用实例。
+		*/
+		__getset(0,__proto,'nativeInput',function(){
+			return this._multiline ? Input.area :Input.input;
+		});
+
+		/**
+		*设置输入提示符。
+		*/
+		__getset(0,__proto,'prompt',function(){
+			return this._prompt;
+			},function(value){
+			if (!this._text && value)
+				_super.prototype._$set_color.call(this,this._promptColor);
+			this.promptColor=this._promptColor;
+			if (this._text)
+				_super.prototype._$set_text.call(this,(this._text==this._prompt)?value:this._text);
+			else
+			_super.prototype._$set_text.call(this,value);
+			this._prompt=value;
+		});
+
+		// 因此 调用focus接口是无法都在移动平台立刻弹出键盘的
+		/**
+		*表示焦点是否在显示对象上。
+		*/
+		__getset(0,__proto,'focus',function(){
+			return this._focus;
+			},function(value){
+			var input=this.nativeInput;
+			if (this._focus!==value){
+				if (value){
+					input.target && (input.target.focus=false);
+					input.target=this;
+					this._setInputMethod();
+					this._focusIn();
+					}else {
+					input.target=null;
+					this._focusOut();
+					input.blur();
+					if (Render.isConchApp){
+						input.setPos(-10000,-10000);
+					}else if (Input.inputContainer.contains(input))
+					Input.inputContainer.removeChild(input);
+				}
+			}
+		});
+
+		/**限制输入的字符。*/
+		__getset(0,__proto,'restrict',function(){
+			if (this._restrictPattern){
+				return this._restrictPattern.source;
+			}
+			return "";
+			},function(pattern){
+			if (pattern){
+				pattern="[^"+pattern+"]";
+				if (pattern.indexOf("^^")>-1)
+					pattern=pattern.replace("^^","");
+				this._restrictPattern=new RegExp(pattern,"g");
+			}else
+			this._restrictPattern=null;
+		});
+
+		/**
+		*是否可编辑。
+		*/
+		__getset(0,__proto,'editable',function(){
+			return this._editable;
+			},function(value){
+			this._editable=value;
+		});
+
+		/**
+		*设置输入提示符颜色。
+		*/
+		__getset(0,__proto,'promptColor',function(){
+			return this._promptColor;
+			},function(value){
+			this._promptColor=value;
+			if (!this._content)_super.prototype._$set_color.call(this,value);
+		});
+
+		/**
+		*输入框类型为Input静态常量之一。
+		*平台兼容性参见http://www.w3school.com.cn/html5/html_5_form_input_types.asp。
+		*/
+		__getset(0,__proto,'type',function(){
+			return this._type;
+			},function(value){
+			if (value=="password")
+				this._getCSSStyle().password=true;
+			else
+			this._getCSSStyle().password=false;
+			this._type=value;
+		});
+
+		//[Deprecated]
+		__getset(0,__proto,'inputElementXAdjuster',function(){
+			console.warn("deprecated: 由于即使设置了该值，在各平台和浏览器之间也不一定一致，inputElementXAdjuster已弃用。");
+			return 0;
+			},function(value){
+			console.warn("deprecated: 由于即使设置了该值，在各平台和浏览器之间也不一定一致，inputElementXAdjuster已弃用。");
+		});
+
+		//[Deprecated(replacement="Input.type")]
+		__getset(0,__proto,'asPassword',function(){
+			return this._getCSSStyle().password;
+			},function(value){
+			this._getCSSStyle().password=value;
+			this._type="password";
+			console.warn("deprecated: 使用type=\"password\"替代设置asPassword, asPassword将在下次重大更新时删去");
+			this.isChanged=true;
+		});
+
+		Input.__init__=function(){
+			Input._createInputElement();
+			if (Browser.onMobile)
+				Render.canvas.addEventListener(Input.IOS_IFRAME ? "click" :"touchend",Input._popupInputMethod);
+		}
+
+		Input._popupInputMethod=function(e){
+			if (!laya.display.Input.isInputting)return;
+			var input=laya.display.Input.inputElement;
+			input.focus();
+		}
+
+		Input._createInputElement=function(){
+			Input._initInput(Input.area=Browser.createElement("textarea"));
+			Input._initInput(Input.input=Browser.createElement("input"));
+			Input.inputContainer=Browser.createElement("div");
+			Input.inputContainer.style.position="absolute";
+			Input.inputContainer.style.zIndex=1E5;
+			Browser.container.appendChild(Input.inputContainer);
+			Input.inputContainer.setPos=function (x,y){Input.inputContainer.style.left=x+'px';Input.inputContainer.style.top=y+'px';};
+		}
+
+		Input._initInput=function(input){
+			var style=input.style;
+			style.cssText="position:absolute;overflow:hidden;resize:none;transform-origin:0 0;-webkit-transform-origin:0 0;-moz-transform-origin:0 0;-o-transform-origin:0 0;";
+			style.resize='none';
+			style.backgroundColor='transparent';
+			style.border='none';
+			style.outline='none';
+			style.zIndex=1;
+			input.addEventListener('input',Input._processInputting);
+			input.addEventListener('mousemove',Input._stopEvent);
+			input.addEventListener('mousedown',Input._stopEvent);
+			input.addEventListener('touchmove',Input._stopEvent);
+			if(!Render.isConchApp){
+				input.setColor=function (color){input.style.color=color;};
+				input.setFontSize=function (fontSize){input.style.fontSize=fontSize+'px';};
+				input.setSize=function (w,h){input.style.width=w+'px';input.style.height=h+'px';};
+			}
+			input.setFontFace=function (fontFace){input.style.fontFamily=fontFace;};
+		}
+
+		Input._processInputting=function(e){
+			var input=laya.display.Input.inputElement.target;
+			var value=laya.display.Input.inputElement.value;
+			if (input._restrictPattern){
+				value=value.replace(/\u2006|\x27/g,"");
+				if (input._restrictPattern.test(value)){
+					value=value.replace(input._restrictPattern,"");
+					laya.display.Input.inputElement.value=value;
+				}
+			}
+			input._text=value;
+			input.event("input");
+		}
+
+		Input._stopEvent=function(e){
+			if (e.type=='touchmove')
+				e.preventDefault();
+			e.stopPropagation && e.stopPropagation();
+		}
+
+		Input.TYPE_TEXT="text";
+		Input.TYPE_PASSWORD="password";
+		Input.TYPE_EMAIL="email";
+		Input.TYPE_URL="url";
+		Input.TYPE_NUMBER="number";
+		Input.TYPE_RANGE="range";
+		Input.TYPE_DATE="date";
+		Input.TYPE_MONTH="month";
+		Input.TYPE_WEEK="week";
+		Input.TYPE_TIME="time";
+		Input.TYPE_DATE_TIME="datetime";
+		Input.TYPE_DATE_TIME_LOCAL="datetime-local";
+		Input.TYPE_SEARCH="search";
+		Input.input=null
+		Input.area=null
+		Input.inputElement=null
+		Input.inputContainer=null
+		Input.confirmButton=null
+		Input.promptStyleDOM=null
+		Input.inputHeight=45;
+		Input.isInputting=false;
+		__static(Input,
+		['IOS_IFRAME',function(){return this.IOS_IFRAME=(Browser.onIOS && Browser.window.top !=Browser.window.self);}
+		]);
+		return Input;
+	})(Text)
 
 
 	/**
@@ -32028,6 +34159,107 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
+	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
+	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
+	*
+	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.HSlider;
+		*import laya.ui.VSlider;
+		*import laya.utils.Handler;
+		*public class VSlider_Example
+		*{
+			*private var vSlider:VSlider;
+			*public function VSlider_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
+				*}
+			*private function onLoadComplete():void
+			*{
+				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+				*vSlider.min=0;//设置 vSlider 最低位置值。
+				*vSlider.max=10;//设置 vSlider 最高位置值。
+				*vSlider.value=2;//设置 vSlider 当前位置值。
+				*vSlider.tick=1;//设置 vSlider 刻度值。
+				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
+				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+				*}
+			*private function onChange(value:Number):void
+			*{
+				*trace("滑块的位置： value="+value);
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*var vSlider;
+	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
+	*function onLoadComplete(){
+		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+		*vSlider.min=0;//设置 vSlider 最低位置值。
+		*vSlider.max=10;//设置 vSlider 最高位置值。
+		*vSlider.value=2;//设置 vSlider 当前位置值。
+		*vSlider.tick=1;//设置 vSlider 刻度值。
+		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
+		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+		*}
+	*function onChange(value){
+		*console.log("滑块的位置： value="+value);
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*import HSlider=laya.ui.HSlider;
+	*import VSlider=laya.ui.VSlider;
+	*import Handler=laya.utils.Handler;
+	*class VSlider_Example {
+		*private vSlider:VSlider;
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
+			*}
+		*private onLoadComplete():void {
+			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+			*this.vSlider.min=0;//设置 vSlider 最低位置值。
+			*this.vSlider.max=10;//设置 vSlider 最高位置值。
+			*this.vSlider.value=2;//设置 vSlider 当前位置值。
+			*this.vSlider.tick=1;//设置 vSlider 刻度值。
+			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
+			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
+			*}
+		*private onChange(value:number):void {
+			*console.log("滑块的位置： value="+value);
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.Slider
+	*/
+	//class laya.ui.VSlider extends laya.ui.Slider
+	var VSlider=(function(_super){
+		function VSlider(){VSlider.__super.call(this);;
+		};
+
+		__class(VSlider,'laya.ui.VSlider',_super);
+		return VSlider;
+	})(Slider)
+
+
+	/**
 	*<code>TextInput</code> 类用于创建显示对象以显示和输入文本。
 	*
 	*@example 以下示例代码，创建了一个 <code>TextInput</code> 实例。
@@ -32340,107 +34572,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return TextInput;
 	})(Label)
-
-
-	/**
-	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
-	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
-	*
-	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.HSlider;
-		*import laya.ui.VSlider;
-		*import laya.utils.Handler;
-		*public class VSlider_Example
-		*{
-			*private var vSlider:VSlider;
-			*public function VSlider_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
-				*}
-			*private function onLoadComplete():void
-			*{
-				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-				*vSlider.min=0;//设置 vSlider 最低位置值。
-				*vSlider.max=10;//设置 vSlider 最高位置值。
-				*vSlider.value=2;//设置 vSlider 当前位置值。
-				*vSlider.tick=1;//设置 vSlider 刻度值。
-				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
-				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-				*}
-			*private function onChange(value:Number):void
-			*{
-				*trace("滑块的位置： value="+value);
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*var vSlider;
-	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
-	*function onLoadComplete(){
-		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-		*vSlider.min=0;//设置 vSlider 最低位置值。
-		*vSlider.max=10;//设置 vSlider 最高位置值。
-		*vSlider.value=2;//设置 vSlider 当前位置值。
-		*vSlider.tick=1;//设置 vSlider 刻度值。
-		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
-		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-		*}
-	*function onChange(value){
-		*console.log("滑块的位置： value="+value);
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*import HSlider=laya.ui.HSlider;
-	*import VSlider=laya.ui.VSlider;
-	*import Handler=laya.utils.Handler;
-	*class VSlider_Example {
-		*private vSlider:VSlider;
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
-			*}
-		*private onLoadComplete():void {
-			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-			*this.vSlider.min=0;//设置 vSlider 最低位置值。
-			*this.vSlider.max=10;//设置 vSlider 最高位置值。
-			*this.vSlider.value=2;//设置 vSlider 当前位置值。
-			*this.vSlider.tick=1;//设置 vSlider 刻度值。
-			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
-			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
-			*}
-		*private onChange(value:number):void {
-			*console.log("滑块的位置： value="+value);
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.Slider
-	*/
-	//class laya.ui.VSlider extends laya.ui.Slider
-	var VSlider=(function(_super){
-		function VSlider(){VSlider.__super.call(this);;
-		};
-
-		__class(VSlider,'laya.ui.VSlider',_super);
-		return VSlider;
-	})(Slider)
 
 
 	/**
@@ -33932,6 +36063,64 @@ var Laya=window.Laya=(function(window,document){
 	})(Dialog)
 
 
+	//class bull.view.smallLoading.SmallLoading extends ui.ui.smallLoading.small_loadingUI
+	var SmallLoading=(function(_super){
+		function SmallLoading(){
+			SmallLoading.__super.call(this);
+			this.ani1.play();
+		}
+
+		__class(SmallLoading,'bull.view.smallLoading.SmallLoading',_super);
+		var __proto=SmallLoading.prototype;
+		__proto.showme=function(root){
+			root.addChild(this);
+			this.ani1.play();
+		}
+
+		__proto.hideme=function(){
+			if(this.parent)this.parent.removeChild(this);
+			this.ani1.stop();
+		}
+
+		return SmallLoading;
+	})(small_loadingUI)
+
+
+	//class bull.view.tipsLoad.TipsLoadPanel extends ui.ui.tipsLoad.tipsLoadPanelUI
+	var TipsLoadPanel=(function(_super){
+		function TipsLoadPanel(){
+			this._tips=null;
+			this._tipIndex=0;
+			this.num=0;
+			this.start=false;
+			TipsLoadPanel.__super.call(this);
+		}
+
+		__class(TipsLoadPanel,'bull.view.tipsLoad.TipsLoadPanel',_super);
+		var __proto=TipsLoadPanel.prototype;
+		__proto.show=function(value){
+			this.msg_txt.text=String(value *100);
+			this.progressbar.value=value;
+		}
+
+		__proto.showMessage=function(msg){
+			this.msg_txt.text=msg;
+		}
+
+		__proto.showTips=function(tips){
+			this._tips=tips;
+			Laya.timer.loop(2000,this,this.showTip);
+		}
+
+		__proto.showTip=function(){
+			if(this._tipIndex >=this._tips.length)this._tipIndex=0;
+			this.tip_txt.text=this._tips[this._tipIndex++];
+		}
+
+		return TipsLoadPanel;
+	})(tipsLoadPanelUI)
+
+
 	//class ui.ui.assetsInPanel.LargePanelUI extends laya.ui.Dialog
 	var LargePanelUI=(function(_super){
 		function LargePanelUI(){
@@ -33996,64 +36185,6 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return SmallPanelUI;
 	})(Dialog)
-
-
-	//class bull.view.smallLoading.SmallLoading extends ui.ui.smallLoading.small_loadingUI
-	var SmallLoading=(function(_super){
-		function SmallLoading(){
-			SmallLoading.__super.call(this);
-			this.ani1.play();
-		}
-
-		__class(SmallLoading,'bull.view.smallLoading.SmallLoading',_super);
-		var __proto=SmallLoading.prototype;
-		__proto.showme=function(root){
-			root.addChild(this);
-			this.ani1.play();
-		}
-
-		__proto.hideme=function(){
-			if(this.parent)this.parent.removeChild(this);
-			this.ani1.stop();
-		}
-
-		return SmallLoading;
-	})(small_loadingUI)
-
-
-	//class bull.view.tipsLoad.TipsLoadPanel extends ui.ui.tipsLoad.tipsLoadPanelUI
-	var TipsLoadPanel=(function(_super){
-		function TipsLoadPanel(){
-			this._tips=null;
-			this._tipIndex=0;
-			this.num=0;
-			this.start=false;
-			TipsLoadPanel.__super.call(this);
-		}
-
-		__class(TipsLoadPanel,'bull.view.tipsLoad.TipsLoadPanel',_super);
-		var __proto=TipsLoadPanel.prototype;
-		__proto.show=function(value){
-			this.msg_txt.text=String(value *100);
-			this.progressbar.value=value;
-		}
-
-		__proto.showMessage=function(msg){
-			this.msg_txt.text=msg;
-		}
-
-		__proto.showTips=function(tips){
-			this._tips=tips;
-			Laya.timer.loop(2000,this,this.showTip);
-		}
-
-		__proto.showTip=function(){
-			if(this._tipIndex >=this._tips.length)this._tipIndex=0;
-			this.tip_txt.text=this._tips[this._tipIndex++];
-		}
-
-		return TipsLoadPanel;
-	})(tipsLoadPanelUI)
 
 
 	// [Event(name="cancel",type="KGameComponents.assetsInPanel.AssetsInEvent")]
