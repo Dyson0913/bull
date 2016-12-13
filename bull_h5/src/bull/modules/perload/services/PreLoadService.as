@@ -19,7 +19,7 @@ package bull.modules.perload.services
 	import bull.view.smallLoading.SmallLoading;
 	import bull.view.tipsLoad.TipsLoadPanel;
 	import bull.modules.common.model.BullProtoModel;
-	//import light.car.view.hall.Hall;
+	import bull.view.hall.Hall;
 	//import light.car.view.room.CarScene;
 	
 	public class PreLoadService extends Model implements IModel
@@ -105,9 +105,9 @@ package bull.modules.perload.services
 			Light.scence.addEventListener(ScenceManagerEvent.SCENCE_PROGRESS,this, onProgress,["hall"]);
 			Light.scence.addEventListener(ScenceManagerEvent.SCENCE_COMPLETE,this, onComplate,["hall"]);
 			//
-			//Light.scence.addScence("hall",["Hall"],Light.layer.scence,ScenceInfo.HIDE_PERSCENCE)
-				//.regView("Hall",Hall);
-			//Light.scence.creat();
+			Light.scence.addScence("hall",["Hall"],Light.layer.scence,ScenceInfo.HIDE_PERSCENCE)
+				.regView("Hall",Hall);
+			Light.scence.creat();
 		}
 		
 		public function loadRoom():void{
@@ -128,7 +128,7 @@ package bull.modules.perload.services
 		}
 		private function protoLoaded():void{
 			trace("protoLoaded");
-			//loadHall();
+			loadHall();
 		}
 
 		private function onProgress(scenceName:String,e:ScenceManagerEvent):void{
@@ -159,11 +159,7 @@ package bull.modules.perload.services
 				case "tipsLoadPanel":
 					trace("tipsLoadPanel");					
 					loadGameConfig();
-					break;
-				case "hall":
-					trace("sentNotification",BullNotification.SOCKET_CONNECT);
-					sentNotification(BullNotification.HALL_SOCKET_CONNECT);
-					break;
+					break;				
 				case "config":
 					trace("config",Light.loader.getRes("error_code"));
 					trace("language",Light.loader.getRes("language"));					
@@ -175,7 +171,11 @@ package bull.modules.perload.services
 				case "common":
 					Light.scence.removeScence("common");
 					loadProto();
-					break;
+				break;
+				case "hall":
+					trace("sentNotification",BullNotification.SOCKET_CONNECT);
+					sentNotification(BullNotification.HALL_SOCKET_CONNECT);
+				break;				
 				case "room":
 					trace("sentNotification",BullNotification.ROOM_SOCKET_CONNECT);
 					trace("assetIn atlas: "+Light.loader.getRes("assetsIn"));

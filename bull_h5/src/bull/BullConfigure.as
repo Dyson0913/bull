@@ -9,11 +9,14 @@ package bull
 	
 	import bull.modules.perload.mediator.TipsLoadMediator;
 	import bull.modules.perload.services.PreLoadService;
+	
+	import bull.modules.common.command.ConnectHallCommand;
+	
 	//import light.car.modules.common.command.BetCancelCommand;
 	//import light.car.modules.common.command.BetCommand;
 	//import light.car.modules.common.command.BetSameAsLastTimeCommand;
 	//import light.car.modules.common.command.CommitRoundCommand;
-	//import light.car.modules.common.command.ConnectHallCommand;
+	
 	//import light.car.modules.common.command.ConnectRoomCommand;
 	//import light.car.modules.common.command.GetPlayerStateCommand;
 	//import light.car.modules.common.command.HeartBeatCommand;
@@ -38,7 +41,7 @@ package bull
 	//import light.car.modules.common.services.WebService;
 	//import light.car.modules.hall.command.UserBalanceCommand;
 	//import light.car.modules.hall.mediator.HallMediator;
-	//import light.car.modules.hall.services.HallSocketService;
+	import bull.modules.BullHall.service.HallSocketService;
 	
 	//import light.car.modules.room.command.CarryInCommand;
 	//import light.car.modules.room.command.EnterRoomCommand;
@@ -71,9 +74,9 @@ package bull
 		private function initCommand():void{
 			//registerCommand( CarNotification.STARTUP, StartupCommand );	
 			
-			//registerCommand(CarNotification.HALL_SOCKET_CONNECT, ConnectHallCommand);
-			//registerCommand(CarNotification.HALL_SOCKET_CONNECT_COMPLETE, ConnectHallCommand);
-			//registerCommand(CarNotification.HALL_SOCKET_CONNECT_FAILED, ConnectHallCommand);
+			registerCommand(BullNotification.HALL_SOCKET_CONNECT, ConnectHallCommand);
+			registerCommand(BullNotification.HALL_SOCKET_CONNECT_COMPLETE, ConnectHallCommand);
+			registerCommand(BullNotification.HALL_SOCKET_CONNECT_FAILED, ConnectHallCommand);
 			//
 			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT, ConnectRoomCommand);
 			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT_COMPLETE, ConnectRoomCommand);
@@ -131,7 +134,7 @@ package bull
 		private function initModel():void{
 			registerModel(new PreLoadService(PreLoadService.NAME));
 			registerModel(new BullProtoModel(BullProtoModel.NAME));
-			//registerModel(new HallSocketService(HallSocketService.NAME));
+			registerModel(new HallSocketService(HallSocketService.NAME));
 			//registerModel(new RoomSocketService(RoomSocketService.NAME));
 			
 			//registerModel(new WebService(WebService.NAME));

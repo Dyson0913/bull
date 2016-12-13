@@ -213,6 +213,7 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
+	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
 	Laya.interface('com.lightMVC.interfaces.IModel','com.lightMVC.interfaces.INode');
 	Laya.interface('com.lightMVC.interfaces.ICommand','com.lightMVC.interfaces.INode');
@@ -1015,6 +1016,83 @@ var Laya=window.Laya=(function(window,document){
 		Event.INSTAGE_CHANGED="instagechanged";
 		Event.CACHEFRAMEINDEX_CHANGED="cacheframeindexchanged";
 		return Event;
+	})()
+
+
+	//class BullHall.manager.LayerManager
+	var LayerManager1=(function(){
+		function LayerManager(){
+			this.loadingMask=null;
+			this.root=null;
+			this._layerBottom=null;
+			this._layerMiddle=null;
+			this._layerTop=null;
+			this._layerTopMask=null;
+			if (LayerManager._singleton){
+				throw new Error("只能用getInstance()来获取实例");
+			}
+		}
+
+		__class(LayerManager,'BullHall.manager.LayerManager',null,'LayerManager1');
+		var __proto=LayerManager.prototype;
+		__proto.init=function(root){
+			this.root=root;
+			this._layerBottom=new /*no*/this.Sprite();
+			this._layerMiddle=new /*no*/this.Sprite();
+			this._layerTop=new /*no*/this.Sprite();
+			root.addChild(this._layerBottom);
+			root.addChild(this._layerMiddle);
+			root.addChild(this._layerTop);
+			this.loadingMask=new kg.core.manager.layerManager.LayerMask();
+			this.loadingMask.init(root);
+		}
+
+		__proto.showPopUp=function(disObj){
+			if(this._layerTopMask==null){
+				this._layerTopMask=new /*no*/this.Shape();
+				this._layerTopMask.graphics.beginFill(0,0.5);
+				this._layerTopMask.graphics.drawRect(0,0,BullHall.common.Common.GameWidth,BullHall.common.Common.GameHeight);
+				this._layerTopMask.graphics.endFill();
+			}
+			this._layerTop.addChild(this._layerTopMask);
+			this._layerTop.addChild(disObj);
+		}
+
+		__proto.hidePopUp=function(disObj){
+			if(this._layerTop.contains(this._layerTopMask))
+				this._layerTop.removeChild(this._layerTopMask);
+			if(this._layerTop.contains(disObj))
+				this._layerTop.removeChild(disObj);
+		}
+
+		__proto.clear=function(){
+			this.loadingMask.clear();
+		}
+
+		__getset(0,__proto,'layerBottom',function(){
+			return this._layerBottom;
+		});
+
+		__getset(0,__proto,'layerMiddle',function(){
+			return this._layerMiddle;
+		});
+
+		__getset(0,__proto,'layerTop',function(){
+			return this._layerTop;
+		});
+
+		LayerManager.getInstance=function(){
+			if (!LayerManager._instance){
+				LayerManager._singleton=false;
+				LayerManager._instance=new LayerManager();
+				LayerManager._singleton=true;
+			}
+			return LayerManager._instance;
+		}
+
+		LayerManager._singleton=true;
+		LayerManager._instance=null
+		return LayerManager;
 	})()
 
 
@@ -7419,6 +7497,524 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
+	*
+	*<code>Byte</code> 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
+	*/
+	//class laya.utils.Byte
+	var Byte=(function(){
+		function Byte(data){
+			this._xd_=true;
+			this._allocated_=8;
+			//this._d_=null;
+			//this._u8d_=null;
+			this._pos_=0;
+			this._length=0;
+			if (data){
+				this._u8d_=new Uint8Array(data);
+				this._d_=new DataView(this._u8d_.buffer);
+				this._length=this._d_.byteLength;
+				}else {
+				this.___resizeBuffer(this._allocated_);
+			}
+		}
+
+		__class(Byte,'laya.utils.Byte');
+		var __proto=Byte.prototype;
+		/**@private */
+		__proto.___resizeBuffer=function(len){
+			try {
+				var newByteView=new Uint8Array(len);
+				if (this._u8d_ !=null){
+					if (this._u8d_.length <=len)newByteView.set(this._u8d_);
+					else newByteView.set(this._u8d_.subarray(0,len));
+				}
+				this._u8d_=newByteView;
+				this._d_=new DataView(newByteView.buffer);
+				}catch (err){
+				throw "___resizeBuffer err:"+len;
+			}
+		}
+
+		/**
+		*读取字符型值。
+		*@return
+		*/
+		__proto.getString=function(){
+			return this.rUTF(this.getUint16());
+		}
+
+		/**
+		*从指定的位置读取指定长度的数据用于创建一个 Float32Array 对象并返回此对象。
+		*@param start 开始位置。
+		*@param len 需要读取的字节长度。
+		*@return 读出的 Float32Array 对象。
+		*/
+		__proto.getFloat32Array=function(start,len){
+			var v=new Float32Array(this._d_.buffer.slice(start,start+len));
+			this._pos_+=len;
+			return v;
+		}
+
+		/**
+		*从指定的位置读取指定长度的数据用于创建一个 Uint8Array 对象并返回此对象。
+		*@param start 开始位置。
+		*@param len 需要读取的字节长度。
+		*@return 读出的 Uint8Array 对象。
+		*/
+		__proto.getUint8Array=function(start,len){
+			var v=new Uint8Array(this._d_.buffer.slice(start,start+len));
+			this._pos_+=len;
+			return v;
+		}
+
+		/**
+		*从指定的位置读取指定长度的数据用于创建一个 Int16Array 对象并返回此对象。
+		*@param start 开始位置。
+		*@param len 需要读取的字节长度。
+		*@return 读出的 Uint8Array 对象。
+		*/
+		__proto.getInt16Array=function(start,len){
+			var v=new Int16Array(this._d_.buffer.slice(start,start+len));
+			this._pos_+=len;
+			return v;
+		}
+
+		/**
+		*在指定字节偏移量位置处读取 Float32 值。
+		*@return Float32 值。
+		*/
+		__proto.getFloat32=function(){
+			var v=this._d_.getFloat32(this._pos_,this._xd_);
+			this._pos_+=4;
+			return v;
+		}
+
+		__proto.getFloat64=function(){
+			var v=this._d_.getFloat64(this._pos_,this._xd_);
+			this._pos_+=8;
+			return v;
+		}
+
+		/**
+		*在当前字节偏移量位置处写入 Float32 值。
+		*@param value 需要写入的 Float32 值。
+		*/
+		__proto.writeFloat32=function(value){
+			this.ensureWrite(this._pos_+4);
+			this._d_.setFloat32(this._pos_,value,this._xd_);
+			this._pos_+=4;
+		}
+
+		__proto.writeFloat64=function(value){
+			this.ensureWrite(this._pos_+8);
+			this._d_.setFloat64(this._pos_,value,this._xd_);
+			this._pos_+=8;
+		}
+
+		/**
+		*在当前字节偏移量位置处读取 Int32 值。
+		*@return Int32 值。
+		*/
+		__proto.getInt32=function(){
+			var float=this._d_.getInt32(this._pos_,this._xd_);
+			this._pos_+=4;
+			return float;
+		}
+
+		/**
+		*在当前字节偏移量位置处读取 Uint32 值。
+		*@return Uint32 值。
+		*/
+		__proto.getUint32=function(){
+			var v=this._d_.getUint32(this._pos_,this._xd_);
+			this._pos_+=4;
+			return v;
+		}
+
+		/**
+		*在当前字节偏移量位置处写入 Int32 值。
+		*@param value 需要写入的 Int32 值。
+		*/
+		__proto.writeInt32=function(value){
+			this.ensureWrite(this._pos_+4);
+			this._d_.setInt32(this._pos_,value,this._xd_);
+			this._pos_+=4;
+		}
+
+		/**
+		*在当前字节偏移量位置处写入 Uint32 值。
+		*@param value 需要写入的 Uint32 值。
+		*/
+		__proto.writeUint32=function(value){
+			this.ensureWrite(this._pos_+4);
+			this._d_.setUint32(this._pos_,value,this._xd_);
+			this._pos_+=4;
+		}
+
+		/**
+		*在当前字节偏移量位置处读取 Int16 值。
+		*@return Int16 值。
+		*/
+		__proto.getInt16=function(){
+			var us=this._d_.getInt16(this._pos_,this._xd_);
+			this._pos_+=2;
+			return us;
+		}
+
+		/**
+		*在当前字节偏移量位置处读取 Uint16 值。
+		*@return Uint16 值。
+		*/
+		__proto.getUint16=function(){
+			var us=this._d_.getUint16(this._pos_,this._xd_);
+			this._pos_+=2;
+			return us;
+		}
+
+		/**
+		*在当前字节偏移量位置处写入 Uint16 值。
+		*@param value 需要写入的Uint16 值。
+		*/
+		__proto.writeUint16=function(value){
+			this.ensureWrite(this._pos_+2);
+			this._d_.setUint16(this._pos_,value,this._xd_);
+			this._pos_+=2;
+		}
+
+		/**
+		*在当前字节偏移量位置处写入 Int16 值。
+		*@param value 需要写入的 Int16 值。
+		*/
+		__proto.writeInt16=function(value){
+			this.ensureWrite(this._pos_+2);
+			this._d_.setInt16(this._pos_,value,this._xd_);
+			this._pos_+=2;
+		}
+
+		/**
+		*在当前字节偏移量位置处读取 Uint8 值。
+		*@return Uint8 值。
+		*/
+		__proto.getUint8=function(){
+			return this._d_.getUint8(this._pos_++);
+		}
+
+		/**
+		*在当前字节偏移量位置处写入 Uint8 值。
+		*@param value 需要写入的 Uint8 值。
+		*/
+		__proto.writeUint8=function(value){
+			this.ensureWrite(this._pos_+1);
+			this._d_.setUint8(this._pos_,value,this._xd_);
+			this._pos_++;
+		}
+
+		/**
+		*@private
+		*在指定位置处读取 Uint8 值。
+		*@param pos 字节读取位置。
+		*@return Uint8 值。
+		*/
+		__proto._getUInt8=function(pos){
+			return this._d_.getUint8(pos);
+		}
+
+		/**
+		*@private
+		*在指定位置处读取 Uint16 值。
+		*@param pos 字节读取位置。
+		*@return Uint16 值。
+		*/
+		__proto._getUint16=function(pos){
+			return this._d_.getUint16(pos,this._xd_);
+		}
+
+		/**
+		*@private
+		*使用 getFloat32()读取6个值，用于创建并返回一个 Matrix 对象。
+		*@return Matrix 对象。
+		*/
+		__proto._getMatrix=function(){
+			var rst=new Matrix(this.getFloat32(),this.getFloat32(),this.getFloat32(),this.getFloat32(),this.getFloat32(),this.getFloat32());
+			return rst;
+		}
+
+		/**
+		*@private
+		*读取指定长度的 UTF 型字符串。
+		*@param len 需要读取的长度。
+		*@return 读出的字符串。
+		*/
+		__proto.rUTF=function(len){
+			var v="",max=this._pos_+len,c=0,c2=0,c3=0,f=String.fromCharCode;
+			var u=this._u8d_,i=0;
+			while (this._pos_ < max){
+				c=u[this._pos_++];
+				if (c < 0x80){
+					if (c !=0){
+						v+=f(c);
+					}
+					}else if (c < 0xE0){
+					v+=f(((c & 0x3F)<< 6)| (u[this._pos_++] & 0x7F));
+					}else if (c < 0xF0){
+					c2=u[this._pos_++];
+					v+=f(((c & 0x1F)<< 12)| ((c2 & 0x7F)<< 6)| (u[this._pos_++] & 0x7F));
+					}else {
+					c2=u[this._pos_++];
+					c3=u[this._pos_++];
+					v+=f(((c & 0x0F)<< 18)| ((c2 & 0x7F)<< 12)| ((c3 << 6)& 0x7F)| (u[this._pos_++] & 0x7F));
+				}
+				i++;
+			}
+			return v;
+		}
+
+		/**
+		*字符串读取。
+		*@param len
+		*@return
+		*/
+		__proto.getCustomString=function(len){
+			var v="",ulen=0,c=0,c2=0,f=String.fromCharCode;
+			var u=this._u8d_,i=0;
+			while (len > 0){
+				c=u[this._pos_];
+				if (c < 0x80){
+					v+=f(c);
+					this._pos_++;
+					len--;
+					}else {
+					ulen=c-0x80;
+					this._pos_++;
+					len-=ulen;
+					while (ulen > 0){
+						c=u[this._pos_++];
+						c2=u[this._pos_++];
+						v+=f((c2 << 8)| c);
+						ulen--;
+					}
+				}
+			}
+			return v;
+		}
+
+		/**
+		*清除数据。
+		*/
+		__proto.clear=function(){
+			this._pos_=0;
+			this.length=0;
+		}
+
+		/**
+		*@private
+		*获取此对象的 ArrayBuffer 引用。
+		*@return
+		*/
+		__proto.__getBuffer=function(){
+			return this._d_.buffer;
+		}
+
+		/**
+		*写入字符串，该方法写的字符串要使用 readUTFBytes 方法读取。
+		*@param value 要写入的字符串。
+		*/
+		__proto.writeUTFBytes=function(value){
+			value=value+"";
+			for (var i=0,sz=value.length;i < sz;i++){
+				var c=value.charCodeAt(i);
+				if (c <=0x7F){
+					this.writeByte(c);
+					}else if (c <=0x7FF){
+					this.writeByte(0xC0 | (c >> 6));
+					this.writeByte(0x80 | (c & 63));
+					}else if (c <=0xFFFF){
+					this.writeByte(0xE0 | (c >> 12));
+					this.writeByte(0x80 | ((c >> 6)& 63));
+					this.writeByte(0x80 | (c & 63));
+					}else {
+					this.writeByte(0xF0 | (c >> 18));
+					this.writeByte(0x80 | ((c >> 12)& 63));
+					this.writeByte(0x80 | ((c >> 6)& 63));
+					this.writeByte(0x80 | (c & 63));
+				}
+			}
+		}
+
+		/**
+		*将 UTF-8 字符串写入字节流。
+		*@param value 要写入的字符串值。
+		*/
+		__proto.writeUTFString=function(value){
+			var tPos=0;
+			tPos=this.pos;
+			this.writeUint16(1);
+			this.writeUTFBytes(value);
+			var dPos=0;
+			dPos=this.pos-tPos-2;
+			this._d_.setUint16(tPos,dPos,this._xd_);
+		}
+
+		/**
+		*@private
+		*读取 UTF-8 字符串。
+		*@return 读出的字符串。
+		*/
+		__proto.readUTFString=function(){
+			var tPos=0;
+			tPos=this.pos;
+			var len=0;
+			len=this.getUint16();
+			return this.readUTFBytes(len);
+		}
+
+		/**
+		*读取 UTF-8 字符串。
+		*@return 读出的字符串。
+		*/
+		__proto.getUTFString=function(){
+			return this.readUTFString();
+		}
+
+		/**
+		*@private
+		*读字符串，必须是 writeUTFBytes 方法写入的字符串。
+		*@param len 要读的buffer长度,默认将读取缓冲区全部数据。
+		*@return 读取的字符串。
+		*/
+		__proto.readUTFBytes=function(len){
+			(len===void 0)&& (len=-1);
+			if(len==0)return "";
+			len=len > 0 ? len :this.bytesAvailable;
+			return this.rUTF(len);
+		}
+
+		/**
+		*读字符串，必须是 writeUTFBytes 方法写入的字符串。
+		*@param len 要读的buffer长度,默认将读取缓冲区全部数据。
+		*@return 读取的字符串。
+		*/
+		__proto.getUTFBytes=function(len){
+			(len===void 0)&& (len=-1);
+			return this.readUTFBytes(len);
+		}
+
+		/**
+		*在字节流中写入一个字节。
+		*@param value
+		*/
+		__proto.writeByte=function(value){
+			this.ensureWrite(this._pos_+1);
+			this._d_.setInt8(this._pos_,value);
+			this._pos_+=1;
+		}
+
+		/**
+		*@private
+		*在字节流中读一个字节。
+		*/
+		__proto.readByte=function(){
+			return this._d_.getInt8(this._pos_++);
+		}
+
+		/**
+		*在字节流中读一个字节。
+		*/
+		__proto.getByte=function(){
+			return this.readByte();
+		}
+
+		/**
+		*指定该字节流的长度。
+		*@param lengthToEnsure 指定的长度。
+		*/
+		__proto.ensureWrite=function(lengthToEnsure){
+			if (this._length < lengthToEnsure)this._length=lengthToEnsure;
+			if (this._allocated_ < lengthToEnsure)this.length=lengthToEnsure;
+		}
+
+		/**
+		*写入指定的 Arraybuffer 对象。
+		*@param arraybuffer 需要写入的 Arraybuffer 对象。
+		*@param offset 偏移量（以字节为单位）
+		*@param length 长度（以字节为单位）
+		*/
+		__proto.writeArrayBuffer=function(arraybuffer,offset,length){
+			(offset===void 0)&& (offset=0);
+			(length===void 0)&& (length=0);
+			if (offset < 0 || length < 0)throw "writeArrayBuffer error - Out of bounds";
+			if (length==0)length=arraybuffer.byteLength-offset;
+			this.ensureWrite(this._pos_+length);
+			var uint8array=new Uint8Array(arraybuffer);
+			this._u8d_.set(uint8array.subarray(offset,offset+length),this._pos_);
+			this._pos_+=length;
+		}
+
+		/**
+		*获取此对象的 ArrayBuffer数据,数据只包含有效数据部分 。
+		*/
+		__getset(0,__proto,'buffer',function(){
+			var rstBuffer=this._d_.buffer;
+			if (rstBuffer.byteLength==this.length)return rstBuffer;
+			return rstBuffer.slice(0,this.length);
+		});
+
+		/**
+		*字节顺序。
+		*/
+		__getset(0,__proto,'endian',function(){
+			return this._xd_ ? "littleEndian" :"bigEndian";
+			},function(endianStr){
+			this._xd_=(endianStr=="littleEndian");
+		});
+
+		/**
+		*字节长度。
+		*/
+		__getset(0,__proto,'length',function(){
+			return this._length;
+			},function(value){
+			if (this._allocated_ < value)
+				this.___resizeBuffer(this._allocated_=Math.floor(Math.max(value,this._allocated_ *2)));
+			else if (this._allocated_ > value)
+			this.___resizeBuffer(this._allocated_=value);
+			this._length=value;
+		});
+
+		/**
+		*当前读取到的位置。
+		*/
+		__getset(0,__proto,'pos',function(){
+			return this._pos_;
+			},function(value){
+			this._pos_=value;
+			this._d_.byteOffset=value;
+		});
+
+		/**
+		*可从字节流的当前位置到末尾读取的数据的字节数。
+		*/
+		__getset(0,__proto,'bytesAvailable',function(){
+			return this.length-this._pos_;
+		});
+
+		Byte.getSystemEndian=function(){
+			if (!Byte._sysEndian){
+				var buffer=new ArrayBuffer(2);
+				new DataView(buffer).setInt16(0,256,true);
+				Byte._sysEndian=(new Int16Array(buffer))[0]===256 ? "littleEndian" :"bigEndian";
+			}
+			return Byte._sysEndian;
+		}
+
+		Byte.BIG_ENDIAN="bigEndian";
+		Byte.LITTLE_ENDIAN="littleEndian";
+		Byte._sysEndian=null;
+		return Byte;
+	})()
+
+
+	/**
 	*对象缓存统一管理类
 	*/
 	//class laya.utils.CacheManger
@@ -13515,6 +14111,75 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
+	/**
+	*
+	*@author light-k
+	*
+	*example
+	*
+	*
+	*Alert.show("adfj","ahdfha",AlertPanel,null,Handler.create(this,closeHandler),"helo_ajdhflahf");
+	*
+	*
+	*private function closeHandler(data:String,flg:String):void{
+		if(flg=="ok_btn"){
+			trace("ok按钮点击",flg,data);
+			}else{
+			trace("关闭按钮点击",flg,data);
+		}
+
+	}
+
+
+	*
+	*/
+	//class com.lightUI.components.alert.Alert
+	var Alert=(function(){
+		//private var closeDie:Dictionary=new Dictionary();
+		function Alert(){
+			;
+		}
+
+		__class(Alert,'com.lightUI.components.alert.Alert');
+		Alert.show=function(message,title,windowClass,parent,closeHandler,data,delayRemove){
+			(message===void 0)&& (message="");
+			(title===void 0)&& (title="");
+			(delayRemove===void 0)&& (delayRemove=-1);
+			console.log("弹出提示框");
+			var window;
+			var storage=StorageManager.getInstance().creatStorage(String(windowClass),windowClass);
+			if(storage.length==0){
+				window=new windowClass();
+				}else{
+				window=storage.getObject();
+			}
+			window.data=data;
+			PopupManager.addPopUp(window,Light.root,true);
+			PopupManager.centerPopUp(window);
+			window.title=title;
+			window.msg=message;
+			window.on("close",null,onClose=function(e){
+				console.log("aaaaaaaa",window)
+				window.off("close",null,onClose);
+				StorageManager.getInstance().getStorage(String(windowClass)).rebackObject(window);
+				PopupManager.removePopUp(window);
+			});
+			if(delayRemove > 0){
+				var fun=function remove (window){
+					if(closeHandler)window.once("close",closeHandler.caller,closeHandler.method,[data]);
+					window.event("close");
+					PopupManager.removePopUp(window);
+				}
+				Light.timer.setTimeout(null,fun,delayRemove,null);
+			}
+			if(closeHandler)(window).once("close",closeHandler.caller,closeHandler.method,[data]);
+			return window;
+		}
+
+		return Alert;
+	})()
+
+
 	//class com.lightUI.core.Light
 	var Light=(function(){
 		function Light(){
@@ -13651,6 +14316,60 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
+	//class com.lightUI.manager.PopupManager
+	var PopupManager=(function(){
+		function PopupManager(){}
+		__class(PopupManager,'com.lightUI.manager.PopupManager');
+		PopupManager.addPopUp=function(window,parent,modal,modalColor,modalAlpha){
+			(modal===void 0)&& (modal=false);
+			(modalAlpha===void 0)&& (modalAlpha=0.60);
+			modalColor=modalColor?modalColor:Color.create(0x000000);
+			parent=parent?parent:Light.root;
+			if(modal){
+				var sp=Draw.drawRect(new Rectangle(0,0,Light.root.stage.width,Light.root.height),modalColor);
+				sp.alpha=modalAlpha;;
+				parent.addChild(sp);
+				parent.addChild(window);
+				}else{
+				parent.addChild(window);
+				PopupManager.objDic[window]=window;
+			}
+		}
+
+		PopupManager.removePopUp=function(popUp){
+			var sp=PopupManager.objDic[popUp];
+			delete PopupManager.objDic[popUp];
+			if(popUp.parent){
+				popUp.parent.removeChild(popUp);
+			}
+			if(sp && sp.parent){
+				sp.parent.removeChild(sp);
+			}
+		}
+
+		PopupManager.centerPopUp=function(popUp,rect){
+			if(rect !=null){
+				popUp.x=(rect.width-popUp.width)/2;
+				popUp.y=(rect.height-popUp.height)/2;
+				}else{
+				if((popUp.parent).width==0 && (popUp.parent).height==0){
+					popUp.x=(Light.root.width-popUp.width)/2;
+					popUp.y=(Light.root.height-popUp.height)/2;
+					}else{
+					popUp.x=((popUp.parent).width-popUp.width)/2;
+					popUp.y=((popUp.parent).height-popUp.height)/2;
+				}
+			}
+		}
+
+		PopupManager.bringToFront=function(popUp){}
+		__static(PopupManager,
+		['objDic',function(){return this.objDic=new Dictionary();}
+		]);
+		return PopupManager;
+	})()
+
+
 	//class com.lightUI.manager.scence.ScenceInfo
 	var ScenceInfo=(function(){
 		function ScenceInfo(name,info,views,parent,treat){
@@ -13697,6 +14416,96 @@ var Laya=window.Laya=(function(window,document){
 		ScenceInfo.HIDE_PERSCENCE=1;
 		ScenceInfo.REMOVE_PERSCCENCE=2;
 		return ScenceInfo;
+	})()
+
+
+	//class com.lightUI.manager.storage.Storage
+	var Storage=(function(){
+		function Storage(clazz){
+			this._clazz=null;
+			this._items=[];
+			this._clazz=clazz;
+		}
+
+		__class(Storage,'com.lightUI.manager.storage.Storage');
+		var __proto=Storage.prototype;
+		__proto.getObject=function(){
+			if(this._items.length > 0){
+				return this._items.pop();
+				}else{
+				return new this._clazz();
+			}
+		}
+
+		__proto.rebackObject=function(obj){
+			this._items.push(obj);
+		}
+
+		__proto.clear=function(){
+			this._items=[];
+		}
+
+		__proto.destroy=function(){
+			this._items=null;
+		}
+
+		__getset(0,__proto,'length',function(){
+			return this._items.length;
+		});
+
+		__getset(0,__proto,'clazz',function(){
+			return this._clazz;
+			},function(value){
+			this._clazz=value;
+		});
+
+		return Storage;
+	})()
+
+
+	//class com.lightUI.manager.storage.StorageManager
+	var StorageManager=(function(){
+		function StorageManager(){
+			this._storages=new Dictionary;
+		}
+
+		__class(StorageManager,'com.lightUI.manager.storage.StorageManager');
+		var __proto=StorageManager.prototype;
+		__proto.LayerManager=function(){
+			if (StorageManager._singleton){
+				throw new Error("只能用getInstance()来获取实例");
+			}
+		}
+
+		__proto.creatStorage=function(name,clazz){
+			if(!this._storages.get(name))this._storages.set(name,new Storage(clazz));
+			return this._storages.get(name);
+		}
+
+		__proto.getStorage=function(name){
+			return this._storages.get(name);
+		}
+
+		__proto.destroy=function(){
+			for (var key in this._storages.keys){
+				(this._storages.get(key)).destroy();
+				delete (this._storages.get(key))
+			}
+			this._storages=null;
+		}
+
+		StorageManager.getInstance=function(){
+			if (!StorageManager._instance){
+				StorageManager._singleton=false;
+				StorageManager._instance=new StorageManager();
+				StorageManager._singleton=true;
+			}
+			return StorageManager._instance;
+		}
+
+		StorageManager._singleton=true;
+		StorageManager._instance=null
+		return StorageManager;
 	})()
 
 
@@ -13893,15 +14702,53 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
+	//class com.lightUI.utils.Draw
+	var Draw=(function(){
+		function Draw(){};
+		__class(Draw,'com.lightUI.utils.Draw');
+		Draw.drawRect=function(rect,color){
+			console.log("drawRectdrawRect")
+			color=color?color:Color.create(0xff0000);
+			var re=new Sprite();
+			re.graphics.drawRect(rect.x,re.y,re.width,re.height,color);
+			return re;
+		}
+
+		Draw.drawCircle=function(x,y,r,color){
+			color=color?color:Color.create(0xff0000);
+			var re=new Sprite();
+			re.graphics.drawCircle(x,y,r,color);
+			return re;
+		}
+
+		Draw.drawCircleBoder=function(x,y,r,thickness,color){
+			(thickness===void 0)&& (thickness=1);
+			color=color?color:Color.create(0xff0000);
+			var re=new Sprite();
+			re.graphics.drawCircle(x,y,r,null,color,thickness);
+			return re;
+		}
+
+		Draw.drawBoder=function(rect,thickness,color){
+			color=color?color:Color.create(0xff0000);
+			var re=new Sprite();
+			re.graphics.drawRect(rect.x,rect.y,rect.width,rect.height,null,color,thickness);
+			return re;
+		}
+
+		return Draw;
+	})()
+
+
 	/**
 	*@author light
 	*创建时间：2015-9-16 上午11:14:07
 	*
 	*/
 	//class com.lightUI.utils.FormartUtils
-	var FormartUtils=(function(){
+	var FormartUtils1=(function(){
 		function FormartUtils(){}
-		__class(FormartUtils,'com.lightUI.utils.FormartUtils');
+		__class(FormartUtils,'com.lightUI.utils.FormartUtils',null,'FormartUtils1');
 		FormartUtils.threeCount=function(num){
 			var temp=String(num).split(".");
 			var small=temp[1];
@@ -14191,6 +15038,180 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher1)
 
 
+	//class com.iflash.events.Event extends laya.events.Event
+	var Event=(function(_super){
+		function Event(type,bubbles,cancelable){
+			this.bubbles=false;
+			this.cancelable=false;
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			Event.__super.call(this);
+			this.type=type;
+			this.bubbles=bubbles;
+			this.cancelable=cancelable;
+		}
+
+		__class(Event,'com.iflash.events.Event',_super);
+		var __proto=Event.prototype;
+		__proto.clone=function(){
+			return new com.iflash.events.Event(this.type);
+		}
+
+		return Event;
+	})(Event1)
+
+
+	//class com.lightMVC.parrerns.Model extends com.lightMVC.core.Node
+	var Model=(function(_super){
+		function Model(modelName,data){
+			this._proxy=null;
+			this._data=null;
+			Model.__super.call(this);
+			this.name=(modelName !=null)?modelName:"Model";
+			if (data !=null)this.setData(data);
+		}
+
+		__class(Model,'com.lightMVC.parrerns.Model',_super);
+		var __proto=Model.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
+		/**
+		*获取注册过的单列
+		*@param clazzname
+		*@return
+		*
+		*/
+		__proto.getSingleton=function(clazzname){
+			return this._proxy.getSingleton(clazzname);
+		}
+
+		/**
+		*获取model数据
+		*@param modelName
+		*@return
+		*
+		*/
+		__proto.getModel=function(modelName){
+			return this._proxy.getModel(modelName);
+		}
+
+		__proto.setProxy=function(proxy){
+			this._proxy=proxy;
+		}
+
+		/**
+		*发送消息
+		*@param notiName 消息名称
+		*@param body 消息携带的参数
+		*
+		*/
+		__proto.sentNotification=function(notiName,body){
+			this._proxy.sentNotification(new Notification(notiName,body));
+			return this;
+		}
+
+		/**
+		*调用此方法 完成参数注入 参数需在 getInjector()数组里申明
+		*
+		*/
+		__proto.injector=function(){
+			this._proxy.injector(this.getInjector(),this);
+		}
+
+		/**
+		*注册完成后触发此函数
+		*
+		*/
+		__proto.onRegister=function(){}
+		/**
+		*初始化完成后触发此函数 如需获取其它注册对象 需在此函数执行后 否则不能确保获取成功
+		*
+		*/
+		__proto.onInitialize=function(){}
+		/**
+		*被移除时候调用此函数
+		*
+		*/
+		__proto.onRemove=function(){}
+		__proto.getData=function(){
+			return this._data;
+		}
+
+		__proto.setData=function(value){
+			this._data=value;
+		}
+
+		Model.NAME="Model";
+		return Model;
+	})(Node)
+
+
+	//class com.lightMVC.parrerns.Command extends com.lightMVC.core.Node
+	var Command=(function(_super){
+		function Command(){
+			this._proxy=null;
+			Command.__super.call(this);
+		}
+
+		__class(Command,'com.lightMVC.parrerns.Command',_super);
+		var __proto=Command.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true,"com.lightMVC.interfaces.IHandle":true})
+		__proto.getSingleton=function(clazzname){
+			return this._proxy.getSingleton(clazzname);
+		}
+
+		/**
+		*获取一个model数据
+		*@param modelName
+		*@return
+		*
+		*/
+		__proto.getModel=function(modelName){
+			return this._proxy.getModel(modelName);
+		}
+
+		/**
+		*获取一个mediator视图
+		*@param mediatorName
+		*@return
+		*
+		*/
+		__proto.getMediator=function(mediatorName){
+			return this._proxy.getMediator(mediatorName);
+		}
+
+		__proto.setProxy=function(proxy){
+			this._proxy=proxy;
+		}
+
+		/**
+		*发送消息
+		*@param notiName 消息名称
+		*@param body 消息携带的参数
+		*
+		*/
+		__proto.sentNotification=function(notiName,body){
+			this._proxy.sentNotification(new Notification(notiName,body));
+			return this;
+		}
+
+		/**
+		*调用此方法 完成参数注入 参数需在 getInjector()数组里申明
+		*
+		*/
+		__proto.injector=function(){
+			this._proxy.injector(this.getInjector(),this);
+		}
+
+		/**
+		*消息处理函数 子类可以重写此方法
+		*@param notification
+		*
+		*/
+		__proto.handler=function(notification){}
+		return Command;
+	})(Node)
+
+
 	//class com.lightMVC.parrerns.Mediator extends com.lightMVC.core.Node
 	var Mediator=(function(_super){
 		function Mediator(mediatorName,viewComponent){
@@ -14326,113 +15347,6 @@ var Laya=window.Laya=(function(window,document){
 		Mediator.NAME="Mediator";
 		return Mediator;
 	})(Node)
-
-
-	//class com.lightMVC.parrerns.Model extends com.lightMVC.core.Node
-	var Model=(function(_super){
-		function Model(modelName,data){
-			this._proxy=null;
-			this._data=null;
-			Model.__super.call(this);
-			this.name=(modelName !=null)?modelName:"Model";
-			if (data !=null)this.setData(data);
-		}
-
-		__class(Model,'com.lightMVC.parrerns.Model',_super);
-		var __proto=Model.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
-		/**
-		*获取注册过的单列
-		*@param clazzname
-		*@return
-		*
-		*/
-		__proto.getSingleton=function(clazzname){
-			return this._proxy.getSingleton(clazzname);
-		}
-
-		/**
-		*获取model数据
-		*@param modelName
-		*@return
-		*
-		*/
-		__proto.getModel=function(modelName){
-			return this._proxy.getModel(modelName);
-		}
-
-		__proto.setProxy=function(proxy){
-			this._proxy=proxy;
-		}
-
-		/**
-		*发送消息
-		*@param notiName 消息名称
-		*@param body 消息携带的参数
-		*
-		*/
-		__proto.sentNotification=function(notiName,body){
-			this._proxy.sentNotification(new Notification(notiName,body));
-			return this;
-		}
-
-		/**
-		*调用此方法 完成参数注入 参数需在 getInjector()数组里申明
-		*
-		*/
-		__proto.injector=function(){
-			this._proxy.injector(this.getInjector(),this);
-		}
-
-		/**
-		*注册完成后触发此函数
-		*
-		*/
-		__proto.onRegister=function(){}
-		/**
-		*初始化完成后触发此函数 如需获取其它注册对象 需在此函数执行后 否则不能确保获取成功
-		*
-		*/
-		__proto.onInitialize=function(){}
-		/**
-		*被移除时候调用此函数
-		*
-		*/
-		__proto.onRemove=function(){}
-		__proto.getData=function(){
-			return this._data;
-		}
-
-		__proto.setData=function(value){
-			this._data=value;
-		}
-
-		Model.NAME="Model";
-		return Model;
-	})(Node)
-
-
-	//class com.iflash.events.Event extends laya.events.Event
-	var Event=(function(_super){
-		function Event(type,bubbles,cancelable){
-			this.bubbles=false;
-			this.cancelable=false;
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			Event.__super.call(this);
-			this.type=type;
-			this.bubbles=bubbles;
-			this.cancelable=cancelable;
-		}
-
-		__class(Event,'com.iflash.events.Event',_super);
-		var __proto=Event.prototype;
-		__proto.clone=function(){
-			return new com.iflash.events.Event(this.type);
-		}
-
-		return Event;
-	})(Event1)
 
 
 	/**
@@ -17319,6 +18233,215 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
+	*<code>Socket</code> 是一种双向通信协议，在建立连接后，服务器和 Browser/Client Agent 都能主动的向对方发送或接收数据。
+	*/
+	//class laya.net.Socket extends laya.events.EventDispatcher
+	var Socket=(function(_super){
+		function Socket(host,port,byteClass){
+			this._endian=null;
+			this._stamp=NaN;
+			this._socket=null;
+			this._connected=false;
+			this._addInputPosition=0;
+			this._input=null;
+			this._output=null;
+			this.timeout=0;
+			this.objectEncoding=0;
+			this.disableInput=false;
+			this._byteClass=null;
+			(port===void 0)&& (port=0);
+			Socket.__super.call(this);
+			this._byteClass=byteClass;
+			this._byteClass=this._byteClass ? this._byteClass :Byte;
+			this.endian="bigEndian";
+			this.timeout=20000;
+			this._addInputPosition=0;
+			if (host&&port > 0 && port < 65535)
+				this.connect(host,port);
+		}
+
+		__class(Socket,'laya.net.Socket',_super);
+		var __proto=Socket.prototype;
+		/**
+		*连接到指定的主机和端口。
+		*@param host 服务器地址。
+		*@param port 服务器端口。
+		*/
+		__proto.connect=function(host,port){
+			var url="ws://"+host+":"+port;
+			this.connectByUrl(url);
+		}
+
+		/**
+		*连接到指定的url
+		*@param url 连接目标
+		*/
+		__proto.connectByUrl=function(url){
+			var _$this=this;
+			if (this._socket !=null)
+				this.close();
+			this._socket && this._cleanSocket();
+			this._socket=new Browser.window.WebSocket(url);
+			this._socket.binaryType="arraybuffer";
+			this._output=new this._byteClass();
+			this._output.endian=this.endian;
+			this._input=new this._byteClass();
+			this._input.endian=this.endian;
+			this._addInputPosition=0;
+			this._socket.onopen=function (e){
+				_$this._onOpen(e);
+			};
+			this._socket.onmessage=function (msg){
+				_$this._onMessage(msg);
+			};
+			this._socket.onclose=function (e){
+				_$this._onClose(e);
+			};
+			this._socket.onerror=function (e){
+				_$this._onError(e);
+			};
+		}
+
+		__proto._cleanSocket=function(){
+			try {
+				this._socket.close();
+			}catch (e){}
+			this._connected=false;
+			this._socket.onopen=null;
+			this._socket.onmessage=null;
+			this._socket.onclose=null;
+			this._socket.onerror=null;
+			this._socket=null;
+		}
+
+		/**
+		*关闭连接。
+		*/
+		__proto.close=function(){
+			if (this._socket !=null){
+				this._cleanSocket();
+			}
+		}
+
+		/**
+		*@private
+		*连接建立成功 。
+		*/
+		__proto._onOpen=function(e){
+			this._connected=true;
+			this.event("open",e);
+		}
+
+		/**
+		*@private
+		*接收到数据处理方法。
+		*@param msg 数据。
+		*/
+		__proto._onMessage=function(msg){
+			if (!msg || !msg.data)return;
+			var data=msg.data;
+			if(this.disableInput&&data){
+				this.event("message",data);
+				return;
+			}
+			if (this._input.length > 0 && this._input.bytesAvailable < 1){
+				this._input.clear();
+				this._addInputPosition=0;
+			};
+			var pre=this._input.pos;
+			!this._addInputPosition && (this._addInputPosition=0);
+			this._input.pos=this._addInputPosition;
+			if (data){
+				if ((typeof data=='string')){
+					this._input.writeUTFBytes(data);
+					}else {
+					this._input.writeArrayBuffer(data);
+				}
+				this._addInputPosition=this._input.pos;
+				this._input.pos=pre;
+			}
+			this.event("message",data);
+		}
+
+		/**
+		*@private
+		*连接被关闭处理方法。
+		*/
+		__proto._onClose=function(e){
+			this._connected=false;
+			this.event("close",e)
+		}
+
+		/**
+		*@private
+		*出现异常处理方法。
+		*/
+		__proto._onError=function(e){
+			this.event("error",e)
+		}
+
+		/**
+		*发送数据到服务器。
+		*@param data 需要发送的数据，可以是String或者ArrayBuffer。
+		*/
+		__proto.send=function(data){
+			this._socket.send(data);
+		}
+
+		/**
+		*发送缓冲区中的数据到服务器。
+		*/
+		__proto.flush=function(){
+			if (this._output && this._output.length > 0){
+				try {
+					this._socket && this._socket.send(this._output.__getBuffer().slice(0,this._output.length));
+					this._output.endian=this.endian;
+					this._output.clear();
+					}catch (e){
+					this.event("error",e);
+				}
+			}
+		}
+
+		/**
+		*表示服务端发来的数据。
+		*/
+		__getset(0,__proto,'input',function(){
+			return this._input;
+		});
+
+		/**
+		*表示需要发送至服务端的缓冲区中的数据。
+		*/
+		__getset(0,__proto,'output',function(){
+			return this._output;
+		});
+
+		/**
+		*表示此 Socket 对象目前是否已连接。
+		*/
+		__getset(0,__proto,'connected',function(){
+			return this._connected;
+		});
+
+		/**
+		*表示数据的字节顺序。
+		*/
+		__getset(0,__proto,'endian',function(){
+			return this._endian;
+			},function(value){
+			this._endian=value;
+			if (this._input !=null)this._input.endian=value;
+			if (this._output !=null)this._output.endian=value;
+		});
+
+		Socket.LITTLE_ENDIAN="littleEndian";
+		Socket.BIG_ENDIAN="bigEndian";
+		return Socket;
+	})(EventDispatcher1)
+
+
+	/**
 	*<code>Texture</code> 是一个纹理处理类。
 	*/
 	//class laya.resource.Texture extends laya.events.EventDispatcher
@@ -20099,6 +21222,886 @@ var Laya=window.Laya=(function(window,document){
 	})(AtlasGrid)
 
 
+	//class com.iflash.utils.ByteArray extends laya.utils.Byte
+	var ByteArray=(function(_super){
+		function ByteArray(){
+			this._$1__length=0;
+			this._objectEncoding_=0;
+			this._position_=0;
+			this._$1__allocated_=8;
+			this._data_=null;
+			this._littleEndian_=false;
+			this._byteView_=null;
+			this._strTable=null;
+			this._objTable=null;
+			this._traitsTable=null;
+			ByteArray.__super.call(this);
+			this.___resizeBuffer(this._allocated_);
+		}
+
+		__class(ByteArray,'com.iflash.utils.ByteArray',_super);
+		var __proto=ByteArray.prototype;
+		__proto.clear=function(){
+			this._strTable=[];
+			this._objTable=[];
+			this._traitsTable=[];
+			this._position_=0;
+			this.length=0;
+		}
+
+		__proto.ensureWrite=function(lengthToEnsure){
+			if (this._$1__length < lengthToEnsure)this.length=lengthToEnsure;
+		}
+
+		__proto.readBoolean=function(){
+			return (this.readByte ()!=0);
+		}
+
+		__proto.readByte=function(){
+			return this._data_.getInt8 (this._position_++);
+		}
+
+		__proto.readBytes=function(bytes,offset,length){
+			(offset===void 0)&& (offset=0);
+			(length===void 0)&& (length=0);
+			if (offset < 0 || length < 0){
+				throw "Read error - Out of bounds";
+			}
+			if (length==0)length=this._$1__length-this._position_;
+			bytes.ensureWrite (offset+length);
+			bytes._byteView_.set (this._byteView_.subarray(this._position_,this._position_+length),offset);
+			bytes.position=offset;
+			this._position_+=length;
+			if (bytes.position+length > bytes.length)bytes.length=bytes.position+length;
+		}
+
+		__proto.readDouble=function(){
+			var double=this._data_.getFloat64 (this._position_,this._littleEndian_);
+			this._position_+=8;
+			return double;
+		}
+
+		__proto.readFloat=function(){
+			var float=this._data_.getFloat32 (this._position_,this._littleEndian_);
+			this._position_+=4;
+			return float;
+		}
+
+		__proto.readFullBytes=function(bytes,pos,len){
+			this.ensureWrite (len);
+			for(var i=pos;i < pos+len;i++){
+				this._data_.setInt8 (this._position_++,bytes.get(i));
+			}
+		}
+
+		__proto.readInt=function(){
+			var tInt=this._data_.getInt32 (this._position_,this._littleEndian_);
+			this._position_+=4;
+			return tInt;
+		}
+
+		__proto.readShort=function(){
+			var short=this._data_.getInt16 (this._position_,this._littleEndian_);
+			this._position_+=2;
+			return short;
+		}
+
+		__proto.readUnsignedByte=function(){
+			return this._data_.getUint8 (this._position_++);
+		}
+
+		__proto.readUnsignedInt=function(){
+			var uInt=this._data_.getUint32 (this._position_,this._littleEndian_);
+			this._position_+=4;
+			return int(uInt);
+		}
+
+		//add by ch.ji 解决读取整数时读到负整数的问题
+		__proto.readUnsignedShort=function(){
+			var uShort=this._data_.getUint16 (this._position_,this._littleEndian_);
+			this._position_+=2;
+			return uShort;
+		}
+
+		__proto.readUTF=function(){
+			return this.readUTFBytes (this.readUnsignedShort ());
+		}
+
+		__proto.readUnicode=function(length){
+			var value="";
+			var max=this._position_+length;
+			var c1=0,c2=0;
+			while (this._position_ < max){
+				c2=this._byteView_[this._position_++];
+				c1=this._byteView_[this._position_++];
+				value+=String.fromCharCode(c1<<8 | c2);
+			}
+			return value;
+		}
+
+		__proto.readMultiByte=function(length,charSet){
+			if(charSet=="UNICODE" || charSet=="unicode"){
+				return this.readUnicode(length);
+			}
+			return this.readUTFBytes (length);
+		}
+
+		__proto.readUTFBytes=function(len){
+			(len===void 0)&& (len=-1);
+			var value="";
+			var max=this._position_+len;
+			var c=0,c2=0,c3=0;
+			while (this._position_ < max){
+				c=this._data_.getUint8 (this._position_++);
+				if (c < 0x80){
+					if (c !=0){
+						value+=String.fromCharCode (c);
+					}
+					}else if (c < 0xE0){
+					value+=String.fromCharCode (((c & 0x3F)<< 6)| (this._data_.getUint8 (this._position_++)& 0x7F));
+					}else if (c < 0xF0){
+					c2=this._data_.getUint8 (this._position_++);
+					value+=String.fromCharCode (((c & 0x1F)<< 12)| ((c2 & 0x7F)<< 6)| (this._data_.getUint8 (this._position_++)& 0x7F));
+					}else {
+					c2=this._data_.getUint8 (this._position_++);
+					c3=this._data_.getUint8 (this._position_++);
+					value+=String.fromCharCode (((c & 0x0F)<< 18)| ((c2 & 0x7F)<< 12)| ((c3 << 6)& 0x7F)| (this._data_.getUint8 (this._position_++)& 0x7F));
+				}
+			}
+			return value;
+		}
+
+		__proto.toString=function(){
+			var cachePosition=this._position_;
+			this._position_=0;
+			var value=this.readUTFBytes (this.length);
+			this._position_=cachePosition;
+			return value;
+		}
+
+		__proto.writeBoolean=function(value){
+			this.writeByte (value ? 1 :0);
+		}
+
+		__proto.writeByte=function(value){
+			this.ensureWrite (this._position_+1);
+			this._data_.setInt8 (this._position_,value);
+			this._position_+=1;
+		}
+
+		__proto.writeBytes=function(bytes,offset,length){
+			(offset===void 0)&& (offset=0);
+			(length===void 0)&& (length=0);
+			if (offset < 0 || length < 0)throw "writeBytes error - Out of bounds";
+			if(length==0)length=bytes.length-offset;
+			this.ensureWrite (this._position_+length);
+			this._byteView_.set(bytes._byteView_.subarray (offset,offset+length),this._position_);
+			this._position_+=length;
+		}
+
+		__proto.writeArrayBuffer=function(arraybuffer,offset,length){
+			(offset===void 0)&& (offset=0);
+			(length===void 0)&& (length=0);
+			if (offset < 0 || length < 0)throw "writeArrayBuffer error - Out of bounds";
+			if(length==0)length=arraybuffer.byteLength-offset;
+			this.ensureWrite (this._position_+length);
+			var uint8array=new Uint8Array(arraybuffer);
+			this._byteView_.set(uint8array.subarray (offset,offset+length),this._position_);
+			this._position_+=length;
+		}
+
+		__proto.writeDouble=function(x){
+			this.ensureWrite (this._position_+8);
+			this._data_.setFloat64 (this._position_,x,this._littleEndian_);
+			this._position_+=8;
+		}
+
+		__proto.writeFloat=function(x){
+			this.ensureWrite (this._position_+4);
+			this._data_.setFloat32 (this._position_,x,this._littleEndian_);
+			this._position_+=4;
+		}
+
+		__proto.writeInt=function(value){
+			this.ensureWrite (this._position_+4);
+			this._data_.setInt32 (this._position_,value,this._littleEndian_);
+			this._position_+=4;
+		}
+
+		__proto.writeShort=function(value){
+			this.ensureWrite (this._position_+2);
+			this._data_.setInt16 (this._position_,value,this._littleEndian_);
+			this._position_+=2;
+		}
+
+		__proto.writeUnsignedInt=function(value){
+			this.ensureWrite (this._position_+4);
+			this._data_.setUint32 (this._position_,value,this._littleEndian_);
+			this._position_+=4;
+		}
+
+		__proto.writeUnsignedShort=function(value){
+			this.ensureWrite (this._position_+2);
+			this._data_.setUint16 (this._position_,value,this._littleEndian_);
+			this._position_+=2;
+		}
+
+		__proto.writeUTF=function(value){
+			value=value+"";
+			this.writeUnsignedShort (this._getUTFBytesCount(value));this.writeUTFBytes (value);
+		}
+
+		__proto.writeUnicode=function(value){
+			value=value+"";
+			this.ensureWrite (this._position_+value.length*2);
+			var c=0;
+			for(var i=0,sz=value.length;i<sz;i++){
+				c=value.charCodeAt(i);
+				this._byteView_[this._position_++]=c&0xff;
+				this._byteView_[this._position_++]=c>>8;
+			}
+		}
+
+		__proto.writeMultiByte=function(value,charSet){
+			value=value+"";
+			if(charSet=="UNICODE" || charSet=="unicode"){
+				return this.writeUnicode(value);
+			}
+			this.writeUTFBytes(value);
+		}
+
+		__proto.writeUTFBytes=function(value){
+			value=value+"";
+			this.ensureWrite(this._position_+value.length*4);
+			for (var i=0,sz=value.length;i < sz;i++){
+				var c=value.charCodeAt(i);
+				if (c <=0x7F){
+					this.writeByte (c);
+					}else if (c <=0x7FF){
+					this.writeByte (0xC0 | (c >> 6));
+					this.writeByte (0x80 | (c & 63));
+					}else if (c <=0xFFFF){
+					this.writeByte(0xE0 | (c >> 12));
+					this.writeByte(0x80 | ((c >> 6)& 63));
+					this.writeByte(0x80 | (c & 63));
+					}else {
+					this.writeByte(0xF0 | (c >> 18));
+					this.writeByte(0x80 | ((c >> 12)& 63));
+					this.writeByte(0x80 | ((c >> 6)& 63));
+					this.writeByte(0x80 | (c & 63));
+				}
+			}
+			this.length=this._position_;
+		}
+
+		__proto.__fromBytes=function(inBytes){
+			this._byteView_=new Uint8Array(inBytes.getData ());
+			this.length=this._byteView_.length;
+			this._$1__allocated_=this.length;
+		}
+
+		__proto.__get=function(pos){
+			return this._data_.getUint8(pos);
+		}
+
+		__proto._getUTFBytesCount=function(value){
+			var count=0;
+			value=value+"";
+			for (var i=0,sz=value.length;i < sz;i++){
+				var c=value.charCodeAt(i);
+				if (c <=0x7F){
+					count+=1;
+					}else if (c <=0x7FF){
+					count+=2;
+					}else if (c <=0xFFFF){
+					count+=3;
+					}else {
+					count+=4;
+				}
+			}
+			return count;
+		}
+
+		__proto._byteAt_=function(index){
+			return this._byteView_[index];
+		}
+
+		__proto._byteSet_=function(index,value){
+			this.ensureWrite (index+1);
+			this._byteView_[index]=value;
+		}
+
+		//this._position_+=1;
+		__proto.uncompress=function(algorithm){
+			(algorithm===void 0)&& (algorithm="zlib");
+			var inflate=new Zlib.Inflate(this._byteView_);
+			this._byteView_=inflate.decompress();
+			this._data_=new DataView(this._byteView_ .buffer);;
+			this._$1__allocated_=this._$1__length=this._byteView_.byteLength;
+			this._position_=0;
+		}
+
+		__proto.compress=function(algorithm){
+			(algorithm===void 0)&& (algorithm="zlib");
+			var deflate=new Zlib.Deflate(this._byteView_);
+			this._byteView_=deflate.compress();
+			this._data_=new DataView(this._byteView_.buffer);;
+			this._position_=this._$1__allocated_=this._$1__length=this._byteView_.byteLength;
+		}
+
+		__proto._$1____resizeBuffer=function(len){
+			try{
+				var newByteView=new Uint8Array(len);
+				if (this._byteView_!=null){
+					if (this._byteView_.length <=len)newByteView.set (this._byteView_);
+					else newByteView.set (this._byteView_.subarray (0,len));
+				}
+				this._byteView_=newByteView;
+				this._data_=new DataView(newByteView.buffer);
+			}
+			catch (err){
+				throw "___resizeBuffer err:"+len;
+			}
+		}
+
+		__proto.__getBuffer=function(){
+			this._data_.buffer.byteLength=this.length;
+			return this._data_.buffer;
+		}
+
+		__proto.__set=function(pos,v){
+			this._data_.setUint8 (pos,v);
+		}
+
+		__proto.setUint8Array=function(data){
+			this._byteView_=data;
+			this._data_=new DataView(data.buffer);
+			this._$1__length=data.byteLength;
+			this._position_=0;
+		}
+
+		/**从字节数组中读取一个以 AMF 序列化格式进行编码的对象 **/
+		__proto.readObject=function(){
+			this._strTable=[];
+			this._objTable=[];
+			this._traitsTable=[];
+			return this.readObject2();
+		}
+
+		__proto.readObject2=function(){
+			var type=this.readByte();
+			return this.readObjectValue(type);
+		}
+
+		__proto.readObjectValue=function(type){
+			var value;
+			switch (type){
+				case 1:
+					break ;
+				case 6:
+					value=this.__readString();
+					break ;
+				case 4:
+					value=this.readInterger();
+					break ;
+				case 2:
+					value=false;
+					break ;
+				case 3:
+					value=true;
+					break ;
+				case 10:
+					value=this.readScriptObject();
+					break ;
+				case 9:
+					value=this.readArray();
+					break ;
+				case 5:
+					value=this.readDouble();
+					break ;
+				case 12:
+					value=this.readByteArray();
+					break ;
+				default :
+					console.log("Unknown object type tag!!!"+type);
+				}
+			return value;
+		}
+
+		__proto.readByteArray=function(){
+			var ref=this.readUInt29();
+			if ((ref & 1)==0){
+				return this.getObjRef(ref >> 1);
+			}
+			else{
+				var len=(ref >> 1);
+				var ba=new ByteArray();
+				this._objTable.push(ba);
+				this.readBytes(ba,0,len);
+				return ba;
+			}
+		}
+
+		__proto.readInterger=function(){
+			var i=this.readUInt29();
+			i=(i << 3)>> 3;
+			return parseInt(i+"");
+		}
+
+		__proto.getStrRef=function(ref){
+			return this._strTable[ref];
+		}
+
+		__proto.getObjRef=function(ref){
+			return this._objTable[ref];
+		}
+
+		__proto.__readString=function(){
+			var ref=this.readUInt29();
+			if ((ref & 1)==0){
+				return this.getStrRef(ref >> 1);
+			};
+			var len=(ref >> 1);
+			if (0==len){
+				return "";
+			};
+			var str=this.readUTFBytes(len);
+			this._strTable.push(str);
+			return str;
+		}
+
+		__proto.readTraits=function(ref){
+			var ti;
+			if ((ref & 3)==1){
+				ti=this.getTraitReference(ref >> 2);
+				return ti.propoties?ti:{obj:{}};
+			}
+			else{
+				var externalizable=((ref & 4)==4);
+				var isDynamic=((ref & 8)==8);
+				var count=(ref >> 4);
+				var className=this.__readString();
+				ti={};
+				ti.className=className;
+				ti.propoties=[];
+				ti.dynamic=isDynamic;
+				ti.externalizable=externalizable;
+				if(count>0){
+					for(var i=0;i<count;i++){
+						var propName=this.__readString();
+						ti.propoties.push(propName);
+					}
+				}
+				this._traitsTable.push(ti);
+				return ti;
+			}
+		}
+
+		__proto.readScriptObject=function(){
+			var ref=this.readUInt29();
+			if ((ref & 1)==0){
+				return this.getObjRef(ref >> 1);
+			}
+			else{
+				var objref=this.readTraits(ref);
+				var className=objref.className;
+				var externalizable=objref.externalizable;
+				var obj;
+				var propName;
+				var pros=objref.propoties;
+				if(className&&className!=""){
+					var rst=ClassUtils.getRegClass(className);
+					if(rst){
+						obj=new rst();
+						}else{
+						obj={};
+					}
+					}else{
+					obj={};
+				}
+				this._objTable.push(obj);
+				if(pros){
+					for(var d=0;d<pros.length;d++){
+						obj[pros[d]]=this.readObject2();
+					}
+				}
+				if(objref.dynamic){
+					for (;;){
+						propName=this.__readString();
+						if (propName==null || propName.length==0)break ;
+						obj[propName]=this.readObject2();
+					}
+				}
+				return obj;
+			}
+		}
+
+		__proto.readArray=function(){
+			var ref=this.readUInt29();
+			if ((ref & 1)==0){
+				return this.getObjRef(ref >> 1);
+			};
+			var obj=null;
+			var count=(ref >> 1);
+			var propName;
+			for (;;){
+				propName=this.__readString();
+				if (propName==null || propName.length==0)break ;
+				if (obj==null){
+					obj={};
+					this._objTable.push(obj);
+				}
+				obj[propName]=this.readObject2();
+			}
+			if (obj==null){
+				obj=[];
+				this._objTable.push(obj);
+				var i=0;
+				for (i=0;i < count;i++){
+					obj.push(this.readObject2());
+				}
+				}else {
+				for (i=0;i < count;i++){
+					obj[i.toString()]=this.readObject2();
+				}
+			}
+			return obj;
+		}
+
+		/**
+		*AMF 3 represents smaller integers with fewer bytes using the most
+		*significant bit of each byte. The worst case uses 32-bits
+		*to represent a 29-bit number,which is what we would have
+		*done with no compression.
+		*<pre>
+		*0x00000000-0x0000007F :0xxxxxxx
+		*0x00000080-0x00003FFF :1xxxxxxx 0xxxxxxx
+		*0x00004000-0x001FFFFF :1xxxxxxx 1xxxxxxx 0xxxxxxx
+		*0x00200000-0x3FFFFFFF :1xxxxxxx 1xxxxxxx 1xxxxxxx xxxxxxxx
+		*0x40000000-0xFFFFFFFF :throw range exception
+		*</pre>
+		*
+		*@return A int capable of holding an unsigned 29 bit integer.
+		*@throws IOException
+		*@exclude
+		*/
+		__proto.readUInt29=function(){
+			var value=0;
+			var b=this.readByte()& 0xFF;
+			if (b < 128){
+				return b;
+			}
+			value=(b & 0x7F)<< 7;
+			b=this.readByte()& 0xFF;
+			if (b < 128){
+				return (value | b);
+			}
+			value=(value | (b & 0x7F))<< 7;
+			b=this.readByte()& 0xFF;
+			if (b < 128){
+				return (value | b);
+			}
+			value=(value | (b & 0x7F))<< 8;
+			b=this.readByte()& 0xFF;
+			return (value | b);
+		}
+
+		//============================================================================================
+		__proto.writeObject=function(o){
+			this._strTable=[];
+			this._objTable=[];
+			this._traitsTable=[];
+			this.writeObject2(o);
+		}
+
+		__proto.writeObject2=function(o){
+			if(o==null){
+				this.writeAMFNull();
+				return;
+			};
+			var type=typeof(o);
+			if("string"===type){
+				this.writeAMFString(o);
+			}
+			else if("boolean"===type){
+				this.writeAMFBoolean(o);
+			}
+			else if("number"===type){
+				if(String(o).indexOf(".")!=-1){
+					this.writeAMFDouble(o);
+				}
+				else{
+					this.writeAMFInt(o);
+				}
+			}
+			else if("object"===type){
+				if((o instanceof Array)){
+					this.writeArray(o);
+				}
+				else if((o instanceof com.iflash.utils.ByteArray )){
+					this.writeAMFByteArray(o);
+				}
+				else{
+					this.writeCustomObject(o);
+				}
+			}
+		}
+
+		__proto.writeAMFNull=function(){
+			this.writeByte(1);
+		}
+
+		__proto.writeAMFString=function(s){
+			this.writeByte(6);
+			this.writeStringWithoutType(s);
+		}
+
+		__proto.writeStringWithoutType=function(s){
+			if (s.length==0){
+				this.writeUInt29(1);
+				return;
+			};
+			var ref=this._strTable.indexOf(s);
+			if(ref>=0){
+				this.writeUInt29(ref << 1);
+				}else{
+				var utflen=this._getUTFBytesCount(s);
+				this.writeUInt29((utflen << 1)| 1);
+				this.writeUTFBytes(s);
+				this._strTable.push(s);
+			}
+		}
+
+		__proto.writeAMFInt=function(i){
+			if (i >=ByteArray.INT28_MIN_VALUE && i <=0x0FFFFFFF){
+				i=i & 0x1FFFFFFF;
+				this.writeByte(4);
+				this.writeUInt29(i);
+				}else {
+				this.writeAMFDouble(i);
+			}
+		}
+
+		__proto.writeAMFDouble=function(d){
+			this.writeByte(5);
+			this.writeDouble(d);
+		}
+
+		__proto.writeAMFBoolean=function(b){
+			if (b)
+				this.writeByte(3);
+			else
+			this.writeByte(2);
+		}
+
+		__proto.writeCustomObject=function(o){
+			this.writeByte(10);
+			var refNum=this._objTable.indexOf(o);
+			if(refNum!=-1){
+				this.writeUInt29(refNum << 1);
+			}
+			else{
+				this._objTable.push(o);
+				var traitsInfo=new Object();
+				traitsInfo.className=this.getAliasByObj(o);
+				traitsInfo.dynamic=false;
+				traitsInfo.externalizable=false;
+				traitsInfo.properties=[];
+				for(var prop in o){
+					if((typeof (o[prop])=='function'))continue ;
+					traitsInfo.properties.push(prop);
+					traitsInfo.properties.sort();
+				};
+				var tRef=ByteArray.getTraitsInfoRef(this._traitsTable,traitsInfo);
+				var count=traitsInfo.properties.length;
+				var i=0;
+				if(tRef>=0){
+					this.writeUInt29((tRef << 2)| 1);
+					}else{
+					this._traitsTable.push(traitsInfo);
+					this.writeUInt29(3 | (traitsInfo.externalizable ? 4 :0)| (traitsInfo.dynamic ? 8 :0)| (count << 4));
+					this.writeStringWithoutType(traitsInfo.className);
+					for(i=0;i<count;i++){
+						this.writeStringWithoutType(traitsInfo.properties[i]);
+					}
+				}
+				for(i=0;i<count;i++){
+					this.writeObject2(o[traitsInfo.properties[i]]);
+				}
+			}
+		}
+
+		/**
+		*获取实例的注册别名
+		*@param obj
+		*@return
+		*/
+		__proto.getAliasByObj=function(obj){
+			var tClassName=ClassUtils.getRegClass(obj);
+			if(tClassName==null || tClassName=="")return "";
+			var tClass=ClassUtils.getClass(tClassName);
+			if(tClass==null)return "";
+			var tkey;
+			return "";
+		}
+
+		__proto.writeArray=function(value){
+			this.writeByte(9);
+			var len=value.length;
+			var ref=this._objTable.indexOf(value);
+			if(ref>-1){
+				this.writeUInt29(len<<1);
+			}
+			else{
+				this.writeUInt29((len << 1)| 1);
+				this.writeStringWithoutType("");
+				for (var i=0;i < len;i++){
+					this.writeObject2(value[i]);
+				}
+				this._objTable.push(value);
+			}
+		}
+
+		__proto.writeAMFByteArray=function(ba){
+			this.writeByte(12);
+			var ref=this._objTable.indexOf(ba);
+			if(ref>=0){
+				this.writeUInt29(ref << 1);
+				}else{
+				var len=ba.length;
+				this.writeUInt29((len << 1)| 1);
+				this.writeBytes(ba,0,len);
+			}
+		}
+
+		__proto.writeMapAsECMAArray=function(o){
+			this.writeByte(9);
+			this.writeUInt29((0 << 1)| 1);
+			var count=0,key;
+			for (key in o){
+				count++;
+				this.writeStringWithoutType(key);
+				this.writeObject2(o[key]);
+			}
+			this.writeStringWithoutType("");
+		}
+
+		__proto.writeUInt29=function(ref){
+			if (ref < 0x80){
+				this.writeByte(ref);
+				}else if (ref < 0x4000){
+				this.writeByte(((ref >> 7)& 0x7F)| 0x80);
+				this.writeByte(ref & 0x7F);
+				}else if (ref < 0x200000){
+				this.writeByte(((ref >> 14)& 0x7F)| 0x80);
+				this.writeByte(((ref >> 7)& 0x7F)| 0x80);
+				this.writeByte(ref & 0x7F);
+				}else if (ref < 0x40000000){
+				this.writeByte(((ref >> 22)& 0x7F)| 0x80);
+				this.writeByte(((ref >> 15)& 0x7F)| 0x80);
+				this.writeByte(((ref >> 8)& 0x7F)| 0x80);
+				this.writeByte(ref & 0xFF);
+				}else {
+				console.log("Integer out of range: "+ref);
+			}
+		}
+
+		/**
+		*@exclude
+		*/
+		__proto.getTraitReference=function(ref){
+			return this._traitsTable[ref];
+		}
+
+		// Getters & Setters
+		__getset(0,__proto,'bytesAvailable',function(){
+			return this.length-this._position_;
+		});
+
+		__getset(0,__proto,'position',function(){
+			return this._position_;
+			},function(pos){
+			if (pos < this._$1__length)
+				this._position_=pos < 0?0:pos;
+			else{
+				this._position_=pos;
+				this.length=pos;
+			}
+		});
+
+		__getset(0,__proto,'endian',function(){
+			return this._littleEndian_ ? "littleEndian" :"bigEndian";
+			},function(endianStr){
+			this._littleEndian_=(endianStr=="littleEndian");
+		});
+
+		__getset(0,__proto,'length',function(){
+			return this._$1__length;
+			},function(value){
+			this._$1____resizeBuffer (this._$1__allocated_=value);
+			this._$1__length=value;
+		});
+
+		ByteArray.__ofBuffer=function(buffer){
+			var bytes=new ByteArray ();
+			bytes.length=bytes.allocated=buffer.byteLength;
+			bytes.data=new DataView(buffer);
+			bytes.byteView=new Uint8Array(buffer);
+			return bytes;
+		}
+
+		ByteArray.getTraitsInfoRef=function(arr,ti){
+			var i=0,len=arr.length;
+			for(i=0;i<len;i++){
+				if (ByteArray.equalsTraitsInfo(ti,arr[i]))return i;
+			}
+			return-1;
+		}
+
+		ByteArray.equalsTraitsInfo=function(ti1,ti2){
+			if (ti1==ti2){
+				return true;
+			}
+			if (!ti1.className===ti2.className){
+				return false;
+			}
+			if(ti1.properties.length !=ti2.properties.length){
+				return false;
+			};
+			var len=ti1.properties.length;
+			var prop;
+			ti1.properties.sort();ti2.properties.sort();
+			for(var i=0;i<len;i++){
+				if(ti1.properties[i] !=ti2.properties[i]){
+					return false;
+				}
+			}
+			return true;
+		}
+
+		ByteArray.BIG_ENDIAN="bigEndian";
+		ByteArray.LITTLE_ENDIAN="littleEndian";
+		ByteArray.UNDEFINED_TYPE=0;
+		ByteArray.NULL_TYPE=1;
+		ByteArray.FALSE_TYPE=2;
+		ByteArray.TRUE_TYPE=3;
+		ByteArray.INTEGER_TYPE=4;
+		ByteArray.DOUBLE_TYPE=5;
+		ByteArray.STRING_TYPE=6;
+		ByteArray.XML_TYPE=7;
+		ByteArray.DATE_TYPE=8;
+		ByteArray.ARRAY_TYPE=9;
+		ByteArray.OBJECT_TYPE=10;
+		ByteArray.AVMPLUSXML_TYPE=11;
+		ByteArray.BYTEARRAY_TYPE=12;
+		ByteArray.EMPTY_STRING="";
+		ByteArray.UINT29_MASK=0x1FFFFFFF;
+		ByteArray.INT28_MAX_VALUE=0x0FFFFFFF;
+		ByteArray.INT28_MIN_VALUE=-268435456;
+		return ByteArray;
+	})(Byte)
+
+
 	//class laya.webgl.shapes.Line extends laya.webgl.shapes.BasePoly
 	var Line=(function(_super){
 		function Line(x,y,points,borderWidth,color){
@@ -20539,11 +22542,17 @@ var Laya=window.Laya=(function(window,document){
 			this.initMediator();
 		}
 
-		__proto.initCommand=function(){}
+		__proto.initCommand=function(){
+			this.registerCommand("hallSocketConnect",ConnectHallCommand);
+			this.registerCommand("hallSocketConnectComplete",ConnectHallCommand);
+			this.registerCommand("hallSocketConnectFailed",ConnectHallCommand);
+		}
+
 		//registerCommand(ENCSType.CS_TYPE_ROUND_CASH_NOTIFY.toString(),SettlementRoundCommand);//开始结算
 		__proto.initModel=function(){
 			this.registerModel(new PreLoadService("perLoadService"));
 			this.registerModel(new BullProtoModel("BullProtoModel"));
+			this.registerModel(new HallSocketService("hallSocketService"));
 			this.asSingleton("ConfigData",ConfigData);
 		}
 
@@ -20639,70 +22648,110 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
-	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
-	var SmallLoadingMediator=(function(_super){
-		function SmallLoadingMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
+	/**
+	*这里处理大厅的socket连接
+	*@author light-k
+	*
+	*/
+	//class bull.modules.BullHall.service.HallSocketService extends com.lightMVC.parrerns.Model
+	var HallSocketService=(function(_super){
+		function HallSocketService(modelName,data){
+			this._socket=null;
+			this.ProtoModel=null;
+			this.num=0;
+			this.timer=null;
+			HallSocketService.__super.call(this,modelName,data);
+			this._socket=new SocketConnect();
+			this._socket.addEventListener("connect",this,this.onSocketConnect);
+			this._socket.addEventListener("close",this,this.onSocketClose);
+			this._socket.addEventListener("receive",this,this.onMessageReveived);
+			this._socket.addEventListener("connectFail",this,this.onConnectionFailed);
 		}
 
-		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
-		var __proto=SmallLoadingMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-		}
-
-		SmallLoadingMediator.NAME="smallLoadingMediator";
-		return SmallLoadingMediator;
-	})(Mediator)
-
-
-	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
-	var TipsLoadMediator=(function(_super){
-		function TipsLoadMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			TipsLoadMediator.__super.call(this,mediatorName,viewComponent);
-		}
-
-		__class(TipsLoadMediator,'bull.modules.perload.mediator.TipsLoadMediator',_super);
-		var __proto=TipsLoadMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__class(HallSocketService,'bull.modules.BullHall.service.HallSocketService',_super);
+		var __proto=HallSocketService.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
 		__proto.getInjector=function(){
-			return [];
+			return ["BullProtoModel"];
 		}
 
-		__proto.setViewComponent=function(viewComponent){
-			_super.prototype.setViewComponent.call(this,viewComponent);
-			this.addNotifiction("loadDataMessage");
-			console.log("TipsLoadMediator setViewComponent");
-			var objData=Light.loader.getRes("tipText");
-			var tips=[];
-			for (var id in objData){
-				var value=objData[id];
-				console.log
-				tips.push(value.cn);
+		__proto.onConnectionFailed=function(e){
+			console.log("连接失败");
+		}
+
+		__proto.connect=function(host,port){
+			this._socket.connect(host,port);
+		}
+
+		__proto.sentMsg=function(message){
+			if(message.msg_type !=3)
+				console.log("发送消息给服务端：type:",message.msg_type," msg:",message);
+			else
+			console.log("心跳消息给服务端：type:",message.msg_type," msg:",message);
+			var byte=message.encode().toBuffer();
+			var builder=/*no*/this.carProtoModel.msg_proto.CS_Builer();
+			var temp=builder.decode(byte);
+			var test=new Byte(byte);
+			this._socket.sent(byte);
+		}
+
+		__proto.onSocketConnect=function(e){
+			console.log("大厅连接成功");
+			this.num=0;
+			this.sentNotification("hallSocketConnectComplete");
+		}
+
+		__proto.close=function(){
+			console.log("大厅SocketClose");
+			this._socket.close();
+			this.num=0;
+		}
+
+		__proto.onSocketClose=function(e){
+			this.clearTimer();
+			Alert.show("您的网络异常，请检查网络!","",AlertPanel,null,Handler.create(this,this.alertClose));
+		}
+
+		__proto.alertClose=function(){}
+		__proto.onMessageReveived=function(e){
+			var msgbyte=e.data;
+			var input=this.ProtoModel.msg_proto.CS_Builer().decode(msgbyte.buffer);
+			if(input.msg_type !=4)
+				console.log("大厅服务端返回消息 type：",input.msg_type," msg:"+input);
+			else
+			console.log("大厅心跳包返回消息 type：",input.msg_type," msg:"+input);
+			this.sentNotification(input.msg_type.toString(),input);
+		}
+
+		__proto.reconnect=function(){
+			if(this.num>2){
+				this.clearTimer();
+				Alert.show("网络异常，请检查网络!","",AlertPanel,null,Handler.create(this,this.alertClose));
+				return;
 			}
-			this.view.showTips(tips);
+			this.startTimer();
+			this.num++;
+			var config=this.getSingleton("ConfigData");
+			this.connect(config.ip,config.port);
 		}
 
-		__proto.handler=function(noti){
-			if(noti.getName()=="loadDataMessage"){
-				this.view.show(noti.getBody().value);
+		__proto.startTimer=function(){
+			if(!this.timer){
+				this.timer=new Timer();
+				this.timer.loop(5000,this,this.reconnect);
 			}
 		}
 
-		__proto.onShowProgress=function(value){
-			console.log("this tips progress --- "+value);
+		__proto.clearTimer=function(){
+			this.timer.clear(this,this.reconnect);
+			this.timer=null;
+			this.num=0;
+			this._socket.close();
 		}
 
-		__getset(0,__proto,'view',function(){
-			return this.viewComponent;
-		});
-
-		TipsLoadMediator.NAME="tipsLoadMediator";
-		return TipsLoadMediator;
-	})(Mediator)
+		HallSocketService.NAME="hallSocketService";
+		return HallSocketService;
+	})(Model)
 
 
 	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
@@ -20731,6 +22780,39 @@ var Laya=window.Laya=(function(window,document){
 		BullProtoModel.NAME="BullProtoModel";
 		return BullProtoModel;
 	})(Model)
+
+
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
 
 
 	//import light.car.view.room.CarScene;
@@ -20803,9 +22885,11 @@ var Laya=window.Laya=(function(window,document){
 			this.sentNotification("car.Change_Scene","Scene_Hall");
 			Light.scence.addEventListener("scenceProgress",this,this.onProgress,["hall"]);
 			Light.scence.addEventListener("scenceComplete",this,this.onComplate,["hall"]);
+			Light.scence.addScence("hall",["Hall"],Light.layer.scence,1)
+			.regView("Hall",Hall);
+			Light.scence.creat();
 		}
 
-		//Light.scence.creat();
 		__proto.loadRoom=function(){
 			this.sentNotification("car.Change_Scene","Scene_Game");
 			Light.scence.addEventListener("scenceProgress",this,this.onProgress,["room"]);
@@ -20821,9 +22905,9 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.protoLoaded=function(){
 			console.log("protoLoaded");
+			this.loadHall();
 		}
 
-		//loadHall();
 		__proto.onProgress=function(scenceName,e){
 			switch(scenceName){
 				case "config":
@@ -20849,10 +22933,6 @@ var Laya=window.Laya=(function(window,document){
 					console.log("tipsLoadPanel");
 					this.loadGameConfig();
 					break ;
-				case "hall":
-					console.log("sentNotification","socketConnect");
-					this.sentNotification("hallSocketConnect");
-					break ;
 				case "config":
 					console.log("config",Light.loader.getRes("error_code"));
 					console.log("language",Light.loader.getRes("language"));
@@ -20864,6 +22944,10 @@ var Laya=window.Laya=(function(window,document){
 				case "common":
 					Light.scence.removeScence("common");
 					this.loadProto();
+					break ;
+				case "hall":
+					console.log("sentNotification","socketConnect");
+					this.sentNotification("hallSocketConnect");
 					break ;
 				case "room":
 					console.log("sentNotification","roomSocketConnect");
@@ -20883,6 +22967,72 @@ var Laya=window.Laya=(function(window,document){
 		PreLoadService.NAME="perLoadService";
 		return PreLoadService;
 	})(Model)
+
+
+	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
+	var SmallLoadingMediator=(function(_super){
+		function SmallLoadingMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
+		}
+
+		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
+		var __proto=SmallLoadingMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+		}
+
+		SmallLoadingMediator.NAME="smallLoadingMediator";
+		return SmallLoadingMediator;
+	})(Mediator)
+
+
+	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
+	var TipsLoadMediator=(function(_super){
+		function TipsLoadMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			TipsLoadMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(TipsLoadMediator,'bull.modules.perload.mediator.TipsLoadMediator',_super);
+		var __proto=TipsLoadMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			_super.prototype.setViewComponent.call(this,viewComponent);
+			this.addNotifiction("loadDataMessage");
+			console.log("TipsLoadMediator setViewComponent");
+			var objData=Light.loader.getRes("tipText");
+			var tips=[];
+			for (var id in objData){
+				var value=objData[id];
+				console.log
+				tips.push(value.cn);
+			}
+			this.view.showTips(tips);
+		}
+
+		__proto.handler=function(noti){
+			if(noti.getName()=="loadDataMessage"){
+				this.view.show(noti.getBody().value);
+			}
+		}
+
+		__proto.onShowProgress=function(value){
+			console.log("this tips progress --- "+value);
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.viewComponent;
+		});
+
+		TipsLoadMediator.NAME="tipsLoadMediator";
+		return TipsLoadMediator;
+	})(Mediator)
 
 
 	/**
@@ -22276,6 +24426,422 @@ var Laya=window.Laya=(function(window,document){
 	})(Resource)
 
 
+	/*
+	*@author light
+	*上午9:07:24
+	*/
+	//class com.lightUI.events.LightEvent extends com.iflash.events.Event
+	var LightEvent=(function(_super){
+		function LightEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			LightEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(LightEvent,'com.lightUI.events.LightEvent',_super);
+		LightEvent.CLOSE="close";
+		LightEvent.ITEM_CLICK="item_click";
+		LightEvent.CREATCOMPLETE="creatComplete";
+		LightEvent.CHANGE="change";
+		LightEvent.COMPLETE="complete";
+		LightEvent.TIME_OUT="timeOut";
+		return LightEvent;
+	})(Event)
+
+
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
+
+
+	//class com.lightUI.manager.LayerMask extends com.iflash.events.EventDispatcher
+	var LayerMask=(function(_super){
+		function LayerMask(){
+			this._root=null;
+			this.lodingMask=null;
+			this.limitTime=20000;
+			this._interval=-1;
+			LayerMask.__super.call(this);
+			this.loadingDic=new Dictionary();
+		}
+
+		__class(LayerMask,'com.lightUI.manager.LayerMask',_super);
+		var __proto=LayerMask.prototype;
+		__proto.init=function(root){
+			this._root=root;
+			this.lodingMask=new Sprite();
+			this.lodingMask.graphics.drawRect(0,0,Laya.stage.width,Laya.stage.height,0x000000);
+			this.lodingMask.alpha=.2
+		}
+
+		__proto.lock=function(key){
+			if(this.loadingDic.get(key)){
+				this.loadingDic.set(key,this.loadingDic.get(key)+1);
+				}else{
+				this.loadingDic.set(key,1);
+			}
+			if(!this.lodingMask.parent){
+				this.lodingMask["showme"](Laya.stage);
+				Laya.timer.once(this.limitTime,this,this.dispatchTimeOutEvent);
+			}
+			console.log("LayerMask lock: ",key);
+			this.showKeys();
+		}
+
+		__proto.dispatchTimeOutEvent=function(){
+			this.dispatchEvent(new LightEvent("timeOut"));
+		}
+
+		__proto.showKeys=function(){
+			console.log("LayerMask showKeys: ",this.loadingDic.keys);
+		}
+
+		__proto.unLock=function(key){
+			if(this.loadingDic.get(key)){
+				this.loadingDic.set(key,this.loadingDic.get(key)-1);
+				if(this.loadingDic.get(key)<=0){
+					this.loadingDic.remove(key);
+				}
+				if(this.loadingDic.keys.length==0){
+					if(this.lodingMask.parent){
+						Laya.timer.clear(this,this.dispatchTimeOutEvent);
+						this.lodingMask.parent.removeChild(this.lodingMask);
+						this.lodingMask["hideme"]();
+					}
+				}
+				}else{
+				console.log("没有此loading "+key);
+			}
+			console.log("LayerMask unLock: ",key);
+			this.showKeys();
+		}
+
+		__proto.clear=function(){
+			this.loadingDic.clear();
+			if(this.lodingMask.parent)this.lodingMask.parent.removeChild(this.lodingMask);
+			Laya.timer.clear(this,this.dispatchTimeOutEvent);
+		}
+
+		return LayerMask;
+	})(EventDispatcher)
+
+
+	/**
+	*场景管理器
+	*@author light-k
+	*
+	*/
+	//class com.lightUI.manager.scence.ScenceManager extends com.iflash.events.EventDispatcher
+	var ScenceManager=(function(_super){
+		function ScenceManager(){
+			this._scenceInfo=null;
+			this._scenceCreatTempList=[];
+			this._scenceCreatList=[];
+			this._isLoading=false;
+			this._onComplete=null;
+			this._onProgress=null;
+			ScenceManager.__super.call(this);
+			this._scenceMap=new Dictionary();
+		}
+
+		__class(ScenceManager,'com.lightUI.manager.scence.ScenceManager',_super);
+		var __proto=ScenceManager.prototype;
+		__proto.init=function(sinfo){
+			this._scenceInfo=sinfo;
+		}
+
+		/**
+		*
+		*@param name 要添加的场景名字
+		*@param views 要添加的视图UI
+		*@param parent 被添加到的层级
+		*@param treat 对前场景的处理方式 ScenceInfo.KEPT_PERSCENCE 0 ScenceInfo.HIDE_PERSCENCE 1 ScenceInfo.REMOVE_PERSCCENCE 2
+		*@return
+		*
+		*/
+		__proto.addScence=function(name,views,parent,treat){
+			(treat===void 0)&& (treat=0);
+			parent=parent?parent:Laya.stage;
+			var info=this.getScenceInfo(name);
+			if(info==null){
+				info=new ScenceInfo(name,this._scenceInfo[name],views,parent,treat);
+			}
+			this._scenceCreatList.push(info);
+			this._scenceCreatTempList.push(info);
+			return this;
+		}
+
+		__proto.creat=function(progress,complete){
+			if(this._scenceCreatList.length==0)return;
+			if(this._isLoading)throw new Error("还有场景没加载完");
+			this._onComplete=complete;
+			this._onProgress=progress;
+			this._isLoading=true;
+			this.loadAssets(this._scenceCreatList[0]);
+		}
+
+		__proto.creatScence=function(scence){
+			this.treatPerScence(scence.treatPerScence);
+			if(scence.state==3){
+				this.showScence(scence);
+				}else{
+				this.newScence(scence);
+			}
+		}
+
+		//trace("已经创建了一个场景",scence.state,scence.name)
+		__proto.treatPerScence=function(treat){
+			if(treat==1){
+				this.hidePerScence();
+				}else if(treat==2){
+			}else if(treat==0){}
+		}
+
+		__proto.hidePerScence=function(){
+			var l=0;
+			var mui;
+			var scence;
+			for(var $each_scence in this._scenceMap.values){
+				scence=this._scenceMap.values[$each_scence];
+				if(scence.state==3)continue ;
+				this.hideScence(scence);
+			}
+		}
+
+		__proto.newScence=function(scence){
+			var l=scence.viewNames.length;
+			var viewname;
+			var view;
+			for (var i=0;i < l;i++){
+				viewname=scence.viewNames[i];
+				view=ClassUtils.getInstance(viewname);
+				view.name=viewname;
+				this.dispatchEvent(new ScenceManagerEvent("uiCreated",view));
+				scence.views.push(view);
+				scence.parent.addChild(view);
+				view.event("uiShow");
+			}
+			this._scenceMap.set(scence.name,scence);
+			scence.state=1;
+		}
+
+		//scence.state=ScenceInfo.SHOW;
+		__proto.hideScence=function(scence){
+			console.log("hideScence",scence.name)
+			var mui;
+			var l=scence.views.length;
+			for (var i=0;i < l;i++){
+				mui=scence.views[i];
+				if(mui.parent)mui.parent.removeChild(mui);
+				mui.event("uiHide");
+			}
+			scence.state=3;
+		}
+
+		__proto.showScence=function(scence){
+			var mui;
+			var l=scence.views.length;
+			for (var i=0;i < l;i++){
+				mui=scence.views[i];
+				scence.parent.addChild(mui);
+				mui.event("uiShow");
+			}
+			scence.state=2;
+		}
+
+		__proto.destroyScence=function(scence){
+			var mui;
+			var l=scence.views.length;
+			for (var i=0;i < l;i++){
+				mui=scence.views[i];
+				mui.event("uiDestroy");
+				if(mui.parent)mui.parent.removeChild(mui);
+			}
+			scence.destroy();
+			scence.state=4;
+		}
+
+		__proto.loadAssets=function(info){
+			var assets=info.assets;
+			var loads=[];
+			for (var i=0;i < assets.length;i++){
+				loads.push(Light.loader.URLM.getURLInfo(assets[i]));
+			}
+			Light.loader.load(loads,Handler.create(this,this.onAssetsLoaded,[info],true),Handler.create(this,this.onProgress,[info],false));
+		}
+
+		__proto.onAssetsLoaded=function(info){
+			Light.loader.offAll();
+			this.creatScence(info);
+			this._scenceCreatList.shift();
+			if(this._scenceCreatList.length > 0)this.loadAssets(this._scenceCreatList[0]);
+			else{
+				console.log("全部加载完成");
+				this._isLoading=false;
+				this._scenceCreatList=[];
+				this._scenceCreatTempList=[];
+				if(this._onComplete)this._onComplete.run();
+				this.dispatchEvent(new ScenceManagerEvent("scenceComplete",info.name));
+			}
+		}
+
+		__proto.onProgress=function(info,pro){
+			var total=0;
+			var curr=0;
+			var l=this._scenceCreatTempList.length;
+			var sinfo;
+			for (var i=0;i < l;i++){
+				sinfo=this._scenceCreatTempList[i];
+				total+=sinfo.assets.length;
+				if(sinfo.state==1)curr+=sinfo.assets.length;
+			};
+			var num=(curr+info.assets.length*pro)/total;
+			if(this._onProgress)this._onProgress.runWith(num);
+			this.dispatchEvent(new ScenceManagerEvent("scenceProgress",num));
+		}
+
+		//trace("加载了总文件的==>:",num,info.state);
+		__proto.regView=function(name,clazz){
+			ClassUtils.regClass(name,clazz);
+			return this;
+		}
+
+		__proto.removeScence=function(name,destroy){
+			(destroy===void 0)&& (destroy=false);
+			var info=this._scenceMap.get(name);
+			if(!info){
+				console.log("你想要移除的场景("+name+")不存在");
+				return;
+			}
+			if(destroy){
+				info.destroy();
+				this._scenceMap.remove(name);
+			}
+			else this.hideScence(info);
+		}
+
+		__proto.getScenceInfo=function(name){
+			return this._scenceMap.get(name);
+		}
+
+		return ScenceManager;
+	})(EventDispatcher)
+
+
+	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
+	var SocketConnect=(function(_super){
+		function SocketConnect(){
+			this._socket=null;
+			this._receiveBytes=null;
+			this._msgBytes=null;
+			this._sendBytes=null;
+			this._host=null;
+			this._port=0;
+			this._retryTimes=0;
+			this._currRetryTimes=0;
+			this._interval=3000;
+			this.isReConnect=false;
+			this.name=null;
+			this._lengthNeedReceived=0;
+			this._hasReededHead=false;
+			this._dataByte=null;
+			SocketConnect.__super.call(this);
+			this.init();
+		}
+
+		__class(SocketConnect,'com.lightUI.net.SocketConnect',_super);
+		var __proto=SocketConnect.prototype;
+		__proto.init=function(){
+			this._receiveBytes=new ByteArray();
+			this._sendBytes=new ByteArray();
+			this._socket=new Socket();
+			this._socket.endian="bigEndian";
+			this._socket.on("open",this,this.onSocketOpen);
+			this._socket.on("close",this,this.onSocketClose);
+			this._socket.on("message",this,this.onMessageReveived);
+		}
+
+		/**
+		*连接服务器
+		*@param host
+		*@param port
+		*
+		*/
+		__proto.connect=function(host,port){
+			this._host=host;
+			this._port=port;
+			console.log("[SocketConnect] ","connect",host,port,this._currRetryTimes,this._retryTimes);
+			this._socket.connect(host,port);
+			this._currRetryTimes++;
+		}
+
+		__proto.sent=function(msg){
+			if(!this._socket || !this._socket.output)return;
+			var _dataByte=new Byte(msg);
+			(this._socket.output).writeArrayBuffer(msg,0,msg.byteLength);
+			this._socket.flush();
+		}
+
+		__proto.close=function(){
+			this._socket.close();
+		}
+
+		__proto.isConnected=function(){
+			return this._socket.connected;
+		}
+
+		/**
+		*收到数据
+		*@param evt
+		*
+		*/
+		__proto.onMessageReveived=function(message){
+			if ((typeof message=='string')){
+				console.log("is String");
+				}else if ((message instanceof ArrayBuffer)){
+				console.log("is ArrayBuffer");
+				this._dataByte=new Byte(message);
+				this._dataByte.endian="bigEndian";
+				this.dispatchEvent(new SocketConnectEvent("receive",this._dataByte));
+			}
+		}
+
+		__proto.onSocketOpen=function(evt){
+			console.log('Socket connect success！',this._port);
+			this._currRetryTimes=0;
+			this.dispatchEvent(new SocketConnectEvent("connect"));
+		}
+
+		__proto.onSocketClose=function(evt){
+			console.log("close: ",evt);
+			this.clear();
+			this.dispatchEvent(new SocketConnectEvent("close"));
+			this.dispatchEvent(new SocketConnectEvent("connection dropped"));
+		}
+
+		//reconnect();
+		__proto.clear=function(){
+			this._currRetryTimes=0;
+		}
+
+		return SocketConnect;
+	})(EventDispatcher)
+
+
 	//class laya.webgl.shader.Shader extends laya.resource.Resource
 	var Shader=(function(_super){
 		function Shader(vs,ps,saveName,nameMap){
@@ -22838,305 +25404,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Resource)
 
 
-	/*
-	*@author light
-	*上午9:07:24
-	*/
-	//class com.lightUI.events.LightEvent extends com.iflash.events.Event
-	var LightEvent=(function(_super){
-		function LightEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			LightEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(LightEvent,'com.lightUI.events.LightEvent',_super);
-		LightEvent.CLOSE="close";
-		LightEvent.ITEM_CLICK="item_click";
-		LightEvent.CREATCOMPLETE="creatComplete";
-		LightEvent.CHANGE="change";
-		LightEvent.COMPLETE="complete";
-		LightEvent.TIME_OUT="timeOut";
-		return LightEvent;
-	})(Event)
-
-
-	//class com.lightUI.manager.LayerMask extends com.iflash.events.EventDispatcher
-	var LayerMask=(function(_super){
-		function LayerMask(){
-			this._root=null;
-			this.lodingMask=null;
-			this.limitTime=20000;
-			this._interval=-1;
-			LayerMask.__super.call(this);
-			this.loadingDic=new Dictionary();
-		}
-
-		__class(LayerMask,'com.lightUI.manager.LayerMask',_super);
-		var __proto=LayerMask.prototype;
-		__proto.init=function(root){
-			this._root=root;
-			this.lodingMask=new Sprite();
-			this.lodingMask.graphics.drawRect(0,0,Laya.stage.width,Laya.stage.height,0x000000);
-			this.lodingMask.alpha=.2
-		}
-
-		__proto.lock=function(key){
-			if(this.loadingDic.get(key)){
-				this.loadingDic.set(key,this.loadingDic.get(key)+1);
-				}else{
-				this.loadingDic.set(key,1);
-			}
-			if(!this.lodingMask.parent){
-				this.lodingMask["showme"](Laya.stage);
-				Laya.timer.once(this.limitTime,this,this.dispatchTimeOutEvent);
-			}
-			console.log("LayerMask lock: ",key);
-			this.showKeys();
-		}
-
-		__proto.dispatchTimeOutEvent=function(){
-			this.dispatchEvent(new LightEvent("timeOut"));
-		}
-
-		__proto.showKeys=function(){
-			console.log("LayerMask showKeys: ",this.loadingDic.keys);
-		}
-
-		__proto.unLock=function(key){
-			if(this.loadingDic.get(key)){
-				this.loadingDic.set(key,this.loadingDic.get(key)-1);
-				if(this.loadingDic.get(key)<=0){
-					this.loadingDic.remove(key);
-				}
-				if(this.loadingDic.keys.length==0){
-					if(this.lodingMask.parent){
-						Laya.timer.clear(this,this.dispatchTimeOutEvent);
-						this.lodingMask.parent.removeChild(this.lodingMask);
-						this.lodingMask["hideme"]();
-					}
-				}
-				}else{
-				console.log("没有此loading "+key);
-			}
-			console.log("LayerMask unLock: ",key);
-			this.showKeys();
-		}
-
-		__proto.clear=function(){
-			this.loadingDic.clear();
-			if(this.lodingMask.parent)this.lodingMask.parent.removeChild(this.lodingMask);
-			Laya.timer.clear(this,this.dispatchTimeOutEvent);
-		}
-
-		return LayerMask;
-	})(EventDispatcher)
-
-
-	/**
-	*场景管理器
-	*@author light-k
-	*
-	*/
-	//class com.lightUI.manager.scence.ScenceManager extends com.iflash.events.EventDispatcher
-	var ScenceManager=(function(_super){
-		function ScenceManager(){
-			this._scenceInfo=null;
-			this._scenceCreatTempList=[];
-			this._scenceCreatList=[];
-			this._isLoading=false;
-			this._onComplete=null;
-			this._onProgress=null;
-			ScenceManager.__super.call(this);
-			this._scenceMap=new Dictionary();
-		}
-
-		__class(ScenceManager,'com.lightUI.manager.scence.ScenceManager',_super);
-		var __proto=ScenceManager.prototype;
-		__proto.init=function(sinfo){
-			this._scenceInfo=sinfo;
-		}
-
-		/**
-		*
-		*@param name 要添加的场景名字
-		*@param views 要添加的视图UI
-		*@param parent 被添加到的层级
-		*@param treat 对前场景的处理方式 ScenceInfo.KEPT_PERSCENCE 0 ScenceInfo.HIDE_PERSCENCE 1 ScenceInfo.REMOVE_PERSCCENCE 2
-		*@return
-		*
-		*/
-		__proto.addScence=function(name,views,parent,treat){
-			(treat===void 0)&& (treat=0);
-			parent=parent?parent:Laya.stage;
-			var info=this.getScenceInfo(name);
-			if(info==null){
-				info=new ScenceInfo(name,this._scenceInfo[name],views,parent,treat);
-			}
-			this._scenceCreatList.push(info);
-			this._scenceCreatTempList.push(info);
-			return this;
-		}
-
-		__proto.creat=function(progress,complete){
-			if(this._scenceCreatList.length==0)return;
-			if(this._isLoading)throw new Error("还有场景没加载完");
-			this._onComplete=complete;
-			this._onProgress=progress;
-			this._isLoading=true;
-			this.loadAssets(this._scenceCreatList[0]);
-		}
-
-		__proto.creatScence=function(scence){
-			this.treatPerScence(scence.treatPerScence);
-			if(scence.state==3){
-				this.showScence(scence);
-				}else{
-				this.newScence(scence);
-			}
-		}
-
-		//trace("已经创建了一个场景",scence.state,scence.name)
-		__proto.treatPerScence=function(treat){
-			if(treat==1){
-				this.hidePerScence();
-				}else if(treat==2){
-			}else if(treat==0){}
-		}
-
-		__proto.hidePerScence=function(){
-			var l=0;
-			var mui;
-			var scence;
-			for(var $each_scence in this._scenceMap.values){
-				scence=this._scenceMap.values[$each_scence];
-				if(scence.state==3)continue ;
-				this.hideScence(scence);
-			}
-		}
-
-		__proto.newScence=function(scence){
-			var l=scence.viewNames.length;
-			var viewname;
-			var view;
-			for (var i=0;i < l;i++){
-				viewname=scence.viewNames[i];
-				view=ClassUtils.getInstance(viewname);
-				view.name=viewname;
-				this.dispatchEvent(new ScenceManagerEvent("uiCreated",view));
-				scence.views.push(view);
-				scence.parent.addChild(view);
-				view.event("uiShow");
-			}
-			this._scenceMap.set(scence.name,scence);
-			scence.state=1;
-		}
-
-		//scence.state=ScenceInfo.SHOW;
-		__proto.hideScence=function(scence){
-			console.log("hideScence",scence.name)
-			var mui;
-			var l=scence.views.length;
-			for (var i=0;i < l;i++){
-				mui=scence.views[i];
-				if(mui.parent)mui.parent.removeChild(mui);
-				mui.event("uiHide");
-			}
-			scence.state=3;
-		}
-
-		__proto.showScence=function(scence){
-			var mui;
-			var l=scence.views.length;
-			for (var i=0;i < l;i++){
-				mui=scence.views[i];
-				scence.parent.addChild(mui);
-				mui.event("uiShow");
-			}
-			scence.state=2;
-		}
-
-		__proto.destroyScence=function(scence){
-			var mui;
-			var l=scence.views.length;
-			for (var i=0;i < l;i++){
-				mui=scence.views[i];
-				mui.event("uiDestroy");
-				if(mui.parent)mui.parent.removeChild(mui);
-			}
-			scence.destroy();
-			scence.state=4;
-		}
-
-		__proto.loadAssets=function(info){
-			var assets=info.assets;
-			var loads=[];
-			for (var i=0;i < assets.length;i++){
-				loads.push(Light.loader.URLM.getURLInfo(assets[i]));
-			}
-			Light.loader.load(loads,Handler.create(this,this.onAssetsLoaded,[info],true),Handler.create(this,this.onProgress,[info],false));
-		}
-
-		__proto.onAssetsLoaded=function(info){
-			Light.loader.offAll();
-			this.creatScence(info);
-			this._scenceCreatList.shift();
-			if(this._scenceCreatList.length > 0)this.loadAssets(this._scenceCreatList[0]);
-			else{
-				console.log("全部加载完成");
-				this._isLoading=false;
-				this._scenceCreatList=[];
-				this._scenceCreatTempList=[];
-				if(this._onComplete)this._onComplete.run();
-				this.dispatchEvent(new ScenceManagerEvent("scenceComplete",info.name));
-			}
-		}
-
-		__proto.onProgress=function(info,pro){
-			var total=0;
-			var curr=0;
-			var l=this._scenceCreatTempList.length;
-			var sinfo;
-			for (var i=0;i < l;i++){
-				sinfo=this._scenceCreatTempList[i];
-				total+=sinfo.assets.length;
-				if(sinfo.state==1)curr+=sinfo.assets.length;
-			};
-			var num=(curr+info.assets.length*pro)/total;
-			if(this._onProgress)this._onProgress.runWith(num);
-			this.dispatchEvent(new ScenceManagerEvent("scenceProgress",num));
-		}
-
-		//trace("加载了总文件的==>:",num,info.state);
-		__proto.regView=function(name,clazz){
-			ClassUtils.regClass(name,clazz);
-			return this;
-		}
-
-		__proto.removeScence=function(name,destroy){
-			(destroy===void 0)&& (destroy=false);
-			var info=this._scenceMap.get(name);
-			if(!info){
-				console.log("你想要移除的场景("+name+")不存在");
-				return;
-			}
-			if(destroy){
-				info.destroy();
-				this._scenceMap.remove(name);
-			}
-			else this.hideScence(info);
-		}
-
-		__proto.getScenceInfo=function(name){
-			return this._scenceMap.get(name);
-		}
-
-		return ScenceManager;
-	})(EventDispatcher)
-
-
 	/**
 	*@private
 	*audio标签播放声音的音轨控制
@@ -23640,6 +25907,32 @@ var Laya=window.Laya=(function(window,document){
 		RenderTarget2D.POOL=[];
 		return RenderTarget2D;
 	})(Texture)
+
+
+	//class com.iflash.net.Socket extends laya.net.Socket
+	var Socket1=(function(_super){
+		function Socket(host,port,byteClass){
+			this._outPut=null;
+			(port===void 0)&& (port=0);
+			byteClass=byteClass?byteClass:com.iflash.ByteArray;
+			Socket.__super.call(this,host,port,byteClass);
+		}
+
+		__class(Socket,'com.iflash.net.Socket',_super,'Socket1');
+		var __proto=Socket.prototype;
+		__proto.connectByUrl=function(url){
+			_super.prototype.connectByUrl.call(this,url);
+			this._outPut=this.output;
+		}
+
+		__proto.writeBytes=function(bytes,offset,length){
+			(offset===void 0)&& (offset=0);
+			(length===void 0)&& (length=0);
+			this._outPut.writeBytes(bytes,offset,length);
+		}
+
+		return Socket;
+	})(Socket)
 
 
 	//class laya.webgl.shader.d2.fillTexture.FillTextureSV extends laya.webgl.shader.d2.value.Value2D
@@ -26527,6 +28820,33 @@ var Laya=window.Laya=(function(window,document){
 		ScenceManagerEvent.SCENCE_COMPLETE="scenceComplete";
 		ScenceManagerEvent.SCENCE_PROGRESS="scenceProgress";
 		return ScenceManagerEvent;
+	})(LightEvent)
+
+
+	/**
+	*@author light
+	*创建时间：2015-9-14 下午12:00:09
+	*
+	*/
+	//class com.lightUI.net.SocketConnectEvent extends com.lightUI.events.LightEvent
+	var SocketConnectEvent=(function(_super){
+		////////////////实在是连不上啊（一定时间内都一直连不上服务器）
+		function SocketConnectEvent(type,data,bubbles,cancelable){
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			SocketConnectEvent.__super.call(this,type,data,bubbles,cancelable);
+		}
+
+		__class(SocketConnectEvent,'com.lightUI.net.SocketConnectEvent',_super);
+		SocketConnectEvent.OPEN="open";
+		SocketConnectEvent.LOGIN="login";
+		SocketConnectEvent.CONNECT="connect";
+		SocketConnectEvent.RECEIVE="receive";
+		SocketConnectEvent.CLOSE="close";
+		SocketConnectEvent.CONNECT_FAIL="connectFail";
+		SocketConnectEvent.DROPPED="connection dropped";
+		SocketConnectEvent.CANT_CONN="cantConn";
+		return SocketConnectEvent;
 	})(LightEvent)
 
 
@@ -34159,107 +36479,6 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
-	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
-	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
-	*
-	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.HSlider;
-		*import laya.ui.VSlider;
-		*import laya.utils.Handler;
-		*public class VSlider_Example
-		*{
-			*private var vSlider:VSlider;
-			*public function VSlider_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
-				*}
-			*private function onLoadComplete():void
-			*{
-				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-				*vSlider.min=0;//设置 vSlider 最低位置值。
-				*vSlider.max=10;//设置 vSlider 最高位置值。
-				*vSlider.value=2;//设置 vSlider 当前位置值。
-				*vSlider.tick=1;//设置 vSlider 刻度值。
-				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
-				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-				*}
-			*private function onChange(value:Number):void
-			*{
-				*trace("滑块的位置： value="+value);
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*var vSlider;
-	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
-	*function onLoadComplete(){
-		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-		*vSlider.min=0;//设置 vSlider 最低位置值。
-		*vSlider.max=10;//设置 vSlider 最高位置值。
-		*vSlider.value=2;//设置 vSlider 当前位置值。
-		*vSlider.tick=1;//设置 vSlider 刻度值。
-		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
-		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-		*}
-	*function onChange(value){
-		*console.log("滑块的位置： value="+value);
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*import HSlider=laya.ui.HSlider;
-	*import VSlider=laya.ui.VSlider;
-	*import Handler=laya.utils.Handler;
-	*class VSlider_Example {
-		*private vSlider:VSlider;
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
-			*}
-		*private onLoadComplete():void {
-			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-			*this.vSlider.min=0;//设置 vSlider 最低位置值。
-			*this.vSlider.max=10;//设置 vSlider 最高位置值。
-			*this.vSlider.value=2;//设置 vSlider 当前位置值。
-			*this.vSlider.tick=1;//设置 vSlider 刻度值。
-			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
-			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
-			*}
-		*private onChange(value:number):void {
-			*console.log("滑块的位置： value="+value);
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.Slider
-	*/
-	//class laya.ui.VSlider extends laya.ui.Slider
-	var VSlider=(function(_super){
-		function VSlider(){VSlider.__super.call(this);;
-		};
-
-		__class(VSlider,'laya.ui.VSlider',_super);
-		return VSlider;
-	})(Slider)
-
-
-	/**
 	*<code>TextInput</code> 类用于创建显示对象以显示和输入文本。
 	*
 	*@example 以下示例代码，创建了一个 <code>TextInput</code> 实例。
@@ -34572,6 +36791,107 @@ var Laya=window.Laya=(function(window,document){
 
 		return TextInput;
 	})(Label)
+
+
+	/**
+	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
+	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
+	*
+	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.HSlider;
+		*import laya.ui.VSlider;
+		*import laya.utils.Handler;
+		*public class VSlider_Example
+		*{
+			*private var vSlider:VSlider;
+			*public function VSlider_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
+				*}
+			*private function onLoadComplete():void
+			*{
+				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+				*vSlider.min=0;//设置 vSlider 最低位置值。
+				*vSlider.max=10;//设置 vSlider 最高位置值。
+				*vSlider.value=2;//设置 vSlider 当前位置值。
+				*vSlider.tick=1;//设置 vSlider 刻度值。
+				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
+				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+				*}
+			*private function onChange(value:Number):void
+			*{
+				*trace("滑块的位置： value="+value);
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*var vSlider;
+	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
+	*function onLoadComplete(){
+		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+		*vSlider.min=0;//设置 vSlider 最低位置值。
+		*vSlider.max=10;//设置 vSlider 最高位置值。
+		*vSlider.value=2;//设置 vSlider 当前位置值。
+		*vSlider.tick=1;//设置 vSlider 刻度值。
+		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
+		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+		*}
+	*function onChange(value){
+		*console.log("滑块的位置： value="+value);
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*import HSlider=laya.ui.HSlider;
+	*import VSlider=laya.ui.VSlider;
+	*import Handler=laya.utils.Handler;
+	*class VSlider_Example {
+		*private vSlider:VSlider;
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
+			*}
+		*private onLoadComplete():void {
+			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+			*this.vSlider.min=0;//设置 vSlider 最低位置值。
+			*this.vSlider.max=10;//设置 vSlider 最高位置值。
+			*this.vSlider.value=2;//设置 vSlider 当前位置值。
+			*this.vSlider.tick=1;//设置 vSlider 刻度值。
+			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
+			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
+			*}
+		*private onChange(value:number):void {
+			*console.log("滑块的位置： value="+value);
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.Slider
+	*/
+	//class laya.ui.VSlider extends laya.ui.Slider
+	var VSlider=(function(_super){
+		function VSlider(){VSlider.__super.call(this);;
+		};
+
+		__class(VSlider,'laya.ui.VSlider',_super);
+		return VSlider;
+	})(Slider)
 
 
 	/**
@@ -35369,6 +37689,26 @@ var Laya=window.Laya=(function(window,document){
 	})(View)
 
 
+	//class ui.ui.hall.hallUI extends laya.ui.View
+	var hallUI=(function(_super){
+		function hallUI(){hallUI.__super.call(this);;
+		};
+
+		__class(hallUI,'ui.ui.hall.hallUI',_super);
+		var __proto=hallUI.prototype;
+		__proto.createChildren=function(){
+			View.regComponent("Text",Text);
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(hallUI.uiView);
+		}
+
+		__static(hallUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":600,"height":400},"child":[{"type":"Text","props":{"y":85,"x":95,"width":158,"text":"進到大廳","height":153,"color":"#f9e7e7"}}]};}
+		]);
+		return hallUI;
+	})(View)
+
+
 	//class ui.ui.smallLoading.small_loadingUI extends laya.ui.View
 	var small_loadingUI=(function(_super){
 		function small_loadingUI(){
@@ -36020,6 +38360,28 @@ var Laya=window.Laya=(function(window,document){
 	})(TextInput)
 
 
+	//class ui.ui.alert.AlertPanelUI extends laya.ui.Dialog
+	var AlertPanelUI=(function(_super){
+		function AlertPanelUI(){
+			this.close_btn=null;
+			this.ok_btn=null;
+			AlertPanelUI.__super.call(this);
+		}
+
+		__class(AlertPanelUI,'ui.ui.alert.AlertPanelUI',_super);
+		var __proto=AlertPanelUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(AlertPanelUI.uiView);
+		}
+
+		__static(AlertPanelUI,
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":318,"height":195},"child":[{"type":"Image","props":{"skin":"res/alert/img_hint.png"}},{"type":"Button","props":{"y":-3,"x":287,"var":"close_btn","skin":"res/alert/btn_close.png"}},{"type":"Button","props":{"y":161,"x":120,"var":"ok_btn","skin":"assetsIn/ok.png"}},{"type":"TextArea","props":{"y":76,"x":13,"width":291,"text":"TextArea","height":69,"color":"#e8dede","align":"center"}}]};}
+		]);
+		return AlertPanelUI;
+	})(Dialog)
+
+
 	//class ui.ui.alert.SetPanelUI extends laya.ui.Dialog
 	var SetPanelUI=(function(_super){
 		function SetPanelUI(){
@@ -36061,6 +38423,19 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return RulePanelUI;
 	})(Dialog)
+
+
+	//class bull.view.hall.Hall extends ui.ui.hall.hallUI
+	var Hall=(function(_super){
+		function Hall(){
+			Hall.__super.call(this);
+		}
+
+		__class(Hall,'bull.view.hall.Hall',_super);
+		var __proto=Hall.prototype;
+		__proto.onReturnClick=function(e){}
+		return Hall;
+	})(hallUI)
 
 
 	//class bull.view.smallLoading.SmallLoading extends ui.ui.smallLoading.small_loadingUI
@@ -36334,6 +38709,50 @@ var Laya=window.Laya=(function(window,document){
 	})(AssetsInSliderUI)
 
 
+	//class bull.view.alert.AlertPanel extends ui.ui.alert.AlertPanelUI
+	var AlertPanel=(function(_super){
+		function AlertPanel(){
+			this._data=null;
+			AlertPanel.__super.call(this);
+			this.init();
+		}
+
+		__class(AlertPanel,'bull.view.alert.AlertPanel',_super);
+		var __proto=AlertPanel.prototype;
+		Laya.imps(__proto,{"com.lightUI.components.alert.IAlertWindow":true})
+		__proto.init=function(){
+			var l=this.numChildren;
+			var child;
+			console.log("aaaaaaa");
+			for (var i=0;i < l;i++){
+				child=this.getChildAt(i);
+				if(((this.getChildAt(i))instanceof laya.ui.Button )){
+					child.on("mousedown",this,this._$8_onClick);
+				}
+			}
+		}
+
+		__proto._$8_onClick=function(e){
+			this.event("close",e.target.name);
+		}
+
+		__getset(0,__proto,'title',null,function(value){
+		});
+
+		__getset(0,__proto,'msg',null,function(value){
+			/*no*/this.txt_label.text=value;
+		});
+
+		__getset(0,__proto,'data',function(){
+			return this._data;
+			},function(value){
+			this._data=value;
+		});
+
+		return AlertPanel;
+	})(AlertPanelUI)
+
+
 	//class bull.view.alert.MusicSetPanel extends ui.ui.alert.SetPanelUI
 	var MusicSetPanel=(function(_super){
 		function MusicSetPanel(){
@@ -36468,7 +38887,7 @@ var Laya=window.Laya=(function(window,document){
 			(type===void 0)&& (type=0);
 			var re=String(num);
 			if(type !=1){
-				re=FormartUtils.pointNumber(num);
+				re=FormartUtils1.pointNumber(num);
 			}
 			return re;
 		}
@@ -36577,7 +38996,7 @@ var Laya=window.Laya=(function(window,document){
 			(type===void 0)&& (type=0);
 			var re=String(num);
 			if(type !=1){
-				re=FormartUtils.pointNumber(num);
+				re=FormartUtils1.pointNumber(num);
 				}else{
 				re=Math.floor(num).toString();
 			}
@@ -36600,7 +39019,17 @@ var Laya=window.Laya=(function(window,document){
 	})(SmallPanelUI)
 
 
-	Laya.__init([EventDispatcher1,Dialog,Timer,Browser,Proxy,Render,WebGLContext,View,WebGLContext2D,LocalStorage,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,LoaderManager]);
+	Laya.__init([EventDispatcher1,Dialog,Timer,LocalStorage,Browser,Proxy,Render,WebGLContext,View,WebGLContext2D,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,LoaderManager]);
 	new Main();
 
 })(window,document,Laya);
+
+
+/*
+1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (36):warning:Sprite This variable is not defined.
+2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (37):warning:Sprite This variable is not defined.
+3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (38):warning:Sprite This variable is not defined.
+4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (67):warning:Shape This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/service/HallSocketService.as (69):warning:carProtoModel.msg_proto.CS_Builer This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/alert/AlertPanel.as (46):warning:txt_label.text This variable is not defined.
+*/

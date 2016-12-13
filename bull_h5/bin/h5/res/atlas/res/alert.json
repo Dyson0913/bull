@@ -42,10 +42,31 @@
             "rotated": false,
             "trimed": false
         },
-        "img_rule_1.png": {
+        "img_hint.png": {
             "frame": {
                 "x": 0,
                 "y": 181,
+                "w": 318,
+                "h": 195,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 318,
+                "h": 195
+            },
+            "sourceSize": {
+                "w": 318,
+                "h": 195
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "img_rule_1.png": {
+            "frame": {
+                "x": 29,
+                "y": 101,
                 "w": 53,
                 "h": 19,
                 "idx": 0
@@ -66,7 +87,7 @@
         "img_rule_2.png": {
             "frame": {
                 "x": 29,
-                "y": 101,
+                "y": 122,
                 "w": 85,
                 "h": 19,
                 "idx": 0
@@ -87,7 +108,7 @@
         "img_rule_3.png": {
             "frame": {
                 "x": 29,
-                "y": 122,
+                "y": 143,
                 "w": 101,
                 "h": 19,
                 "idx": 0
@@ -107,7 +128,7 @@
         },
         "img_seb_bg.png": {
             "frame": {
-                "x": 132,
+                "x": 320,
                 "y": 0,
                 "w": 274,
                 "h": 315,
