@@ -1,0 +1,201 @@
+{
+    "frames": {
+        "btn_cancel.png": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 99,
+                "h": 108,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 99,
+                "h": 108
+            },
+            "sourceSize": {
+                "w": 99,
+                "h": 108
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "btn_close.png": {
+            "frame": {
+                "x": 0,
+                "y": 110,
+                "w": 23,
+                "h": 69,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 23,
+                "h": 69
+            },
+            "sourceSize": {
+                "w": 23,
+                "h": 69
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "btn_commit.png": {
+            "frame": {
+                "x": 0,
+                "y": 181,
+                "w": 99,
+                "h": 108,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 99,
+                "h": 108
+            },
+            "sourceSize": {
+                "w": 99,
+                "h": 108
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "CheckBox.png": {
+            "frame": {
+                "x": 25,
+                "y": 110,
+                "w": 27,
+                "h": 26,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 27,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 27,
+                "h": 26
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chk_unselected.png": {
+            "frame": {
+                "x": 25,
+                "y": 138,
+                "w": 27,
+                "h": 26,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 27,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 27,
+                "h": 26
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "img_alert_bg.png": {
+            "frame": {
+                "x": 0,
+                "y": 291,
+                "w": 406,
+                "h": 233,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 406,
+                "h": 233
+            },
+            "sourceSize": {
+                "w": 406,
+                "h": 233
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "img_rule.png": {
+            "frame": {
+                "x": 0,
+                "y": 526,
+                "w": 522,
+                "h": 323,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 522,
+                "h": 323
+            },
+            "sourceSize": {
+                "w": 522,
+                "h": 323
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "img_rule_bg.png": {
+            "frame": {
+                "x": 408,
+                "y": 0,
+                "w": 552,
+                "h": 467,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 552,
+                "h": 467
+            },
+            "sourceSize": {
+                "w": 552,
+                "h": 467
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "img_set_bg.png": {
+            "frame": {
+                "x": 524,
+                "y": 469,
+                "w": 408,
+                "h": 233,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 408,
+                "h": 233
+            },
+            "sourceSize": {
+                "w": 408,
+                "h": 233
+            },
+            "rotated": false,
+            "trimed": false
+        }
+    },
+    "meta": {
+        "app": "http:\/\/www.layabox.com",
+        "version": "0.1.0 alpha",
+        "format": "json",
+        "scale": 1,
+        "image": "alert.png",
+        "prefix": "alert\/"
+    }
+}

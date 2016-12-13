@@ -1,0 +1,38 @@
+{
+    "version": "0.0.1",
+    "tipLoading": { "url": "res/tipLoading/loading.jpg"},
+    "tipText": { "url": "res/config/TipText.json", "type":"json"},
+    "smallLoading": { "url": "res/atlas/smallLoading.json","type":"atlas"},    
+    "comp": { "url": "res/atlas/comp.json","type":"atlas"},
+    "hall": { "url": "res/atlas/hall.json","type":"atlas"},
+    "room": { "url": "res/atlas/room.json","type":"atlas"},
+    "proto": { "url": "res/config/carProto.proto"},
+    "alert": { "url": "res/atlas/alert.json","type":"atlas"},    
+    "error_code": { "url": "res/config/error_code.json", "type":"json"},
+    "language": { "url": "res/config/language.json", "type":"json"},  
+    "group":{
+        "config":["carError"]
+    },
+    
+    "scence":{
+        "smallLoading":{
+            "assets":["smallLoading"]
+        },
+        "tipsLoadPanel":{
+            "assets":["tipLoading","tipText","comp"]
+        },
+        "hall":{
+            "assets":["hall","proto","alert"]
+        },
+        "room":{
+            "assets":["room","assetsIn","alert"]
+        },
+        "config":{
+            "assets":["language","error_code"]
+        },
+        "common":{
+            "assets":["alert"]
+        }
+    }
+    
+}
