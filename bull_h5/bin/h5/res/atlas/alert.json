@@ -1,22 +1,43 @@
 {
     "frames": {
-        "btn_close.png": {
+        "backLobbyBtn.png": {
             "frame": {
                 "x": 0,
                 "y": 0,
-                "w": 34,
-                "h": 99,
+                "w": 89,
+                "h": 267,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 34,
-                "h": 99
+                "w": 89,
+                "h": 267
             },
             "sourceSize": {
-                "w": 34,
-                "h": 99
+                "w": 89,
+                "h": 267
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "btn_close.png": {
+            "frame": {
+                "x": 0,
+                "y": 269,
+                "w": 43,
+                "h": 126,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 43,
+                "h": 126
+            },
+            "sourceSize": {
+                "w": 43,
+                "h": 126
             },
             "rotated": false,
             "trimed": false
@@ -24,7 +45,7 @@
         "checkbox.png": {
             "frame": {
                 "x": 0,
-                "y": 101,
+                "y": 397,
                 "w": 27,
                 "h": 78,
                 "idx": 0
@@ -42,10 +63,52 @@
             "rotated": false,
             "trimed": false
         },
+        "helpBtn.png": {
+            "frame": {
+                "x": 29,
+                "y": 397,
+                "w": 65,
+                "h": 204,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 65,
+                "h": 204
+            },
+            "sourceSize": {
+                "w": 65,
+                "h": 204
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "img_hint.png": {
+            "frame": {
+                "x": 91,
+                "y": 0,
+                "w": 318,
+                "h": 195,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 318,
+                "h": 195
+            },
+            "sourceSize": {
+                "w": 318,
+                "h": 195
+            },
+            "rotated": false,
+            "trimed": false
+        },
         "img_rule_1.png": {
             "frame": {
-                "x": 0,
-                "y": 181,
+                "x": 45,
+                "y": 269,
                 "w": 53,
                 "h": 19,
                 "idx": 0
@@ -65,8 +128,8 @@
         },
         "img_rule_2.png": {
             "frame": {
-                "x": 29,
-                "y": 101,
+                "x": 91,
+                "y": 197,
                 "w": 85,
                 "h": 19,
                 "idx": 0
@@ -86,8 +149,8 @@
         },
         "img_rule_3.png": {
             "frame": {
-                "x": 29,
-                "y": 122,
+                "x": 91,
+                "y": 218,
                 "w": 101,
                 "h": 19,
                 "idx": 0
@@ -107,8 +170,8 @@
         },
         "img_seb_bg.png": {
             "frame": {
-                "x": 132,
-                "y": 0,
+                "x": 96,
+                "y": 290,
                 "w": 274,
                 "h": 315,
                 "idx": 0
@@ -122,6 +185,48 @@
             "sourceSize": {
                 "w": 274,
                 "h": 315
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "optionBtn.png": {
+            "frame": {
+                "x": 372,
+                "y": 197,
+                "w": 89,
+                "h": 267,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 89,
+                "h": 267
+            },
+            "sourceSize": {
+                "w": 89,
+                "h": 267
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "setup.png": {
+            "frame": {
+                "x": 463,
+                "y": 0,
+                "w": 65,
+                "h": 204,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 65,
+                "h": 204
+            },
+            "sourceSize": {
+                "w": 65,
+                "h": 204
             },
             "rotated": false,
             "trimed": false

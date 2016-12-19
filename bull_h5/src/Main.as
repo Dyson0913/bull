@@ -22,7 +22,7 @@ package {
 			//加载引擎需要的资源
 			//Laya.loader.load([{url: "res/atlas/comp.json", type: Loader.ATLAS}], Handler.create(this, onLoaded));
 			
-			Laya.init(1022, 575, WebGL);
+			Laya.init(1420, 800, WebGL);
 			//不缩放   到时候采取的适配模式 应该是 左右居中  按照高度等比例缩放
 			Laya.stage.scaleMode = Stage.SCALE_SHOWALL;
 			//选择横屏模式

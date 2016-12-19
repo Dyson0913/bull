@@ -26,6 +26,7 @@ package bull.view.tipsLoad
 			
 			
 			msg_txt.text = String(value * 100);
+			
 			progressbar.value = value ;
 		}
 

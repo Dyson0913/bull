@@ -4,19 +4,19 @@
             "frame": {
                 "x": 0,
                 "y": 0,
-                "w": 71,
-                "h": 213,
+                "w": 94,
+                "h": 285,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 71,
-                "h": 213
+                "w": 94,
+                "h": 285
             },
             "sourceSize": {
-                "w": 71,
-                "h": 213
+                "w": 94,
+                "h": 285
             },
             "rotated": false,
             "trimed": false
@@ -24,27 +24,27 @@
         "GBtn.png": {
             "frame": {
                 "x": 0,
-                "y": 215,
-                "w": 145,
-                "h": 195,
+                "y": 287,
+                "w": 192,
+                "h": 249,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 145,
-                "h": 195
+                "w": 192,
+                "h": 249
             },
             "sourceSize": {
-                "w": 145,
-                "h": 195
+                "w": 192,
+                "h": 249
             },
             "rotated": false,
             "trimed": false
         },
         "GEnter.png": {
             "frame": {
-                "x": 73,
+                "x": 96,
                 "y": 0,
                 "w": 115,
                 "h": 141,
@@ -65,7 +65,7 @@
         },
         "hall_light.png": {
             "frame": {
-                "x": 73,
+                "x": 96,
                 "y": 143,
                 "w": 16,
                 "h": 16,
@@ -84,94 +84,10 @@
             "rotated": false,
             "trimed": false
         },
-        "img_GHigh.png": {
-            "frame": {
-                "x": 0,
-                "y": 412,
-                "w": 363,
-                "h": 399,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 363,
-                "h": 399
-            },
-            "sourceSize": {
-                "w": 363,
-                "h": 399
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "img_Ginit.png": {
-            "frame": {
-                "x": 190,
-                "y": 0,
-                "w": 363,
-                "h": 399,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 363,
-                "h": 399
-            },
-            "sourceSize": {
-                "w": 363,
-                "h": 399
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "img_MHigh.png": {
-            "frame": {
-                "x": 365,
-                "y": 401,
-                "w": 363,
-                "h": 399,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 363,
-                "h": 399
-            },
-            "sourceSize": {
-                "w": 363,
-                "h": 399
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "img_Minit.png": {
-            "frame": {
-                "x": 555,
-                "y": 0,
-                "w": 363,
-                "h": 399,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 363,
-                "h": 399
-            },
-            "sourceSize": {
-                "w": 363,
-                "h": 399
-            },
-            "rotated": false,
-            "trimed": false
-        },
         "LeftArrow.png": {
             "frame": {
-                "x": 365,
-                "y": 802,
+                "x": 96,
+                "y": 161,
                 "w": 46,
                 "h": 110,
                 "idx": 0
@@ -191,29 +107,29 @@
         },
         "logo.png": {
             "frame": {
-                "x": 0,
-                "y": 813,
-                "w": 150,
-                "h": 95,
+                "x": 144,
+                "y": 143,
+                "w": 210,
+                "h": 138,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 150,
-                "h": 95
+                "w": 210,
+                "h": 138
             },
             "sourceSize": {
-                "w": 150,
-                "h": 95
+                "w": 210,
+                "h": 138
             },
             "rotated": false,
             "trimed": false
         },
         "LP.png": {
             "frame": {
-                "x": 73,
-                "y": 161,
+                "x": 213,
+                "y": 0,
                 "w": 23,
                 "h": 21,
                 "idx": 0
@@ -233,29 +149,29 @@
         },
         "MBtn.png": {
             "frame": {
-                "x": 730,
-                "y": 401,
-                "w": 145,
-                "h": 195,
+                "x": 194,
+                "y": 283,
+                "w": 192,
+                "h": 249,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 145,
-                "h": 195
+                "w": 192,
+                "h": 249
             },
             "sourceSize": {
-                "w": 145,
-                "h": 195
+                "w": 192,
+                "h": 249
             },
             "rotated": false,
             "trimed": false
         },
         "MEnter.png": {
             "frame": {
-                "x": 730,
-                "y": 598,
+                "x": 238,
+                "y": 0,
                 "w": 115,
                 "h": 141,
                 "idx": 0
@@ -275,8 +191,8 @@
         },
         "RightArrow.png": {
             "frame": {
-                "x": 152,
-                "y": 813,
+                "x": 355,
+                "y": 0,
                 "w": 46,
                 "h": 110,
                 "idx": 0

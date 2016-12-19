@@ -1616,7 +1616,7 @@ var Laya=window.Laya=(function(window,document){
 	//class Main
 	var Main=(function(){
 		function Main(){
-			Laya.init(1022,575,WebGL);
+			Laya.init(1420,800,WebGL);
 			Laya.stage.scaleMode="showall";
 			Laya.stage.screenMode="horizontal";
 			Laya.stage.alignH="center";
@@ -37691,19 +37691,25 @@ var Laya=window.Laya=(function(window,document){
 
 	//class ui.ui.hall.hallUI extends laya.ui.View
 	var hallUI=(function(_super){
-		function hallUI(){hallUI.__super.call(this);;
-		};
+		function hallUI(){
+			this.backLobby=null;
+			this.optionBtn=null;
+			this.setupBtn=null;
+			this.helpBtn=null;
+			this.GBtn=null;
+			this.MBtn=null;
+			hallUI.__super.call(this);
+		}
 
 		__class(hallUI,'ui.ui.hall.hallUI',_super);
 		var __proto=hallUI.prototype;
 		__proto.createChildren=function(){
-			View.regComponent("Text",Text);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(hallUI.uiView);
 		}
 
 		__static(hallUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":600,"height":400},"child":[{"type":"Text","props":{"y":85,"x":95,"width":158,"text":"進到大廳","height":153,"color":"#f9e7e7"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.png","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":168,"x":158,"skin":"res/hall/img_Ginit.png","name":"Ginit"}},{"type":"Image","props":{"y":174,"x":771,"skin":"res/hall/img_GHigh.png","name":"GHigh"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":739,"x":358,"skin":"res/hall/GEnter.png","name":"GEnter"}},{"type":"Button","props":{"y":748,"x":973,"skin":"res/hall/GEnter.png","name":"GHighEnter"}},{"type":"Image","props":{"y":142,"x":346,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":142,"x":426,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}}]};}
 		]);
 		return hallUI;
 	})(View)
@@ -37734,9 +37740,12 @@ var Laya=window.Laya=(function(window,document){
 	//class ui.ui.tipsLoad.tipsLoadPanelUI extends laya.ui.View
 	var tipsLoadPanelUI=(function(_super){
 		function tipsLoadPanelUI(){
+			this.loading_percent=null;
 			this.msg_txt=null;
 			this.tip_txt=null;
 			this.progressbar=null;
+			this.loadingbg=null;
+			this.loadin_percent=null;
 			tipsLoadPanelUI.__super.call(this);
 		}
 
@@ -37749,7 +37758,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(tipsLoadPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1022,"runtime":"com.lightUI.components.tipsLoadPanel.TipsLoadPanel","height":575},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/tipLoading/loading.jpg"}},{"type":"Label","props":{"y":384,"x":454,"width":69,"var":"msg_txt","text":"label","height":12,"fontSize":12,"color":"#e1e1e1","align":"center"}},{"type":"Label","props":{"y":432,"x":212,"width":553,"var":"tip_txt","text":"label","height":12,"color":"#e1e1e1","align":"center"}},{"type":"ProgressBar","props":{"y":404,"x":200,"width":585,"var":"progressbar","skin":"comp/progress.png","height":14}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"Version 0.0.1","scaleX":1,"runtime":"com.lightUI.components.tipsLoadPanel.TipsLoadPanel","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"var":"loading_percent","skin":"res/tipLoading/loading.jpg"}},{"type":"Label","props":{"y":604,"x":680,"width":69,"var":"msg_txt","text":"label","height":12,"fontSize":12,"color":"#e1e1e1","align":"center"}},{"type":"Label","props":{"y":650,"x":599,"width":161,"var":"tip_txt","text":"Version 0.0.1","scaleY":1.5,"scaleX":1.4,"height":35,"color":"#e1e1e1","align":"center"}},{"type":"ProgressBar","props":{"y":582,"x":267,"width":893,"var":"progressbar","skin":"comp/progress.png","height":14}},{"type":"Image","props":{"y":624,"x":260,"var":"loadingbg","skin":"res/tipLoading/loading_bg.png"}},{"type":"Image","props":{"y":629,"x":266,"var":"loadin_percent","skin":"res/tipLoading/loading_bar.png"}}]};}
 		]);
 		return tipsLoadPanelUI;
 	})(View)
