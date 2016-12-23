@@ -124,7 +124,7 @@ package laya.net {
 		 * @param port 服务器端口。
 		 */
 		public function connect(host:String, port:int):void {		
-			var url:String = "ws://" + host + ":" + port;
+			var url:String = "ws://" + host + ":" + port;			
 			connectByUrl(url);		
 		}
 		/**

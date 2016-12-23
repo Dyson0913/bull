@@ -5,12 +5,12 @@ package bull.modules.common.command
 	import com.lightMVC.parrerns.Command;
 	import com.lightMVC.parrerns.Notification;
 	
-	import light.car.core.ShareObjectMgr;
+	import bull.core.ShareObjectMgr;
 	import bull.events.BullNotification;
-	import bull.modules.common.model.data.ConfigData;
-	//import light.car.modules.common.model.data.CarData;
-	//import light.car.modules.common.model.param.WebParam;
-	//import light.car.modules.common.services.WebService;
+	import bull.modules.common.model.data.ConfigData;	
+	import bull.modules.common.model.param.WebParam;
+	import bull.modules.common.services.WebService;
+	import bull.modules.common.model.data.Data;
 	import bull.modules.BullHall.service.HallSocketService;
 	
 	import msg.ENCSType;
@@ -40,15 +40,15 @@ package bull.modules.common.command
 		
 		private function hallConnectCompleteHandler():void{
 			trace("hallConnectCompleteHandler");
-			//var param:WebParam = WebService.resolveBrowserParam();
-			//var carData:CarData = getSingleton(CarData.NAME) as CarData;
-			//if(param.uid) {
-				//carData.uid = param.uid;
-				//ShareObjectMgr.get().init(param.uid.toString());
-			//}
-			//if(param.access_token) carData.token = param.access_token;
-			//
-			//sentNotification(CarNotification.LOGIN_HALL_RQS);
+			var param:WebParam = WebService.resolveBrowserParam();
+			var bullData:Data = getSingleton(Data.NAME) as Data;
+			if(param.uid) {
+				bullData.uid = param.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if(param.access_token) bullData.token = param.access_token;
+			
+			sentNotification(BullNotification.LOGIN_HALL_RQS);
 		}
 	}
 }

@@ -7,8 +7,7 @@
     "msg_proto": { "url": "res/config/msg_cs.proto"},
     "conf_proto": { "url": "res/config/conf_game.proto"},
     "hall": { "url": "res/atlas/hall.json","type":"atlas"},
-    "room": { "url": "res/atlas/room.json","type":"atlas"},
-    "proto": { "url": "res/config/carProto.proto"},
+    "room": { "url": "res/atlas/room.json","type":"atlas"},    
     "alert": { "url": "res/atlas/alert.json","type":"atlas"},    
     "error_code": { "url": "res/config/error_code.json", "type":"json"},
     "language": { "url": "res/config/language.json", "type":"json"},  
@@ -24,7 +23,7 @@
             "assets":["tipLoading","tipText","comp"]
         },
         "hall":{
-            "assets":["hall","proto","alert"]
+            "assets":["hall","alert"]
         },
         "room":{
             "assets":["room","assetsIn","alert"]

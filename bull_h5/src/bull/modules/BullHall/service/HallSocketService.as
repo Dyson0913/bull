@@ -29,12 +29,12 @@ package bull.modules.BullHall.service
 		public static const NAME:String = "hallSocketService";
 		
 		private var _socket:SocketConnect;
-		public var ProtoModel:BullProtoModel;
+		public var bullProtoModel:BullProtoModel;
 		private var num:int;
 		private var timer:Timer;
 		
 		override public function getInjector():Array{
-			return ["BullProtoModel"];
+			return ["bullProtoModel"];
 		}
 		
 		public function HallSocketService(modelName:String=null, data:Object=null)
@@ -65,9 +65,8 @@ package bull.modules.BullHall.service
 			else
 				trace("心跳消息给服务端：type:",message.msg_type," msg:",message);
 				
-			var byte:ArrayBuffer = message.encode().toBuffer();
-			
-			var builder:Builder = carProtoModel.msg_proto.CS_Builer();
+			var byte:ArrayBuffer = message.encode().toBuffer();			
+			var builder:Builder = bullProtoModel.msg_proto.CS_Builer();
 			var temp:CS = builder.decode(byte);
 			
 			var test:Byte = new Byte(byte);
@@ -99,13 +98,13 @@ package bull.modules.BullHall.service
 		
 		private function onMessageReveived(e:SocketConnectEvent):void{
 			var msgbyte:Byte = e.data as Byte;
-			var input:CS = ProtoModel.msg_proto.CS_Builer().decode(msgbyte.buffer);
+			var input:CS = bullProtoModel.msg_proto.CS_Builer().decode(msgbyte.buffer);
 			if(input.msg_type != ENCSType.CS_TYPE_HEART_BEAT_RSP)
 				trace("大厅服务端返回消息 type：",input.msg_type," msg:"+input);
 			else
-				trace("大厅心跳包返回消息 type：",input.msg_type," msg:"+input);
-	
-			//var input:CS = carProtoModel.CS_Builer().decode(msgbyte.buffer);
+				trace("大厅心跳包返回消息 type：", input.msg_type, " msg:" + input);
+				
+			var input:CS = bullProtoModel.msg_proto.CS_Builer().decode(msgbyte.buffer);
 			sentNotification(input.msg_type.toString(),input);
 		}
 		

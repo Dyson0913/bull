@@ -20,12 +20,17 @@ package bull.events
 		public static const HALL_SOCKET_CONNECT_COMPLETE:String = "hallSocketConnectComplete";//////////////连接大厅成功
 		public static const HALL_SOCKET_CONNECT_FAILED:String = "hallSocketConnectFailed";//////////////////连接大厅失败
 		
+		public static const LOGIN_HALL_RQS:String = "loginHallRequest";//////////////////登录大厅请求		
+		
+		
+		
+		
 		public static const ROOM_SOCKET_CONNECT:String = "roomSocketConnect";/////////////连接房间服务器
 		public static const ROOM_SOCKET_CONNECT_COMPLETE:String = "roomSocketConnectComplete";//////////////房间大厅成功
 		public static const ROOM_SOCKET_CONNECT_FAILED:String = "roomSocketConnectFailed";//////////////////房间大厅失败
 		
 		public static const LOGIN_ROOM_RQS:String = "loginRoomRequest";//////////////////登录房间请求
-		public static const LOGIN_HALL_RQS:String = "loginHallRequest";//////////////////登录大厅请求
+		
 		
 		
 		

@@ -14,7 +14,7 @@ package bull.modules.common.model
 	
 	public class BullProtoModel extends Model implements IModel
 	{
-		public static const NAME:String = "BullProtoModel";
+		public static const NAME:String = "bullProtoModel";
 		
 		public var msg_proto:msg_cs;
 		public var conf_proto:conf_game;

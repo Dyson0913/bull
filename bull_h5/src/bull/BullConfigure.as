@@ -12,19 +12,21 @@ package bull
 	
 	import bull.modules.common.command.ConnectHallCommand;
 	
+	import bull.modules.common.command.LoginHallCommand;
+	import bull.modules.common.command.RoomListCommand;
+	
 	//import light.car.modules.common.command.BetCancelCommand;
 	//import light.car.modules.common.command.BetCommand;
 	//import light.car.modules.common.command.BetSameAsLastTimeCommand;
 	//import light.car.modules.common.command.CommitRoundCommand;
 	
-	//import light.car.modules.common.command.ConnectRoomCommand;
-	//import light.car.modules.common.command.GetPlayerStateCommand;
+	//import light.car.modules.common.command.ConnectRoomCommand;	
 	//import light.car.modules.common.command.HeartBeatCommand;
 	//import light.car.modules.common.command.JoinRoomCommand;
-	//import light.car.modules.common.command.LoginHallCommand;
+	
 	//import light.car.modules.common.command.LoginRoomCommand;
 	//import light.car.modules.common.command.RoomConfigCommand;
-	//import light.car.modules.common.command.RoomListCommand;
+	
 	//import light.car.modules.common.command.SettlementRoundCommand;
 	//import light.car.modules.common.command.StartBetCommand;
 	//import light.car.modules.common.command.TableInfoCommand;
@@ -34,13 +36,13 @@ package bull
 	//import light.car.modules.common.mediator.RuleMediator;
 		
 	
-	//import light.car.modules.common.model.data.CarData;
-	//import light.car.modules.common.model.data.HallData;
-	//import light.car.modules.common.model.data.RoomData;
-	//import light.car.modules.common.model.data.UserInfoData;
-	//import light.car.modules.common.services.WebService;
+	import bull.modules.common.model.data.Data;
+	import bull.modules.common.model.data.HallData;
+	//import bull.modules.common.model.data.RoomData;
+	import bull.modules.common.model.data.UserInfoData;
+	import bull.modules.common.services.WebService;
 	//import light.car.modules.hall.command.UserBalanceCommand;
-	//import light.car.modules.hall.mediator.HallMediator;
+	import bull.modules.BullHall.mediator.HallMediator;
 	import bull.modules.BullHall.service.HallSocketService;
 	
 	//import light.car.modules.room.command.CarryInCommand;
@@ -72,23 +74,29 @@ package bull
 		}
 		
 		private function initCommand():void{
-			//registerCommand( CarNotification.STARTUP, StartupCommand );	
 			
+			//大廳連接
 			registerCommand(BullNotification.HALL_SOCKET_CONNECT, ConnectHallCommand);
 			registerCommand(BullNotification.HALL_SOCKET_CONNECT_COMPLETE, ConnectHallCommand);
 			registerCommand(BullNotification.HALL_SOCKET_CONNECT_FAILED, ConnectHallCommand);
-			//
+			
+			//大廳登入
+			registerCommand(BullNotification.LOGIN_HALL_RQS, LoginHallCommand);
+			registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(), LoginHallCommand);
+			
+			//要求桌列表
+			registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString(), RoomListCommand);
+			registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString(), RoomListCommand);
+			
 			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT, ConnectRoomCommand);
 			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT_COMPLETE, ConnectRoomCommand);
 			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT_FAILED, ConnectRoomCommand);
 			//
-			//registerCommand(CarNotification.LOGIN_HALL_RQS, LoginHallCommand);
-			//registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(), LoginHallCommand);
+			
+			
 			//registerCommand(CarNotification.LOGIN_ROOM_RQS, LoginRoomCommand);
 			//registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(), LoginRoomCommand);
-			//
-			//registerCommand(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString(), GetPlayerStateCommand);
-			//registerCommand(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_RSP.toString(), GetPlayerStateCommand);
+			//			
 			//
 			//registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString(), JoinRoomCommand);
 			//registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(), JoinRoomCommand);
@@ -98,8 +106,7 @@ package bull
 			
 //			registerCommand(MessageID.ROOM_CONFIG_NOTIFY.toString(), RoomConfigCommand);
 			
-			//registerCommand(ENCSType.CS_TYPE_GET_TABLE_LIST_REQ.toString(), RoomListCommand);
-			//registerCommand(ENCSType.CS_TYPE_GET_TABLE_LIST_RSP.toString(), RoomListCommand);
+			
 			//
 			//registerCommand(ENCSType.CS_TYPE_HEART_BEAT_REQ.toString(),  HeartBeatCommand);
 			//registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),  HeartBeatCommand);
@@ -137,22 +144,22 @@ package bull
 			registerModel(new HallSocketService(HallSocketService.NAME));
 			//registerModel(new RoomSocketService(RoomSocketService.NAME));
 			
-			//registerModel(new WebService(WebService.NAME));
+			registerModel(new WebService(WebService.NAME));
 			//registerModel(new CarModel(CarModel.NAME,new CarData()));
 			
 			
 			
-			//asSingleton(CarData.NAME,CarData)
-			//asSingleton(HallData.NAME,HallData);
+			asSingleton(Data.NAME,Data)
+			asSingleton(HallData.NAME,HallData);
 			//asSingleton(RoomData.NAME,RoomData);
-			//asSingleton(UserInfoData.NAME,UserInfoData);
+			asSingleton(UserInfoData.NAME,UserInfoData);
 			asSingleton(ConfigData.NAME,ConfigData);
 		}
 		
 		private function initMediator():void{
 			registerMediator(new SmallLoadingMediator(SmallLoadingMediator.NAME,SmallLoading));
 			registerMediator(new TipsLoadMediator(TipsLoadMediator.NAME), TipsLoadPanel);
-			//registerMediator(new HallMediator(HallMediator.NAME),Hall);
+			registerMediator(new HallMediator(HallMediator.NAME),Hall);
 			//registerMediator(new CarScenceMediator(CarScenceMediator.NAME),CarScene);
 			//registerMediator(new AssetInMediator(AssetInMediator.NAME),AssetsInPanel);
 			//registerMediator(new AlertMediator(AlertMediator.NAME),AlertPanel);

@@ -7,8 +7,8 @@ package bull.modules.common.services
 	
 	
 	import bull.modules.BullHall.common.Common;
-	import bull.modules.common.model.data.AppModel;
-	import bull.modules.common.model.param.RoomParam;
+	//import bull.modules.common.model.data.AppModel;
+	//import bull.modules.common.model.param.RoomParam;
 	import bull.modules.common.model.param.WebParam;
 	
 	import conf.ENMoneyType;
@@ -21,7 +21,7 @@ package bull.modules.common.services
 	public class WebService extends Model implements IModel
 	{
 
-		public var appModel:AppModel;
+		//public var appModel:AppModel;
 		public var webApi:KGH5 = new KGH5();
 		
 		//TODO
@@ -33,7 +33,7 @@ package bull.modules.common.services
 	
 		
 		override public function getInjector():Array{
-			return ["appModel","evt"];
+			return [];
 		}
 		
 		//h5
@@ -55,6 +55,32 @@ package bull.modules.common.services
 		
 	
 		
+		static public function resolveBrowserParam():WebParam {
+			
+			//FOR test test
+			var param:WebParam = new WebParam();
+			param.uid = 1014495;
+			param.access_token = "7b8007aaaef180fb1c0d78bc9c4b5589";
+			return param;
+			
+			var browserStr:String = Browser.document.location.href.toString();
+			var askIndex:int = browserStr.indexOf("?");
+			var paramAry:Array = browserStr.substr(askIndex+1).split("&");
+			var param:WebParam = new WebParam();
+			for (var i:int=0;i<paramAry.length;i++){
+				var ary:Array = paramAry[i].split("=");
+				var key:String = ary[0];
+				var value:String = ary[1];
+				param[key] = value;
+				trace("key: "+key+",  value: "+value);
+			}
+			//調試數據
+			if(!param.uid){
+				param.uid = 1014495;
+				param.access_token = "6908dfe04342b2458fb006435eab8e48";//"6908dfe04342b2458fb006435eab8e48";//"7b8007aaaef180fb1c0d78bc9c4b5589";
+			}
+			return param;
+		}
 		
 		public function parseInfo(callback:Function):void
 		{
@@ -74,13 +100,7 @@ package bull.modules.common.services
 			//appModel.userInfoModel.user_id = param.uid;
 			//appModel.assess_token = param.access_token;
 			
-			
-//			//調試數據
-//			if(!param.uid){
-//				param.uid = 1014495;
-//				param.access_token = "7b8007aaaef180fb1c0d78bc9c4b5589";//"6908dfe04342b2458fb006435eab8e48";//"7b8007aaaef180fb1c0d78bc9c4b5589";
-//			}
-//			return param;
+
 			
 		}
 		
