@@ -1250,6 +1250,7 @@ var Laya=window.Laya=(function(window,document){
 		__class(HallRoomVO,'bull.modules.common.model.data.vo.HallRoomVO');
 		var __proto=HallRoomVO.prototype;
 		__proto.parse=function(roominfo){
+			var config=roominfo.config;
 			this.id=roominfo.table_id;
 			this.name=roominfo.table_name;
 			this.chipsType=roominfo.chips_type;
@@ -22789,7 +22790,7 @@ var Laya=window.Laya=(function(window,document){
 		__proto.initMediator=function(){
 			this.registerMediator(new SmallLoadingMediator("smallLoadingMediator",SmallLoading));
 			this.registerMediator(new TipsLoadMediator("tipsLoadMediator"),TipsLoadPanel);
-			this.registerMediator(new HallMediator("hallMediator"),/*no*/this.Hall);
+			this.registerMediator(new HallMediator("hallMediator"),Hall);
 		}
 
 		return BullConfigure;
@@ -22988,13 +22989,13 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.setViewComponent=function(viewComponent){
+			console.log("hall midatior init")
 			_super.prototype.setViewComponent.call(this,viewComponent);
 			this.hallData.addEventListener("change",this,this.onRoomListChange);
 		}
 
 		// view.loginPanel.login_btn.on(Event.CLICK,this,loginHandler);
 		__proto.handler=function(notification){}
-		// }
 		__proto.startRoomList=function(){
 			this.getRoomList();
 			Laya.timer.loop(this.roomListInterval,this,this.getRoomList);
@@ -23013,17 +23014,6 @@ var Laya=window.Laya=(function(window,document){
 		*/
 		__proto.onClick=function(e){
 			console.log("onClick:"+e.target);
-			switch(e.target){
-				case this.view.btnSet:
-					this.sentNotification(/*no*/this.MusicSetMediator.SHOW_MUSIC_SET_PANEL);
-					break ;
-				case this.view.btnRule:
-					this.sentNotification(/*no*/this.RuleMediator.SHOW_RULE_PANEL);
-					break ;
-				case this.view.btnModify:
-					this.showOrHideBtnGroup(!this.view.imgSetBackground.visible);
-					break ;
-				}
 		}
 
 		/**
@@ -23048,9 +23038,10 @@ var Laya=window.Laya=(function(window,document){
 
 		//startRoomList();
 		__proto.onRoomListChange=function(e){
-			this.view.showRoomList(this.hallData.roomList);
+			console.log("get room data")
 		}
 
+		//view.showRoomList(hallData.roomList);
 		__proto.onListItemClick=function(data){
 			console.log("onListItemClick",data.id);
 			this.currentId=data.id;
@@ -23402,18 +23393,15 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.roomListResponseHandler=function(param){
 			console.log("roomListResponseHandler",param);
-			return;
 			var bulldata=this.getSingleton("Data");
-			var list=param.get_room_list_rsp;
-			var l=list.length;
+			if (param.get_room_list_rsp.error_code !=0)return;
+			var list=param.get_room_list_rsp.room_infos;
+			var l=list.roominfo.length;
 			var roomList=[];
-			var room;
 			for (var i=0;i < l;i++){
-				room=new light.car.modules.common.model.data.vo.HallRoomVO();
-				room.parse(list[i]);
-				roomList.push(room);
+				roomList.push(list.roominfo[i]);
 			}
-			/*no*/this.cardata.hallData.roomList=roomList;
+			bulldata.hallData.roomList=roomList;
 		}
 
 		return RoomListCommand;
@@ -38380,8 +38368,16 @@ var Laya=window.Laya=(function(window,document){
 			this.optionBtn=null;
 			this.setupBtn=null;
 			this.helpBtn=null;
+			this.Ginit=null;
+			this.GHigh=null;
 			this.GBtn=null;
 			this.MBtn=null;
+			this.GLowEnter=null;
+			this.GHighEnter=null;
+			this.Minit=null;
+			this.MHigh=null;
+			this.MLowEnter=null;
+			this.MHighEnter=null;
 			hallUI.__super.call(this);
 		}
 
@@ -38393,7 +38389,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(hallUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.png","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":168,"x":158,"skin":"res/hall/img_Ginit.png","name":"Ginit"}},{"type":"Image","props":{"y":174,"x":771,"skin":"res/hall/img_GHigh.png","name":"GHigh"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":739,"x":358,"skin":"res/hall/GEnter.png","name":"GEnter"}},{"type":"Button","props":{"y":748,"x":973,"skin":"res/hall/GEnter.png","name":"GHighEnter"}},{"type":"Image","props":{"y":142,"x":346,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":142,"x":426,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}},{"type":"Image","props":{"y":171,"x":156,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png","label":"label"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png","label":"label"}}]};}
 		]);
 		return hallUI;
 	})(View)
@@ -39122,11 +39118,27 @@ var Laya=window.Laya=(function(window,document){
 	var Hall=(function(_super){
 		function Hall(){
 			Hall.__super.call(this);
+			this.Ginit.visible=this.GHigh.visible=this.GLowEnter.visible=this.GHighEnter.visible=true;
+			this.Minit.visible=this.MHigh.visible=this.MLowEnter.visible=this.MHighEnter.visible=false;
+			this.GBtn.on("click",this,this.onGBtnClick);
+			this.MBtn.on("click",this,this.onMBtnClick);
+			this.backLobby.on("click",this,this.onReturnClick);
 		}
 
 		__class(Hall,'bull.view.hall.Hall',_super);
 		var __proto=Hall.prototype;
 		__proto.onReturnClick=function(e){}
+		// TODO Auto Generated method stub
+		__proto.onGBtnClick=function(e){
+			this.Ginit.visible=this.GHigh.visible=this.GLowEnter.visible=this.GHighEnter.visible=true;
+			this.Minit.visible=this.MHigh.visible=this.MLowEnter.visible=this.MHighEnter.visible=false;
+		}
+
+		__proto.onMBtnClick=function(e){
+			this.Ginit.visible=this.GHigh.visible=this.GLowEnter.visible=this.GHighEnter.visible=false;
+			this.Minit.visible=this.MHigh.visible=this.MLowEnter.visible=this.MHighEnter.visible=true;
+		}
+
 		return Hall;
 	})(hallUI)
 
@@ -39723,22 +39735,18 @@ var Laya=window.Laya=(function(window,document){
 2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (37):warning:Sprite This variable is not defined.
 3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (38):warning:Sprite This variable is not defined.
 4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (67):warning:Shape This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/BullConfigure.as (90):warning:Hall This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (79):warning:MusicSetMediator.SHOW_MUSIC_SET_PANEL This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (82):warning:RuleMediator.SHOW_RULE_PANEL This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (124):warning:CarNotification.ENTER_ROOM This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (73):warning:CarProtoModel.NAME This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/RoomListCommand.as (56):warning:cardata.hallData.roomList This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/alert/AlertPanel.as (46):warning:txt_label.text This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (117):warning:CarNotification.ENTER_ROOM This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (73):warning:CarProtoModel.NAME This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/alert/AlertPanel.as (46):warning:txt_label.text This variable is not defined.
 */

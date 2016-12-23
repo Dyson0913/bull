@@ -3,10 +3,12 @@ package bull.modules.common.command
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
+	import conf.SRoomConfig;
+	import conf.SRoomInfos;
 	
 	import bull.modules.common.model.BullProtoModel;
 	import bull.modules.common.model.data.Data;
-	import light.car.modules.common.model.data.vo.HallRoomVO;
+	import bull.modules.common.model.data.vo.HallRoomVO;
 	import bull.modules.BullHall.service.HallSocketService;
 	
 	import msg.CS;
@@ -41,20 +43,20 @@ package bull.modules.common.command
 		
 		private function roomListResponseHandler(param:CS):void{
 			trace("roomListResponseHandler",param);
-			return;
+			
 			var bulldata:Data = getSingleton(Data.NAME) as Data;
 			
-			var list:Array = param.get_room_list_rsp
-			var l:int = list.length;
-			var roomList:Array = [];
-			var room:HallRoomVO;
+			//TODO error handle
+			if ( param.get_room_list_rsp.error_code != 0) return;
+			
+			var list:SRoomInfos = param.get_room_list_rsp.room_infos as SRoomInfos;
+			var l:int = list.roominfo.length;
+			var roomList:Array = [];			
 			for (var i:int = 0; i < l; i++) 
-			{
-				room = new HallRoomVO();
-				room.parse(list[i]);
-				roomList.push(room);
+			{							
+				roomList.push(list.roominfo[i]);
 			}
-			cardata.hallData.roomList = roomList;
+			bulldata.hallData.roomList = roomList;
 		}
 	}
 }

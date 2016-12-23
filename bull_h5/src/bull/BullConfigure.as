@@ -52,7 +52,7 @@ package bull
 	//import light.car.view.alert.AlertPanel;
 	//import light.car.view.alert.MusicSetPanel;
 	//import light.car.view.alert.RulePanel;
-	//import light.car.view.hall.Hall;
+	import bull.view.hall.Hall;
 	//import light.car.view.room.CarScene;
 	import bull.view.smallLoading.SmallLoading;
 	import bull.view.tipsLoad.TipsLoadPanel;

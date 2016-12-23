@@ -21,7 +21,7 @@ package bull.modules.BullHall.mediator
 	import msg.ENCSType;
 	
 	
-	public class HallMediator extends com.lightMVC.parrerns.Mediator implements IMediator
+	public class HallMediator extends Mediator implements IMediator
 	{
 		public static const NAME:String = "hallMediator";
 		
@@ -49,9 +49,14 @@ package bull.modules.BullHall.mediator
 		
 		override public function setViewComponent(viewComponent:Object):void
 		{
+			trace("hall midatior init")
 			super.setViewComponent(viewComponent);
+			
+			//資料更新通知	
+			hallData.addEventListener(LightEvent.CHANGE, this, onRoomListChange);			
+			
 			//view.list.on(LightEvent.ITEM_CLICK,this,onListItemClick);
-			hallData.addEventListener(LightEvent.CHANGE, this,onRoomListChange);
+			
 			//view.on(ScenceManagerEvent.UI_HIDE,this, onHideHandler);
 			//view.on(ScenceManagerEvent.UI_SHOW,this, onShowHandler);
 			
@@ -64,18 +69,7 @@ package bull.modules.BullHall.mediator
 		
 		override public function handler(notification:INotification):void
 		{
-//			trace("HallMediator handler",notification.getName());
-//			var type:String = notification.getName();
-//			switch(type)
-//			{
-//				case CarNotification.SOCKET_CONNECT:
-//					socketService.sfs.connect();
-//					break;
-//				case CarNotification.ONLOGIN:
-//					onLogin();
-//				default:
-//					break;
-//			}
+
 		}
 		
 		
@@ -96,18 +90,18 @@ package bull.modules.BullHall.mediator
 		private function onClick(e:Event):void
 		{
 			trace("onClick:"+e.target);
-			switch(e.target)
-			{
-				case view.btnSet:
-					sentNotification(MusicSetMediator.SHOW_MUSIC_SET_PANEL);
-					break;
-				case view.btnRule:
-					sentNotification(RuleMediator.SHOW_RULE_PANEL);
-					break;
-				case view.btnModify:
-					showOrHideBtnGroup(!view.imgSetBackground.visible);
-					break;
-			}
+			//switch(e.target)
+			//{
+				//case view.btnSet:
+					//sentNotification(MusicSetMediator.SHOW_MUSIC_SET_PANEL);
+					//break;
+				//case view.btnRule:
+					//sentNotification(RuleMediator.SHOW_RULE_PANEL);
+					//break;
+				//case view.btnModify:
+					//showOrHideBtnGroup(!view.imgSetBackground.visible);
+					//break;
+			//}
 		}
 		
 		/**
@@ -138,8 +132,9 @@ package bull.modules.BullHall.mediator
 			//startRoomList();
 		}
 		
-		private function onRoomListChange(e:LightEvent):void{
-			view.showRoomList(hallData.roomList);
+		private function onRoomListChange(e:LightEvent):void {
+			trace("get room data")
+			//view.showRoomList(hallData.roomList);
 		}
 		
 		private function onListItemClick(data:*):void{

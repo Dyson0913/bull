@@ -2,6 +2,8 @@ package bull.modules.common.model.data.vo
 {
 	import conf.ENPlatformType;
 	import conf.NetAddress;
+	import conf.SRoomConfig;
+	import conf.SRoomInfo;	
 	
 	import msg.CS_Table;
 
@@ -29,7 +31,10 @@ package bull.modules.common.model.data.vo
 			this.curPlayer = number;
 		}
 		
-		public function parse(roominfo:CS_Table):void{
+		public function parse(roominfo:SRoomInfo):void {
+			
+			var config:SRoomConfig = roominfo.config;
+			
 			this.id = roominfo.table_id;
 			this.name = roominfo.table_name;
 			this.chipsType = roominfo.chips_type;

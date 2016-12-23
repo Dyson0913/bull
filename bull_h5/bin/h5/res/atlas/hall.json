@@ -5,18 +5,18 @@
                 "x": 0,
                 "y": 0,
                 "w": 94,
-                "h": 285,
+                "h": 279,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
                 "w": 94,
-                "h": 285
+                "h": 279
             },
             "sourceSize": {
                 "w": 94,
-                "h": 285
+                "h": 279
             },
             "rotated": false,
             "trimed": false
@@ -24,20 +24,20 @@
         "GBtn.png": {
             "frame": {
                 "x": 0,
-                "y": 287,
-                "w": 192,
-                "h": 249,
+                "y": 281,
+                "w": 196,
+                "h": 258,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 192,
-                "h": 249
+                "w": 196,
+                "h": 258
             },
             "sourceSize": {
-                "w": 192,
-                "h": 249
+                "w": 196,
+                "h": 258
             },
             "rotated": false,
             "trimed": false
@@ -46,27 +46,27 @@
             "frame": {
                 "x": 96,
                 "y": 0,
-                "w": 115,
-                "h": 141,
+                "w": 158,
+                "h": 162,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 115,
-                "h": 141
+                "w": 158,
+                "h": 162
             },
             "sourceSize": {
-                "w": 115,
-                "h": 141
+                "w": 158,
+                "h": 162
             },
             "rotated": false,
             "trimed": false
         },
         "hall_light.png": {
             "frame": {
-                "x": 96,
-                "y": 143,
+                "x": 0,
+                "y": 541,
                 "w": 16,
                 "h": 16,
                 "idx": 0
@@ -87,7 +87,7 @@
         "LeftArrow.png": {
             "frame": {
                 "x": 96,
-                "y": 161,
+                "y": 164,
                 "w": 46,
                 "h": 110,
                 "idx": 0
@@ -105,64 +105,85 @@
             "rotated": false,
             "trimed": false
         },
-        "logo.png": {
+        "Lobby_light.png": {
             "frame": {
-                "x": 144,
-                "y": 143,
-                "w": 210,
-                "h": 138,
+                "x": 18,
+                "y": 541,
+                "w": 16,
+                "h": 16,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 210,
-                "h": 138
+                "w": 16,
+                "h": 16
             },
             "sourceSize": {
-                "w": 210,
-                "h": 138
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "logo.png": {
+            "frame": {
+                "x": 198,
+                "y": 164,
+                "w": 216,
+                "h": 139,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 216,
+                "h": 139
+            },
+            "sourceSize": {
+                "w": 216,
+                "h": 139
             },
             "rotated": false,
             "trimed": false
         },
         "LP.png": {
             "frame": {
-                "x": 213,
-                "y": 0,
-                "w": 23,
-                "h": 21,
+                "x": 144,
+                "y": 164,
+                "w": 33,
+                "h": 30,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 23,
-                "h": 21
+                "w": 33,
+                "h": 30
             },
             "sourceSize": {
-                "w": 23,
-                "h": 21
+                "w": 33,
+                "h": 30
             },
             "rotated": false,
             "trimed": false
         },
         "MBtn.png": {
             "frame": {
-                "x": 194,
-                "y": 283,
-                "w": 192,
+                "x": 198,
+                "y": 305,
+                "w": 195,
                 "h": 249,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 192,
+                "w": 195,
                 "h": 249
             },
             "sourceSize": {
-                "w": 192,
+                "w": 195,
                 "h": 249
             },
             "rotated": false,
@@ -170,28 +191,28 @@
         },
         "MEnter.png": {
             "frame": {
-                "x": 238,
-                "y": 0,
-                "w": 115,
-                "h": 141,
+                "x": 395,
+                "y": 305,
+                "w": 158,
+                "h": 162,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 115,
-                "h": 141
+                "w": 158,
+                "h": 162
             },
             "sourceSize": {
-                "w": 115,
-                "h": 141
+                "w": 158,
+                "h": 162
             },
             "rotated": false,
             "trimed": false
         },
         "RightArrow.png": {
             "frame": {
-                "x": 355,
+                "x": 416,
                 "y": 0,
                 "w": 46,
                 "h": 110,

@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":21,
+    "selecteID":26,
     "props":{"width":1420,"sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -22,7 +22,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":0,"x":0,"skin":"res/hall/bg.png","name":"bg"},
+            "props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"},
             "nodeParent":1,
             "label":"Image(bg)",
             "isDirectory":false,
@@ -143,7 +143,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":168,"x":158,"skin":"res/hall/img_Ginit.png","name":"Ginit"},
+            "props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"},
             "nodeParent":1,
             "label":"Image(Ginit)",
             "isDirectory":false,
@@ -158,12 +158,13 @@
                 }],
             "compId":9,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Image",
-            "props":{"y":174,"x":771,"skin":"res/hall/img_GHigh.png","name":"GHigh"},
+            "props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"},
             "nodeParent":1,
             "label":"Image(GHigh)",
             "isDirectory":false,
@@ -223,9 +224,9 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":739,"x":358,"skin":"res/hall/GEnter.png","name":"GEnter"},
+            "props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"},
             "nodeParent":1,
-            "label":"Button(GEnter)",
+            "label":"Button(GLowEnter)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -243,7 +244,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":742,"x":982,"skin":"res/hall/GEnter.png","name":"GHighEnter"},
+            "props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"},
             "nodeParent":1,
             "label":"Button(GHighEnter)",
             "isDirectory":false,
@@ -263,7 +264,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":142,"x":346,"skin":"res/hall/borad_bg.png","name":"boardbg"},
+            "props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"},
             "nodeParent":1,
             "label":"Image(boardbg)",
             "isDirectory":false,
@@ -283,7 +284,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":142,"x":426,"skin":"res/hall/LP.png","name":"Lp"},
+            "props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"},
             "nodeParent":1,
             "label":"Image(Lp)",
             "isDirectory":false,
@@ -337,6 +338,86 @@
                     "__InPool":false
                 }],
             "compId":20,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":171,"x":156,"var":"Minit","skin":"res/hall/img_Minit.png"},
+            "nodeParent":1,
+            "label":"Image(Minit)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":358,"x":381,"skin":"res/hall/img_Minit.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":23,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"},
+            "nodeParent":1,
+            "label":"Image(MHigh)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":439,"x":902,"skin":"res/hall/img_MHigh.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":24,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Button",
+            "props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png","label":"label"},
+            "nodeParent":1,
+            "label":"Button(MLowEnter)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"label":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":25,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Button",
+            "props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png","label":"label"},
+            "nodeParent":1,
+            "label":"Button(MHighEnter)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"label":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":26,
             "child":[
                 ]
         }],
