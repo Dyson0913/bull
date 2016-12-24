@@ -2,8 +2,8 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":2,
-    "props":{"width":274,"sceneColor":"#000000","height":315},
+    "selecteID":4,
+    "props":{"width":384,"sceneColor":"#000000","height":267},
     "nodeParent":-1,
     "label":"Dialog",
     "isOpen":true,
@@ -22,7 +22,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"skin":"res/alert/img_seb_bg.png"},
+            "props":{"y":0,"x":0,"skin":"res/alert/img_seb_bg.png"},
             "nodeParent":1,
             "label":"Image",
             "isDirectory":false,
@@ -42,7 +42,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":67,"x":22,"width":27,"var":"versionTxt","text":"0.0.1","height":12,"color":"#eed6d6"},
+            "props":{"y":92,"x":28,"width":108,"var":"versionTxt","text":"0.0.1","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"},
             "nodeParent":1,
             "label":"Label(versionTxt)",
             "isDirectory":false,
@@ -62,7 +62,7 @@
         {
             "x":15,
             "type":"CheckBox",
-            "props":{"y":144,"x":28,"var":"chkMusic","stateNum":"3","skin":"res/alert/checkbox.png"},
+            "props":{"y":205,"x":46,"var":"chkMusic","stateNum":"3","skin":"res/alert/checkbox.png"},
             "nodeParent":1,
             "label":"CheckBox(chkMusic)",
             "isDirectory":false,
@@ -82,7 +82,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":-2,"x":242,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"},
+            "props":{"y":0,"x":343,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"},
             "nodeParent":1,
             "label":"Button(btnClose)",
             "isDirectory":false,
@@ -102,7 +102,7 @@
         {
             "x":15,
             "type":"CheckBox",
-            "props":{"y":145,"x":155,"var":"chkVoice","stateNum":"3","skin":"res/alert/checkbox.png"},
+            "props":{"y":205,"x":222,"var":"chkVoice","stateNum":"3","skin":"res/alert/checkbox.png"},
             "nodeParent":1,
             "label":"CheckBox(chkVoice)",
             "isDirectory":false,
@@ -116,6 +116,86 @@
                     "__InPool":false
                 }],
             "compId":6,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":9,"x":181,"width":36,"text":"设置","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#eed6d6"},
+            "nodeParent":1,
+            "label":"Label",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":7,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":50,"x":24,"width":108,"text":"版本号","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"},
+            "nodeParent":1,
+            "label":"Label",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":8,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":206,"x":82,"width":80,"text":"开启音乐","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"},
+            "nodeParent":1,
+            "label":"Label",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":10,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":207,"x":256,"width":57,"text":"开启音效","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"},
+            "nodeParent":1,
+            "label":"Label",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":11,
             "child":[
                 ]
         }],

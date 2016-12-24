@@ -22791,6 +22791,8 @@ var Laya=window.Laya=(function(window,document){
 			this.registerMediator(new SmallLoadingMediator("smallLoadingMediator",SmallLoading));
 			this.registerMediator(new TipsLoadMediator("tipsLoadMediator"),TipsLoadPanel);
 			this.registerMediator(new HallMediator("hallMediator"),Hall);
+			this.registerMediator(new MusicSetMediator("musicSetMediator"),MusicSetPanel);
+			this.registerMediator(new RuleMediator("ruleMediator"),RulePanel);
 		}
 
 		return BullConfigure;
@@ -22973,7 +22975,6 @@ var Laya=window.Laya=(function(window,document){
 			this.hallSocketService=null;
 			this.hallData=null;
 			this.userInfoData=null;
-			this.roomListInterval=30000;
 			this.timer=null;
 			this.num=0;
 			this.currentId=0;
@@ -22989,49 +22990,48 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.setViewComponent=function(viewComponent){
-			console.log("hall midatior init")
 			_super.prototype.setViewComponent.call(this,viewComponent);
 			this.hallData.addEventListener("change",this,this.onRoomListChange);
+			this.view.helpBtn.on("click",this,this.onClick);
+			this.view.setupBtn.on("click",this,this.onClick);
+			this.view.optionBtn.on("click",this,this.onClick);
+			this.showOrHideBtnGroup(false);
 		}
 
-		// view.loginPanel.login_btn.on(Event.CLICK,this,loginHandler);
 		__proto.handler=function(notification){}
-		__proto.startRoomList=function(){
-			this.getRoomList();
-			Laya.timer.loop(this.roomListInterval,this,this.getRoomList);
-		}
-
-		__proto.stopRoomList=function(){
-			Laya.timer.clear(this,this.getRoomList);
-		}
-
-		__proto.getRoomList=function(){
-			this.sentNotification(ENCSType.CS_TYPE_GET_TABLE_LIST_REQ.toString());
-		}
-
 		/**
 		*点击设置上的按钮
 		*/
 		__proto.onClick=function(e){
 			console.log("onClick:"+e.target);
+			switch(e.target){
+				case this.view.helpBtn:
+					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				case this.view.setupBtn:
+					this.sentNotification("car.SHOW_RULE_PANEL");
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				case this.view.optionBtn:
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				}
 		}
 
 		/**
 		*隐藏或显示设置按钮状态
 		*/
 		__proto.showOrHideBtnGroup=function(flag){
-			this.view.imgSetBackground.visible=flag;
-			this.view.btnRule.visible=flag;
-			this.view.btnSet.visible=flag;
+			this.view.btnBg.visible=flag;
+			this.view.setupBtn.visible=flag;
+			this.view.helpBtn.visible=flag;
 		}
 
-		__proto.loginHandler=function(){}
-		// sentNotification(CarNotification.SOCKET_CONNECT);
 		__proto.onHideHandler=function(){
 			console.log("Hall onHideHandler");
 		}
 
-		// stopRoomList();
 		__proto.onShowHandler=function(){
 			console.log("Hall onShowHandler");
 		}
@@ -23201,6 +23201,155 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
+
+
+	/**
+	*设置声音面板
+	*/
+	//class bull.modules.common.mediator.MusicSetMediator extends com.lightMVC.parrerns.Mediator
+	var MusicSetMediator=(function(_super){
+		function MusicSetMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			MusicSetMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(MusicSetMediator,'bull.modules.common.mediator.MusicSetMediator',_super);
+		var __proto=MusicSetMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			_super.prototype.setViewComponent.call(this,viewComponent);
+			Light.layer.top.addChild(this.view);
+			this.view.visible=false;
+			PopupManager.centerPopUp(this.view);
+			console.log("MusicSetMediator setViewComponent visible:"+this.view.visible);
+			this.view.btnClose.on("click",this,this.onClose);
+			this.addNotifiction("car.SHOW_MUSIC_SET_PANEL");
+			this.addNotifiction("car.HIDE_MUSIC_SET_PANEL");
+			this.addNotifiction("scenceChange");
+			this.view.chkMusic.on("change",this,this.onChange);
+			this.view.chkVoice.on("change",this,this.onChange);
+		}
+
+		__proto.handler=function(notification){
+			switch(notification.getName()){
+				case "car.SHOW_MUSIC_SET_PANEL":
+					this.onShow();
+					break ;
+				case "car.HIDE_MUSIC_SET_PANEL":
+					this.onClose();
+					break ;
+				case "scenceChange":;
+					var curScene=notification.getBody();
+					console.log("MusicSetMediator 切换到游戏场景:"+curScene);
+					if(curScene=="Scene_Game" || curScene=="Scene_Hall")
+						this.onClose();
+					break ;
+				}
+		}
+
+		__proto.onShow=function(){
+			console.log("MusicSetMediator onShow()");
+			this.view.chkMusic.selected=!ShareObjectMgr.get().music;
+			this.view.chkVoice.selected=!ShareObjectMgr.get().sound;
+			Light.layer.top.addChild(this.view);
+			this.view.visible=true;
+		}
+
+		__proto.onClose=function(e){
+			console.log("MusicSetMediator onClose()");
+			this.view.close();
+		}
+
+		/**
+		*设置声音
+		*/
+		__proto.onChange=function(){
+			console.log("设置音乐音效：music:",this.view.chkMusic.selected," sound:",this.view.chkVoice.selected);
+			ShareObjectMgr.get().setMusicSound(!this.view.chkMusic.selected,!this.view.chkVoice.selected);
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.viewComponent;
+		});
+
+		MusicSetMediator.NAME="musicSetMediator";
+		MusicSetMediator.SHOW_MUSIC_SET_PANEL="car.SHOW_MUSIC_SET_PANEL";
+		MusicSetMediator.HIDE_MUSIC_SET_PANEL="car.HIDE_MUSIC_SET_PANEL";
+		return MusicSetMediator;
+	})(Mediator)
+
+
+	/**
+	*规则面板
+	*/
+	//class bull.modules.common.mediator.RuleMediator extends com.lightMVC.parrerns.Mediator
+	var RuleMediator=(function(_super){
+		//显示规则说明面板事件
+		function RuleMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			RuleMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(RuleMediator,'bull.modules.common.mediator.RuleMediator',_super);
+		var __proto=RuleMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.top.addChild(this.view);
+			this.view.visible=false;
+			PopupManager.centerPopUp(this.view);
+			console.log("RuleMediator setViewComponent visible:"+this.view.visible);
+			this.view.btnClose.on("click",this,this.onClose);
+			this.addNotifiction("car.SHOW_RULE_PANEL");
+			this.addNotifiction("car.HIDE_RULE_PANEL");
+			this.addNotifiction("scenceChange");
+		}
+
+		__proto.handler=function(notification){
+			switch(notification.getName()){
+				case "car.SHOW_RULE_PANEL":
+					this.onShow();
+					break ;
+				case "car.HIDE_RULE_PANEL":
+					this.onClose();
+					break ;
+				case "scenceChange":;
+					var curScene=notification.getBody();
+					console.log("MusicSetMediator 切换到游戏场景:"+curScene);
+					if(curScene==/*no*/this.CarNotification.Scene_Game || curScene==/*no*/this.CarNotification.Scene_Hall)
+						this.onClose();
+					break ;
+				}
+		}
+
+		__proto.onShow=function(){
+			console.log("RuleMediator onShow()");
+			Light.layer.top.addChild(this.view);
+			this.view.visible=true;
+		}
+
+		__proto.onClose=function(e){
+			console.log("RuleMediator onClose()");
+			this.view.close();
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.viewComponent;
+		});
+
+		RuleMediator.NAME="ruleMediator";
+		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
+		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
+		return RuleMediator;
+	})(Mediator)
 
 
 	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
@@ -23650,11 +23799,9 @@ var Laya=window.Laya=(function(window,document){
 			switch(scenceName){
 				case "config":
 					this.sentNotification("loadDataMessage",{"scenceName":scenceName,"value":e.data});
-					console.log("----------------------sentNotification: "+scenceName+" value: "+e.data);
 					break ;
 				case "room":
 					this.sentNotification("loadDataMessage",{"scenceName":scenceName,"value":e.data});
-					console.log("----------------------sentNotification: "+scenceName+" value: "+e.data);
 					break ;
 				}
 		}
@@ -38365,6 +38512,7 @@ var Laya=window.Laya=(function(window,document){
 	var hallUI=(function(_super){
 		function hallUI(){
 			this.backLobby=null;
+			this.btnBg=null;
 			this.optionBtn=null;
 			this.setupBtn=null;
 			this.helpBtn=null;
@@ -38389,7 +38537,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(hallUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}},{"type":"Image","props":{"y":171,"x":156,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png","label":"label"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png","label":"label"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}},{"type":"Image","props":{"y":171,"x":156,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png","label":"label"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png","label":"label"}}]};}
 		]);
 		return hallUI;
 	})(View)
@@ -39089,7 +39237,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(SetPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":274,"height":315},"child":[{"type":"Image","props":{"skin":"res/alert/img_seb_bg.png"}},{"type":"Label","props":{"y":67,"x":22,"width":27,"var":"versionTxt","text":"0.0.1","height":12,"color":"#eed6d6"}},{"type":"CheckBox","props":{"y":144,"x":28,"var":"chkMusic","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Button","props":{"y":-2,"x":242,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"}},{"type":"CheckBox","props":{"y":145,"x":155,"var":"chkVoice","stateNum":"3","skin":"res/alert/checkbox.png"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":384,"height":267},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_seb_bg.png"}},{"type":"Label","props":{"y":92,"x":28,"width":108,"var":"versionTxt","text":"0.0.1","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"}},{"type":"CheckBox","props":{"y":205,"x":46,"var":"chkMusic","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Button","props":{"y":0,"x":343,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"}},{"type":"CheckBox","props":{"y":205,"x":222,"var":"chkVoice","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Label","props":{"y":9,"x":181,"width":36,"text":"设置","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#eed6d6"}},{"type":"Label","props":{"y":50,"x":24,"width":108,"text":"版本号","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"}},{"type":"Label","props":{"y":206,"x":82,"width":80,"text":"开启音乐","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":207,"x":256,"width":57,"text":"开启音效","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}}]};}
 		]);
 		return SetPanelUI;
 	})(Dialog)
@@ -39097,8 +39245,10 @@ var Laya=window.Laya=(function(window,document){
 
 	//class ui.ui.alert.RulePanelUI extends laya.ui.Dialog
 	var RulePanelUI=(function(_super){
-		function RulePanelUI(){RulePanelUI.__super.call(this);;
-		};
+		function RulePanelUI(){
+			this.btnClose=null;
+			RulePanelUI.__super.call(this);
+		}
 
 		__class(RulePanelUI,'ui.ui.alert.RulePanelUI',_super);
 		var __proto=RulePanelUI.prototype;
@@ -39108,7 +39258,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(RulePanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":597,"text":"规则说明","height":439},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_rule.png"}},{"type":"Button","props":{"y":-2,"x":564,"skin":"res/alert/btn_close.png"}},{"type":"Image","props":{"y":52,"x":13,"skin":"res/alert/img_rule_1.png"}},{"type":"TextArea","props":{"y":77,"x":13,"width":552,"text":" 百人牛牛是牛牛游戏的升级版，是可以提供100人及以上玩家同时进行的简单“押注类”扑克游戏，玩家可坐庄，闲家分别与庄家比较牌型大小来定输赢。","height":45}},{"type":"Image","props":{"y":119,"x":18,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":134,"x":22,"skin":"res/alert/img_rule_2.png"}},{"type":"TextArea","props":{"y":163,"x":18,"width":552,"text":"进入游戏：百人牛牛是随到随玩，您可以随时进入或退出游戏。 申请坐庄：玩家如果满足游戏坐庄条件，就能申请坐庄，进入申请上庄列表。 闲家下注：下注分为四个下注区，游戏开始后，除庄家外，所有玩家都可以下注。 发牌：加注时间结束后，系统将同时发出五副手牌。 结算：每位闲家赢得自己下注的金额，庄家赢闲家所输掉的下注金额，不同牌型倍数不一，结算时玩家的下注筹码乘上牌型倍数即为结算金额。","height":82}},{"type":"Image","props":{"y":242,"x":19,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":257,"x":23,"skin":"res/alert/img_rule_3.png"}},{"type":"TextArea","props":{"y":283,"x":21,"width":552,"text":"无牛：五张牌中，任意三张牌点数之和都不能组成10的倍数。 牛一：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是1，赔一倍。 牛二：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是2，赔一倍。 牛三：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是3，赔一倍。 牛四：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是4，赔一倍。 牛五：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是5，赔一倍。 牛六：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是6，赔一倍。 牛七：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是7，赔二倍。 牛八：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是8，赔三倍。 牛九：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是9，赔四倍。 牛牛：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是0，赔五倍。 五小牛：五张牌中，都小于或等于五，且五张牌点数之和小于或等于10，赔十倍。 四炸：即五张牌中有四张一样的牌，此时无需有牛赔十倍。 五花牛：五张十以上的花牌（不包括十）组成的牛牛，赔十倍。 牌型大小：五花牛>四炸>五小牛>牛牛>牛九>牛八>牛七>牛六>牛五>牛四>牛三>牛二>牛一>没牛。 如牌型大小一样，则比较最大单张牌的牌点：K>Q>J>10>9>8>7>6>5>4>3>2>A。","height":125}},{"type":"TextArea","props":{"y":5,"x":257,"width":66,"text":"规则说明","height":26,"color":"#f3e9e9"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":833,"text":"规则说明","height":612},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_rule.png"}},{"type":"Button","props":{"y":-1,"x":793,"var":"btnClose","skin":"res/alert/btn_close.png"}},{"type":"Image","props":{"y":64,"x":13,"skin":"res/alert/img_rule_1.png"}},{"type":"TextArea","props":{"y":97,"x":36,"width":781,"text":" 百人牛牛是牛牛游戏的升级版，是可以提供100人及以上玩家同时进行的简单“押注类”扑克游戏，玩家可坐庄，闲家分别与庄家比较牌型大小来定输赢。","height":45,"color":"#f3e4e4"}},{"type":"Image","props":{"y":153,"x":30,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":164,"x":16,"skin":"res/alert/img_rule_2.png"}},{"type":"TextArea","props":{"y":204,"x":23,"width":781,"text":"进入游戏：百人牛牛是随到随玩，您可以随时进入或退出游戏。 申请坐庄：玩家如果满足游戏坐庄条件，就能申请坐庄，进入申请上庄列表。 闲家下注：下注分为四个下注区，游戏开始后，除庄家外，所有玩家都可以下注。 发牌：加注时间结束后，系统将同时发出五副手牌。 结算：每位闲家赢得自己下注的金额，庄家赢闲家所输掉的下注金额，不同牌型倍数不一，结算时玩家的下注筹码乘上牌型倍数即为结算金额。","height":82,"color":"#f3efef"}},{"type":"Image","props":{"y":272,"x":19,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":287,"x":19,"skin":"res/alert/img_rule_3.png"}},{"type":"TextArea","props":{"y":349,"x":21,"width":782,"text":"无牛：五张牌中，任意三张牌点数之和都不能组成10的倍数。 牛一：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是1，赔一倍。 牛二：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是2，赔一倍。 牛三：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是3，赔一倍。 牛四：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是4，赔一倍。 牛五：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是5，赔一倍。 牛六：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是6，赔一倍。 牛七：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是7，赔二倍。 牛八：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是8，赔三倍。 牛九：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是9，赔四倍。 牛牛：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是0，赔五倍。 五小牛：五张牌中，都小于或等于五，且五张牌点数之和小于或等于10，赔十倍。 四炸：即五张牌中有四张一样的牌，此时无需有牛赔十倍。 五花牛：五张十以上的花牌（不包括十）组成的牛牛，赔十倍。 牌型大小：五花牛>四炸>五小牛>牛牛>牛九>牛八>牛七>牛六>牛五>牛四>牛三>牛二>牛一>没牛。 如牌型大小一样，则比较最大单张牌的牌点：K>Q>J>10>9>8>7>6>5>4>3>2>A。","height":157,"color":"#eedfdf"}},{"type":"TextArea","props":{"y":7,"x":408,"width":66,"text":"规则说明","scaleY":1.5,"scaleX":1.5,"height":26,"color":"#f3e9e9"}}]};}
 		]);
 		return RulePanelUI;
 	})(Dialog)
@@ -39724,7 +39874,7 @@ var Laya=window.Laya=(function(window,document){
 	})(SmallPanelUI)
 
 
-	Laya.__init([EventDispatcher1,Timer,LocalStorage,Browser,Proxy,Render,ShareObjectMgr,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,Dialog]);
+	Laya.__init([EventDispatcher1,LocalStorage,Timer,Browser,Proxy,Render,ShareObjectMgr,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,Dialog]);
 	new Main();
 
 })(window,document,Laya);
@@ -39735,18 +39885,20 @@ var Laya=window.Laya=(function(window,document){
 2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (37):warning:Sprite This variable is not defined.
 3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (38):warning:Sprite This variable is not defined.
 4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (67):warning:Shape This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (117):warning:CarNotification.ENTER_ROOM This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (73):warning:CarProtoModel.NAME This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/alert/AlertPanel.as (46):warning:txt_label.text This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (124):warning:CarNotification.ENTER_ROOM This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (73):warning:CarProtoModel.NAME This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/alert/AlertPanel.as (46):warning:txt_label.text This variable is not defined.
 */

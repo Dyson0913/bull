@@ -49,12 +49,12 @@ res\alert\btn_close.png:1482138942
 res\alert\checkbox.png:1481188965
 res\alert\helpBtn.png:1482139528
 res\alert\img_hint.png:1481607223
-res\alert\img_rule.png:1480299298
-res\alert\img_rule_1.png:1480299298
-res\alert\img_rule_2.png:1480299298
-res\alert\img_rule_3.png:1480299298
-res\alert\img_rule_line.png:1480299298
-res\alert\img_seb_bg.png:1478834766
+res\alert\img_rule.png:1482212097
+res\alert\img_rule_1.png:1482212097
+res\alert\img_rule_2.png:1482212097
+res\alert\img_rule_3.png:1482212097
+res\alert\img_rule_line.png:1482212097
+res\alert\img_seb_bg.png:1482212098
 res\alert\optionBtn.png:1482139063
 res\alert\setup.png:1482139102
 res\hall\bg.jpg:1482212099
@@ -74,6 +74,7 @@ res\hall\LP.png:1482212099
 res\hall\MBtn.png:1482473892
 res\hall\MEnter.png:1482474211
 res\hall\RightArrow.png:1481613054
+res\share\btn_bg.png:1482212097
 res\smallLoading\chip_10.png:1480924594
 res\tipLoading\loading.jpg:1482212099
 res\tipLoading\loading_bar.png:1482135362

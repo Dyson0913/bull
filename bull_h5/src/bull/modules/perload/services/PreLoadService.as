@@ -137,12 +137,10 @@ package bull.modules.perload.services
 			{				
 				case "config":
 //				case "hall":
-					sentNotification(BullNotification.LOAD_DATA_MESSAGE, {"scenceName":scenceName, "value":e.data});
-					trace("----------------------sentNotification: "+scenceName+" value: "+e.data);
+					sentNotification(BullNotification.LOAD_DATA_MESSAGE, {"scenceName":scenceName, "value":e.data});					
 					break;
 				case "room":
-					sentNotification(BullNotification.LOAD_DATA_MESSAGE, {"scenceName":scenceName, "value":e.data});
-					trace("----------------------sentNotification: "+scenceName+" value: "+e.data);
+					sentNotification(BullNotification.LOAD_DATA_MESSAGE, {"scenceName":scenceName, "value":e.data});					
 					break;
 			}
 		}

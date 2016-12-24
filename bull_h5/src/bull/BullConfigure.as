@@ -30,10 +30,12 @@ package bull
 	//import light.car.modules.common.command.SettlementRoundCommand;
 	//import light.car.modules.common.command.StartBetCommand;
 	//import light.car.modules.common.command.TableInfoCommand;
+	
 	//import light.car.modules.common.mediator.AlertMediator;
 	//import light.car.modules.common.mediator.AssetInMediator;
-	//import light.car.modules.common.mediator.MusicSetMediator;
-	//import light.car.modules.common.mediator.RuleMediator;
+	
+	import bull.modules.common.mediator.MusicSetMediator;
+	import bull.modules.common.mediator.RuleMediator;
 		
 	
 	import bull.modules.common.model.data.Data;
@@ -50,8 +52,8 @@ package bull
 	//import light.car.modules.room.mediator.CarScenceMediator;
 	//import light.car.modules.room.services.RoomSocketService;
 	//import light.car.view.alert.AlertPanel;
-	//import light.car.view.alert.MusicSetPanel;
-	//import light.car.view.alert.RulePanel;
+	import bull.view.alert.MusicSetPanel;
+	import bull.view.alert.RulePanel;
 	import bull.view.hall.Hall;
 	//import light.car.view.room.CarScene;
 	import bull.view.smallLoading.SmallLoading;
@@ -163,8 +165,9 @@ package bull
 			//registerMediator(new CarScenceMediator(CarScenceMediator.NAME),CarScene);
 			//registerMediator(new AssetInMediator(AssetInMediator.NAME),AssetsInPanel);
 			//registerMediator(new AlertMediator(AlertMediator.NAME),AlertPanel);
-			//registerMediator(new MusicSetMediator(MusicSetMediator.NAME),MusicSetPanel);
-			//registerMediator(new RuleMediator(RuleMediator.NAME),RulePanel);
+			
+			registerMediator(new MusicSetMediator(MusicSetMediator.NAME),MusicSetPanel);
+			registerMediator(new RuleMediator(RuleMediator.NAME),RulePanel);
 		}
 	}
 }

@@ -10,8 +10,8 @@ package bull.modules.BullHall.mediator
 	import laya.utils.Timer;
 	
 	import bull.events.BullNotification;
-	//import light.car.modules.common.mediator.MusicSetMediator;
-	//import light.car.modules.common.mediator.RuleMediator;
+	import bull.modules.common.mediator.MusicSetMediator;
+	import bull.modules.common.mediator.RuleMediator;
 	import bull.modules.common.model.data.HallData;
 	import bull.modules.common.model.data.UserInfoData;
 	import bull.modules.common.model.data.vo.HallRoomVO;	
@@ -27,9 +27,7 @@ package bull.modules.BullHall.mediator
 		
 		public var hallSocketService:HallSocketService;
 		public var hallData:HallData;
-		public var userInfoData:UserInfoData;
-		
-		private var roomListInterval:int = 30000;
+		public var userInfoData:UserInfoData;		
 		
 		public function HallMediator(mediatorName:String=null, viewComponent:Object=null)
 		{
@@ -48,8 +46,7 @@ package bull.modules.BullHall.mediator
 		}
 		
 		override public function setViewComponent(viewComponent:Object):void
-		{
-			trace("hall midatior init")
+		{			
 			super.setViewComponent(viewComponent);
 			
 			//資料更新通知	
@@ -60,11 +57,13 @@ package bull.modules.BullHall.mediator
 			//view.on(ScenceManagerEvent.UI_HIDE,this, onHideHandler);
 			//view.on(ScenceManagerEvent.UI_SHOW,this, onShowHandler);
 			
-			//view.btnModify.on(Event.CLICK,this, onClick);
-			//view.btnRule.on(Event.CLICK, this, onClick);
-			//view.btnSet.on(Event.CLICK, this, onClick);
-			//showOrHideBtnGroup(false);
-//			view.loginPanel.login_btn.on(Event.CLICK, this, loginHandler);
+			view.helpBtn.on(Event.CLICK,this, onClick);
+			view.setupBtn.on(Event.CLICK, this, onClick);
+			view.optionBtn.on(Event.CLICK, this, onClick);
+			
+			
+			
+			showOrHideBtnGroup(false);			
 		}
 		
 		override public function handler(notification:INotification):void
@@ -73,35 +72,26 @@ package bull.modules.BullHall.mediator
 		}
 		
 		
-		public function startRoomList():void{
-			getRoomList();
-			Laya.timer.loop(roomListInterval,this,getRoomList);
-		}
-		public function stopRoomList():void{
-			Laya.timer.clear(this,getRoomList);
-		}
-		private function getRoomList():void{
-			sentNotification(ENCSType.CS_TYPE_GET_TABLE_LIST_REQ.toString());
-		}
-		
 		/**
 		 * 点击设置上的按钮 
 		 */		
 		private function onClick(e:Event):void
 		{
 			trace("onClick:"+e.target);
-			//switch(e.target)
-			//{
-				//case view.btnSet:
-					//sentNotification(MusicSetMediator.SHOW_MUSIC_SET_PANEL);
-					//break;
-				//case view.btnRule:
-					//sentNotification(RuleMediator.SHOW_RULE_PANEL);
-					//break;
-				//case view.btnModify:
-					//showOrHideBtnGroup(!view.imgSetBackground.visible);
-					//break;
-			//}
+			switch(e.target)
+			{
+				case view.helpBtn:
+					sentNotification(MusicSetMediator.SHOW_MUSIC_SET_PANEL);
+					showOrHideBtnGroup(!view.btnBg.visible);
+				break;					
+				case view.setupBtn:
+					sentNotification(RuleMediator.SHOW_RULE_PANEL);
+					showOrHideBtnGroup(!view.btnBg.visible);
+				break;
+				case view.optionBtn:
+					showOrHideBtnGroup(!view.btnBg.visible);
+				break;
+			}
 		}
 		
 		/**
@@ -109,21 +99,15 @@ package bull.modules.BullHall.mediator
 		 */		
 		private function showOrHideBtnGroup(flag:Boolean):void
 		{
-			view.imgSetBackground.visible = flag;
-			view.btnRule.visible = flag;
-			view.btnSet.visible = flag;
+			view.btnBg.visible = flag;
+			view.setupBtn.visible = flag;
+			view.helpBtn.visible = flag;
 		}
 		
-		private function loginHandler():void{
-//			userInfoData.name = view.loginPanel.name_txt.text;
-//			view.hideLogin();
-//			sentNotification(CarNotification.SOCKET_CONNECT);
-		}
 		
 		private function onHideHandler():void{
 			//记得移除一些事情
 			trace("Hall onHideHandler");
-//			stopRoomList();
 		}
 		
 		private function onShowHandler():void{

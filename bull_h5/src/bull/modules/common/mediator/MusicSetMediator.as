@@ -8,9 +8,9 @@ package bull.modules.common.mediator
 	
 	import laya.events.Event;
 	
-	import light.car.core.ShareObjectMgr;
-	import light.car.events.CarNotification;
-	import light.car.view.alert.MusicSetPanel;
+	import bull.core.ShareObjectMgr;
+	import bull.events.BullNotification
+	import bull.view.alert.MusicSetPanel;
 	
 	/**
 	 * 设置声音面板 
@@ -48,7 +48,7 @@ package bull.modules.common.mediator
 			view.btnClose.on(Event.CLICK, this, onClose);
 			addNotifiction(SHOW_MUSIC_SET_PANEL);
 			addNotifiction(HIDE_MUSIC_SET_PANEL);
-			addNotifiction(CarNotification.SCENCE_CHANGE);
+			addNotifiction(BullNotification.SCENCE_CHANGE);
 			view.chkMusic.on(Event.CHANGE, this, onChange);
 			view.chkVoice.on(Event.CHANGE, this, onChange);
 		}
@@ -63,10 +63,10 @@ package bull.modules.common.mediator
 				case HIDE_MUSIC_SET_PANEL:
 					onClose();
 					break;
-				case CarNotification.SCENCE_CHANGE:
+				case BullNotification.SCENCE_CHANGE:
 					var curScene:String = notification.getBody() as String;
 					trace("MusicSetMediator 切换到游戏场景:"+curScene);
-					if( curScene == CarNotification.Scene_Game || curScene == CarNotification.Scene_Hall )
+					if( curScene == BullNotification.Scene_Game || curScene == BullNotification.Scene_Hall )
 						onClose();
 					break;
 			}
