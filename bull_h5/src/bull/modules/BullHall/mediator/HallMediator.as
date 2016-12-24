@@ -62,6 +62,8 @@ package bull.modules.BullHall.mediator
 			view.optionBtn.on(Event.CLICK, this, onClick);
 			
 			
+			view.GBtn.on(Event.CLICK, this, onGBtnClick);
+			view.MBtn.on(Event.CLICK, this, onMBtnClick);
 			
 			showOrHideBtnGroup(false);			
 		}
@@ -69,6 +71,20 @@ package bull.modules.BullHall.mediator
 		override public function handler(notification:INotification):void
 		{
 
+		}
+		
+		private function onGBtnClick(e:Event):void
+		{
+			trace("onGBtnClick");
+			view.showRoomList([hallData.roomList[0], hallData.roomList[1]]);
+			view.show_G();
+		}
+		
+		private function onMBtnClick(e:Event):void
+		{
+			trace("onMBtnClick");
+			view.showRoomList([hallData.roomList[2], hallData.roomList[3]]);
+			view.show_M();
 		}
 		
 		
@@ -118,7 +134,7 @@ package bull.modules.BullHall.mediator
 		
 		private function onRoomListChange(e:LightEvent):void {
 			trace("get room data")
-			//view.showRoomList(hallData.roomList);
+			view.showRoomList(hallData.roomList);
 		}
 		
 		private function onListItemClick(data:*):void{

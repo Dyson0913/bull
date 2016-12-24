@@ -22995,10 +22995,24 @@ var Laya=window.Laya=(function(window,document){
 			this.view.helpBtn.on("click",this,this.onClick);
 			this.view.setupBtn.on("click",this,this.onClick);
 			this.view.optionBtn.on("click",this,this.onClick);
+			this.view.GBtn.on("click",this,this.onGBtnClick);
+			this.view.MBtn.on("click",this,this.onMBtnClick);
 			this.showOrHideBtnGroup(false);
 		}
 
 		__proto.handler=function(notification){}
+		__proto.onGBtnClick=function(e){
+			console.log("onGBtnClick");
+			this.view.showRoomList([this.hallData.roomList[0],this.hallData.roomList[1]]);
+			this.view.show_G();
+		}
+
+		__proto.onMBtnClick=function(e){
+			console.log("onMBtnClick");
+			this.view.showRoomList([this.hallData.roomList[2],this.hallData.roomList[3]]);
+			this.view.show_M();
+		}
+
 		/**
 		*点击设置上的按钮
 		*/
@@ -23039,9 +23053,9 @@ var Laya=window.Laya=(function(window,document){
 		//startRoomList();
 		__proto.onRoomListChange=function(e){
 			console.log("get room data")
+			this.view.showRoomList(this.hallData.roomList);
 		}
 
-		//view.showRoomList(hallData.roomList);
 		__proto.onListItemClick=function(data){
 			console.log("onListItemClick",data.id);
 			this.currentId=data.id;
@@ -38526,18 +38540,23 @@ var Laya=window.Laya=(function(window,document){
 			this.MHigh=null;
 			this.MLowEnter=null;
 			this.MHighEnter=null;
+			this.LowRoomLimit=null;
+			this.HighRoomLimit=null;
+			this.LowRoomBet=null;
+			this.HighRoomBet=null;
 			hallUI.__super.call(this);
 		}
 
 		__class(hallUI,'ui.ui.hall.hallUI',_super);
 		var __proto=hallUI.prototype;
 		__proto.createChildren=function(){
+			View.regComponent("Text",Text);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(hallUI.uiView);
 		}
 
 		__static(hallUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}},{"type":"Image","props":{"y":171,"x":156,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png","label":"label"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png","label":"label"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}},{"type":"Image","props":{"y":171,"x":156,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":423,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":422,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Text","props":{"y":432,"x":210,"width":55,"text":"房间限红:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":431,"x":815,"width":55,"text":"房间限红:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":462,"x":192,"width":55,"text":"投注额:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":461,"x":801,"width":55,"text":"投注额:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":427,"x":305,"width":75,"var":"LowRoomLimit","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":427,"x":909,"width":76,"var":"HighRoomLimit","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":457,"x":268,"width":75,"var":"LowRoomBet","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":457,"x":875,"width":75,"var":"HighRoomBet","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}}]};}
 		]);
 		return hallUI;
 	})(View)
@@ -39270,8 +39289,6 @@ var Laya=window.Laya=(function(window,document){
 			Hall.__super.call(this);
 			this.Ginit.visible=this.GHigh.visible=this.GLowEnter.visible=this.GHighEnter.visible=true;
 			this.Minit.visible=this.MHigh.visible=this.MLowEnter.visible=this.MHighEnter.visible=false;
-			this.GBtn.on("click",this,this.onGBtnClick);
-			this.MBtn.on("click",this,this.onMBtnClick);
 			this.backLobby.on("click",this,this.onReturnClick);
 		}
 
@@ -39279,14 +39296,26 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=Hall.prototype;
 		__proto.onReturnClick=function(e){}
 		// TODO Auto Generated method stub
-		__proto.onGBtnClick=function(e){
+		__proto.show_G=function(){
 			this.Ginit.visible=this.GHigh.visible=this.GLowEnter.visible=this.GHighEnter.visible=true;
 			this.Minit.visible=this.MHigh.visible=this.MLowEnter.visible=this.MHighEnter.visible=false;
 		}
 
-		__proto.onMBtnClick=function(e){
+		__proto.show_M=function(){
 			this.Ginit.visible=this.GHigh.visible=this.GLowEnter.visible=this.GHighEnter.visible=false;
 			this.Minit.visible=this.MHigh.visible=this.MLowEnter.visible=this.MHighEnter.visible=true;
+		}
+
+		__proto.showRoomList=function(data){
+			var roominfo=data [0];
+			var config=roominfo.config;
+			console.log("config ="+config)
+			this.LowRoomLimit.text=config.room_limit;
+			this.LowRoomBet.text=config.min_bet+" - "+config.max_bet;
+			roominfo=data [1];
+			config=roominfo.config;
+			this.HighRoomLimit.text=config.room_limit;
+			this.HighRoomBet.text=config.min_bet+" - "+config.max_bet;
 		}
 
 		return Hall;
@@ -39885,7 +39914,7 @@ var Laya=window.Laya=(function(window,document){
 2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (37):warning:Sprite This variable is not defined.
 3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (38):warning:Sprite This variable is not defined.
 4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (67):warning:Shape This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (124):warning:CarNotification.ENTER_ROOM This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (141):warning:CarNotification.ENTER_ROOM This variable is not defined.
 6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
 7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
 8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (73):warning:CarProtoModel.NAME This variable is not defined.

@@ -20,6 +20,27 @@
             },
             "rotated": false,
             "trimed": false
+        },
+        "tip_bg.png": {
+            "frame": {
+                "x": 0,
+                "y": 335,
+                "w": 257,
+                "h": 70,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 257,
+                "h": 70
+            },
+            "sourceSize": {
+                "w": 257,
+                "h": 70
+            },
+            "rotated": false,
+            "trimed": false
         }
     },
     "meta": {
