@@ -14,6 +14,7 @@ package bull.modules.common.model.data
 		
 		
 		private var _roomList:Array;////////////HallRoomVO
+		private var _join_room_idx:int;
 		
 		public function getHallRoomInfoById(tableId:int):HallRoomVO{
 			for each(var roomVo:HallRoomVO in _roomList){
@@ -30,13 +31,23 @@ package bull.modules.common.model.data
 		public function get roomList():Array
 		{
 			return _roomList;
-		}
-
+		}		
+		
 		public function set roomList(value:Array):void
 		{
 			//trace("set roomList",value);
 			_roomList = value;
 			this.dispatchEvent(new LightEvent(LightEvent.CHANGE));
+		}
+		
+		public function get join_room_idx():int
+		{
+			return _join_room_idx;
+		}
+		
+		public function set join_room_idx(value:int):void
+		{		
+			_join_room_idx = value;			
 		}
 
 	}

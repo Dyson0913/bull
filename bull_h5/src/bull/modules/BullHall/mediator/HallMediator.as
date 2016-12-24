@@ -65,6 +65,13 @@ package bull.modules.BullHall.mediator
 			view.GBtn.on(Event.CLICK, this, onGBtnClick);
 			view.MBtn.on(Event.CLICK, this, onMBtnClick);
 			
+			view.MLowEnter.on(Event.CLICK, this, onMLowEnter);
+			view.MHighEnter.on(Event.CLICK, this, onMHighEnter);
+			
+			view.GLowEnter.on(Event.CLICK, this, onGLowEnter);
+			view.GHighEnter.on(Event.CLICK, this, onGHighEnter);
+			
+			
 			showOrHideBtnGroup(false);			
 		}
 		
@@ -74,17 +81,39 @@ package bull.modules.BullHall.mediator
 		}
 		
 		private function onGBtnClick(e:Event):void
-		{
-			trace("onGBtnClick");
+		{		
 			view.showRoomList([hallData.roomList[0], hallData.roomList[1]]);
 			view.show_G();
 		}
 		
 		private function onMBtnClick(e:Event):void
-		{
-			trace("onMBtnClick");
+		{			
 			view.showRoomList([hallData.roomList[2], hallData.roomList[3]]);
 			view.show_M();
+		}
+		
+		private function onMLowEnter(e:Event):void
+		{
+			hallData.join_room_idx = 0;
+			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+		}
+		
+		private function onMHighEnter(e:Event):void
+		{
+			hallData.join_room_idx = 1;
+			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+		}
+		
+		private function onGLowEnter(e:Event):void
+		{
+			hallData.join_room_idx = 2;
+			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+		}
+		
+		private function onGHighEnter(e:Event):void
+		{
+			hallData.join_room_idx = 3;
+			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
 		}
 		
 		

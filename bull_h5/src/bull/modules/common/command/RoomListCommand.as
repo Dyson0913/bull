@@ -57,6 +57,8 @@ package bull.modules.common.command
 				roomList.push(list.roominfo[i]);
 			}
 			bulldata.hallData.roomList = roomList;
+			
+			//TODO 己經在桌內處理
 		}
 	}
 }

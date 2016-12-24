@@ -22,7 +22,7 @@ package bull
 	
 	//import light.car.modules.common.command.ConnectRoomCommand;	
 	//import light.car.modules.common.command.HeartBeatCommand;
-	//import light.car.modules.common.command.JoinRoomCommand;
+	import bull.modules.common.command.JoinRoomCommand;
 	
 	//import light.car.modules.common.command.LoginRoomCommand;
 	//import light.car.modules.common.command.RoomConfigCommand;
@@ -90,19 +90,22 @@ package bull
 			registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString(), RoomListCommand);
 			registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString(), RoomListCommand);
 			
+			//請求加入房間
+			registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString(), JoinRoomCommand);
+			registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_RSP.toString(), JoinRoomCommand);
+			//registerCommand(CarNotification.ENTER_ROOM, EnterRoomCommand);
+			
 			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT, ConnectRoomCommand);
 			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT_COMPLETE, ConnectRoomCommand);
-			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT_FAILED, ConnectRoomCommand);
-			//
+			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT_FAILED, ConnectRoomCommand);		
 			
 			
 			//registerCommand(CarNotification.LOGIN_ROOM_RQS, LoginRoomCommand);
 			//registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(), LoginRoomCommand);
 			//			
 			//
-			//registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString(), JoinRoomCommand);
-			//registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(), JoinRoomCommand);
-			//registerCommand(CarNotification.ENTER_ROOM, EnterRoomCommand);
+			
+			
 			//
 			//registerCommand(CarNotification.GET_USER_BALANCE, UserBalanceCommand);
 			
