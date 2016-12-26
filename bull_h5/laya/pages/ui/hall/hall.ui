@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":14,
+    "selecteID":41,
     "props":{"width":1420,"text":"房间限红:","sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -260,7 +260,8 @@
                 }],
             "compId":13,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
@@ -421,7 +422,7 @@
             "compId":25,
             "child":[
                 ],
-            "$HIDDEN":false
+            "$HIDDEN":true
         },
         {
             "x":15,
