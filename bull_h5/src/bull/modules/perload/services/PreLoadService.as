@@ -2,7 +2,7 @@ package bull.modules.perload.services
 {
 	import com.lightMVC.interfaces.IModel;
 	import com.lightMVC.parrerns.Model;
-	//import com.lightUI.KGameComponents.assetsInPanel.AssetsInPanel;
+	import com.lightUI.KGameComponents.assetsInPanel.AssetsInPanel;
 	import com.lightUI.core.Light;
 	import com.lightUI.events.LightEvent;
 	import com.lightUI.events.ScenceManagerEvent;
@@ -20,7 +20,7 @@ package bull.modules.perload.services
 	import bull.view.tipsLoad.TipsLoadPanel;
 	import bull.modules.common.model.BullProtoModel;
 	import bull.view.hall.Hall;
-	//import light.car.view.room.CarScene;
+	import bull.view.room.BullScene;
 	
 	public class PreLoadService extends Model implements IModel
 	{
@@ -115,10 +115,10 @@ package bull.modules.perload.services
 			Light.scence.addEventListener(ScenceManagerEvent.SCENCE_PROGRESS,this, onProgress,["room"]);
 			Light.scence.addEventListener(ScenceManagerEvent.SCENCE_COMPLETE,this, onComplate,["room"]);
 			
-			//Light.scence.addScence("room",["CarScene","AssetsInPanel"],Light.layer.scence,ScenceInfo.HIDE_PERSCENCE)
-				//.regView("CarScene",CarScene)
-				//.regView("AssetsInPanel",AssetsInPanel);
-			//Light.scence.creat();
+			Light.scence.addScence("room",["BullScene","AssetsInPanel"],Light.layer.scence,ScenceInfo.HIDE_PERSCENCE)
+				.regView("BullScene", BullScene)
+				.regView("AssetsInPanel",AssetsInPanel);
+			Light.scence.creat();
 		}
 		
 		private function loadProto():void{
@@ -170,14 +170,12 @@ package bull.modules.perload.services
 					Light.scence.removeScence("common");
 					loadProto();
 				break;
-				case "hall":
-					trace("sentNotification",BullNotification.SOCKET_CONNECT);
+				case "hall":					
 					sentNotification(BullNotification.HALL_SOCKET_CONNECT);
 				break;				
 				case "room":
-					trace("sentNotification",BullNotification.ROOM_SOCKET_CONNECT);
-					trace("assetIn atlas: "+Light.loader.getRes("assetsIn"));
-					sentNotification(BullNotification.ROOM_SOCKET_CONNECT);
+					trace("sentNotification",BullNotification.ROOM_SOCKET_CONNECT);					
+					//sentNotification(BullNotification.ROOM_SOCKET_CONNECT);
 					break;
 				default:
 					break;

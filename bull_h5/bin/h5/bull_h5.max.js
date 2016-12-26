@@ -15240,27 +15240,71 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher1)
 
 
-	//class com.iflash.events.Event extends laya.events.Event
-	var Event=(function(_super){
-		function Event(type,bubbles,cancelable){
-			this.bubbles=false;
-			this.cancelable=false;
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			Event.__super.call(this);
-			this.type=type;
-			this.bubbles=bubbles;
-			this.cancelable=cancelable;
+	//class com.lightMVC.parrerns.Command extends com.lightMVC.core.Node
+	var Command=(function(_super){
+		function Command(){
+			this._proxy=null;
+			Command.__super.call(this);
 		}
 
-		__class(Event,'com.iflash.events.Event',_super);
-		var __proto=Event.prototype;
-		__proto.clone=function(){
-			return new com.iflash.events.Event(this.type);
+		__class(Command,'com.lightMVC.parrerns.Command',_super);
+		var __proto=Command.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true,"com.lightMVC.interfaces.IHandle":true})
+		__proto.getSingleton=function(clazzname){
+			return this._proxy.getSingleton(clazzname);
 		}
 
-		return Event;
-	})(Event1)
+		/**
+		*获取一个model数据
+		*@param modelName
+		*@return
+		*
+		*/
+		__proto.getModel=function(modelName){
+			return this._proxy.getModel(modelName);
+		}
+
+		/**
+		*获取一个mediator视图
+		*@param mediatorName
+		*@return
+		*
+		*/
+		__proto.getMediator=function(mediatorName){
+			return this._proxy.getMediator(mediatorName);
+		}
+
+		__proto.setProxy=function(proxy){
+			this._proxy=proxy;
+		}
+
+		/**
+		*发送消息
+		*@param notiName 消息名称
+		*@param body 消息携带的参数
+		*
+		*/
+		__proto.sentNotification=function(notiName,body){
+			this._proxy.sentNotification(new Notification(notiName,body));
+			return this;
+		}
+
+		/**
+		*调用此方法 完成参数注入 参数需在 getInjector()数组里申明
+		*
+		*/
+		__proto.injector=function(){
+			this._proxy.injector(this.getInjector(),this);
+		}
+
+		/**
+		*消息处理函数 子类可以重写此方法
+		*@param notification
+		*
+		*/
+		__proto.handler=function(notification){}
+		return Command;
+	})(Node)
 
 
 	//class com.lightMVC.parrerns.Mediator extends com.lightMVC.core.Node
@@ -15400,6 +15444,29 @@ var Laya=window.Laya=(function(window,document){
 	})(Node)
 
 
+	//class com.iflash.events.Event extends laya.events.Event
+	var Event=(function(_super){
+		function Event(type,bubbles,cancelable){
+			this.bubbles=false;
+			this.cancelable=false;
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			Event.__super.call(this);
+			this.type=type;
+			this.bubbles=bubbles;
+			this.cancelable=cancelable;
+		}
+
+		__class(Event,'com.iflash.events.Event',_super);
+		var __proto=Event.prototype;
+		__proto.clone=function(){
+			return new com.iflash.events.Event(this.type);
+		}
+
+		return Event;
+	})(Event1)
+
+
 	//class com.lightMVC.parrerns.Model extends com.lightMVC.core.Node
 	var Model=(function(_super){
 		function Model(modelName,data){
@@ -15481,73 +15548,6 @@ var Laya=window.Laya=(function(window,document){
 
 		Model.NAME="Model";
 		return Model;
-	})(Node)
-
-
-	//class com.lightMVC.parrerns.Command extends com.lightMVC.core.Node
-	var Command=(function(_super){
-		function Command(){
-			this._proxy=null;
-			Command.__super.call(this);
-		}
-
-		__class(Command,'com.lightMVC.parrerns.Command',_super);
-		var __proto=Command.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true,"com.lightMVC.interfaces.IHandle":true})
-		__proto.getSingleton=function(clazzname){
-			return this._proxy.getSingleton(clazzname);
-		}
-
-		/**
-		*获取一个model数据
-		*@param modelName
-		*@return
-		*
-		*/
-		__proto.getModel=function(modelName){
-			return this._proxy.getModel(modelName);
-		}
-
-		/**
-		*获取一个mediator视图
-		*@param mediatorName
-		*@return
-		*
-		*/
-		__proto.getMediator=function(mediatorName){
-			return this._proxy.getMediator(mediatorName);
-		}
-
-		__proto.setProxy=function(proxy){
-			this._proxy=proxy;
-		}
-
-		/**
-		*发送消息
-		*@param notiName 消息名称
-		*@param body 消息携带的参数
-		*
-		*/
-		__proto.sentNotification=function(notiName,body){
-			this._proxy.sentNotification(new Notification(notiName,body));
-			return this;
-		}
-
-		/**
-		*调用此方法 完成参数注入 参数需在 getInjector()数组里申明
-		*
-		*/
-		__proto.injector=function(){
-			this._proxy.injector(this.getInjector(),this);
-		}
-
-		/**
-		*消息处理函数 子类可以重写此方法
-		*@param notification
-		*
-		*/
-		__proto.handler=function(notification){}
-		return Command;
 	})(Node)
 
 
@@ -22771,8 +22771,12 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand("hallSocketConnectFailed",ConnectHallCommand);
 			this.registerCommand("loginHallRequest",LoginHallCommand);
 			this.registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(),LoginHallCommand);
-			this.registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString(),RoomListCommand1);
-			this.registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString(),RoomListCommand1);
+			this.registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString(),RoomListCommand);
+			this.registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString(),RoomListCommand);
+			this.registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString(),JoinRoomCommand);
+			this.registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_RSP.toString(),JoinRoomCommand);
+			this.registerCommand("getUserBalance",UserBalanceCommand);
+			this.registerCommand("enterRoom",EnterRoomCommand);
 		}
 
 		//registerCommand(ENCSType.CS_TYPE_ROUND_CASH_NOTIFY.toString(),SettlementRoundCommand);//开始结算
@@ -22791,6 +22795,8 @@ var Laya=window.Laya=(function(window,document){
 			this.registerMediator(new SmallLoadingMediator("smallLoadingMediator",SmallLoading));
 			this.registerMediator(new TipsLoadMediator("tipsLoadMediator"),TipsLoadPanel);
 			this.registerMediator(new HallMediator("hallMediator"),Hall);
+			this.registerMediator(new BullScenceMediator("BullScenceMediator"),BullScene);
+			this.registerMediator(new AssetInMediator("assetInMediator"),AssetsInPanel);
 			this.registerMediator(new MusicSetMediator("musicSetMediator"),MusicSetPanel);
 			this.registerMediator(new RuleMediator("ruleMediator"),RulePanel);
 		}
@@ -22882,91 +22888,77 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			HallData.__super.call(this);
+	//class bull.modules.BullHall.command.UserBalanceCommand extends com.lightMVC.parrerns.Command
+	var UserBalanceCommand=(function(_super){
+		function UserBalanceCommand(){
+			this._firstEnter=false;
+			UserBalanceCommand.__super.call(this);
 		}
 
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		////////////HallRoomVO
-		__proto.getHallRoomInfoById=function(tableId){
-			var roomVo;
-			for(var $each_roomVo in this._roomList){
-				roomVo=this._roomList[$each_roomVo];
-				if(roomVo.id==tableId)return roomVo;
+		__class(UserBalanceCommand,'bull.modules.BullHall.command.UserBalanceCommand',_super);
+		var __proto=UserBalanceCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="getUserBalance"){
+				this.onUserBalanceHandler(notification.getBody());
 			}
-			return null;
 		}
 
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
-	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
-	var UserInfoData=(function(_super){
-		function UserInfoData(){
-			this._name=null;
-			this._balance=0;
-			this._bonus=0;
-			this._moneyType=0;
-			this._headIcon=null;
-			UserInfoData.__super.call(this);
+		__proto.onUserBalanceHandler=function(firstEnter){
+			(firstEnter===void 0)&& (firstEnter=false);
+			var ws=this.getModel("WebService");
+			ws.getUserBalance(new Handler(this,this.userBalanceCallback));
+			this._firstEnter=firstEnter;
 		}
 
-		__class(UserInfoData,'bull.modules.common.model.data.UserInfoData',_super);
-		var __proto=UserInfoData.prototype;
-		__proto.toString=function(){
-			return "{name:"+this._name+",balance:"+this._balance+":bonus:"+this._bonus+"}";
+		__proto.userBalanceCallback=function(param){
+			console.log("----userBalanceCallback",+param)
+			var hallData=this.getSingleton("hallData");
+			this.sentNotification("enterRoom");
+			return;
+			if(hallData.roomId > 0){
+				var carData=this.getSingleton(light.car.modules.common.model.data.CarData.NAME);
+				var roomData=this.getSingleton(light.car.modules.common.model.data.RoomData.NAME);
+				var roomVO=hallData.getHallRoomInfoById(hallData.roomId);
+				if(!roomVO)return;
+				var carryInParam=new light.car.modules.common.model.param.CarryInParam(param);
+				var userInfo=this.getSingleton(light.car.modules.common.model.data.UserInfoData.NAME);
+				roomData.chipsType=roomVO.chipsType;
+				carryInParam.name=roomVO.name;
+				carryInParam.betMin=light.car.utils.MoneyUtils.getCashChange(roomVO.chipsType,roomVO.betMin);
+				carryInParam.isFirst=this._firstEnter;
+				carryInParam.carrayType=roomVO.chipsType==1 ? 1 :roomData.nm ? 2:0;
+				if(carData.states==light.car.modules.common.model.data.ConstData.HALL_STATE){
+					if(this.checkInByBalanceEnough(carryInParam)){
+						this.sentNotification(/*no*/this.CarNotification.ENTER_ROOM,roomVO);
+						}else{
+						Alert.show("抱歉，你的余额低于最低带入金。","",light.car.view.alert.AlertCancelPanel,null,Handler.create(this,this.gotoRecharge));
+					}
+					}else{
+					if(!this.checkInByBalanceEnough(carryInParam)){
+						Alert.show("抱歉，你的余额低于最低带入金。","",light.car.view.alert.AlertCancelPanel,null,Handler.create(this,this.gotoRecharge));
+						}else{
+						this.sentNotification(/*no*/this.CarNotification.SHOW_CARRY_IN_PANEL,carryInParam);
+					}
+				}
+			}
 		}
 
-		__getset(0,__proto,'moneyType',function(){
-			return this._moneyType;
-			},function(value){
-			this._moneyType=value;
-		});
+		__proto.gotoRecharge=function(data,flg){
+			if(flg=="ok_btn"){
+			}else{}
+		}
 
-		__getset(0,__proto,'name',function(){
-			return this._name;
-			},function(value){
-			this._name=value;
-			this.dispatchEventDelay(new LightEvent("change"));
-		});
+		//关闭提示
+		__proto.checkInByBalanceEnough=function(param){
+			if((param.carrayType==1 && param.coin < param.betMin)|| (param.carrayType==2 && (param.cash+param.nm)< param.betMin)|| (param.carrayType==0 && param.cash < param.betMin)){
+				return false;
+			}
+			return true;
+		}
 
-		__getset(0,__proto,'balance',function(){
-			return this._balance;
-			},function(value){
-			console.log("userbalance sss");
-			this._balance=value;
-			this.dispatchEventDelay(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'bonus',function(){
-			return this._bonus;
-			},function(value){
-			this._bonus=value;
-			this.dispatchEventDelay(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'headIcon',function(){
-			return this._headIcon;
-			},function(value){
-			this._headIcon=value;
-		});
-
-		UserInfoData.NAME="userInfoData";
-		return UserInfoData;
-	})(EventDispatcher)
+		return UserBalanceCommand;
+	})(Command)
 
 
 	//class bull.modules.BullHall.mediator.HallMediator extends com.lightMVC.parrerns.Mediator
@@ -22997,20 +22989,42 @@ var Laya=window.Laya=(function(window,document){
 			this.view.optionBtn.on("click",this,this.onClick);
 			this.view.GBtn.on("click",this,this.onGBtnClick);
 			this.view.MBtn.on("click",this,this.onMBtnClick);
+			this.view.MLowEnter.on("click",this,this.onMLowEnter);
+			this.view.MHighEnter.on("click",this,this.onMHighEnter);
+			this.view.GLowEnter.on("click",this,this.onGLowEnter);
+			this.view.GHighEnter.on("click",this,this.onGHighEnter);
 			this.showOrHideBtnGroup(false);
 		}
 
 		__proto.handler=function(notification){}
 		__proto.onGBtnClick=function(e){
-			console.log("onGBtnClick");
 			this.view.showRoomList([this.hallData.roomList[0],this.hallData.roomList[1]]);
 			this.view.show_G();
 		}
 
 		__proto.onMBtnClick=function(e){
-			console.log("onMBtnClick");
 			this.view.showRoomList([this.hallData.roomList[2],this.hallData.roomList[3]]);
 			this.view.show_M();
+		}
+
+		__proto.onMLowEnter=function(e){
+			this.hallData.join_room_idx=0;
+			this.sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+		}
+
+		__proto.onMHighEnter=function(e){
+			this.hallData.join_room_idx=1;
+			this.sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+		}
+
+		__proto.onGLowEnter=function(e){
+			this.hallData.join_room_idx=2;
+			this.sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+		}
+
+		__proto.onGHighEnter=function(e){
+			this.hallData.join_room_idx=3;
+			this.sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
 		}
 
 		/**
@@ -23108,6 +23122,213 @@ var Laya=window.Laya=(function(window,document){
 		HallMediator.NAME="hallMediator";
 		return HallMediator;
 	})(Mediator)
+
+
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			if(param.uid){
+				bullData.uid=param.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if(param.access_token)bullData.token=param.access_token;
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
+
+
+	//class bull.modules.common.command.JoinRoomCommand extends com.lightMVC.parrerns.Command
+	var JoinRoomCommand=(function(_super){
+		function JoinRoomCommand(){
+			JoinRoomCommand.__super.call(this);
+		}
+
+		__class(JoinRoomCommand,'bull.modules.common.command.JoinRoomCommand',_super);
+		var __proto=JoinRoomCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString()){
+				this.joinRoomRqsHandler();
+				}else if(notification.getName()==ENCSType.CS_TYPE_TRY_ENTER_TABLE_RSP.toString()){
+				this.joinRoomRspHandler(notification.getBody());
+			}
+		}
+
+		__proto.joinRoomRqsHandler=function(){
+			console.log("joinRoomRqsHandler");
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=13;
+			out.try_enter_table_req=proto.msg_proto.getSTryEnterTableReq();
+			var bullData=this.getSingleton("Data");
+			var roominfo=bullData.hallData.roomList [bullData.hallData.join_room_idx];
+			var config=roominfo.config;
+			out.try_enter_table_req.room_type=config.room_type;
+			out.try_enter_table_req.room_id=config.room_id;
+			var socket=this.getModel("hallSocketService");
+			socket.sentMsg(out);
+		}
+
+		__proto.joinRoomRspHandler=function(e){
+			console.log("joinRoomRspHandler",e);
+			if (e.try_enter_table_rsp.error_code==0){
+				var hallData=this.getSingleton("hallData");
+				hallData.ip=e.try_enter_table_rsp.net_address.ip;
+				hallData.port=e.try_enter_table_rsp.net_address.port;
+				hallData.Token=e.try_enter_table_rsp.token;
+				this.sentNotification("getUserBalance",true);
+				}else{
+				console.log("error code: "+e.enter_table_rsp.result);
+			}
+		}
+
+		return JoinRoomCommand;
+	})(Command)
+
+
+	//class bull.modules.common.command.LoginHallCommand extends com.lightMVC.parrerns.Command
+	var LoginHallCommand=(function(_super){
+		function LoginHallCommand(){
+			LoginHallCommand.__super.call(this);
+		}
+
+		__class(LoginHallCommand,'bull.modules.common.command.LoginHallCommand',_super);
+		var __proto=LoginHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(noti){
+			switch(noti.getName()){
+				case "loginHallRequest":
+					this.hallLoginReqHandler();
+					break ;
+				case ENCSType.CS_TYPE_LOGIN_RSP.toString():
+					this.hallLoginRspHandler(noti.getBody());
+					break ;
+				case BullNotification.Leave_Game:
+					this.returnHallReq();
+					break ;
+				case ENCSType.CS_TYPE_RETURN_HALL_RSP.toString():
+					this.returnHallRsp(noti.getBody());
+					break ;
+				}
+		}
+
+		__proto.hallLoginReqHandler=function(){
+			var bullData=this.getSingleton("Data");
+			bullData.truthLogin=true;
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=8;
+			out.login_req=proto.msg_proto.getLoginReq();
+			out.login_req.uid=Long.fromNumber(bullData.uid);
+			out.login_req.verify_sig=bullData.token;
+			var socket=this.getModel("hallSocketService");
+			socket.sentMsg(out);
+		}
+
+		__proto.hallLoginRspHandler=function(msg){
+			console.log("hallLoginRspHandler",msg);
+			var bullData=this.getSingleton("Data");
+			if(bullData.truthLogin){}
+				bullData.truthLogin=false;
+			this.sentNotification(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString());
+		}
+
+		__proto.returnHallReq=function(){
+			var proto=this.getModel(/*no*/this.CarProtoModel.NAME);
+			var out=proto.msg_proto.getCS();
+			out.msg_type=ENCSType.CS_TYPE_RETURN_HALL_REQ;
+			var req=proto.msg_proto.getReturnHallReq();
+			out.return_hall_req=req;
+			var socket=this.getModel("hallSocketService");
+			socket.sentMsg(out);
+		}
+
+		__proto.returnHallRsp=function(cs){
+			var rsp=cs.return_hall_rsp;
+			switch(rsp.result){
+				case 0:
+					console.log("returnHallRsp rsp:",rsp);
+					this.sentNotification(ENCSType.CS_TYPE_GET_TABLE_LIST_REQ.toString());
+					break ;
+				default :
+					console.log("returnHallRsp ........... errorCode:"+rsp.result);
+					break ;
+				}
+		}
+
+		return LoginHallCommand;
+	})(Command)
+
+
+	//class bull.modules.common.command.RoomListCommand extends com.lightMVC.parrerns.Command
+	var RoomListCommand=(function(_super){
+		function RoomListCommand(){
+			RoomListCommand.__super.call(this);
+		}
+
+		__class(RoomListCommand,'bull.modules.common.command.RoomListCommand',_super);
+		var __proto=RoomListCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString()){
+				this.roomListRequestHandler();
+				}else if(notification.getName()==ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString()){
+				this.roomListResponseHandler(notification.getBody());
+			}
+		}
+
+		__proto.roomListRequestHandler=function(){
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=11;
+			out.get_room_list_req=proto.msg_proto.getSGetRoomListReq()
+			var socket=this.getModel("hallSocketService");
+			socket.sentMsg(out);
+		}
+
+		__proto.roomListResponseHandler=function(param){
+			console.log("roomListResponseHandler",param);
+			var bulldata=this.getSingleton("Data");
+			if (param.get_room_list_rsp.error_code !=0)return;
+			var list=param.get_room_list_rsp.room_infos;
+			var l=list.roominfo.length;
+			var roomList=[];
+			for (var i=0;i < l;i++){
+				roomList.push(list.roominfo[i]);
+			}
+			bulldata.hallData.roomList=roomList;
+		}
+
+		return RoomListCommand;
+	})(Command)
 
 
 	/**
@@ -23215,6 +23436,231 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
+
+
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			HallData.__super.call(this);
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__proto.getHallRoomInfoById=function(tableId){
+			var roomVo;
+			for(var $each_roomVo in this._roomList){
+				roomVo=this._roomList[$each_roomVo];
+				if(roomVo.id==tableId)return roomVo;
+			}
+			return null;
+		}
+
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
+
+
+	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
+	var UserInfoData=(function(_super){
+		function UserInfoData(){
+			this._name=null;
+			this._balance=0;
+			this._bonus=0;
+			this._moneyType=0;
+			this._headIcon=null;
+			UserInfoData.__super.call(this);
+		}
+
+		__class(UserInfoData,'bull.modules.common.model.data.UserInfoData',_super);
+		var __proto=UserInfoData.prototype;
+		__proto.toString=function(){
+			return "{name:"+this._name+",balance:"+this._balance+":bonus:"+this._bonus+"}";
+		}
+
+		__getset(0,__proto,'moneyType',function(){
+			return this._moneyType;
+			},function(value){
+			this._moneyType=value;
+		});
+
+		__getset(0,__proto,'name',function(){
+			return this._name;
+			},function(value){
+			this._name=value;
+			this.dispatchEventDelay(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'balance',function(){
+			return this._balance;
+			},function(value){
+			console.log("userbalance sss");
+			this._balance=value;
+			this.dispatchEventDelay(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'bonus',function(){
+			return this._bonus;
+			},function(value){
+			this._bonus=value;
+			this.dispatchEventDelay(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'headIcon',function(){
+			return this._headIcon;
+			},function(value){
+			this._headIcon=value;
+		});
+
+		UserInfoData.NAME="userInfoData";
+		return UserInfoData;
+	})(EventDispatcher)
+
+
+	//class bull.modules.common.mediator.AlertMediator extends com.lightMVC.parrerns.Mediator
+	var AlertMediator=(function(_super){
+		function AlertMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			AlertMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(AlertMediator,'bull.modules.common.mediator.AlertMediator',_super);
+		var __proto=AlertMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.showPanel=function(){}
+		// Light.layer.top.addChild(viewComponent);
+		__proto.hidePanel=function(){}
+		// Light.layer.top.removeChild(viewComponent);
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.getAlertPanel=function(){
+			return this.viewComponent;
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			this.getAlertPanel().visible=false;
+			Light.layer.top.addChild(this.getAlertPanel());
+			this.getAlertPanel().close_btn.on("click",this,this.onClose);
+			this.getAlertPanel().ok_btn.on("click",this,this.onClose);
+			this.addNotifiction("showAlertPanel");
+		}
+
+		__proto.handler=function(notification){
+			if(notification.getName()=="showAlertPanel"){
+				console.log("SHOW_ALERT_PANEL Handler");
+				this.alertPanelShow(notification.getBody());
+			}
+		}
+
+		__proto.alertPanelShow=function(param){
+			this.getAlertPanel().show(true);
+		}
+
+		__proto.onClose=function(e){
+			this.getAlertPanel().close();
+		}
+
+		AlertMediator.NAME="alertMediator";
+		return AlertMediator;
+	})(Mediator)
+
+
+	//class bull.modules.common.mediator.AssetInMediator extends com.lightMVC.parrerns.Mediator
+	var AssetInMediator=(function(_super){
+		function AssetInMediator(mediatorName,viewComponent){
+			this.roomSocketService=null;
+			this.first=false;
+			this.perLoadService=null;
+			this.timerId=0;
+			this.timer=new Timer1();
+			(mediatorName===void 0)&& (mediatorName="");
+			AssetInMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(AssetInMediator,'bull.modules.common.mediator.AssetInMediator',_super);
+		var __proto=AssetInMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.showPanel=function(){}
+		// Light.layer.top.addChild(viewComponent);
+		__proto.hidePanel=function(){}
+		// Light.layer.top.removeChild(viewComponent);
+		__proto.getInjector=function(){
+			return ["roomSocketService","perLoadService"];
+		}
+
+		__proto.getAssetsPanel=function(){
+			return this.viewComponent;
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			this.getAssetsPanel().visible=false;
+			this.addNotifiction("showCarryInPanel");
+			this.getAssetsPanel().on("ok",this,this.onCommitCarryIn);
+			this.getAssetsPanel().on("cancel",this,this.onCancelCarryIn);
+		}
+
+		__proto.handler=function(notification){
+			if(notification.getName()=="showCarryInPanel"){
+				console.log("SHOW_CARRY_IN_PANEL Handler");
+			}
+		}
+
+		__proto.carryInPanelShow=function(param){
+			this.first=param.isFirst;
+			if(this.first){
+				this.timerId=this.timer.setTimeout(this,this.countCarryInTime,30000,null);
+			}
+			this.getAssetsPanel().assetsIn(param.betMin,param.betMax,param.carrayType,param.betMin,param.cash,param.coin,param.nm,0.01);
+		}
+
+		__proto.countCarryInTime=function(){
+			Alert.show("带入超时","",light.car.view.alert.AlertPanel,null,Handler.create(this,this.onCancelCarryIn),null,3000);
+		}
+
+		__proto.onTimeOver=function(data,flg){
+			this.onCancelCarryIn(null);
+		}
+
+		__proto.onCancelCarryIn=function(e){
+			if(this.first){
+				this.roomSocketService.close();
+				this.perLoadService.loadHall();
+			}
+			this.timer.clearTimeout(this.timerId);
+			this.getAssetsPanel().close();
+		}
+
+		__proto.onCommitCarryIn=function(vo){
+			this.timer.clearTimeout(this.timerId);
+			console.log("amountCash: "+vo.amount_cash+"amount_nm: "+vo.amount_nm+"amount_total: "+vo.amount_total);
+			this.sentNotification(ENCSType.CS_TYPE_CARRY_IN_REQ.toString(),vo);
+			this.getAssetsPanel().close();
+		}
+
+		AssetInMediator.NAME="assetInMediator";
+		return AssetInMediator;
+	})(Mediator)
 
 
 	/**
@@ -23385,6 +23831,30 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
+	var EnterRoomCommand=(function(_super){
+		function EnterRoomCommand(){
+			EnterRoomCommand.__super.call(this);
+		}
+
+		__class(EnterRoomCommand,'bull.modules.room.command.EnterRoomCommand',_super);
+		var __proto=EnterRoomCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="enterRoom"){
+				this.enterRoomRqsHandler(notification.getBody());
+			}
+		}
+
+		__proto.enterRoomRqsHandler=function(data){
+			var preLoad=this.getModel("perLoadService");
+			preLoad.loadRoom();
+		}
+
+		return EnterRoomCommand;
+	})(Command)
+
+
 	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
 	var BullProtoModel=(function(_super){
 		function BullProtoModel(modelName,data){
@@ -23411,164 +23881,6 @@ var Laya=window.Laya=(function(window,document){
 		BullProtoModel.NAME="bullProtoModel";
 		return BullProtoModel;
 	})(Model)
-
-
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			if(param.uid){
-				bullData.uid=param.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if(param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
-
-
-	//class bull.modules.common.command.LoginHallCommand extends com.lightMVC.parrerns.Command
-	var LoginHallCommand=(function(_super){
-		function LoginHallCommand(){
-			LoginHallCommand.__super.call(this);
-		}
-
-		__class(LoginHallCommand,'bull.modules.common.command.LoginHallCommand',_super);
-		var __proto=LoginHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(noti){
-			switch(noti.getName()){
-				case "loginHallRequest":
-					this.hallLoginReqHandler();
-					break ;
-				case ENCSType.CS_TYPE_LOGIN_RSP.toString():
-					this.hallLoginRspHandler(noti.getBody());
-					break ;
-				case BullNotification.Leave_Game:
-					this.returnHallReq();
-					break ;
-				case ENCSType.CS_TYPE_RETURN_HALL_RSP.toString():
-					this.returnHallRsp(noti.getBody());
-					break ;
-				}
-		}
-
-		__proto.hallLoginReqHandler=function(){
-			var bullData=this.getSingleton("Data");
-			bullData.truthLogin=true;
-			var proto=this.getModel("bullProtoModel");
-			var out=proto.msg_proto.getCS();
-			out.msg_type=8;
-			out.login_req=proto.msg_proto.getLoginReq();
-			out.login_req.uid=Long.fromNumber(bullData.uid);
-			out.login_req.verify_sig=bullData.token;
-			var socket=this.getModel("hallSocketService");
-			socket.sentMsg(out);
-		}
-
-		__proto.hallLoginRspHandler=function(msg){
-			console.log("hallLoginRspHandler",msg);
-			var bullData=this.getSingleton("Data");
-			if(bullData.truthLogin){}
-				bullData.truthLogin=false;
-			this.sentNotification(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString());
-		}
-
-		__proto.returnHallReq=function(){
-			var proto=this.getModel(/*no*/this.CarProtoModel.NAME);
-			var out=proto.msg_proto.getCS();
-			out.msg_type=ENCSType.CS_TYPE_RETURN_HALL_REQ;
-			var req=proto.msg_proto.getReturnHallReq();
-			out.return_hall_req=req;
-			var socket=this.getModel("hallSocketService");
-			socket.sentMsg(out);
-		}
-
-		__proto.returnHallRsp=function(cs){
-			var rsp=cs.return_hall_rsp;
-			switch(rsp.result){
-				case 0:
-					console.log("returnHallRsp rsp:",rsp);
-					this.sentNotification(ENCSType.CS_TYPE_GET_TABLE_LIST_REQ.toString());
-					break ;
-				default :
-					console.log("returnHallRsp ........... errorCode:"+rsp.result);
-					break ;
-				}
-		}
-
-		return LoginHallCommand;
-	})(Command)
-
-
-	//class bull.modules.common.command.RoomListCommand extends com.lightMVC.parrerns.Command
-	var RoomListCommand1=(function(_super){
-		function RoomListCommand(){
-			RoomListCommand.__super.call(this);
-		}
-
-		__class(RoomListCommand,'bull.modules.common.command.RoomListCommand',_super,'RoomListCommand1');
-		var __proto=RoomListCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString()){
-				this.roomListRequestHandler();
-				}else if(notification.getName()==ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString()){
-				this.roomListResponseHandler(notification.getBody());
-			}
-		}
-
-		__proto.roomListRequestHandler=function(){
-			var proto=this.getModel("bullProtoModel");
-			var out=proto.msg_proto.getCS();
-			out.msg_type=11;
-			out.get_room_list_req=proto.msg_proto.getSGetRoomListReq()
-			var socket=this.getModel("hallSocketService");
-			socket.sentMsg(out);
-		}
-
-		__proto.roomListResponseHandler=function(param){
-			console.log("roomListResponseHandler",param);
-			var bulldata=this.getSingleton("Data");
-			if (param.get_room_list_rsp.error_code !=0)return;
-			var list=param.get_room_list_rsp.room_infos;
-			var l=list.roominfo.length;
-			var roomList=[];
-			for (var i=0;i < l;i++){
-				roomList.push(list.roominfo[i]);
-			}
-			bulldata.hallData.roomList=roomList;
-		}
-
-		return RoomListCommand;
-	})(Command)
 
 
 	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
@@ -23618,6 +23930,181 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.room.mediator.BullScenceMediator extends com.lightMVC.parrerns.Mediator
+	var BullScenceMediator=(function(_super){
+		function BullScenceMediator(mediatorName,viewComponent){
+			this.perLoadService=null;
+			this.roomSocketService=null;
+			this.roomData=null;
+			this.userInfoData=null;
+			this.num=0;
+			this.timer=null;
+			(mediatorName===void 0)&& (mediatorName="");
+			BullScenceMediator.__super.call(this,"BullScenceMediator",viewComponent);
+		}
+
+		__class(BullScenceMediator,'bull.modules.room.mediator.BullScenceMediator',_super);
+		var __proto=BullScenceMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return ["perLoadService","roomSocketService","roomData","userInfoData"];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			_super.prototype.setViewComponent.call(this,viewComponent);
+			console.log("BullScenceMediator setViewComponent")
+			this.view.backLobby.on("click",this,this.onReturnClick);
+			this.view.optionBtn.on("click",this,this.onClick);
+			this.view.setupBtn.on("click",this,this.onClick);
+			this.view.helpBtn.on("click",this,this.onClick);
+			this.view.CarryInBtn.on("click",this,this.onClick);
+			this.view.PlayerListBtn.on("click",this,this.onClick);
+			this.showOrHideBtnGroup(false);
+		}
+
+		/**
+		*点击设置上的按钮
+		*/
+		__proto.onClick=function(e){
+			console.log("onClick:"+e.target);
+			switch(e.target){
+				case this.view.helpBtn:
+					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				case this.view.setupBtn:
+					this.sentNotification("car.SHOW_RULE_PANEL");
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				case this.view.CarryInBtn:
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				case this.view.PlayerListBtn:
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				case this.view.optionBtn:
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				}
+		}
+
+		/**
+		*隐藏或显示设置按钮状态
+		*/
+		__proto.showOrHideBtnGroup=function(flag){
+			this.view.btnBg.visible=this.view.setupBtn.visible=this.view.helpBtn.visible=this.view.CarryInBtn.visible=this.view.PlayerListBtn.visible=flag;
+		}
+
+		__proto.handler=function(noti){
+			switch(noti.getName()){
+				case /*no*/this.CarNotification.RoomSocketClose:
+					this.dispose();
+					break ;
+				case /*no*/this.CarNotification.ExitRoomEvent:
+					this.exitRoom();
+				}
+		}
+
+		__proto.getPlayerInfoCallback=function(param){
+			console.log("getPlayerInfoCallback!!!!!!!!!!!!!!!!!!");
+			console.log(param);
+		}
+
+		__proto.sendHeartBeat=function(){
+			this.startHeartCount();
+			this.sendMsg();
+		}
+
+		__proto.sendMsg=function(){
+			if(this.num > 2){
+				this.clearTimer();
+				this.roomSocketService.reconnect();
+				return;
+			}
+			this.num++;
+			this.sentNotification(/*no*/this.CarNotification.ROOM_HEART_BEAT);
+		}
+
+		__proto.startHeartCount=function(){
+			if(!this.timer){
+				this.timer=new Timer();
+				this.timer.loop(5000,this,this.sendMsg);
+			}
+		}
+
+		__proto.clearTimer=function(){
+			if(!this.timer)return;
+			this.timer.clear(this,this.sendMsg);
+			this.timer=null;
+			this.num=0;
+		}
+
+		__proto.receiveHeartBeat=function(){
+			this.num=0;
+		}
+
+		__proto.onCarryInClick=function(){
+			this.sentNotification(/*no*/this.CarNotification.GET_USER_BALANCE);
+		}
+
+		__proto.onCZClick=function(e){
+			if(this.roomData.chongzhi)return;
+			this.sentNotification(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_REQ.toString());
+		}
+
+		__proto.onXTClick=function(e){
+			if(this.roomData.xutou)return;
+			this.sentNotification(ENCSType.CS_TYPE_PLAYER_SAVED_BET_REQ.toString());
+		}
+
+		__proto.onBetHandler=function(param){
+			this.sentNotification(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),param);
+		}
+
+		__proto.onUIShow=function(){
+			this.view.roomData=this.roomData;
+			this.view.userInfoData=this.userInfoData;
+			this.roomData.initClipConfig();
+			this.view.initSelectClip();
+			this.view.img_cash.visible=this.view.img_coin.visible=false;
+			this.roomData.chipsType==light.car.modules.common.model.data.MoneyType.CASH ? this.view.img_cash.visible=true :this.view.img_coin.visible=true;
+			this.view.showme();
+		}
+
+		__proto.onUIHide=function(){
+			this.view.hideme();
+		}
+
+		__proto.onReturnClick=function(){
+			console.log("onReturnClick exit room");
+			this.exitRoom();
+		}
+
+		__proto.exitRoomCall=function(data,flg){
+			if(flg=="ok_btn"){
+				this.exitRoom();
+			}
+		}
+
+		__proto.exitRoom=function(){
+			this.perLoadService.loadHall();
+			this.sentNotification(BullNotification.Leave_Game);
+			this.dispose();
+		}
+
+		__proto.dispose=function(){
+			this.view.clear();
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.getViewComponent();
+		});
+
+		BullScenceMediator.NAME="BullScenceMediator";
+		return BullScenceMediator;
+	})(Mediator)
+
+
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
 	var WebService=(function(_super){
 		function WebService(modelName,data){
@@ -23634,7 +24121,7 @@ var Laya=window.Laya=(function(window,document){
 
 		// ExternalInterface.addCallback("getUserBalanceCallBack",getUserBalanceCallBack);
 		__proto.getUserBalance=function(callback){
-			this.webApi.getUserBalance(Handler.create(this,this.getUserBalanceCallBack));
+			this.webApi.getUserBalance(callback);
 		}
 
 		__proto.parseInfo=function(callback){
@@ -23716,7 +24203,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Model)
 
 
-	//import light.car.view.room.CarScene;
 	//class bull.modules.perload.services.PreLoadService extends com.lightMVC.parrerns.Model
 	var PreLoadService=(function(_super){
 		function PreLoadService(proxyName){
@@ -23795,9 +24281,12 @@ var Laya=window.Laya=(function(window,document){
 			this.sentNotification("car.Change_Scene","Scene_Game");
 			Light.scence.addEventListener("scenceProgress",this,this.onProgress,["room"]);
 			Light.scence.addEventListener("scenceComplete",this,this.onComplate,["room"]);
+			Light.scence.addScence("room",["BullScene","AssetsInPanel"],Light.layer.scence,1)
+			.regView("BullScene",BullScene)
+			.regView("AssetsInPanel",AssetsInPanel);
+			Light.scence.creat();
 		}
 
-		//Light.scence.creat();
 		__proto.loadProto=function(){
 			console.log("loadProto")
 			var bullProto=this.getModel("bullProtoModel");
@@ -23845,13 +24334,10 @@ var Laya=window.Laya=(function(window,document){
 					this.loadProto();
 					break ;
 				case "hall":
-					console.log("sentNotification","socketConnect");
 					this.sentNotification("hallSocketConnect");
 					break ;
 				case "room":
 					console.log("sentNotification","roomSocketConnect");
-					console.log("assetIn atlas: "+Light.loader.getRes("assetsIn"));
-					this.sentNotification("roomSocketConnect");
 					break ;
 				default :
 					break ;
@@ -38556,9 +39042,36 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(hallUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}},{"type":"Image","props":{"y":171,"x":156,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":423,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":422,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Text","props":{"y":432,"x":210,"width":55,"text":"房间限红:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":431,"x":815,"width":55,"text":"房间限红:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":462,"x":192,"width":55,"text":"投注额:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":461,"x":801,"width":55,"text":"投注额:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":427,"x":305,"width":75,"var":"LowRoomLimit","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":427,"x":909,"width":76,"var":"HighRoomLimit","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":457,"x":268,"width":75,"var":"LowRoomBet","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":457,"x":875,"width":75,"var":"HighRoomBet","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}},{"type":"Image","props":{"y":171,"x":157,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":423,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":422,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Text","props":{"y":432,"x":210,"width":55,"text":"房间限红:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":431,"x":815,"width":55,"text":"房间限红:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":462,"x":192,"width":55,"text":"投注额:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":461,"x":801,"width":55,"text":"投注额:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":427,"x":305,"width":75,"var":"LowRoomLimit","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":427,"x":909,"width":76,"var":"HighRoomLimit","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":457,"x":268,"width":75,"var":"LowRoomBet","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":457,"x":875,"width":75,"var":"HighRoomBet","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}}]};}
 		]);
 		return hallUI;
+	})(View)
+
+
+	//class ui.ui.room.BullSceneUI extends laya.ui.View
+	var BullSceneUI=(function(_super){
+		function BullSceneUI(){
+			this.btnBg=null;
+			this.backLobby=null;
+			this.optionBtn=null;
+			this.setupBtn=null;
+			this.helpBtn=null;
+			this.PlayerListBtn=null;
+			this.CarryInBtn=null;
+			BullSceneUI.__super.call(this);
+		}
+
+		__class(BullSceneUI,'ui.ui.room.BullSceneUI',_super);
+		var __proto=BullSceneUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(BullSceneUI.uiView);
+		}
+
+		__static(BullSceneUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}}]};}
+		]);
+		return BullSceneUI;
 	})(View)
 
 
@@ -39322,6 +39835,23 @@ var Laya=window.Laya=(function(window,document){
 	})(hallUI)
 
 
+	//class bull.view.room.BullScene extends ui.ui.room.BullSceneUI
+	var BullScene=(function(_super){
+		function BullScene(){
+			BullScene.__super.call(this);
+			console.log("room init");
+			this.btnBg.visible=this.setupBtn.visible=this.helpBtn.visible=this.CarryInBtn.visible=this.PlayerListBtn.visible=false;
+		}
+
+		__class(BullScene,'bull.view.room.BullScene',_super);
+		var __proto=BullScene.prototype;
+		//backLobby.on(Event.CLICK,this,onReturnClick);
+		__proto.onReturnClick=function(e){}
+		__proto.clear=function(){}
+		return BullScene;
+	})(BullSceneUI)
+
+
 	//class bull.view.smallLoading.SmallLoading extends ui.ui.smallLoading.small_loadingUI
 	var SmallLoading=(function(_super){
 		function SmallLoading(){
@@ -39914,20 +40444,26 @@ var Laya=window.Laya=(function(window,document){
 2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (37):warning:Sprite This variable is not defined.
 3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (38):warning:Sprite This variable is not defined.
 4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (67):warning:Shape This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (141):warning:CarNotification.ENTER_ROOM This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (72):warning:CarNotification.ENTER_ROOM This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (82):warning:CarNotification.SHOW_CARRY_IN_PANEL This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (170):warning:CarNotification.ENTER_ROOM This variable is not defined.
 8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (73):warning:CarProtoModel.NAME This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/alert/AlertPanel.as (46):warning:txt_label.text This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (114):warning:CarNotification.RoomSocketClose This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (117):warning:CarNotification.ExitRoomEvent This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (140):warning:CarNotification.ROOM_HEART_BEAT This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (163):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/alert/AlertPanel.as (46):warning:txt_label.text This variable is not defined.
 */

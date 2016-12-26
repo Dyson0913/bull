@@ -31,9 +31,8 @@ package bull
 	//import light.car.modules.common.command.StartBetCommand;
 	//import light.car.modules.common.command.TableInfoCommand;
 	
-	//import light.car.modules.common.mediator.AlertMediator;
-	//import light.car.modules.common.mediator.AssetInMediator;
-	
+	import bull.modules.common.mediator.AlertMediator;
+	import bull.modules.common.mediator.AssetInMediator;	
 	import bull.modules.common.mediator.MusicSetMediator;
 	import bull.modules.common.mediator.RuleMediator;
 		
@@ -43,19 +42,19 @@ package bull
 	//import bull.modules.common.model.data.RoomData;
 	import bull.modules.common.model.data.UserInfoData;
 	import bull.modules.common.services.WebService;
-	//import light.car.modules.hall.command.UserBalanceCommand;
+	import bull.modules.BullHall.command.UserBalanceCommand;
 	import bull.modules.BullHall.mediator.HallMediator;
 	import bull.modules.BullHall.service.HallSocketService;
 	
 	//import light.car.modules.room.command.CarryInCommand;
-	//import light.car.modules.room.command.EnterRoomCommand;
-	//import light.car.modules.room.mediator.CarScenceMediator;
+	import bull.modules.room.command.EnterRoomCommand;
+	import bull.modules.room.mediator.BullScenceMediator;
 	//import light.car.modules.room.services.RoomSocketService;
-	//import light.car.view.alert.AlertPanel;
+	import bull.view.alert.AlertPanel;
 	import bull.view.alert.MusicSetPanel;
 	import bull.view.alert.RulePanel;
 	import bull.view.hall.Hall;
-	//import light.car.view.room.CarScene;
+	import bull.view.room.BullScene;
 	import bull.view.smallLoading.SmallLoading;
 	import bull.view.tipsLoad.TipsLoadPanel;
 	import bull.modules.common.model.BullProtoModel;
@@ -93,7 +92,11 @@ package bull
 			//請求加入房間
 			registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString(), JoinRoomCommand);
 			registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_RSP.toString(), JoinRoomCommand);
-			//registerCommand(CarNotification.ENTER_ROOM, EnterRoomCommand);
+			
+			//向平台檢查金額
+			registerCommand(BullNotification.GET_USER_BALANCE, UserBalanceCommand);
+			
+			registerCommand(BullNotification.ENTER_ROOM, EnterRoomCommand);
 			
 			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT, ConnectRoomCommand);
 			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT_COMPLETE, ConnectRoomCommand);
@@ -107,7 +110,7 @@ package bull
 			
 			
 			//
-			//registerCommand(CarNotification.GET_USER_BALANCE, UserBalanceCommand);
+			
 			
 //			registerCommand(MessageID.ROOM_CONFIG_NOTIFY.toString(), RoomConfigCommand);
 			
@@ -165,8 +168,8 @@ package bull
 			registerMediator(new SmallLoadingMediator(SmallLoadingMediator.NAME,SmallLoading));
 			registerMediator(new TipsLoadMediator(TipsLoadMediator.NAME), TipsLoadPanel);
 			registerMediator(new HallMediator(HallMediator.NAME),Hall);
-			//registerMediator(new CarScenceMediator(CarScenceMediator.NAME),CarScene);
-			//registerMediator(new AssetInMediator(AssetInMediator.NAME),AssetsInPanel);
+			registerMediator(new BullScenceMediator(BullScenceMediator.NAME),BullScene);
+			registerMediator(new AssetInMediator(AssetInMediator.NAME),AssetsInPanel);
 			//registerMediator(new AlertMediator(AlertMediator.NAME),AlertPanel);
 			
 			registerMediator(new MusicSetMediator(MusicSetMediator.NAME),MusicSetPanel);

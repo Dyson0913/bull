@@ -46,10 +46,8 @@ package bull.modules.common.services
 		
 		
 		public function getUserBalance(callback:Handler):void
-		{
-			//			if(!ExternalInterface.available) return;
-			//			var param:Object = {app_id:app_id, room_id:room_id, uid:uid, callback:callback};
-			webApi.getUserBalance(Handler.create(this,getUserBalanceCallBack));
+		{					
+			webApi.getUserBalance(callback);			
 		}
 		
 		

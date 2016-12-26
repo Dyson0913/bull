@@ -6,11 +6,12 @@
     "comp": { "url": "res/atlas/comp.json","type":"atlas"},
     "msg_proto": { "url": "res/config/msg_cs.proto"},
     "conf_proto": { "url": "res/config/conf_game.proto"},
-    "hall": { "url": "res/atlas/hall.json","type":"atlas"},
-    "room": { "url": "res/atlas/room.json","type":"atlas"},    
+    "hall": { "url": "res/atlas/hall.json","type":"atlas"},    
     "alert": { "url": "res/atlas/alert.json","type":"atlas"},    
-    "share": { "url": "res/atlas/share.json","type":"atlas"},    
+    "share": { "url": "res/atlas/share.json","type":"atlas"},
+    "GameSprite": { "url": "res/atlas/gameScene.json","type":"atlas"},    
     "error_code": { "url": "res/config/error_code.json", "type":"json"},
+    "assetsIn": { "url": "res/atlas/assetsIn.json", "type":"atlas"},
     "language": { "url": "res/config/language.json", "type":"json"},  
     "group":{
         "config":["carError"]
@@ -27,7 +28,7 @@
             "assets":["hall","alert","share"]
         },
         "room":{
-            "assets":["room","assetsIn","alert"]
+            "assets":["GameSprite","assetsIn","alert"]
         },
         "config":{
             "assets":["language","error_code","msg_proto","conf_proto"]

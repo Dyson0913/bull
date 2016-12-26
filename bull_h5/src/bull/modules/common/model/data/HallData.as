@@ -1,6 +1,7 @@
 package bull.modules.common.model.data
 {
 	import com.iflash.events.EventDispatcher;
+	import com.IProtobuf.Long;
 	import com.lightUI.events.LightEvent;
 	
 	import bull.modules.common.model.data.vo.HallRoomVO;	
@@ -14,7 +15,12 @@ package bull.modules.common.model.data
 		
 		
 		private var _roomList:Array;////////////HallRoomVO
+		
 		private var _join_room_idx:int;
+		public var ip:String
+		public var port:int
+		public var Token:Long;
+		
 		
 		public function getHallRoomInfoById(tableId:int):HallRoomVO{
 			for each(var roomVo:HallRoomVO in _roomList){

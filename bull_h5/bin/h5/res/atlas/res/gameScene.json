@@ -1,0 +1,54 @@
+{
+    "frames": {
+        "CarryInBtn.png": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 68,
+                "h": 207,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 68,
+                "h": 207
+            },
+            "sourceSize": {
+                "w": 68,
+                "h": 207
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "PlayerListBtn.png": {
+            "frame": {
+                "x": 70,
+                "y": 0,
+                "w": 68,
+                "h": 207,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 68,
+                "h": 207
+            },
+            "sourceSize": {
+                "w": 68,
+                "h": 207
+            },
+            "rotated": false,
+            "trimed": false
+        }
+    },
+    "meta": {
+        "app": "http:\/\/www.layabox.com",
+        "version": "0.1.0 alpha",
+        "format": "json",
+        "scale": 1,
+        "image": "gameScene.png",
+        "prefix": "res\/gameScene\/"
+    }
+}

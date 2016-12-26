@@ -52,8 +52,8 @@ package com.lightUI.manager.loader
 			return getURLInfo(name)["url"];
 		}
 		
-		public function getURLInfo(name:String):Object{
-			var re:Object = _config[name];
+		public function getURLInfo(name:String):Object {					
+			var re:Object = _config[name];			
 			if(!re["isparse"]){
 				if(Browser.onAndriod || Browser.onIOS){
 					re["url"] = root+_config[name]["url"];

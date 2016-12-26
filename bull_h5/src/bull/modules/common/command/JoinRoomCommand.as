@@ -8,6 +8,7 @@ package bull.modules.common.command
 	
 	import bull.events.BullNotification;
 	import bull.modules.common.model.data.Data;
+	import bull.modules.common.model.data.HallData;
 	import bull.modules.common.model.BullProtoModel;	
 	import bull.modules.BullHall.service.HallSocketService;
 	
@@ -49,16 +50,16 @@ package bull.modules.common.command
 		}
 		
 		private function joinRoomRspHandler(e:CS):void{
-			trace("joinRoomRspHandler"+e);
+			trace("joinRoomRspHandler",e);
 			
 			if (e.try_enter_table_rsp.error_code  == ENError.ERROR_OK) {
 				
-				//e.try_enter_table_rsp.net_address.ip
-				//e.try_enter_table_rsp.net_address.port
-				//e.try_enter_table_rsp.token;
+				var hallData:HallData = getSingleton(HallData.NAME) as HallData;
+				hallData.ip = e.try_enter_table_rsp.net_address.ip;
+				hallData.port = e.try_enter_table_rsp.net_address.port;
+				hallData.Token = e.try_enter_table_rsp.token;
 				
-				
-				//sentNotification(BullNotification.GET_USER_BALANCE, true);
+				sentNotification(BullNotification.GET_USER_BALANCE, true);
 //				(getModel(HallSocketService.NAME) as HallSocketService).close();
 			}else{
 				trace("error code: "+e.enter_table_rsp.result);
