@@ -7,11 +7,16 @@ package bull.view.hall
 	import laya.events.Event;
 	import laya.utils.Handler;
 	import laya.utils.Tween;
+	import laya.utils.Ease;
+	
+	
 	
 	import ui.ui.hall.hallUI;
 	
 	public class Hall extends hallUI
 	{
+		
+		var marqu_x:int = 612;
 		
 		public function Hall()
 		{
@@ -21,6 +26,16 @@ package bull.view.hall
 			
 			
 			backLobby.on(Event.CLICK, this, onReturnClick);
+			
+			Tween.to(mqrqueue, { x:mqrqueue.x - 600 }, 15000,null, Handler.create(this,showmarque));
+			
+		}
+		
+		private function showmarque():void
+		{
+			Tween.clearTween(showmarque);
+			mqrqueue.x = marqu_x;
+			Tween.to(mqrqueue, { x:mqrqueue.x - 600 }, 15000,null, Handler.create(this,showmarque));
 		}
 		
 		private function onReturnClick(e:Event):void

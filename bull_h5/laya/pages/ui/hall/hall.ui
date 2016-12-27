@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":20,
+    "selecteID":55,
     "props":{"width":1420,"text":"房间限红:","sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -289,9 +289,10 @@
             "props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"},
             "nodeParent":1,
             "label":"Image(boardbg)",
-            "isDirectory":false,
+            "isOpen":false,
+            "isDirectory":true,
             "isAniNode":true,
-            "hasChild":false,
+            "hasChild":true,
             "frames":[
                 {
                     "type":1,
@@ -301,12 +302,69 @@
                 }],
             "compId":16,
             "child":[
-                ]
+                {
+                    "type":"Sprite",
+                    "props":{"y":2,"x":73,"width":565,"renderType":"mask","height":25},
+                    "nodeParent":16,
+                    "label":"Sprite",
+                    "isOpen":true,
+                    "isDirectory":true,
+                    "isAniNode":true,
+                    "hasChild":true,
+                    "frames":[
+                        {
+                            "type":1,
+                            "props":{"y":13,"x":85},
+                            "frame":0,
+                            "__InPool":false
+                        }],
+                    "compId":51,
+                    "child":[
+                        {
+                            "type":"Rect",
+                            "props":{"y":-1,"x":4,"width":533,"lineWidth":1,"height":31,"fillColor":"#ff0000"},
+                            "nodeParent":51,
+                            "label":"Rect",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "frames":[
+                                {
+                                    "type":1,
+                                    "props":{"y":6,"x":12,"width":100,"lineWidth":1,"height":100,"fillColor":"#ff0000"},
+                                    "frame":0,
+                                    "__InPool":false
+                                }],
+                            "compId":52,
+                            "child":[
+                                ]
+                        }]
+                },
+                {
+                    "type":"Label",
+                    "props":{"y":5,"x":614,"var":"mqrqueue","text":"跑馬燈","scaleY":2,"scaleX":2,"color":"#eee7e7"},
+                    "nodeParent":16,
+                    "label":"Label(mqrqueue)",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "frames":[
+                        {
+                            "type":1,
+                            "props":{"text":"label"},
+                            "frame":0,
+                            "__InPool":false
+                        }],
+                    "compId":53,
+                    "child":[
+                        ]
+                }],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Image",
-            "props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"},
+            "props":{"y":135,"x":418,"skin":"res/hall/LP.png","name":"Lp"},
             "nodeParent":1,
             "label":"Image(Lp)",
             "isDirectory":false,
@@ -643,6 +701,26 @@
                     "__InPool":false
                 }],
             "compId":19,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Animation",
+            "props":{},
+            "nodeParent":1,
+            "label":"Animation",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":55,
             "child":[
                 ]
         }],
