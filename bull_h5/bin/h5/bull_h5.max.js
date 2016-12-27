@@ -39027,8 +39027,8 @@ var Laya=window.Laya=(function(window,document){
 			this.MLowEnter=null;
 			this.MHighEnter=null;
 			this.LowRoomLimit=null;
-			this.HighRoomLimit=null;
 			this.LowRoomBet=null;
+			this.HighRoomLimit=null;
 			this.HighRoomBet=null;
 			hallUI.__super.call(this);
 		}
@@ -39036,13 +39036,12 @@ var Laya=window.Laya=(function(window,document){
 		__class(hallUI,'ui.ui.hall.hallUI',_super);
 		var __proto=hallUI.prototype;
 		__proto.createChildren=function(){
-			View.regComponent("Text",Text);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(hallUI.uiView);
 		}
 
 		__static(hallUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}},{"type":"Image","props":{"y":171,"x":157,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":423,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":422,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Text","props":{"y":432,"x":210,"width":55,"text":"房间限红:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":431,"x":815,"width":55,"text":"房间限红:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":462,"x":192,"width":55,"text":"投注额:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":461,"x":801,"width":55,"text":"投注额:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true}},{"type":"Text","props":{"y":427,"x":305,"width":75,"var":"LowRoomLimit","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":427,"x":909,"width":76,"var":"HighRoomLimit","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":457,"x":268,"width":75,"var":"LowRoomBet","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}},{"type":"Text","props":{"y":457,"x":875,"width":75,"var":"HighRoomBet","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"}},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Image","props":{"y":171,"x":157,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":423,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":422,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Label","props":{"y":431,"x":204,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":431,"x":816,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":459,"x":190,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":460,"x":796,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":431,"x":309,"width":78,"var":"LowRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":458,"x":271,"width":78,"var":"LowRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":429,"x":922,"width":78,"var":"HighRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":458,"x":876,"width":78,"var":"HighRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}},{"type":"Button","props":{"y":169,"x":155.99999999999997,"skin":"res/hall/fullState.png","name":"fullstate_low"}}]};}
 		]);
 		return hallUI;
 	})(View)
@@ -39100,12 +39099,10 @@ var Laya=window.Laya=(function(window,document){
 	//class ui.ui.tipsLoad.tipsLoadPanelUI extends laya.ui.View
 	var tipsLoadPanelUI=(function(_super){
 		function tipsLoadPanelUI(){
-			this.loading_percent=null;
 			this.msg_txt=null;
 			this.tip_txt=null;
-			this.progressbar=null;
 			this.loadingbg=null;
-			this.loadin_percent=null;
+			this.loading_percent=null;
 			tipsLoadPanelUI.__super.call(this);
 		}
 
@@ -39118,7 +39115,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(tipsLoadPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"Version 0.0.1","scaleX":1,"runtime":"com.lightUI.components.tipsLoadPanel.TipsLoadPanel","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"var":"loading_percent","skin":"res/tipLoading/loading.jpg"}},{"type":"Label","props":{"y":604,"x":680,"width":69,"var":"msg_txt","text":"label","height":12,"fontSize":12,"color":"#e1e1e1","align":"center"}},{"type":"Label","props":{"y":650,"x":599,"width":161,"var":"tip_txt","text":"Version 0.0.1","scaleY":1.5,"scaleX":1.4,"height":35,"color":"#e1e1e1","align":"center"}},{"type":"ProgressBar","props":{"y":582,"x":267,"width":893,"var":"progressbar","skin":"comp/progress.png","height":14}},{"type":"Image","props":{"y":624,"x":260,"var":"loadingbg","skin":"res/tipLoading/loading_bg.png"}},{"type":"Image","props":{"y":629,"x":266,"var":"loadin_percent","skin":"res/tipLoading/loading_bar.png"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"Version 0.0.1","scaleX":1,"runtime":"com.lightUI.components.tipsLoadPanel.TipsLoadPanel","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/tipLoading/loading.jpg"}},{"type":"Label","props":{"y":604,"x":680,"width":69,"var":"msg_txt","text":"label","height":12,"fontSize":12,"color":"#e1e1e1","align":"center"}},{"type":"Label","props":{"y":650,"x":599,"width":161,"var":"tip_txt","text":"Version 0.0.1","scaleY":1.5,"scaleX":1.4,"height":35,"color":"#e1e1e1","align":"center"}},{"type":"Image","props":{"y":624,"x":260,"var":"loadingbg","skin":"res/tipLoading/loading_bg.png"}},{"type":"Image","props":{"y":629,"x":266,"width":893,"var":"loading_percent","skin":"res/tipLoading/loading_bar.png"}}]};}
 		]);
 		return tipsLoadPanelUI;
 	})(View)
@@ -39822,13 +39819,20 @@ var Laya=window.Laya=(function(window,document){
 		__proto.showRoomList=function(data){
 			var roominfo=data [0];
 			var config=roominfo.config;
-			console.log("config ="+config)
-			this.LowRoomLimit.text=config.room_limit;
-			this.LowRoomBet.text=config.min_bet+" - "+config.max_bet;
+			var isCoin=true;
+			if (config.room_type !=1)isCoin=false;
+			this.LowRoomLimit.text=this.txt_adjust(isCoin,config.room_limit);
+			this.LowRoomBet.text=this.txt_adjust(isCoin,config.min_bet)+" - "+this.txt_adjust(isCoin,config.max_bet);
 			roominfo=data [1];
 			config=roominfo.config;
-			this.HighRoomLimit.text=config.room_limit;
-			this.HighRoomBet.text=config.min_bet+" - "+config.max_bet;
+			this.HighRoomLimit.text=this.txt_adjust(isCoin,config.room_limit);
+			this.HighRoomBet.text=this.txt_adjust(isCoin,config.min_bet)+" - "+this.txt_adjust(isCoin,config.max_bet);
+		}
+
+		__proto.txt_adjust=function(isCoin,nu){
+			if (isCoin==true)return nu.toString();
+			nu=nu / 100;
+			return "¥"+nu+".00";
 		}
 
 		return Hall;
@@ -39889,7 +39893,7 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=TipsLoadPanel.prototype;
 		__proto.show=function(value){
 			this.msg_txt.text=String(value *100);
-			this.progressbar.value=value;
+			this.loading_percent.width=893 *value;
 		}
 
 		__proto.showMessage=function(msg){

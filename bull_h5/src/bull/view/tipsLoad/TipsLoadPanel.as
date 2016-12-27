@@ -27,7 +27,9 @@ package bull.view.tipsLoad
 			
 			msg_txt.text = String(value * 100);
 			
-			progressbar.value = value ;
+			//0~1			
+			loading_percent.width = 893 * value;			
+			
 		}
 
 		public function showMessage(msg:String):void{

@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":41,
+    "selecteID":20,
     "props":{"width":1420,"text":"房间限红:","sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -325,46 +325,6 @@
         },
         {
             "x":15,
-            "type":"Button",
-            "props":{"y":169,"x":156,"skin":"res/hall/fullState.png","name":"fullstate_low"},
-            "nodeParent":1,
-            "label":"Button(fullstate_low)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"label":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":19,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Button",
-            "props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"},
-            "nodeParent":1,
-            "label":"Button(fullstate_high)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"label":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":20,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
             "type":"Image",
             "props":{"y":171,"x":157,"var":"Minit","skin":"res/hall/img_Minit.png"},
             "nodeParent":1,
@@ -381,7 +341,8 @@
                 }],
             "compId":23,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
@@ -487,161 +448,201 @@
         },
         {
             "x":15,
-            "type":"Text",
-            "props":{"y":432,"x":210,"width":55,"text":"房间限红:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true},
+            "type":"Label",
+            "props":{"y":431,"x":204,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true},
             "nodeParent":1,
-            "label":"Text",
+            "label":"Label",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"text":"text"},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":33,
+            "compId":42,
             "child":[
                 ]
         },
         {
             "x":15,
-            "type":"Text",
-            "props":{"y":431,"x":815,"width":55,"text":"房间限红:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true},
+            "type":"Label",
+            "props":{"y":431,"x":816,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true},
             "nodeParent":1,
-            "label":"Text",
+            "label":"Label",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"text":"text"},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":34,
+            "compId":43,
             "child":[
                 ]
         },
         {
             "x":15,
-            "type":"Text",
-            "props":{"y":462,"x":192,"width":55,"text":"投注额:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true},
+            "type":"Label",
+            "props":{"y":459,"x":190,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true},
             "nodeParent":1,
-            "label":"Text",
+            "label":"Label",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"text":"text"},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":35,
+            "compId":44,
             "child":[
                 ]
         },
         {
             "x":15,
-            "type":"Text",
-            "props":{"y":461,"x":801,"width":55,"text":"投注额:","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#cd615f","bold":true},
+            "type":"Label",
+            "props":{"y":460,"x":796,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true},
             "nodeParent":1,
-            "label":"Text",
+            "label":"Label",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"text":"text"},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":36,
+            "compId":45,
             "child":[
                 ]
         },
         {
             "x":15,
-            "type":"Text",
-            "props":{"y":427,"x":305,"width":75,"var":"LowRoomLimit","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false},
+            "type":"Label",
+            "props":{"y":431,"x":309,"width":78,"var":"LowRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false},
             "nodeParent":1,
-            "label":"Text(LowRoomLimit)",
+            "label":"Label(LowRoomLimit)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"text":"text"},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":37,
+            "compId":46,
             "child":[
                 ]
         },
         {
             "x":15,
-            "type":"Text",
-            "props":{"y":427,"x":909,"width":76,"var":"HighRoomLimit","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false},
+            "type":"Label",
+            "props":{"y":458,"x":271,"width":78,"var":"LowRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false},
             "nodeParent":1,
-            "label":"Text(HighRoomLimit)",
+            "label":"Label(LowRoomBet)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"text":"text"},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":38,
+            "compId":47,
             "child":[
                 ]
         },
         {
             "x":15,
-            "type":"Text",
-            "props":{"y":457,"x":268,"width":75,"var":"LowRoomBet","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false},
+            "type":"Label",
+            "props":{"y":429,"x":922,"width":78,"var":"HighRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false},
             "nodeParent":1,
-            "label":"Text(LowRoomBet)",
+            "label":"Label(HighRoomLimit)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"text":"text"},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":39,
+            "compId":48,
             "child":[
                 ]
         },
         {
             "x":15,
-            "type":"Text",
-            "props":{"y":457,"x":875,"width":75,"var":"HighRoomBet","text":"2000","scaleY":2,"scaleX":2,"height":15,"color":"#f3e9e9","bold":false},
+            "type":"Label",
+            "props":{"y":458,"x":876,"width":78,"var":"HighRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false},
             "nodeParent":1,
-            "label":"Text(HighRoomBet)",
+            "label":"Label(HighRoomBet)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"text":"text"},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":40,
+            "compId":49,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Button",
+            "props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"},
+            "nodeParent":1,
+            "label":"Button(fullstate_high)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"label":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":20,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Button",
+            "props":{"y":169,"x":155.99999999999997,"skin":"res/hall/fullState.png","name":"fullstate_low"},
+            "nodeParent":1,
+            "label":"Button(fullstate_low)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"label":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":19,
             "child":[
                 ]
         }],
