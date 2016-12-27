@@ -28,7 +28,6 @@ package bull.view.hall
 			backLobby.on(Event.CLICK, this, onReturnClick);
 			
 			Tween.to(mqrqueue, { x:mqrqueue.x - 600 }, 15000,null, Handler.create(this,showmarque));
-			
 		}
 		
 		private function showmarque():void
@@ -66,7 +65,14 @@ package bull.view.hall
 			if (config.room_type != ENRoomType.ROOM_TYPE_COIN) isCoin = false;
 			
 			LowRoomLimit.text = txt_adjust(isCoin, config.room_limit);
-			LowRoomBet.text = txt_adjust(isCoin,config.min_bet) +" - "+ txt_adjust(isCoin,config.max_bet);
+			LowRoomBet.text = txt_adjust(isCoin, config.min_bet) +" - " + txt_adjust(isCoin, config.max_bet);
+			
+			var frame:int = 0;
+			if ( roominfo.cur_player > 30 && roominfo.cur_player < 50 ) frame = 1;
+			if ( roominfo.cur_player > 50  ) frame = 2;
+			
+			stateAni_1.index = frame;
+			stateAni_1.stop();
 			
 			roominfo = data[1] as SRoomInfo;					
 			config = roominfo.config;
@@ -74,6 +80,11 @@ package bull.view.hall
 			HighRoomLimit.text = txt_adjust(isCoin, config.room_limit);
 			HighRoomBet.text = txt_adjust(isCoin, config.min_bet) +" - " + txt_adjust(isCoin, config.max_bet);
 			
+			if ( roominfo.cur_player > 30 && roominfo.cur_player < 50 ) frame = 1;
+			if ( roominfo.cur_player > 50  ) frame = 2;
+			
+			stateAni_2.index = frame;
+			stateAni_2.stop();
 		}
 		
 		private function txt_adjust(isCoin:Boolean,nu:int):String

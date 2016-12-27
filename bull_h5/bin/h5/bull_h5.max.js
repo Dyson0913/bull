@@ -1122,83 +1122,6 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
-	//class BullHall.manager.LayerManager
-	var LayerManager1=(function(){
-		function LayerManager(){
-			this.loadingMask=null;
-			this.root=null;
-			this._layerBottom=null;
-			this._layerMiddle=null;
-			this._layerTop=null;
-			this._layerTopMask=null;
-			if (LayerManager._singleton){
-				throw new Error("只能用getInstance()来获取实例");
-			}
-		}
-
-		__class(LayerManager,'BullHall.manager.LayerManager',null,'LayerManager1');
-		var __proto=LayerManager.prototype;
-		__proto.init=function(root){
-			this.root=root;
-			this._layerBottom=new /*no*/this.Sprite();
-			this._layerMiddle=new /*no*/this.Sprite();
-			this._layerTop=new /*no*/this.Sprite();
-			root.addChild(this._layerBottom);
-			root.addChild(this._layerMiddle);
-			root.addChild(this._layerTop);
-			this.loadingMask=new kg.core.manager.layerManager.LayerMask();
-			this.loadingMask.init(root);
-		}
-
-		__proto.showPopUp=function(disObj){
-			if(this._layerTopMask==null){
-				this._layerTopMask=new /*no*/this.Shape();
-				this._layerTopMask.graphics.beginFill(0,0.5);
-				this._layerTopMask.graphics.drawRect(0,0,BullHall.common.Common.GameWidth,BullHall.common.Common.GameHeight);
-				this._layerTopMask.graphics.endFill();
-			}
-			this._layerTop.addChild(this._layerTopMask);
-			this._layerTop.addChild(disObj);
-		}
-
-		__proto.hidePopUp=function(disObj){
-			if(this._layerTop.contains(this._layerTopMask))
-				this._layerTop.removeChild(this._layerTopMask);
-			if(this._layerTop.contains(disObj))
-				this._layerTop.removeChild(disObj);
-		}
-
-		__proto.clear=function(){
-			this.loadingMask.clear();
-		}
-
-		__getset(0,__proto,'layerBottom',function(){
-			return this._layerBottom;
-		});
-
-		__getset(0,__proto,'layerMiddle',function(){
-			return this._layerMiddle;
-		});
-
-		__getset(0,__proto,'layerTop',function(){
-			return this._layerTop;
-		});
-
-		LayerManager.getInstance=function(){
-			if (!LayerManager._instance){
-				LayerManager._singleton=false;
-				LayerManager._instance=new LayerManager();
-				LayerManager._singleton=true;
-			}
-			return LayerManager._instance;
-		}
-
-		LayerManager._singleton=true;
-		LayerManager._instance=null
-		return LayerManager;
-	})()
-
-
 	//class bull.modules.common.model.data.ConfigData
 	var ConfigData=(function(){
 		function ConfigData(){
@@ -13927,10 +13850,6 @@ var Laya=window.Laya=(function(window,document){
 		WebGLContext._frontFace=0x0901;
 		WebGLContext.curBindTexTarget=null
 		WebGLContext.curBindTexValue=null
-		WebGLContext.__init$=function(){
-			;
-		}
-
 		return WebGLContext;
 	})()
 
@@ -27228,32 +27147,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Texture)
 
 
-	//class com.iflash.net.Socket extends laya.net.Socket
-	var Socket1=(function(_super){
-		function Socket(host,port,byteClass){
-			this._outPut=null;
-			(port===void 0)&& (port=0);
-			byteClass=byteClass?byteClass:com.iflash.ByteArray;
-			Socket.__super.call(this,host,port,byteClass);
-		}
-
-		__class(Socket,'com.iflash.net.Socket',_super,'Socket1');
-		var __proto=Socket.prototype;
-		__proto.connectByUrl=function(url){
-			_super.prototype.connectByUrl.call(this,url);
-			this._outPut=this.output;
-		}
-
-		__proto.writeBytes=function(bytes,offset,length){
-			(offset===void 0)&& (offset=0);
-			(length===void 0)&& (length=0);
-			this._outPut.writeBytes(bytes,offset,length);
-		}
-
-		return Socket;
-	})(Socket)
-
-
 	//class laya.webgl.shader.d2.fillTexture.FillTextureSV extends laya.webgl.shader.d2.value.Value2D
 	var FillTextureSV=(function(_super){
 		function FillTextureSV(type){
@@ -39031,6 +38924,8 @@ var Laya=window.Laya=(function(window,document){
 			this.LowRoomBet=null;
 			this.HighRoomLimit=null;
 			this.HighRoomBet=null;
+			this.stateAni_1=null;
+			this.stateAni_2=null;
 			hallUI.__super.call(this);
 		}
 
@@ -39042,7 +38937,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(hallUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":605,"skin":"res/hall/logo.png","name":"logo"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"},"child":[{"type":"Sprite","props":{"y":2,"x":73,"width":565,"renderType":"mask","height":25},"child":[{"type":"Rect","props":{"y":-1,"x":4,"width":533,"lineWidth":1,"height":31,"fillColor":"#ff0000"}}]},{"type":"Label","props":{"y":5,"x":614,"var":"mqrqueue","text":"跑馬燈","scaleY":2,"scaleX":2,"color":"#eee7e7"}}]},{"type":"Image","props":{"y":135,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Image","props":{"y":171,"x":157,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":423,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":422,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Label","props":{"y":431,"x":204,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":431,"x":816,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":459,"x":190,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":460,"x":796,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":431,"x":309,"width":78,"var":"LowRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":458,"x":271,"width":78,"var":"LowRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":429,"x":922,"width":78,"var":"HighRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":458,"x":876,"width":78,"var":"HighRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Button","props":{"y":171,"x":774,"skin":"res/hall/fullState.png","name":"fullstate_high"}},{"type":"Button","props":{"y":169,"x":155.99999999999997,"skin":"res/hall/fullState.png","name":"fullstate_low"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":3,"x":564,"skin":"res/hall/logo.png"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Image","props":{"y":172,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":173,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":-1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"y":-2,"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":734,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":736,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":134,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"},"child":[{"type":"Sprite","props":{"y":2,"x":73,"width":565,"renderType":"mask","height":25},"child":[{"type":"Rect","props":{"y":-1,"x":4,"width":533,"lineWidth":1,"height":31,"fillColor":"#ff0000"}}]},{"type":"Label","props":{"y":5,"x":614,"var":"mqrqueue","text":"跑馬燈","scaleY":2,"scaleX":2,"color":"#eee7e7"}}]},{"type":"Image","props":{"y":135,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Image","props":{"y":171,"x":157,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":172,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":733,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":737,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":423,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":422,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Label","props":{"y":431,"x":204,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":431,"x":816,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":459,"x":190,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":460,"x":796,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":431,"x":309,"width":78,"var":"LowRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":458,"x":271,"width":78,"var":"LowRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":429,"x":922,"width":78,"var":"HighRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":458,"x":876,"width":78,"var":"HighRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Animation","props":{"y":172,"x":155,"width":0,"var":"stateAni_1","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":171,"x":774,"width":0,"var":"stateAni_2","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}}]};}
 		]);
 		return hallUI;
 	})(View)
@@ -39100,10 +38995,10 @@ var Laya=window.Laya=(function(window,document){
 	//class ui.ui.tipsLoad.tipsLoadPanelUI extends laya.ui.View
 	var tipsLoadPanelUI=(function(_super){
 		function tipsLoadPanelUI(){
-			this.msg_txt=null;
 			this.tip_txt=null;
 			this.loadingbg=null;
 			this.loading_percent=null;
+			this.msg_txt=null;
 			tipsLoadPanelUI.__super.call(this);
 		}
 
@@ -39116,7 +39011,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(tipsLoadPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"Version 0.0.1","scaleX":1,"runtime":"com.lightUI.components.tipsLoadPanel.TipsLoadPanel","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/tipLoading/loading.jpg"}},{"type":"Label","props":{"y":604,"x":680,"width":69,"var":"msg_txt","text":"label","height":12,"fontSize":12,"color":"#e1e1e1","align":"center"}},{"type":"Label","props":{"y":650,"x":599,"width":161,"var":"tip_txt","text":"Version 0.0.1","scaleY":1.5,"scaleX":1.4,"height":35,"color":"#e1e1e1","align":"center"}},{"type":"Image","props":{"y":624,"x":260,"var":"loadingbg","skin":"res/tipLoading/loading_bg.png"}},{"type":"Image","props":{"y":629,"x":266,"width":893,"var":"loading_percent","skin":"res/tipLoading/loading_bar.png"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"Version 0.0.1","scaleX":1,"runtime":"com.lightUI.components.tipsLoadPanel.TipsLoadPanel","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/tipLoading/loading.jpg"}},{"type":"Label","props":{"y":650,"x":599,"width":161,"var":"tip_txt","text":"Version 0.0.1","scaleY":1.5,"scaleX":1.4,"height":35,"color":"#e1e1e1","align":"center"}},{"type":"Image","props":{"y":624,"x":260,"var":"loadingbg","skin":"res/tipLoading/loading_bg.png"}},{"type":"Image","props":{"y":629,"x":266,"width":893,"var":"loading_percent","skin":"res/tipLoading/loading_bar.png"}},{"type":"Label","props":{"y":627,"x":680,"width":69,"var":"msg_txt","text":"label","height":12,"fontSize":12,"color":"#e1e1e1","align":"center"}}]};}
 		]);
 		return tipsLoadPanelUI;
 	})(View)
@@ -39832,10 +39727,19 @@ var Laya=window.Laya=(function(window,document){
 			if (config.room_type !=1)isCoin=false;
 			this.LowRoomLimit.text=this.txt_adjust(isCoin,config.room_limit);
 			this.LowRoomBet.text=this.txt_adjust(isCoin,config.min_bet)+" - "+this.txt_adjust(isCoin,config.max_bet);
+			var frame=0;
+			if (roominfo.cur_player > 30 && roominfo.cur_player < 50)frame=1;
+			if (roominfo.cur_player > 50)frame=2;
+			this.stateAni_1.index=frame;
+			this.stateAni_1.stop();
 			roominfo=data [1];
 			config=roominfo.config;
 			this.HighRoomLimit.text=this.txt_adjust(isCoin,config.room_limit);
 			this.HighRoomBet.text=this.txt_adjust(isCoin,config.min_bet)+" - "+this.txt_adjust(isCoin,config.max_bet);
+			if (roominfo.cur_player > 30 && roominfo.cur_player < 50)frame=1;
+			if (roominfo.cur_player > 50)frame=2;
+			this.stateAni_2.index=frame;
+			this.stateAni_2.stop();
 		}
 
 		__proto.txt_adjust=function(isCoin,nu){
@@ -40446,37 +40350,33 @@ var Laya=window.Laya=(function(window,document){
 	})(SmallPanelUI)
 
 
-	Laya.__init([EventDispatcher1,LocalStorage,Timer,Browser,Proxy,Render,ShareObjectMgr,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,Dialog]);
+	Laya.__init([EventDispatcher1,LocalStorage,Timer,Browser,Proxy,Render,ShareObjectMgr,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,Dialog]);
 	new Main();
 
 })(window,document,Laya);
 
 
 /*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (36):warning:Sprite This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (37):warning:Sprite This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (38):warning:Sprite This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (67):warning:Shape This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (72):warning:CarNotification.ENTER_ROOM This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (82):warning:CarNotification.SHOW_CARRY_IN_PANEL This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (170):warning:CarNotification.ENTER_ROOM This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (73):warning:CarProtoModel.NAME This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (114):warning:CarNotification.RoomSocketClose This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (117):warning:CarNotification.ExitRoomEvent This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (140):warning:CarNotification.ROOM_HEART_BEAT This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (163):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/alert/AlertPanel.as (46):warning:txt_label.text This variable is not defined.
+1 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (72):warning:CarNotification.ENTER_ROOM This variable is not defined.
+2 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (82):warning:CarNotification.SHOW_CARRY_IN_PANEL This variable is not defined.
+3 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (170):warning:CarNotification.ENTER_ROOM This variable is not defined.
+4 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (73):warning:CarProtoModel.NAME This variable is not defined.
+5 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
+6 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
+7 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (114):warning:CarNotification.RoomSocketClose This variable is not defined.
+8 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (117):warning:CarNotification.ExitRoomEvent This variable is not defined.
+9 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (140):warning:CarNotification.ROOM_HEART_BEAT This variable is not defined.
+10 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (163):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+11 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
+12 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
+13 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
+14 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
+15 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
+16 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
+17 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
+18 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
+19 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
+20 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
+21 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
+22 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/alert/AlertPanel.as (46):warning:txt_label.text This variable is not defined.
 */
