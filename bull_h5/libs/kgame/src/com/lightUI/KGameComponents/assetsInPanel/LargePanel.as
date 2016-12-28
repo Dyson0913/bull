@@ -25,13 +25,13 @@ package com.lightUI.KGameComponents.assetsInPanel
 			cash_txt.mouseEnabled = false;
 			nm_txt.mouseEnabled = false;
 			tips_txt.mouseEnabled = false;
-			
-			nm_slider.slider.on(Event.CHANGE,this, onNmChange);
-			cash_slider.slider.on(Event.CHANGE,this, onCashChange);
 		}
 		
 		public function showMe(vo:AssetsVO):void{
 			this.visible = true;
+			
+			nm_slider.slider.on(Event.CHANGE,this, onNmChange);
+			cash_slider.slider.on(Event.CHANGE,this, onCashChange);
 			
 			_vo = vo;
 			updataView();
@@ -63,7 +63,7 @@ package com.lightUI.KGameComponents.assetsInPanel
 			slider.canEdit = true;
 			
 			if(money == 0){
-				//关闭拖动条
+				trace("关闭拖动条");
 				slider.canEdit = false;
 				
 				slider.slider.max = 1;
@@ -85,6 +85,7 @@ package com.lightUI.KGameComponents.assetsInPanel
 		
 		
 		private function onNmChange():void{
+			
 			nm_txt.text = formartMoney(nm_slider.slider.value);
 			_vo.amount_nm = nm_slider.slider.value;
 			
@@ -112,6 +113,8 @@ package com.lightUI.KGameComponents.assetsInPanel
 			
 			//trace("onNmChange",_vo.amount_cash,_vo.amount_nm,_vo.amount_total)
 			amount_total_txt.text = formartMoney(_vo.amount_total);
+			
+			trace("onNmChange ",_vo.amount_cash,_vo.amount_nm)
 		}
 		
 		private function lessValue(value:Number):Number{
@@ -119,6 +122,7 @@ package com.lightUI.KGameComponents.assetsInPanel
 		}
 		
 		private function onCashChange():void{
+			
 			cash_txt.text = formartMoney(cash_slider.slider.value);
 			_vo.amount_cash = cash_slider.slider.value;
 			
@@ -148,6 +152,8 @@ package com.lightUI.KGameComponents.assetsInPanel
 			amount_total_txt.text = formartMoney(_vo.amount_total);
 			
 			//amount_total_txt.text = String(_vo.amount_cash + _vo.amount_nm);
+			
+			trace("onCashChange",_vo.amount_cash,_vo.amount_nm)
 		}
 		
 		/**
@@ -180,6 +186,14 @@ package com.lightUI.KGameComponents.assetsInPanel
 		}
 		
 		public function clear():void{
+			nm_slider.slider.off(Event.CHANGE,this, onNmChange);
+			cash_slider.slider.off(Event.CHANGE,this, onCashChange);
+			
+			
+			amount_total_txt.text = formartMoney(0);
+			cash_txt.text = formartMoney(0);
+			nm_txt.text = formartMoney(0);
+			
 			cash_slider.clear();
 			nm_slider.clear();
 		}

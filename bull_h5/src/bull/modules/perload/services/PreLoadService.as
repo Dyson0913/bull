@@ -21,6 +21,7 @@ package bull.modules.perload.services
 	import bull.modules.common.model.BullProtoModel;
 	import bull.view.hall.Hall;
 	import bull.view.room.BullScene;
+	import bull.view.alert.AlertPanel;
 	
 	public class PreLoadService extends Model implements IModel
 	{
@@ -51,8 +52,10 @@ package bull.modules.perload.services
 		}
 		
 		private function loadURLConfig():void {			
-			Light.loader.URLM.addEventListener(LightEvent.COMPLETE,this, onConfigURLLoaded);
-			Light.loader.URLM.loadConfig("res/config/BullURL.json");
+			Light.loader.URLM.addEventListener(LightEvent.COMPLETE, this, onConfigURLLoaded);
+			Light.loader.URLM.configURL = "res/config/BullURL.json";
+			//Light.loader.URLM.loadConfig("res/config/BullURL.json");
+			Light.loader.URLM.loadConfig();
 		}
 		private function onConfigURLLoaded(e:LightEvent):void {			
 			Light.scence.init(Light.loader.URLM.config.scence);			
@@ -106,7 +109,7 @@ package bull.modules.perload.services
 			Light.scence.addEventListener(ScenceManagerEvent.SCENCE_COMPLETE,this, onComplate,["hall"]);
 			//
 			Light.scence.addScence("hall",["Hall"],Light.layer.scence,ScenceInfo.HIDE_PERSCENCE)
-				.regView("Hall",Hall);
+				.regView("Hall", Hall);				
 			Light.scence.creat();
 		}
 		

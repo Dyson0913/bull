@@ -26,9 +26,9 @@ package bull.modules.common.mediator
 	{
 		public static const NAME:String = "assetInMediator";
 		
-		private var roomSocketService:RoomSocketService;
+		//private var roomSocketService:RoomSocketService;
 		private var first:Boolean;
-		public var perLoadService:PreLoadService;
+		//public var perLoadService:PreLoadService;
 		private var timer:Timer = new Timer();
 		public function AssetInMediator(mediatorName:String="", viewComponent:Object=null)
 		{
@@ -44,7 +44,7 @@ package bull.modules.common.mediator
 		}
 		
 		override public function getInjector():Array{
-			return ["roomSocketService","perLoadService"];
+			return [];// ["roomSocketService", "perLoadService"];
 		}
 		
 		private function getAssetsPanel():AssetsInPanel{

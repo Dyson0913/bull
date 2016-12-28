@@ -50,6 +50,7 @@ package com.lightUI.KGameComponents.assetsInPanel
 			vo.cash_step = cash_step;
 			vo.coin_step = coin_step;
 			
+			trace("现金步长："+cash);
 			hideAll();
 			if(currency == CurrencyType.CASHANDNM){
 				largePanel.showMe(vo);
@@ -70,7 +71,8 @@ package com.lightUI.KGameComponents.assetsInPanel
 		}
 		
 		private function onOk():void{
-			event(AssetsInEvent.OK,vo);
+			trace("onOk",vo)
+			event(AssetsInEvent.OK,vo.clone());
 		}
 		
 		private function onCancel():void{
@@ -120,7 +122,10 @@ package com.lightUI.KGameComponents.assetsInPanel
 		{
 			// TODO Auto Generated method stub
 			largePanel.close();
+			largePanel.clear();
+			
 			smallPanel.close();
+			smallPanel.clear();
 		}
 	}
 }

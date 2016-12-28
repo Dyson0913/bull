@@ -170,7 +170,7 @@ package bull
 			registerMediator(new HallMediator(HallMediator.NAME),Hall);
 			registerMediator(new BullScenceMediator(BullScenceMediator.NAME),BullScene);
 			registerMediator(new AssetInMediator(AssetInMediator.NAME),AssetsInPanel);
-			//registerMediator(new AlertMediator(AlertMediator.NAME),AlertPanel);
+			registerMediator(new AlertMediator(AlertMediator.NAME),AlertPanel);
 			
 			registerMediator(new MusicSetMediator(MusicSetMediator.NAME),MusicSetPanel);
 			registerMediator(new RuleMediator(RuleMediator.NAME),RulePanel);

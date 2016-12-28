@@ -25,7 +25,7 @@ package com.lightUI.manager
 			//lodingMask = Draw.drawRect(new Rectangle(0,0,root.stage.stageWidth, root.stage.stageHeight),0x000000);
 			lodingMask = new Sprite();
 			lodingMask.graphics.drawRect(0,0,Laya.stage.width, Laya.stage.height,0x000000);
-			lodingMask.alpha = .2
+			lodingMask.alpha = .2;
 		}
 		
 		public function lock(key:String):void{
@@ -57,16 +57,27 @@ package com.lightUI.manager
 		public function unLock(key:String):void{
 			
 			if(loadingDic.get(key)){
+				
+				trace("loadingDic.get(key) : ",loadingDic.get(key))
+				
 				loadingDic.set(key,loadingDic.get(key)-1);
+				
+				trace("loadingDic.get(key) : ",loadingDic.get(key))
+				
 				if(loadingDic.get(key) <= 0){
 					loadingDic.remove(key);
 				}
+				
+				trace("------",loadingDic.get(key),loadingDic.keys.length);
+				
+				
 				if(loadingDic.keys.length == 0){
 					if(lodingMask.parent){
 //						if(_interval != -1){
 //							clearTimeout(_interval);
 //							_interval = -1;
 //						}
+						trace("需要移除 ");
 						Laya.timer.clear(this,dispatchTimeOutEvent);
 						lodingMask.parent.removeChild(lodingMask);
 						lodingMask["hideme"]();

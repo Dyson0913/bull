@@ -1,10 +1,13 @@
 package com.lightUI.manager.loader
 {
+	import laya.events.EventDispatcher;
 	import laya.net.LoaderManager;
+	import laya.utils.Handler;
 	
-	public class LLoaderManager extends LoaderManager
+	public class LLoaderManager
 	{
 		private var _URLM:IURLManager;
+		
 		
 		public function LLoaderManager()
 		{
@@ -19,15 +22,27 @@ package com.lightUI.manager.loader
 			}
 		}
 		
-		override public function getRes(url:String):*{
+		public function load(url:*, complete:Handler=null, progress:Handler=null, type:String=null, priority:int=1, cache:Boolean=true, group:String=null, ignoreCache:Boolean=false):LoaderManager{
+			return Laya.loader.load(url,complete,progress,type,priority,cache,group,ignoreCache);
+		}
+		
+		public function off(type:String, caller:*, listener:Function, onceOnly:Boolean=false):EventDispatcher{
+			return Laya.loader.off(type,caller,listener,onceOnly);
+		}
+		
+		public function offAll(type:String=null):EventDispatcher{
+			return Laya.loader.offAll(type);
+		}
+			
+		public function getRes(url:String):*{
 			if(String(url).indexOf("http") == -1 && String(url).indexOf("/") == -1){
 				url = _URLM.getURL(url);
 			}
-			return super.getRes(url);
+			return Laya.loader.getRes(url);
 		}
 		
-		public function loadConfig(info:* = null):void{
-			URLM.loadConfig(info);
+		public function loadConfig():void{
+			URLM.loadConfig();
 		}
 
 		public function get URLM():IURLManager

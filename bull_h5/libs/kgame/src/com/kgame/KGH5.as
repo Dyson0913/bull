@@ -28,5 +28,24 @@ package com.kgame
 		public function getPlayerGuideStatus(callBack:Handler):void{
 			__JS__("this.KGAPI.getUserBalance(callBack.method.bind(callBack.caller))");
 		}
+		
+		/**
+		 * 返回大厅 
+		 * @param callBack
+		 * 
+		 */		
+		public function goBack(callBack:Handler):void{
+			__JS__("this.KGAPI.goBack(callBack.method.bind(callBack.caller))");
+		}
+		
+		/**
+		 * 跳转到充值页面
+		 * @param type     		cash：跳转到现金充值界面    coin
+		 * @param callBack
+		 * 
+		 */		
+		public function rechargeShow(type:String,callBack:Handler):void{
+			__JS__("this.KGAPI.rechargeShow(callBack.method.bind(callBack.caller))");
+		}
 	}
 }

@@ -25,7 +25,7 @@ package com.lightUI.KGameComponents.assetsInPanel
 			total_describe_txt.mouseEnabled = false;
 			amount_describe_txt.mouseEnabled = false;
 			
-			slider.slider.on(Event.CHANGE, this, onSliderChange);
+			
 		}
 		
 		private function onSliderChange():void{
@@ -44,6 +44,8 @@ package com.lightUI.KGameComponents.assetsInPanel
 			this.visible = true;
 			
 			this.vo = vo;
+			
+			slider.slider.on(Event.CHANGE, this, onSliderChange);
 			
 			if(vo.currency == CurrencyType.CASH){
 				total_txt.text = formartMoney(vo.cash);
@@ -82,13 +84,15 @@ package com.lightUI.KGameComponents.assetsInPanel
 				//slider.slider.tickInterval = vo.coin_step;
 			}
 			
-			slider.slider.value = vo.amount_default;
+			if(slider.slider.value == vo.amount_default)  onSliderChange()
+			else  slider.slider.value = vo.amount_default;
 			popupCenter =true;
 			popup();
 		}
 		
 		public function clear():void{
-			
+			slider.slider.off(Event.CHANGE, this, onSliderChange);
+			slider.clear();
 		}
 		
 		/**

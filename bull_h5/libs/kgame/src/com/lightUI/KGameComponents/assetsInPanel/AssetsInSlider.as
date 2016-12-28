@@ -22,8 +22,9 @@ package com.lightUI.KGameComponents.assetsInPanel
 		}
 		
 		private function onChange():void{
-			trace("AssetsInSlideronChange",slider.value,slider.max,slider.min)
-			slider_bar.width = slider.value/(slider.max - slider.min)*188;
+//			trace("AssetsInSlideronChange",slider.value,slider.max,slider.min)
+//			trace("AssetsInSlideronChange",slider.tick)
+			slider_bar.width = (slider.value - slider.min)/(slider.max - slider.min)*188;
 		}
 		
 		private function test():void{
@@ -49,7 +50,8 @@ package com.lightUI.KGameComponents.assetsInPanel
 		public function set canEdit(value:Boolean):void
 		{
 			_canEdit = value;
-			slider.mouseEnabled = value;
+			this.mouseEnabled = value;
+			//slider.mouseEnabled = value;
 		}
 		
 		public function clear():void{

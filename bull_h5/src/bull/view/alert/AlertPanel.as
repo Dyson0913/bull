@@ -29,13 +29,16 @@ package bull.view.alert
 			{
 				child = this.getChildAt(i) as Sprite;
 				
-				if(this.getChildAt(i) is Button){
+				
+				if (this.getChildAt(i) is Button) {
+					trace("child is btn");
 					child.on(Event.MOUSE_DOWN,this,onClick);
 				}
 			}
 		}
 		
-		private function onClick(e:Event):void{
+		private function onClick(e:Event):void {
+			trace("e.target.name = "+e.target.name);
 			this.event(WindowEvent.CLOSE,e.target.name);
 		}
 		

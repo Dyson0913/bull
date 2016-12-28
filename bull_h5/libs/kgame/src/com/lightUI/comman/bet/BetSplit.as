@@ -1,6 +1,6 @@
 package com.lightUI.comman.bet
 {
-	import com.proto.car.massage.BetInfo;
+	
 	
 	/**
 	 * 
@@ -173,8 +173,15 @@ package com.lightUI.comman.bet
 		 * 
 		 */		
 		public function splitBet(value:int = 2000):BetSlipParam{
-			_bets = [];
 			var re:BetSlipParam = new BetSlipParam();
+			
+			if(value < _betConfig[0].value){
+				re.remainder = -1;
+				return re;
+			}
+			
+			_bets = [];
+			
 			splitBetHandler(value);
 			re.chips = _bets;
 			re.remainder = _remainder;
@@ -201,19 +208,21 @@ package com.lightUI.comman.bet
 					if(tempvalue >= minchip.value){
 						_bets.push(_betConfig[i].clone());
 						value = tempvalue;
-						//trace("继续分",_betConfig[i],tempvalue)
+						trace("继续分",_betConfig[i],tempvalue)
 					}else if(tempvalue < minchip.value && tempvalue >= 0){
 						_bets.push(_betConfig[i].clone());
 						value = tempvalue;
 						_remainder = tempvalue;
-						//trace("分完了",_remainder);
+						trace("分完了",_remainder);
 						return true;
 					}else{
 						return splitBetHandler(value);
 					}
 				}
 			}
-			return true;
+			
+			
+			return splitBetHandler(value);
 		}
 		
 		public function clear():void{

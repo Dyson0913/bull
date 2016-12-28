@@ -12,6 +12,7 @@ package bull.modules.common.command
 	import bull.modules.BullHall.mediator.HallMediator;
 	import bull.modules.BullHall.service.HallSocketService;
 	
+	
 	import msg.CS;
 	import msg.ENCSType;
 	import msg.ReturnHallReq;
@@ -93,7 +94,8 @@ package bull.modules.common.command
 //					sentNotification(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString());
 					break;
 				default:
-					trace("returnHallRsp ........... errorCode:"+rsp.result);
+					trace("returnHallRsp ........... errorCode:" + rsp.result);
+					
 					break;
 			}
 		}

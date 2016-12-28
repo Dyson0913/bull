@@ -29,6 +29,7 @@ package com.lightUI.core
 		public static function init(root:Sprite):void{
 			layer.init(root);
 			Light.root = root;
+			//Laya.loader = loader;
 		}
 	}
 }

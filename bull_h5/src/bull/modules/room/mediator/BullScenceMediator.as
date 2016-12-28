@@ -35,7 +35,7 @@ package bull.modules.room.mediator
 	public class BullScenceMediator extends Mediator implements IMediator
 	{
 		public var perLoadService:PreLoadService;
-		public var roomSocketService:RoomSocketService;
+		//public var roomSocketService:RoomSocketService;
 		public var roomData:RoomData;
 		public var userInfoData:UserInfoData;
 		private var num:int;
@@ -48,7 +48,7 @@ package bull.modules.room.mediator
 		}
 		
 		override public function getInjector():Array{
-			return ["perLoadService","roomSocketService","roomData","userInfoData"];
+			return ["perLoadService","userInfoData"];
 		}
 		
 		override public function setViewComponent(viewComponent:Object):void{

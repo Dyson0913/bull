@@ -3,8 +3,11 @@ package com.lightUI.manager
 	import com.lightUI.core.Light;
 	import com.lightUI.utils.Draw;
 	
+	import laya.debug.tools.MouseEventAnalyser;
 	import laya.display.Sprite;
+	import laya.events.Event;
 	import laya.maths.Rectangle;
+	import laya.ui.Dialog;
 	import laya.utils.Color;
 	import laya.utils.Dictionary;
 
@@ -20,20 +23,35 @@ package com.lightUI.manager
 										parent:Sprite = null,
 										modal:Boolean = false,modalColor:Color = null,modalAlpha:Number = 0.60):void
 		{
-			modalColor = modalColor?modalColor:Color.create(0x000000);
+			modalColor = modalColor?modalColor:Color.create(0xff0000);
 			
 			parent = parent?parent:Light.root;
 			if(modal){
+				
+				trace("addPopUp test")
+				
 				var sp:Sprite = Draw.drawRect(new Rectangle(0,0,Light.root.stage.width, Light.root.height),modalColor);
+				//sp.graphics.drawCircle(100,100,50,Color.create("0xff0000"));
+				//sp.graphics.drawRect(0,0,Light.root.stage.width, Light.root.height,Color.create("0xff0000"));
 				sp.alpha = modalAlpha;;
 				parent.addChild(sp);
 				parent.addChild(window);
 				
-				//objDic[window] = sp;
+				sp.width = Light.root.stage.width;
+				sp.height = Light.root.stage.height;
+				
+				sp.mouseEnabled = true;
+				
+				
+				objDic[window] = sp;
 			}else{
 				parent.addChild(window);
 				objDic[window] = window;
 			}
+		}
+		
+		private function test():void{
+			
 		}
 		
 		public static function removePopUp(popUp:Sprite):void

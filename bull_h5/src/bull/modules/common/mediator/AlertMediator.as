@@ -8,7 +8,7 @@ package bull.modules.common.mediator
 	import laya.events.Event;
 	
 	import bull.events.BullNotification;
-	import light.car.modules.common.model.param.CarryInParam;
+	//import light.car.modules.common.model.param.CarryInParam;
 	import bull.view.alert.AlertPanel;
 	
 	
@@ -39,19 +39,19 @@ package bull.modules.common.mediator
 		
 		override public function setViewComponent(viewComponent:Object):void{
 			super.viewComponent = viewComponent;
-			
-			getAlertPanel().visible = false;
-			Light.layer.top.addChild(getAlertPanel());
-			
-			getAlertPanel().close_btn.on(Event.CLICK, this, onClose);
-			getAlertPanel().ok_btn.on(Event.CLICK, this, onClose);
-			addNotifiction(BullNotification.SHOW_ALERT_PANEL);
+			trace("alter view init");
+			//getAlertPanel().visible = false;
+			//Light.layer.top.addChild(getAlertPanel());
+			//
+			//getAlertPanel().close_btn.on(Event.CLICK, this, onClose);
+			//getAlertPanel().ok_btn.on(Event.CLICK, this, onClose);
+			//addNotifiction(BullNotification.SHOW_ALERT_PANEL);
 		}
 		
 		override public function handler(notification:INotification):void{
 			if(notification.getName() == BullNotification.SHOW_ALERT_PANEL){
 				trace("SHOW_ALERT_PANEL Handler");
-				alertPanelShow(notification.getBody() as CarryInParam);
+				//alertPanelShow(notification.getBody() as CarryInParam);
 			}
 		}
 		

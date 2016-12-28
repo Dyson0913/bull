@@ -25,7 +25,7 @@ package com.lightUI.manager.loader
 		function getURL(name:String):String;
 		//function getURLRequest(name:String):URLRequest
 		
-		function loadConfig(config:* = null):void;
+		function loadConfig():void;
 		function getURLInfo(name:String):Object;
 		
 		function get config():Object;

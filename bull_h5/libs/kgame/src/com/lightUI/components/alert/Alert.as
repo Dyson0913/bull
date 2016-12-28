@@ -7,6 +7,8 @@ package com.lightUI.components.alert
 	import com.lightUI.manager.storage.StorageManager;
 	
 	import laya.display.Sprite;
+	import laya.ui.Dialog;
+	import laya.utils.Color;
 	import laya.utils.Handler;
 	
 	/**
@@ -48,11 +50,28 @@ package com.lightUI.components.alert
 		 * @param delayRemove	是否延迟自动关闭
 		 * @return 
 		 * 
+		 */	
+		/**
+		 * 
+		*弹出提示框 
+		 * @param message			提示消息内容
+		 * @param title				提示标题
+		 * @param parent			提示框父容器
+		 * @param windowClazz		提示框视图类
+		 * @param closeHandler		关闭回调的函数
+		 * @param data				需要传递的参数
+		 * @param delayRemove		是否延迟自动关闭
+		 * @param modal				是否遮挡
+		 * @param modalColor		遮挡的颜色
+		 * @param modalAlpha		遮挡的透明度
+		 * @return 
+		 * 
 		 */		
 		public static function show(message:String = "", title:String = ""
 									,windowClass:Class = null
 									,parent:Sprite = null
-									,closeHandler:Handler = null,data:Object = null,delayRemove:int = -1):Sprite
+									,closeHandler:Handler = null,data:Object = null,delayRemove:int = -1
+									,modal:Boolean = true,modalColor:Color = null,modalAlpha:Number = 0):Sprite
 		{
 			trace("弹出提示框");
 			
@@ -66,18 +85,24 @@ package com.lightUI.components.alert
 			}
 			
 			window.data = data;
-			PopupManager.addPopUp(window as Sprite,Light.root,true);
+			
+//			(window as Dialog).popup();
+//			(window as Dialog).popupCenter = true;
+			
+			PopupManager.addPopUp(window as Sprite,Light.root,modal,modalColor,modalAlpha);
 			PopupManager.centerPopUp(window as Sprite);
 			
+			//parent.mouseEnabled = false;
 			
 			window.title = title;
 			window.msg = message;
 			window.on(WindowEvent.CLOSE,null, function onClose(e:WindowEvent):void{
-				trace("aaaaaaaa",window)
+				//trace("aaaaaaaa",window)
 				//var w:IAlertWindow = e.currentTarget as IAlertWindow;
 				window.off(WindowEvent.CLOSE,null,onClose);
 				StorageManager.getInstance().getStorage(String(windowClass)).rebackObject(window);
 				PopupManager.removePopUp(window as Sprite);
+				//(window as Dialog).close();
 			});
 			
 			if(delayRemove > 0){
@@ -87,7 +112,7 @@ package com.lightUI.components.alert
 					PopupManager.removePopUp(window);
 				}
 				//setTimeout(fun,delayRemove,window);
-				Light.timer.setTimeout(null,fun,delayRemove,null);
+				Light.timer.setTimeout(null,fun,delayRemove,window);
 			}
 			
 			if(closeHandler) (window as Sprite).once(WindowEvent.CLOSE,closeHandler.caller,closeHandler.method,[data]);

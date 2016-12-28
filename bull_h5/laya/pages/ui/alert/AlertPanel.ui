@@ -2,10 +2,10 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":1,
-    "props":{"width":318,"var":"txt_label","sceneColor":"#000000","height":195},
+    "selecteID":3,
+    "props":{"width":318,"sceneColor":"#000000","height":195},
     "nodeParent":-1,
-    "label":"Dialog(txt_label)",
+    "label":"Dialog",
     "isOpen":true,
     "isDirectory":true,
     "isAniNode":true,
@@ -42,7 +42,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":-3,"x":287,"var":"close_btn","skin":"res/alert/btn_close.png"},
+            "props":{"y":0,"x":405,"var":"close_btn","skin":"res/alert/btn_close.png"},
             "nodeParent":1,
             "label":"Button(close_btn)",
             "isDirectory":false,
@@ -61,8 +61,68 @@
         },
         {
             "x":15,
+            "type":"Label",
+            "props":{"y":115,"x":20,"width":410,"var":"txt_label","text":"label","height":96,"color":"#f1ebea","align":"center"},
+            "nodeParent":1,
+            "label":"Label(txt_label)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":6,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
             "type":"Button",
-            "props":{"y":161,"x":120,"var":"ok_btn","skin":"assetsIn/ok.png"},
+            "props":{"y":232,"x":283,"var":"cancel_btn","skin":"assetsIn/cancel.png"},
+            "nodeParent":1,
+            "label":"Button(cancel_btn)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"label":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":7,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":8,"x":190,"width":59,"text":"温馨提示","scaleY":1.5,"scaleX":1.5,"height":19,"color":"#f4e6e6"},
+            "nodeParent":1,
+            "label":"Label",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":8,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Button",
+            "props":{"y":232,"x":87,"var":"ok_btn","skin":"assetsIn/ok.png"},
             "nodeParent":1,
             "label":"Button(ok_btn)",
             "isDirectory":false,
@@ -76,26 +136,6 @@
                     "__InPool":false
                 }],
             "compId":4,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"TextArea",
-            "props":{"y":76,"x":13,"width":291,"text":"TextArea","height":69,"color":"#e8dede","align":"center"},
-            "nodeParent":1,
-            "label":"TextArea",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"text":"TextArea"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":5,
             "child":[
                 ]
         }],

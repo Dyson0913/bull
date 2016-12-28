@@ -36,6 +36,27 @@ package com.lightUI.KGameComponents.assetsInPanel
 			amount_cash = 0;
 			amount_nm = 0;
 			amount_coin = 0;
+			amount_total = 0;
+		}
+		
+		public function clone():AssetsVO{
+			var re:AssetsVO = new AssetsVO();
+			re.cash = this.cash;
+			re.nm = this.nm;
+			re.coin = this.coin;
+			re.min = this.min;
+			re.max = this.max;
+			re.currency = this.currency;
+			re.amount_default = this.amount_default;
+			re.cash_step = this.cash_step;
+			re.coin_step = this.coin_step;
+			
+			re.amount_cash = this.amount_cash;
+			re.amount_nm = this.amount_nm;
+			re.amount_coin = this.amount_coin;
+			re.amount_total = this.amount_total;
+			
+			return re;
 		}
 	}
 }

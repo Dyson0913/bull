@@ -167,7 +167,7 @@ package com.lightUI.manager.scence
 			Light.loader.load(loads,Handler.create(this,onAssetsLoaded,[info],true),Handler.create(this,onProgress,[info],false));
 		}
 		private function onAssetsLoaded(info:ScenceInfo):void{
-		Light.loader.offAll();
+		    Light.loader.offAll();
 			creatScence(info);
 			//trace("创建完一个 ",info)
 			_scenceCreatList.shift();

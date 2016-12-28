@@ -5,12 +5,15 @@ package bull.modules.common.command
 	import com.lightMVC.parrerns.Command;
 	import conf.SRoomConfig;
 	import conf.SRoomInfo;
+	import com.lightUI.core.Light;
+	import com.lightUI.components.alert.Alert;
 	
 	import bull.events.BullNotification;
 	import bull.modules.common.model.data.Data;
 	import bull.modules.common.model.data.HallData;
 	import bull.modules.common.model.BullProtoModel;	
 	import bull.modules.BullHall.service.HallSocketService;
+	import bull.view.alert.AlertPanel;
 	
 	import msg.CS;
 	import msg.ENCSType;
@@ -62,7 +65,8 @@ package bull.modules.common.command
 				sentNotification(BullNotification.GET_USER_BALANCE, true);
 //				(getModel(HallSocketService.NAME) as HallSocketService).close();
 			}else{
-				trace("error code: "+e.enter_table_rsp.result);
+				trace("error code: " + e.try_enter_table_rsp.error_code);
+				Alert.show(Light.error.getError(e.try_enter_table_rsp.error_code.toString()),"",AlertPanel);
 			}
 		}
 	}

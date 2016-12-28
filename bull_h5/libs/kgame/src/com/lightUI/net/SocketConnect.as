@@ -1,7 +1,7 @@
 package com.lightUI.net
 {
-	import com.iflash.utils.ByteArray;
 	import com.iflash.events.EventDispatcher;
+	import com.iflash.utils.ByteArray;
 	
 	import laya.events.Event;
 	import laya.net.Socket;
@@ -24,6 +24,8 @@ package com.lightUI.net
 		public var isReConnect:Boolean = false;//////////////////////标记是否为重连
 		public var name:String;
 		
+		private var _isConnectError:Boolean = false;
+		
 		public function SocketConnect()
 		{
 			init();
@@ -40,6 +42,14 @@ package com.lightUI.net
 			_socket.on(Event.OPEN, this, onSocketOpen);
 			_socket.on(Event.CLOSE, this, onSocketClose);
 			_socket.on(Event.MESSAGE, this, onMessageReveived);
+			_socket.on(Event.ERROR, this, onConnectError);
+		}
+		
+		private function onConnectError():void
+		{
+			trace("onConnectError");
+			_isConnectError = true;
+			this.dispatchEvent(new SocketConnectEvent(SocketConnectEvent.CONNECT_FAIL));
 		}
 		
 		/**
@@ -109,7 +119,14 @@ package com.lightUI.net
 		
 		private function onSocketClose(evt:Event = null):void
 		{
-			trace("close: ",evt);
+			trace("onSocketClose")
+			
+			if(_isConnectError){
+				_isConnectError = false;
+				return;
+			}
+			
+			//trace("close: ",evt);
 			clear();
 			this.dispatchEvent(new SocketConnectEvent(SocketConnectEvent.CLOSE));
 			this.dispatchEvent(new SocketConnectEvent(SocketConnectEvent.DROPPED));
