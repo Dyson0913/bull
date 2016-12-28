@@ -231,6 +231,27 @@
             "rotated": false,
             "trimed": false
         },
+        "Lobby_light2.png": {
+            "frame": {
+                "x": 929,
+                "y": 35,
+                "w": 16,
+                "h": 16,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimed": false
+        },
         "logo.png": {
             "frame": {
                 "x": 0,

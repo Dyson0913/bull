@@ -27,7 +27,30 @@ package bull.view.hall
 			
 			backLobby.on(Event.CLICK, this, onReturnClick);
 			
-			Tween.to(mqrqueue, { x:mqrqueue.x - 600 }, 15000,null, Handler.create(this,showmarque));
+			Tween.to(mqrqueue, { x:mqrqueue.x - 600 }, 15000, null, Handler.create(this, showmarque));
+			
+			//跑燈
+			for (var i:int = 0; i < 128; i++)
+			{
+				if ( i % 2 == 1)
+				{					
+					this["light_" + i].interval = 1000;
+					this["light_" + i].play();	
+					
+					this["_light_" + i].interval = 1000;
+					this["_light_" + i].play();	
+				}
+				else
+				{
+					this["light_" + i].interval = 1000;
+					this["light_" + i].wrapMode = 1;
+					this["light_" + i].play(1);		
+					
+					this["_light_" + i].interval = 1000;
+					this["_light_" + i].wrapMode = 1;
+					this["_light_" + i].play(1);		
+				}			
+			}		
 		}
 		
 		private function showmarque():void
@@ -39,14 +62,15 @@ package bull.view.hall
 		
 		private function onReturnClick(e:Event):void
 		{
-			// TODO Auto Generated method stub
-			
+			// TODO Auto Generated method stub			
+						
 		}
 		
 		public function show_G():void
 		{
 			Ginit.visible = GHigh.visible =GLowEnter.visible = GHighEnter.visible = true;			
 			Minit.visible = MHigh.visible = MLowEnter.visible =	MHighEnter.visible = false;
+			
 		}
 		
 		public function show_M():void
