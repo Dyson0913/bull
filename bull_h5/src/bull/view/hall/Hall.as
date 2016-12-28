@@ -7,9 +7,14 @@ package bull.view.hall
 	import laya.events.Event;
 	import laya.utils.Handler;
 	import laya.utils.Tween;
-	import laya.utils.Ease;
+	import laya.utils.Ease;	
+	import laya.media.SoundManager;
 	
+	import com.lightUI.core.Light;
+	import com.lightUI.components.alert.Alert;
+	import bull.view.alert.AlertPanel;
 	
+	import bull.core.SoundPath;
 	
 	import ui.ui.hall.hallUI;
 	
@@ -50,7 +55,9 @@ package bull.view.hall
 					this["_light_" + i].wrapMode = 1;
 					this["_light_" + i].play(1);		
 				}			
-			}		
+			}
+			SoundManager.playMusic(SoundPath.Lobby_BGM, 100);
+			
 		}
 		
 		private function showmarque():void
@@ -63,7 +70,9 @@ package bull.view.hall
 		private function onReturnClick(e:Event):void
 		{
 			// TODO Auto Generated method stub			
-						
+			//Alert.show(Light.error.getError("2"), "", AlertPanel);
+			 
+			
 		}
 		
 		public function show_G():void

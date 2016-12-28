@@ -22,6 +22,8 @@ package bull.events
 		
 		public static const LOGIN_HALL_RQS:String = "loginHallRequest";//////////////////登录大厅请求		
 		
+		public static const Close_BGM:String = "Close_BGM";//////////////關閉大廳音效
+		
 		
 		
 		

@@ -16,6 +16,7 @@ package bull.modules.common.mediator
 		
 		override public function setViewComponent(viewComponent:Object):void{
 			super.viewComponent = viewComponent;			
+			Light.layer.loadingMask.lodingMask = viewComponent as Sprite;
 		}
 	}
 }

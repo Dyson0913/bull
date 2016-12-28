@@ -8,6 +8,7 @@ package bull.modules.BullHall.mediator
 	
 	import laya.events.Event;
 	import laya.utils.Timer;
+	import laya.media.SoundManager;
 	
 	import bull.events.BullNotification;
 	import bull.modules.common.mediator.MusicSetMediator;
@@ -16,7 +17,7 @@ package bull.modules.BullHall.mediator
 	import bull.modules.common.model.data.UserInfoData;
 	import bull.modules.common.model.data.vo.HallRoomVO;	
 	import bull.modules.BullHall.service.HallSocketService;
-	import bull.view.hall.Hall;
+	import bull.view.hall.Hall;		
 	
 	import msg.ENCSType;
 	
@@ -71,13 +72,16 @@ package bull.modules.BullHall.mediator
 			view.GLowEnter.on(Event.CLICK, this, onGLowEnter);
 			view.GHighEnter.on(Event.CLICK, this, onGHighEnter);
 			
+			addNotifiction(BullNotification.Close_BGM);
 			
 			showOrHideBtnGroup(false);			
 		}
 		
 		override public function handler(notification:INotification):void
 		{
-
+			if(notification.getName() == BullNotification.Close_BGM){				
+				SoundManager.stopMusic();
+			}
 		}
 		
 		private function onGBtnClick(e:Event):void
@@ -96,6 +100,7 @@ package bull.modules.BullHall.mediator
 		{
 			hallData.join_room_idx = 0;
 			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+			
 		}
 		
 		private function onMHighEnter(e:Event):void

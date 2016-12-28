@@ -159,6 +159,7 @@ package bull.modules.perload.services
 					break;
 				case "tipsLoadPanel":
 					trace("tipsLoadPanel");					
+					Light.layer.loadingMask.clear();
 					loadGameConfig();
 					break;				
 				case "config":
@@ -173,7 +174,7 @@ package bull.modules.perload.services
 					Light.scence.removeScence("common");
 					loadProto();
 				break;
-				case "hall":					
+				case "hall":							
 					sentNotification(BullNotification.HALL_SOCKET_CONNECT);
 				break;				
 				case "room":

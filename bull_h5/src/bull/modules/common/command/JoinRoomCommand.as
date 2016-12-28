@@ -5,8 +5,7 @@ package bull.modules.common.command
 	import com.lightMVC.parrerns.Command;
 	import conf.SRoomConfig;
 	import conf.SRoomInfo;
-	import com.lightUI.core.Light;
-	import com.lightUI.components.alert.Alert;
+	
 	
 	import bull.events.BullNotification;
 	import bull.modules.common.model.data.Data;

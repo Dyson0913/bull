@@ -55,9 +55,9 @@ package bull.modules.common.mediator
 			}
 		}
 		
-		private function alertPanelShow(param:CarryInParam):void{
-			getAlertPanel().show(true);
-		}
+		//private function alertPanelShow(param:CarryInParam):void{
+		//	getAlertPanel().show(true);
+		//}
 		
 		private function onClose(e:Event):void
 		{

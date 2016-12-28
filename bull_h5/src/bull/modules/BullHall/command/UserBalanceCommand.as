@@ -48,7 +48,10 @@ package bull.modules.BullHall.command
 			trace("----userBalanceCallback",+param)
 			var hallData:HallData = getSingleton(HallData.NAME) as HallData;
 			
-			//TODO parse param
+			//TODO parse param			
+			
+			//關閉大廳音樂
+			sentNotification(BullNotification.Close_BGM);
 			
 			sentNotification(BullNotification.ENTER_ROOM);
 			
