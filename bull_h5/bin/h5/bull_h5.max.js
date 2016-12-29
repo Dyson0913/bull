@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
+	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -939,6 +939,8 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.Change_Scene="car.Change_Scene";
 		BullNotification.Scene_Hall="Scene_Hall";
 		BullNotification.Scene_Game="Scene_Game";
+		BullNotification.RoomSocketClose="RoomSocketClose";
+		BullNotification.ExitRoomEvent="ExitRoomEvent";
 		return BullNotification;
 	})()
 
@@ -20942,29 +20944,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Node)
 
 
-	//class com.iflash.events.Event extends laya.events.Event
-	var Event=(function(_super){
-		function Event(type,bubbles,cancelable){
-			this.bubbles=false;
-			this.cancelable=false;
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			Event.__super.call(this);
-			this.type=type;
-			this.bubbles=bubbles;
-			this.cancelable=cancelable;
-		}
-
-		__class(Event,'com.iflash.events.Event',_super);
-		var __proto=Event.prototype;
-		__proto.clone=function(){
-			return new com.iflash.events.Event(this.type);
-		}
-
-		return Event;
-	})(Event1)
-
-
 	//class com.lightMVC.parrerns.Model extends com.lightMVC.core.Node
 	var Model=(function(_super){
 		function Model(modelName,data){
@@ -21047,6 +21026,29 @@ var Laya=window.Laya=(function(window,document){
 		Model.NAME="Model";
 		return Model;
 	})(Node)
+
+
+	//class com.iflash.events.Event extends laya.events.Event
+	var Event=(function(_super){
+		function Event(type,bubbles,cancelable){
+			this.bubbles=false;
+			this.cancelable=false;
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			Event.__super.call(this);
+			this.type=type;
+			this.bubbles=bubbles;
+			this.cancelable=cancelable;
+		}
+
+		__class(Event,'com.iflash.events.Event',_super);
+		var __proto=Event.prototype;
+		__proto.clone=function(){
+			return new com.iflash.events.Event(this.type);
+		}
+
+		return Event;
+	})(Event1)
 
 
 	//class bull.modules.common.model.data.Data extends laya.events.EventDispatcher
@@ -28301,12 +28303,18 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand("hallSocketConnectFailed",ConnectHallCommand);
 			this.registerCommand("loginHallRequest",LoginHallCommand);
 			this.registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(),LoginHallCommand);
+			this.registerCommand(BullNotification.Leave_Game,LoginHallCommand);
 			this.registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString(),RoomListCommand);
 			this.registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString(),RoomListCommand);
 			this.registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString(),JoinRoomCommand);
 			this.registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_RSP.toString(),JoinRoomCommand);
 			this.registerCommand("getUserBalance",UserBalanceCommand);
 			this.registerCommand("enterRoom",EnterRoomCommand);
+			this.registerCommand("roomSocketConnect",ConnectRoomCommand);
+			this.registerCommand("roomSocketConnectComplete",ConnectRoomCommand);
+			this.registerCommand("roomSocketConnectFailed",ConnectRoomCommand);
+			this.registerCommand("loginRoomRequest",LoginRoomCommand);
+			this.registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(),LoginRoomCommand);
 		}
 
 		//registerCommand(ENCSType.CS_TYPE_ROUND_CASH_NOTIFY.toString(),SettlementRoundCommand);//开始结算
@@ -28314,6 +28322,7 @@ var Laya=window.Laya=(function(window,document){
 			this.registerModel(new PreLoadService("perLoadService"));
 			this.registerModel(new BullProtoModel("bullProtoModel"));
 			this.registerModel(new HallSocketService("hallSocketService"));
+			this.registerModel(new RoomSocketService("roomSocketService"));
 			this.registerModel(new WebService("WebService"));
 			this.asSingleton("Data",Data)
 			this.asSingleton("hallData",HallData);
@@ -28326,8 +28335,8 @@ var Laya=window.Laya=(function(window,document){
 			this.registerMediator(new TipsLoadMediator("tipsLoadMediator"),TipsLoadPanel);
 			this.registerMediator(new HallMediator("hallMediator"),Hall);
 			this.registerMediator(new BullScenceMediator("BullScenceMediator"),BullScene);
-			this.registerMediator(new AssetInMediator("assetInMediator"),AssetsInPanel);
 			this.registerMediator(new AlertMediator("alertMediator"),AlertPanel);
+			this.registerMediator(new AssetInMediator("assetInMediator"),AssetsInPanel);
 			this.registerMediator(new MusicSetMediator("musicSetMediator"),MusicSetPanel);
 			this.registerMediator(new RuleMediator("ruleMediator"),RulePanel);
 		}
@@ -28727,6 +28736,43 @@ var Laya=window.Laya=(function(window,document){
 	})(Command)
 
 
+	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
+	var ConnectRoomCommand=(function(_super){
+		function ConnectRoomCommand(){
+			ConnectRoomCommand.__super.call(this);
+		}
+
+		__class(ConnectRoomCommand,'bull.modules.common.command.ConnectRoomCommand',_super);
+		var __proto=ConnectRoomCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName().toString()=="roomSocketConnect"){
+				this.connectRoom();
+				}else if(notification.getName().toString()=="roomSocketConnectComplete"){
+				this.onConnectRoomComplete();
+				}else if(notification.getName().toString()=="roomSocketConnectFailed"){
+				Alert.show("无法连接到游戏服务器。","",AlertPanel,null,Handler.create(this,this.Server_not_open));
+			}
+		}
+
+		__proto.onConnectRoomComplete=function(){
+			this.sentNotification("loginRoomRequest");
+		}
+
+		__proto.connectRoom=function(){
+			var hallData=this.getSingleton("hallData");
+			var roomSocketService=this.getModel("roomSocketService");
+			roomSocketService.connect(hallData.ip,hallData.port);
+		}
+
+		__proto.Server_not_open=function(){
+			this.sentNotification("ExitRoomEvent");
+		}
+
+		return ConnectRoomCommand;
+	})(Command)
+
+
 	//class bull.modules.common.command.JoinRoomCommand extends com.lightMVC.parrerns.Command
 	var JoinRoomCommand=(function(_super){
 		function JoinRoomCommand(){
@@ -28767,9 +28813,10 @@ var Laya=window.Laya=(function(window,document){
 				hallData.port=e.try_enter_table_rsp.net_address.port;
 				hallData.Token=e.try_enter_table_rsp.token;
 				this.sentNotification("getUserBalance",true);
+				(this.getModel("hallSocketService")).close();
 				}else{
 				console.log("error code: "+e.try_enter_table_rsp.error_code);
-				/*no*/this.Alert.show(/*no*/this.Light.error.getError(e.try_enter_table_rsp.error_code.toString()),"",AlertPanel);
+				Alert.show(Light.error.getError(e.try_enter_table_rsp.error_code.toString()),"",AlertPanel);
 			}
 		}
 
@@ -28805,6 +28852,8 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.hallLoginReqHandler=function(){
 			var bullData=this.getSingleton("Data");
+			bullData.hallData.lobbyLogin=false;
+			console.log("lobby bullData.roomLogin ==========="+bullData.hallData.lobbyLogin);
 			bullData.truthLogin=true;
 			var proto=this.getModel("bullProtoModel");
 			var out=proto.msg_proto.getCS();
@@ -28817,14 +28866,24 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.hallLoginRspHandler=function(msg){
-			console.log("hallLoginRspHandler",msg);
+			console.log("hall hallLoginRspHandler",msg);
 			var bullData=this.getSingleton("Data");
+			console.log("hall bullData.roomLogin ==========="+bullData.hallData.roomLogin);
+			console.log("hall bullData.lobbyLogin ==========="+bullData.hallData.lobbyLogin);
+			if (bullData.hallData.lobbyLogin)return;
+			bullData.hallData.lobbyLogin=true;
+			console.log("after hall bullData.lobbyLogin ==========="+bullData.hallData.lobbyLogin);
 			if(bullData.truthLogin){}
 				bullData.truthLogin=false;
 			this.sentNotification(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString());
 		}
 
 		__proto.returnHallReq=function(){
+			console.log("-----------------back to hall");
+			var bullData=this.getSingleton("Data");
+			bullData.hallData.roomLogin=false;
+			console.log("returnHallReq bullData.roomLogin ==========="+bullData.hallData.roomLogin);
+			return;
 			var proto=this.getModel(/*no*/this.CarProtoModel.NAME);
 			var out=proto.msg_proto.getCS();
 			out.msg_type=ENCSType.CS_TYPE_RETURN_HALL_REQ;
@@ -28848,6 +28907,51 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		return LoginHallCommand;
+	})(Command)
+
+
+	//class bull.modules.common.command.LoginRoomCommand extends com.lightMVC.parrerns.Command
+	var LoginRoomCommand=(function(_super){
+		function LoginRoomCommand(){
+			LoginRoomCommand.__super.call(this);
+		}
+
+		__class(LoginRoomCommand,'bull.modules.common.command.LoginRoomCommand',_super);
+		var __proto=LoginRoomCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="loginRoomRequest"){
+				this.onLoginRoomRqs();
+				}else if(notification.getName()==ENCSType.CS_TYPE_LOGIN_RSP.toString()){
+				this.onLoginRoomRsp(notification.getBody());
+			}
+		}
+
+		__proto.onLoginRoomRqs=function(){
+			console.log("onLoginRoomRqs");
+			var bullData=this.getSingleton("Data");
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=8;
+			out.login_req=proto.msg_proto.getLoginReq();
+			out.login_req.uid=Long.fromNumber(bullData.uid);
+			out.login_req.verify_sig=bullData.token;
+			var socket=this.getModel("roomSocketService");
+			socket.sentMsg(out);
+		}
+
+		//roomData.login=true;
+		__proto.onLoginRoomRsp=function(cs){
+			console.log("room onLoginRoomRsp"+cs);
+			var bullData=this.getSingleton("Data");
+			if (!bullData.hallData.roomLogin)return;
+			bullData.hallData.roomLogin=true;
+			console.log("room bullData.roomLogin ==========="+bullData.hallData.roomLogin);
+			console.log("room bullData.lobbyLogin ==========="+bullData.hallData.lobbyLogin);
+			return;
+		}
+
+		return LoginRoomCommand;
 	})(Command)
 
 
@@ -28880,7 +28984,10 @@ var Laya=window.Laya=(function(window,document){
 		__proto.roomListResponseHandler=function(param){
 			console.log("roomListResponseHandler",param);
 			var bulldata=this.getSingleton("Data");
-			if (param.get_room_list_rsp.error_code !=0)return;
+			if (param.get_room_list_rsp.error_code !=0){
+				Alert.show("无法取得桌资讯!","",AlertPanel);
+				return;
+			};
 			var list=param.get_room_list_rsp.room_infos;
 			var l=list.roominfo.length;
 			var roomList=[];
@@ -29009,6 +29116,8 @@ var Laya=window.Laya=(function(window,document){
 			this.ip=null;
 			this.port=0;
 			this.Token=null;
+			this.lobbyLogin=true;
+			this.roomLogin=false;
 			HallData.__super.call(this);
 		}
 
@@ -29121,17 +29230,25 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.setViewComponent=function(viewComponent){
 			this.viewComponent=viewComponent;
-			console.log("alter view init");
+			console.log("alter  init");
+			this.getAlertPanel().visible=false;
+			Light.layer.top.addChild(this.getAlertPanel());
+			this.getAlertPanel().close_btn.on("click",this,this.onClose);
+			this.getAlertPanel().ok_btn.on("click",this,this.onClose);
+			this.addNotifiction("showAlertPanel");
 		}
 
-		//addNotifiction(BullNotification.SHOW_ALERT_PANEL);
 		__proto.handler=function(notification){
 			if(notification.getName()=="showAlertPanel"){
 				console.log("SHOW_ALERT_PANEL Handler");
+				this.getAlertPanel().show(true);
 			}
 		}
 
-		//}
+		__proto.alertPanelShow=function(param){
+			this.getAlertPanel().show(true);
+		}
+
 		__proto.onClose=function(e){
 			this.getAlertPanel().close();
 		}
@@ -29486,180 +29603,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.room.mediator.BullScenceMediator extends com.lightMVC.parrerns.Mediator
-	var BullScenceMediator=(function(_super){
-		function BullScenceMediator(mediatorName,viewComponent){
-			this.perLoadService=null;
-			this.roomData=null;
-			this.userInfoData=null;
-			this.num=0;
-			this.timer=null;
-			(mediatorName===void 0)&& (mediatorName="");
-			BullScenceMediator.__super.call(this,"BullScenceMediator",viewComponent);
-		}
-
-		__class(BullScenceMediator,'bull.modules.room.mediator.BullScenceMediator',_super);
-		var __proto=BullScenceMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.getInjector=function(){
-			return ["perLoadService","userInfoData"];
-		}
-
-		__proto.setViewComponent=function(viewComponent){
-			_super.prototype.setViewComponent.call(this,viewComponent);
-			console.log("BullScenceMediator setViewComponent")
-			this.view.backLobby.on("click",this,this.onReturnClick);
-			this.view.optionBtn.on("click",this,this.onClick);
-			this.view.setupBtn.on("click",this,this.onClick);
-			this.view.helpBtn.on("click",this,this.onClick);
-			this.view.CarryInBtn.on("click",this,this.onClick);
-			this.view.PlayerListBtn.on("click",this,this.onClick);
-			this.showOrHideBtnGroup(false);
-		}
-
-		/**
-		*点击设置上的按钮
-		*/
-		__proto.onClick=function(e){
-			console.log("onClick:"+e.target);
-			switch(e.target){
-				case this.view.helpBtn:
-					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
-					this.showOrHideBtnGroup(!this.view.btnBg.visible);
-					break ;
-				case this.view.setupBtn:
-					this.sentNotification("car.SHOW_RULE_PANEL");
-					this.showOrHideBtnGroup(!this.view.btnBg.visible);
-					break ;
-				case this.view.CarryInBtn:
-					this.showOrHideBtnGroup(!this.view.btnBg.visible);
-					break ;
-				case this.view.PlayerListBtn:
-					this.showOrHideBtnGroup(!this.view.btnBg.visible);
-					break ;
-				case this.view.optionBtn:
-					this.showOrHideBtnGroup(!this.view.btnBg.visible);
-					break ;
-				}
-		}
-
-		/**
-		*隐藏或显示设置按钮状态
-		*/
-		__proto.showOrHideBtnGroup=function(flag){
-			this.view.btnBg.visible=this.view.setupBtn.visible=this.view.helpBtn.visible=this.view.CarryInBtn.visible=this.view.PlayerListBtn.visible=flag;
-		}
-
-		__proto.handler=function(noti){
-			switch(noti.getName()){
-				case /*no*/this.CarNotification.RoomSocketClose:
-					this.dispose();
-					break ;
-				case /*no*/this.CarNotification.ExitRoomEvent:
-					this.exitRoom();
-				}
-		}
-
-		__proto.getPlayerInfoCallback=function(param){
-			console.log("getPlayerInfoCallback!!!!!!!!!!!!!!!!!!");
-			console.log(param);
-		}
-
-		__proto.sendHeartBeat=function(){
-			this.startHeartCount();
-			this.sendMsg();
-		}
-
-		__proto.sendMsg=function(){
-			if(this.num > 2){
-				this.clearTimer();
-				/*no*/this.roomSocketService.reconnect();
-				return;
-			}
-			this.num++;
-			this.sentNotification(/*no*/this.CarNotification.ROOM_HEART_BEAT);
-		}
-
-		__proto.startHeartCount=function(){
-			if(!this.timer){
-				this.timer=new Timer();
-				this.timer.loop(5000,this,this.sendMsg);
-			}
-		}
-
-		__proto.clearTimer=function(){
-			if(!this.timer)return;
-			this.timer.clear(this,this.sendMsg);
-			this.timer=null;
-			this.num=0;
-		}
-
-		__proto.receiveHeartBeat=function(){
-			this.num=0;
-		}
-
-		__proto.onCarryInClick=function(){
-			this.sentNotification(/*no*/this.CarNotification.GET_USER_BALANCE);
-		}
-
-		__proto.onCZClick=function(e){
-			if(this.roomData.chongzhi)return;
-			this.sentNotification(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_REQ.toString());
-		}
-
-		__proto.onXTClick=function(e){
-			if(this.roomData.xutou)return;
-			this.sentNotification(ENCSType.CS_TYPE_PLAYER_SAVED_BET_REQ.toString());
-		}
-
-		__proto.onBetHandler=function(param){
-			this.sentNotification(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),param);
-		}
-
-		__proto.onUIShow=function(){
-			this.view.roomData=this.roomData;
-			this.view.userInfoData=this.userInfoData;
-			this.roomData.initClipConfig();
-			this.view.initSelectClip();
-			this.view.img_cash.visible=this.view.img_coin.visible=false;
-			this.roomData.chipsType==light.car.modules.common.model.data.MoneyType.CASH ? this.view.img_cash.visible=true :this.view.img_coin.visible=true;
-			this.view.showme();
-		}
-
-		__proto.onUIHide=function(){
-			this.view.hideme();
-		}
-
-		__proto.onReturnClick=function(){
-			console.log("onReturnClick exit room");
-			this.exitRoom();
-		}
-
-		__proto.exitRoomCall=function(data,flg){
-			if(flg=="ok_btn"){
-				this.exitRoom();
-			}
-		}
-
-		__proto.exitRoom=function(){
-			this.perLoadService.loadHall();
-			this.sentNotification(BullNotification.Leave_Game);
-			this.dispose();
-		}
-
-		__proto.dispose=function(){
-			this.view.clear();
-		}
-
-		__getset(0,__proto,'view',function(){
-			return this.getViewComponent();
-		});
-
-		BullScenceMediator.NAME="BullScenceMediator";
-		return BullScenceMediator;
-	})(Mediator)
-
-
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
 	var WebService=(function(_super){
 		function WebService(modelName,data){
@@ -29756,6 +29699,183 @@ var Laya=window.Laya=(function(window,document){
 		WebService.NAME="WebService";
 		return WebService;
 	})(Model)
+
+
+	//class bull.modules.room.mediator.BullScenceMediator extends com.lightMVC.parrerns.Mediator
+	var BullScenceMediator=(function(_super){
+		function BullScenceMediator(mediatorName,viewComponent){
+			this.perLoadService=null;
+			this.roomSocketService=null;
+			this.roomData=null;
+			this.userInfoData=null;
+			this.num=0;
+			this.timer=null;
+			(mediatorName===void 0)&& (mediatorName="");
+			BullScenceMediator.__super.call(this,"BullScenceMediator",viewComponent);
+		}
+
+		__class(BullScenceMediator,'bull.modules.room.mediator.BullScenceMediator',_super);
+		var __proto=BullScenceMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return ["roomSocketService","perLoadService","userInfoData"];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			_super.prototype.setViewComponent.call(this,viewComponent);
+			console.log("BullScenceMediator setViewComponent")
+			this.view.backLobby.on("click",this,this.onReturnClick);
+			this.view.optionBtn.on("click",this,this.onClick);
+			this.view.setupBtn.on("click",this,this.onClick);
+			this.view.helpBtn.on("click",this,this.onClick);
+			this.view.CarryInBtn.on("click",this,this.onClick);
+			this.view.PlayerListBtn.on("click",this,this.onClick);
+			this.showOrHideBtnGroup(false);
+			this.addNotifiction("RoomSocketClose");
+			this.addNotifiction("ExitRoomEvent");
+		}
+
+		/**
+		*点击设置上的按钮
+		*/
+		__proto.onClick=function(e){
+			console.log("onClick:"+e.target);
+			switch(e.target){
+				case this.view.helpBtn:
+					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				case this.view.setupBtn:
+					this.sentNotification("car.SHOW_RULE_PANEL");
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				case this.view.CarryInBtn:
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				case this.view.PlayerListBtn:
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				case this.view.optionBtn:
+					this.showOrHideBtnGroup(!this.view.btnBg.visible);
+					break ;
+				}
+		}
+
+		/**
+		*隐藏或显示设置按钮状态
+		*/
+		__proto.showOrHideBtnGroup=function(flag){
+			this.view.btnBg.visible=this.view.setupBtn.visible=this.view.helpBtn.visible=this.view.CarryInBtn.visible=this.view.PlayerListBtn.visible=flag;
+		}
+
+		__proto.handler=function(noti){
+			switch(noti.getName()){
+				case "RoomSocketClose":
+					this.dispose();
+					break ;
+				case "ExitRoomEvent":
+					this.exitRoom();
+				}
+		}
+
+		__proto.getPlayerInfoCallback=function(param){
+			console.log("getPlayerInfoCallback!!!!!!!!!!!!!!!!!!");
+			console.log(param);
+		}
+
+		__proto.sendHeartBeat=function(){
+			this.startHeartCount();
+			this.sendMsg();
+		}
+
+		__proto.sendMsg=function(){
+			if(this.num > 2){
+				this.clearTimer();
+				this.roomSocketService.reconnect();
+				return;
+			}
+			this.num++;
+			this.sentNotification(/*no*/this.CarNotification.ROOM_HEART_BEAT);
+		}
+
+		__proto.startHeartCount=function(){
+			if(!this.timer){
+				this.timer=new Timer();
+				this.timer.loop(5000,this,this.sendMsg);
+			}
+		}
+
+		__proto.clearTimer=function(){
+			if(!this.timer)return;
+			this.timer.clear(this,this.sendMsg);
+			this.timer=null;
+			this.num=0;
+		}
+
+		__proto.receiveHeartBeat=function(){
+			this.num=0;
+		}
+
+		__proto.onCarryInClick=function(){
+			this.sentNotification(/*no*/this.CarNotification.GET_USER_BALANCE);
+		}
+
+		__proto.onCZClick=function(e){
+			if(this.roomData.chongzhi)return;
+			this.sentNotification(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_REQ.toString());
+		}
+
+		__proto.onXTClick=function(e){
+			if(this.roomData.xutou)return;
+			this.sentNotification(ENCSType.CS_TYPE_PLAYER_SAVED_BET_REQ.toString());
+		}
+
+		__proto.onBetHandler=function(param){
+			this.sentNotification(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),param);
+		}
+
+		__proto.onUIShow=function(){
+			this.view.roomData=this.roomData;
+			this.view.userInfoData=this.userInfoData;
+			this.roomData.initClipConfig();
+			this.view.initSelectClip();
+			this.view.img_cash.visible=this.view.img_coin.visible=false;
+			this.roomData.chipsType==light.car.modules.common.model.data.MoneyType.CASH ? this.view.img_cash.visible=true :this.view.img_coin.visible=true;
+			this.view.showme();
+		}
+
+		__proto.onUIHide=function(){
+			this.view.hideme();
+		}
+
+		__proto.onReturnClick=function(){
+			console.log("onReturnClick exit room");
+			this.exitRoom();
+		}
+
+		__proto.exitRoomCall=function(data,flg){
+			if(flg=="ok_btn"){
+				this.exitRoom();
+			}
+		}
+
+		__proto.exitRoom=function(){
+			this.perLoadService.loadHall();
+			this.sentNotification(BullNotification.Leave_Game);
+			this.dispose();
+		}
+
+		__proto.dispose=function(){
+			this.view.clear();
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.getViewComponent();
+		});
+
+		BullScenceMediator.NAME="BullScenceMediator";
+		return BullScenceMediator;
+	})(Mediator)
 
 
 	//class bull.modules.perload.services.PreLoadService extends com.lightMVC.parrerns.Model
@@ -29895,6 +30015,7 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case "room":
 					console.log("sentNotification","roomSocketConnect");
+					this.sentNotification("roomSocketConnect");
 					break ;
 				default :
 					break ;
@@ -29908,6 +30029,118 @@ var Laya=window.Laya=(function(window,document){
 
 		PreLoadService.NAME="perLoadService";
 		return PreLoadService;
+	})(Model)
+
+
+	//class bull.modules.room.services.RoomSocketService extends com.lightMVC.parrerns.Model
+	var RoomSocketService=(function(_super){
+		function RoomSocketService(modelName,data){
+			this._socket=null;
+			this.bullProtoModel=null;
+			this.num=0;
+			this.timer=null;
+			RoomSocketService.__super.call(this,modelName,data);
+			this._socket=new SocketConnect();
+			this._socket.addEventListener("connect",this,this.onSocketConnect);
+			this._socket.addEventListener("close",this,this.onSocketClose);
+			this._socket.addEventListener("receive",this,this.onMessageReveived);
+			this._socket.addEventListener("connectFail",this,this.onConnectionFailed);
+		}
+
+		__class(RoomSocketService,'bull.modules.room.services.RoomSocketService',_super);
+		var __proto=RoomSocketService.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
+		__proto.onConnectionFailed=function(e){
+			this.sentNotification("roomSocketConnectFailed",e.data);
+		}
+
+		__proto.getInjector=function(){
+			return ["bullProtoModel"];
+		}
+
+		__proto.connect=function(host,port){
+			console.log("游戏socket连接 Ip:",host," Port:",port);
+			this._socket.connect(host,port);
+		}
+
+		__proto.close=function(){
+			this._socket.close();
+		}
+
+		__proto.sentMsg=function(message){
+			if(message.msg_type !=3)
+				console.log("发送消息给服务端：type:",message.msg_type," msg:",message);
+			var byte=message.encode().toBuffer();
+			var builder=this.bullProtoModel.msg_proto.CS_Builer();
+			var temp=builder.decode(byte);
+			var test=new Byte(byte);
+			this._socket.sent(byte);
+		}
+
+		__proto.hasConnected=function(){
+			return this._socket.isConnected();
+		}
+
+		__proto.onSocketConnect=function(e){
+			console.log("房间连接成功");
+			this.clearTimer();
+			this.sentNotification("roomSocketConnectComplete");
+		}
+
+		__proto.onSocketClose=function(e){
+			console.log("onSocketClose");
+			this.sentNotification("RoomSocketClose");
+			this.countRect();
+		}
+
+		// showAlert();/////试图提示用户正在重连中
+		__proto.alertClose=function(){
+			this.sentNotification(/*no*/this.CarNotification.ExitRoomEvent);
+		}
+
+		__proto.onMessageReveived=function(e){
+			var msgbyte=e.data;
+			var input=this.bullProtoModel.msg_proto.CS_Builer().decode(msgbyte.buffer);
+			if(input.msg_type !=4)
+				console.log("房间服务端返回消息 type：",input.msg_type," msg:"+input);
+			else
+			console.log("房间心跳返回消息 type：",input.msg_type," msg:"+input);
+			this.sentNotification(input.msg_type.toString(),input);
+		}
+
+		__proto.reconnect=function(){
+			this.countRect();
+		}
+
+		__proto.countRect=function(){
+			console.log("countRect",this.num,(new Date()).getTime())
+			if(this.num>2){
+				this.clearTimer();
+				Alert.show("网络异常，请检查网络!","",light.car.view.alert.AlertPanel,null,Handler.create(this,this.alertClose));
+				return;
+			}
+			this.startTimer();
+			this.num++;
+			var hallData=this.getSingleton("hallData");
+			this.connect(hallData.ip,hallData.port);
+		}
+
+		__proto.startTimer=function(){
+			if(!this.timer){
+				this.timer=new Timer();
+				this.timer.loop(5000,this,this.countRect);
+			}
+		}
+
+		__proto.clearTimer=function(){
+			if(!this.timer)return;
+			this.timer.clear(this,this.countRect);
+			this.timer=null;
+			this.num=0;
+		}
+
+		RoomSocketService.NAME="roomSocketService";
+		return RoomSocketService;
 	})(Model)
 
 
@@ -31474,23 +31707,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
-
-
 	/**
 	*场景管理器
 	*@author light-k
@@ -31691,6 +31907,23 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
+
+
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -47400,6 +47633,11 @@ var Laya=window.Laya=(function(window,document){
 	//class ui.ui.hall.hallUI extends laya.ui.View
 	var hallUI=(function(_super){
 		function hallUI(){
+			this.backLobby=null;
+			this.btnBg=null;
+			this.optionBtn=null;
+			this.setupBtn=null;
+			this.helpBtn=null;
 			this.Ginit=null;
 			this.GHigh=null;
 			this.GBtn=null;
@@ -47673,11 +47911,6 @@ var Laya=window.Laya=(function(window,document){
 			this._light_97=null;
 			this._light_96=null;
 			this._light_127=null;
-			this.backLobby=null;
-			this.btnBg=null;
-			this.optionBtn=null;
-			this.setupBtn=null;
-			this.helpBtn=null;
 			hallUI.__super.call(this);
 		}
 
@@ -47689,7 +47922,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(hallUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Box","props":{"y":-2,"x":0},"child":[{"type":"Image","props":{"y":2,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Image","props":{"y":5,"x":564,"skin":"res/hall/logo.png"}},{"type":"Image","props":{"y":174,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":175,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":736,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":738,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":136,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"},"child":[{"type":"Sprite","props":{"y":2,"x":73,"width":565,"renderType":"mask","height":25},"child":[{"type":"Rect","props":{"y":-1,"x":4,"width":533,"lineWidth":1,"height":31,"fillColor":"#ff0000"}}]},{"type":"Label","props":{"y":5,"x":614,"var":"mqrqueue","text":"跑馬燈","scaleY":2,"scaleX":2,"color":"#eee7e7"}}]},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Image","props":{"y":173,"x":157,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":174,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":735,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":739,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":425,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":424,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Label","props":{"y":433,"x":204,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":816,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":461,"x":190,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":462,"x":796,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":309,"width":78,"var":"LowRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":271,"width":78,"var":"LowRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":431,"x":922,"width":78,"var":"HighRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":876,"width":78,"var":"HighRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Animation","props":{"y":188,"x":166,"width":0,"var":"stateAni_1","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":187,"x":779,"width":0,"var":"stateAni_2","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":173,"x":163,"width":0,"var":"light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":176,"width":0,"var":"light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":191,"width":0,"var":"light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":206,"width":0,"var":"light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":224,"width":0,"var":"light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":240,"width":0,"var":"light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":256,"width":0,"var":"light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":271,"width":0,"var":"light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":287,"width":0,"var":"light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":302,"width":0,"var":"light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":318,"width":0,"var":"light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":333,"width":0,"var":"light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":350,"width":0,"var":"light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":367,"width":0,"var":"light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":383,"width":0,"var":"light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":399,"width":0,"var":"light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":414,"width":0,"var":"light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":429,"width":0,"var":"light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":446,"width":0,"var":"light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":462,"width":0,"var":"light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":477,"width":0,"var":"light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":494,"width":0,"var":"light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":511,"width":0,"var":"light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":527,"width":0,"var":"light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":543,"width":0,"var":"light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":558,"width":0,"var":"light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":573,"width":0,"var":"light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":591,"width":0,"var":"light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":606,"width":0,"var":"light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":623,"width":0,"var":"light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":640,"width":0,"var":"light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":184,"x":648,"width":0,"var":"light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":199,"x":651,"width":0,"var":"light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":214,"x":651,"width":0,"var":"light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":229,"x":651,"width":0,"var":"light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":651,"width":0,"var":"light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":651,"width":0,"var":"light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":651,"width":0,"var":"light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":294,"x":651,"width":0,"var":"light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":312,"x":651,"width":0,"var":"light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":328,"x":651,"width":0,"var":"light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":345,"x":651,"width":0,"var":"light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":361,"x":651,"width":0,"var":"light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":651,"width":0,"var":"light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":396,"x":651,"width":0,"var":"light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":651,"width":0,"var":"light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":651,"width":0,"var":"light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":651,"width":0,"var":"light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":462,"x":651,"width":0,"var":"light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":479,"x":651,"width":0,"var":"light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":495,"x":651,"width":0,"var":"light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":651,"width":0,"var":"light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":528,"x":651,"width":0,"var":"light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":545,"x":651,"width":0,"var":"light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":560,"x":651,"width":0,"var":"light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":576,"x":651,"width":0,"var":"light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":594,"x":651,"width":0,"var":"light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":610,"x":651,"width":0,"var":"light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":627,"x":651,"width":0,"var":"light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":643,"x":651,"width":0,"var":"light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":660,"x":651,"width":0,"var":"light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":676,"x":651,"width":0,"var":"light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":693,"x":651,"width":0,"var":"light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":708,"x":651,"width":0,"var":"light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":716,"x":641,"width":0,"var":"light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":259,"width":0,"var":"light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":274,"width":0,"var":"light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":290,"width":0,"var":"light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":305,"width":0,"var":"light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":321,"width":0,"var":"light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":336,"width":0,"var":"light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":353,"width":0,"var":"light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":370,"width":0,"var":"light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":386,"width":0,"var":"light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":402,"width":0,"var":"light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":417,"width":0,"var":"light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":432,"width":0,"var":"light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":449,"width":0,"var":"light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":465,"width":0,"var":"light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":480,"width":0,"var":"light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":497,"width":0,"var":"light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":514,"width":0,"var":"light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":530,"width":0,"var":"light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":546,"width":0,"var":"light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":561,"width":0,"var":"light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":576,"width":0,"var":"light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":594,"width":0,"var":"light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":609,"width":0,"var":"light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":626,"width":0,"var":"light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":181,"width":0,"var":"light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":197,"width":0,"var":"light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":213,"width":0,"var":"light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":228,"width":0,"var":"light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":244,"width":0,"var":"light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":714,"x":165,"width":0,"var":"light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":701,"x":156,"width":0,"var":"light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":197,"x":155,"width":0,"var":"light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":211,"x":156,"width":0,"var":"light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":226,"x":156,"width":0,"var":"light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":244,"x":156,"width":0,"var":"light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":156,"width":0,"var":"light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":274,"x":156,"width":0,"var":"light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":290,"x":156,"width":0,"var":"light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":308,"x":156,"width":0,"var":"light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":325,"x":156,"width":0,"var":"light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":342,"x":156,"width":0,"var":"light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":358,"x":156,"width":0,"var":"light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":375,"x":156,"width":0,"var":"light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":394,"x":156,"width":0,"var":"light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":410,"x":156,"width":0,"var":"light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":427,"x":156,"width":0,"var":"light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":445,"x":156,"width":0,"var":"light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":460,"x":156,"width":0,"var":"light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":477,"x":156,"width":0,"var":"light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":493,"x":156,"width":0,"var":"light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":511,"x":156,"width":0,"var":"light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":525,"x":156,"width":0,"var":"light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":541,"x":156,"width":0,"var":"light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":558,"x":156,"width":0,"var":"light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":573,"x":156,"width":0,"var":"light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":590,"x":156,"width":0,"var":"light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":607,"x":156,"width":0,"var":"light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":622,"x":156,"width":0,"var":"light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":637,"x":156,"width":0,"var":"light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":653,"x":156,"width":0,"var":"light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":670,"x":156,"width":0,"var":"light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":686,"x":156,"width":0,"var":"light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":156,"width":0,"var":"light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":778,"width":0,"var":"_light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":791,"width":0,"var":"_light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":806,"width":0,"var":"_light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":821,"width":0,"var":"_light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":839,"width":0,"var":"_light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":855,"width":0,"var":"_light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":871,"width":0,"var":"_light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":886,"width":0,"var":"_light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":902,"width":0,"var":"_light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":917,"width":0,"var":"_light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":933,"width":0,"var":"_light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":948,"width":0,"var":"_light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":965,"width":0,"var":"_light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":982,"width":0,"var":"_light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":998,"width":0,"var":"_light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1014,"width":0,"var":"_light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1029,"width":0,"var":"_light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1044,"width":0,"var":"_light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1061,"width":0,"var":"_light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1077,"width":0,"var":"_light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1092,"width":0,"var":"_light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1109,"width":0,"var":"_light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1126,"width":0,"var":"_light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1142,"width":0,"var":"_light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1158,"width":0,"var":"_light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1173,"width":0,"var":"_light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1188,"width":0,"var":"_light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1206,"width":0,"var":"_light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1221,"width":0,"var":"_light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1238,"width":0,"var":"_light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":1255,"width":0,"var":"_light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":1263,"width":0,"var":"_light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":200,"x":1266,"width":0,"var":"_light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":215,"x":1266,"width":0,"var":"_light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":230,"x":1266,"width":0,"var":"_light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":246,"x":1266,"width":0,"var":"_light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":1266,"width":0,"var":"_light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":276,"x":1266,"width":0,"var":"_light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":295,"x":1266,"width":0,"var":"_light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":313,"x":1266,"width":0,"var":"_light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":329,"x":1266,"width":0,"var":"_light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":346,"x":1266,"width":0,"var":"_light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":362,"x":1266,"width":0,"var":"_light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":377,"x":1266,"width":0,"var":"_light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":397,"x":1266,"width":0,"var":"_light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":412,"x":1266,"width":0,"var":"_light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":429,"x":1266,"width":0,"var":"_light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":447,"x":1266,"width":0,"var":"_light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":463,"x":1266,"width":0,"var":"_light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":480,"x":1266,"width":0,"var":"_light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":496,"x":1266,"width":0,"var":"_light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":513,"x":1266,"width":0,"var":"_light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":529,"x":1266,"width":0,"var":"_light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":546,"x":1266,"width":0,"var":"_light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":561,"x":1266,"width":0,"var":"_light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":577,"x":1266,"width":0,"var":"_light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":595,"x":1266,"width":0,"var":"_light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":611,"x":1266,"width":0,"var":"_light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":628,"x":1266,"width":0,"var":"_light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":644,"x":1266,"width":0,"var":"_light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":661,"x":1266,"width":0,"var":"_light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":677,"x":1266,"width":0,"var":"_light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":694,"x":1266,"width":0,"var":"_light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":709,"x":1266,"width":0,"var":"_light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":717,"x":1256,"width":0,"var":"_light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":874,"width":0,"var":"_light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":889,"width":0,"var":"_light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":905,"width":0,"var":"_light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":920,"width":0,"var":"_light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":936,"width":0,"var":"_light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":951,"width":0,"var":"_light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":968,"width":0,"var":"_light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":985,"width":0,"var":"_light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1001,"width":0,"var":"_light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1017,"width":0,"var":"_light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1032,"width":0,"var":"_light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1047,"width":0,"var":"_light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1064,"width":0,"var":"_light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1080,"width":0,"var":"_light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1095,"width":0,"var":"_light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1112,"width":0,"var":"_light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1129,"width":0,"var":"_light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1145,"width":0,"var":"_light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1161,"width":0,"var":"_light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1176,"width":0,"var":"_light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1191,"width":0,"var":"_light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1209,"width":0,"var":"_light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1224,"width":0,"var":"_light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1241,"width":0,"var":"_light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":796,"width":0,"var":"_light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":812,"width":0,"var":"_light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":828,"width":0,"var":"_light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":843,"width":0,"var":"_light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":859,"width":0,"var":"_light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":715,"x":780,"width":0,"var":"_light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":702,"x":771,"width":0,"var":"_light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":198,"x":770,"width":0,"var":"_light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":212,"x":771,"width":0,"var":"_light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":227,"x":771,"width":0,"var":"_light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":771,"width":0,"var":"_light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":771,"width":0,"var":"_light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":771,"width":0,"var":"_light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":291,"x":771,"width":0,"var":"_light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":309,"x":771,"width":0,"var":"_light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":326,"x":771,"width":0,"var":"_light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":343,"x":771,"width":0,"var":"_light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":359,"x":771,"width":0,"var":"_light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":771,"width":0,"var":"_light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":395,"x":771,"width":0,"var":"_light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":771,"width":0,"var":"_light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":771,"width":0,"var":"_light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":771,"width":0,"var":"_light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":461,"x":771,"width":0,"var":"_light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":478,"x":771,"width":0,"var":"_light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":494,"x":771,"width":0,"var":"_light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":771,"width":0,"var":"_light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":526,"x":771,"width":0,"var":"_light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":542,"x":771,"width":0,"var":"_light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":559,"x":771,"width":0,"var":"_light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":574,"x":771,"width":0,"var":"_light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":591,"x":771,"width":0,"var":"_light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":608,"x":771,"width":0,"var":"_light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":623,"x":771,"width":0,"var":"_light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":638,"x":771,"width":0,"var":"_light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":654,"x":771,"width":0,"var":"_light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":671,"x":771,"width":0,"var":"_light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":687,"x":771,"width":0,"var":"_light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":186,"x":771,"width":0,"var":"_light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}}]},{"type":"Box","props":{"y":0,"x":0},"child":[{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"width":65,"var":"helpBtn","skin":"res/alert/helpBtn.png","height":68}}]}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Box","props":{"y":-1.9999999999999762,"x":0},"child":[{"type":"Image","props":{"y":5.000000000000009,"x":564,"skin":"res/hall/logo.png"},"child":[{"type":"Box","props":{"y":-2.999999999999992,"x":-564},"child":[{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"width":65,"var":"helpBtn","skin":"res/alert/helpBtn.png","height":68}}]}]},{"type":"Image","props":{"y":174,"x":158,"var":"Ginit","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":175,"x":771,"var":"GHigh","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Button","props":{"y":736,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":738,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":136,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"},"child":[{"type":"Sprite","props":{"y":2,"x":73,"width":565,"renderType":"mask","height":25},"child":[{"type":"Rect","props":{"y":-1,"x":4,"width":533,"lineWidth":1,"height":31,"fillColor":"#ff0000"}}]},{"type":"Label","props":{"y":5,"x":614,"var":"mqrqueue","text":"跑馬燈","scaleY":2,"scaleX":2,"color":"#eee7e7"}}]},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Image","props":{"y":173,"x":157,"var":"Minit","skin":"res/hall/img_Minit.png"}},{"type":"Image","props":{"y":174,"x":772,"var":"MHigh","skin":"res/hall/img_MHigh.png"}},{"type":"Button","props":{"y":735,"x":326,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":739,"x":957,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":425,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":424,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Label","props":{"y":433,"x":204,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":816,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":461,"x":190,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":462,"x":796,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":309,"width":78,"var":"LowRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":271,"width":78,"var":"LowRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":431,"x":922,"width":78,"var":"HighRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":876,"width":78,"var":"HighRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Animation","props":{"y":188,"x":166,"width":0,"var":"stateAni_1","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":187,"x":779,"width":0,"var":"stateAni_2","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":173,"x":163,"width":0,"var":"light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":176,"width":0,"var":"light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":191,"width":0,"var":"light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":206,"width":0,"var":"light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":224,"width":0,"var":"light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":240,"width":0,"var":"light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":256,"width":0,"var":"light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":271,"width":0,"var":"light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":287,"width":0,"var":"light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":302,"width":0,"var":"light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":318,"width":0,"var":"light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":333,"width":0,"var":"light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":350,"width":0,"var":"light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":367,"width":0,"var":"light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":383,"width":0,"var":"light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":399,"width":0,"var":"light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":414,"width":0,"var":"light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":429,"width":0,"var":"light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":446,"width":0,"var":"light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":462,"width":0,"var":"light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":477,"width":0,"var":"light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":494,"width":0,"var":"light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":511,"width":0,"var":"light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":527,"width":0,"var":"light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":543,"width":0,"var":"light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":558,"width":0,"var":"light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":573,"width":0,"var":"light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":591,"width":0,"var":"light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":606,"width":0,"var":"light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":623,"width":0,"var":"light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":640,"width":0,"var":"light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":184,"x":648,"width":0,"var":"light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":199,"x":651,"width":0,"var":"light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":214,"x":651,"width":0,"var":"light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":229,"x":651,"width":0,"var":"light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":651,"width":0,"var":"light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":651,"width":0,"var":"light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":651,"width":0,"var":"light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":294,"x":651,"width":0,"var":"light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":312,"x":651,"width":0,"var":"light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":328,"x":651,"width":0,"var":"light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":345,"x":651,"width":0,"var":"light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":361,"x":651,"width":0,"var":"light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":651,"width":0,"var":"light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":396,"x":651,"width":0,"var":"light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":651,"width":0,"var":"light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":651,"width":0,"var":"light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":651,"width":0,"var":"light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":462,"x":651,"width":0,"var":"light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":479,"x":651,"width":0,"var":"light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":495,"x":651,"width":0,"var":"light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":651,"width":0,"var":"light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":528,"x":651,"width":0,"var":"light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":545,"x":651,"width":0,"var":"light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":560,"x":651,"width":0,"var":"light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":576,"x":651,"width":0,"var":"light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":594,"x":651,"width":0,"var":"light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":610,"x":651,"width":0,"var":"light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":627,"x":651,"width":0,"var":"light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":643,"x":651,"width":0,"var":"light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":660,"x":651,"width":0,"var":"light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":676,"x":651,"width":0,"var":"light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":693,"x":651,"width":0,"var":"light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":708,"x":651,"width":0,"var":"light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":716,"x":641,"width":0,"var":"light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":259,"width":0,"var":"light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":274,"width":0,"var":"light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":290,"width":0,"var":"light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":305,"width":0,"var":"light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":321,"width":0,"var":"light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":336,"width":0,"var":"light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":353,"width":0,"var":"light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":370,"width":0,"var":"light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":386,"width":0,"var":"light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":402,"width":0,"var":"light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":417,"width":0,"var":"light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":432,"width":0,"var":"light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":449,"width":0,"var":"light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":465,"width":0,"var":"light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":480,"width":0,"var":"light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":497,"width":0,"var":"light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":514,"width":0,"var":"light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":530,"width":0,"var":"light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":546,"width":0,"var":"light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":561,"width":0,"var":"light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":576,"width":0,"var":"light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":594,"width":0,"var":"light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":609,"width":0,"var":"light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":626,"width":0,"var":"light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":181,"width":0,"var":"light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":197,"width":0,"var":"light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":213,"width":0,"var":"light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":228,"width":0,"var":"light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":244,"width":0,"var":"light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":714,"x":165,"width":0,"var":"light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":701,"x":156,"width":0,"var":"light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":197,"x":155,"width":0,"var":"light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":211,"x":156,"width":0,"var":"light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":226,"x":156,"width":0,"var":"light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":244,"x":156,"width":0,"var":"light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":156,"width":0,"var":"light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":274,"x":156,"width":0,"var":"light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":290,"x":156,"width":0,"var":"light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":308,"x":156,"width":0,"var":"light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":325,"x":156,"width":0,"var":"light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":342,"x":156,"width":0,"var":"light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":358,"x":156,"width":0,"var":"light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":375,"x":156,"width":0,"var":"light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":394,"x":156,"width":0,"var":"light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":410,"x":156,"width":0,"var":"light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":427,"x":156,"width":0,"var":"light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":445,"x":156,"width":0,"var":"light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":460,"x":156,"width":0,"var":"light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":477,"x":156,"width":0,"var":"light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":493,"x":156,"width":0,"var":"light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":511,"x":156,"width":0,"var":"light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":525,"x":156,"width":0,"var":"light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":541,"x":156,"width":0,"var":"light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":558,"x":156,"width":0,"var":"light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":573,"x":156,"width":0,"var":"light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":590,"x":156,"width":0,"var":"light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":607,"x":156,"width":0,"var":"light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":622,"x":156,"width":0,"var":"light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":637,"x":156,"width":0,"var":"light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":653,"x":156,"width":0,"var":"light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":670,"x":156,"width":0,"var":"light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":686,"x":156,"width":0,"var":"light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":156,"width":0,"var":"light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":778,"width":0,"var":"_light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":791,"width":0,"var":"_light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":806,"width":0,"var":"_light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":821,"width":0,"var":"_light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":839,"width":0,"var":"_light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":855,"width":0,"var":"_light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":871,"width":0,"var":"_light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":886,"width":0,"var":"_light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":902,"width":0,"var":"_light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":917,"width":0,"var":"_light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":933,"width":0,"var":"_light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":948,"width":0,"var":"_light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":965,"width":0,"var":"_light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":982,"width":0,"var":"_light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":998,"width":0,"var":"_light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1014,"width":0,"var":"_light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1029,"width":0,"var":"_light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1044,"width":0,"var":"_light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1061,"width":0,"var":"_light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1077,"width":0,"var":"_light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1092,"width":0,"var":"_light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1109,"width":0,"var":"_light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1126,"width":0,"var":"_light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1142,"width":0,"var":"_light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1158,"width":0,"var":"_light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1173,"width":0,"var":"_light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1188,"width":0,"var":"_light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1206,"width":0,"var":"_light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1221,"width":0,"var":"_light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1238,"width":0,"var":"_light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":1255,"width":0,"var":"_light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":1263,"width":0,"var":"_light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":200,"x":1266,"width":0,"var":"_light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":215,"x":1266,"width":0,"var":"_light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":230,"x":1266,"width":0,"var":"_light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":246,"x":1266,"width":0,"var":"_light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":1266,"width":0,"var":"_light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":276,"x":1266,"width":0,"var":"_light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":295,"x":1266,"width":0,"var":"_light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":313,"x":1266,"width":0,"var":"_light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":329,"x":1266,"width":0,"var":"_light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":346,"x":1266,"width":0,"var":"_light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":362,"x":1266,"width":0,"var":"_light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":377,"x":1266,"width":0,"var":"_light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":397,"x":1266,"width":0,"var":"_light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":412,"x":1266,"width":0,"var":"_light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":429,"x":1266,"width":0,"var":"_light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":447,"x":1266,"width":0,"var":"_light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":463,"x":1266,"width":0,"var":"_light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":480,"x":1266,"width":0,"var":"_light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":496,"x":1266,"width":0,"var":"_light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":513,"x":1266,"width":0,"var":"_light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":529,"x":1266,"width":0,"var":"_light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":546,"x":1266,"width":0,"var":"_light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":561,"x":1266,"width":0,"var":"_light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":577,"x":1266,"width":0,"var":"_light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":595,"x":1266,"width":0,"var":"_light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":611,"x":1266,"width":0,"var":"_light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":628,"x":1266,"width":0,"var":"_light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":644,"x":1266,"width":0,"var":"_light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":661,"x":1266,"width":0,"var":"_light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":677,"x":1266,"width":0,"var":"_light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":694,"x":1266,"width":0,"var":"_light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":709,"x":1266,"width":0,"var":"_light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":717,"x":1256,"width":0,"var":"_light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":874,"width":0,"var":"_light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":889,"width":0,"var":"_light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":905,"width":0,"var":"_light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":920,"width":0,"var":"_light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":936,"width":0,"var":"_light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":951,"width":0,"var":"_light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":968,"width":0,"var":"_light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":985,"width":0,"var":"_light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1001,"width":0,"var":"_light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1017,"width":0,"var":"_light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1032,"width":0,"var":"_light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1047,"width":0,"var":"_light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1064,"width":0,"var":"_light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1080,"width":0,"var":"_light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1095,"width":0,"var":"_light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1112,"width":0,"var":"_light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1129,"width":0,"var":"_light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1145,"width":0,"var":"_light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1161,"width":0,"var":"_light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1176,"width":0,"var":"_light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1191,"width":0,"var":"_light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1209,"width":0,"var":"_light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1224,"width":0,"var":"_light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1241,"width":0,"var":"_light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":796,"width":0,"var":"_light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":812,"width":0,"var":"_light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":828,"width":0,"var":"_light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":843,"width":0,"var":"_light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":859,"width":0,"var":"_light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":715,"x":780,"width":0,"var":"_light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":702,"x":771,"width":0,"var":"_light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":198,"x":770,"width":0,"var":"_light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":212,"x":771,"width":0,"var":"_light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":227,"x":771,"width":0,"var":"_light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":771,"width":0,"var":"_light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":771,"width":0,"var":"_light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":771,"width":0,"var":"_light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":291,"x":771,"width":0,"var":"_light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":309,"x":771,"width":0,"var":"_light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":326,"x":771,"width":0,"var":"_light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":343,"x":771,"width":0,"var":"_light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":359,"x":771,"width":0,"var":"_light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":771,"width":0,"var":"_light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":395,"x":771,"width":0,"var":"_light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":771,"width":0,"var":"_light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":771,"width":0,"var":"_light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":771,"width":0,"var":"_light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":461,"x":771,"width":0,"var":"_light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":478,"x":771,"width":0,"var":"_light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":494,"x":771,"width":0,"var":"_light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":771,"width":0,"var":"_light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":526,"x":771,"width":0,"var":"_light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":542,"x":771,"width":0,"var":"_light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":559,"x":771,"width":0,"var":"_light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":574,"x":771,"width":0,"var":"_light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":591,"x":771,"width":0,"var":"_light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":608,"x":771,"width":0,"var":"_light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":623,"x":771,"width":0,"var":"_light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":638,"x":771,"width":0,"var":"_light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":654,"x":771,"width":0,"var":"_light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":671,"x":771,"width":0,"var":"_light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":687,"x":771,"width":0,"var":"_light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":186,"x":771,"width":0,"var":"_light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}}]}]};}
 		]);
 		return hallUI;
 	})(View)
@@ -48934,9 +49167,8 @@ var Laya=window.Laya=(function(window,document){
 	var AlertPanelUI=(function(_super){
 		function AlertPanelUI(){
 			this.close_btn=null;
-			this.txt_label=null;
-			this.cancel_btn=null;
 			this.ok_btn=null;
+			this.txt_label=null;
 			AlertPanelUI.__super.call(this);
 		}
 
@@ -48948,7 +49180,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(AlertPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":318,"height":195},"child":[{"type":"Image","props":{"skin":"res/alert/img_hint.png"}},{"type":"Button","props":{"y":0,"x":405,"var":"close_btn","skin":"res/alert/btn_close.png","name":"close_btn"}},{"type":"Label","props":{"y":115,"x":20,"width":410,"var":"txt_label","text":"label","height":96,"color":"#f1ebea","align":"center"}},{"type":"Button","props":{"y":232,"x":283,"var":"cancel_btn","skin":"assetsIn/cancel.png"}},{"type":"Label","props":{"y":8,"x":190,"width":59,"text":"温馨提示","scaleY":1.5,"scaleX":1.5,"height":19,"color":"#f4e6e6"}},{"type":"Button","props":{"y":232,"x":87,"var":"ok_btn","skin":"assetsIn/ok.png"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":273},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_hint.png"}},{"type":"Button","props":{"y":0,"x":405,"var":"close_btn","skin":"res/alert/btn_close.png","name":"close_btn"}},{"type":"Button","props":{"y":232,"x":183,"var":"ok_btn","skin":"assetsIn/ok.png","name":"ok_btn"}},{"type":"Label","props":{"y":115,"x":20,"width":410,"var":"txt_label","text":"label","height":96,"color":"#f1ebea","align":"center"}},{"type":"Label","props":{"y":8,"x":190,"width":59,"text":"温馨提示","scaleY":1.5,"scaleX":1.5,"height":19,"color":"#f4e6e6"}}]};}
 		]);
 		return AlertPanelUI;
 	})(Dialog)
@@ -49036,7 +49268,8 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onReturnClick=function(e){}
-		//Alert.show(Light.error.getError("2"),"",AlertPanel);
+		// TODO Auto Generated method stub
+		__proto.callCarryInPanel=function(data,flg){}
 		__proto.show_G=function(){
 			this.Ginit.visible=this.GHigh.visible=this.GLowEnter.visible=this.GHighEnter.visible=true;
 			this.Minit.visible=this.MHigh.visible=this.MLowEnter.visible=this.MHighEnter.visible=false;
@@ -49454,26 +49687,6 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
-	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
-	var NodeTreeSetting=(function(_super){
-		function NodeTreeSetting(){
-			NodeTreeSetting.__super.call(this);
-			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
-			this.createView(NodeTreeSettingUI.uiView);
-		}
-
-		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
-		var __proto=NodeTreeSetting.prototype;
-		//inits();
-		__proto.createChildren=function(){}
-		return NodeTreeSetting;
-	})(NodeTreeSettingUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
 	//class laya.debug.view.nodeInfo.nodetree.NodeTree extends laya.debug.ui.debugui.NodeTreeUI
 	var NodeTree=(function(_super){
 		function NodeTree(){
@@ -49711,6 +49924,26 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return NodeTree;
 	})(NodeTreeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
+	var NodeTreeSetting=(function(_super){
+		function NodeTreeSetting(){
+			NodeTreeSetting.__super.call(this);
+			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
+			this.createView(NodeTreeSettingUI.uiView);
+		}
+
+		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
+		var __proto=NodeTreeSetting.prototype;
+		//inits();
+		__proto.createChildren=function(){}
+		return NodeTreeSetting;
+	})(NodeTreeSettingUI)
 
 
 	/**
@@ -50036,14 +50269,12 @@ var Laya=window.Laya=(function(window,document){
 			for (var i=0;i < l;i++){
 				child=this.getChildAt(i);
 				if (((this.getChildAt(i))instanceof laya.ui.Button )){
-					console.log("child is btn");
 					child.on("mousedown",this,this._$8_onClick);
 				}
 			}
 		}
 
 		__proto._$8_onClick=function(e){
-			console.log("e.target.name = "+e.target.name);
 			this.event("close",e.target.name);
 		}
 
@@ -50357,27 +50588,23 @@ var Laya=window.Laya=(function(window,document){
 5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (74):warning:CarNotification.ENTER_ROOM This variable is not defined.
 6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (84):warning:CarNotification.SHOW_CARRY_IN_PANEL This variable is not defined.
 7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (175):warning:CarNotification.ENTER_ROOM This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/JoinRoomCommand.as (66):warning:Alert.show This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/JoinRoomCommand.as (66):warning:Light.error.getError This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (74):warning:CarProtoModel.NAME This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (84):warning:roomSocketService.close This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (113):warning:CarNotification.RoomSocketClose This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (116):warning:CarNotification.ExitRoomEvent This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (135):warning:roomSocketService.reconnect This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (139):warning:CarNotification.ROOM_HEART_BEAT This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (162):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
-27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
-28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
-29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
-30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (96):warning:CarProtoModel.NAME This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (84):warning:roomSocketService.close This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (144):warning:CarNotification.ROOM_HEART_BEAT This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (167):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
 */

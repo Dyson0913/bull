@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":446,
-    "selecteID":5,
+    "selectedBox":1,
+    "selecteID":447,
     "props":{"width":1420,"text":"房间限红:","sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -21,8 +21,29 @@
     "child":[
         {
             "x":15,
+            "type":"Image",
+            "props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"},
+            "nodeParent":1,
+            "label":"Image(bg)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":2,
+            "child":[
+                ],
+            "$LOCKED":false
+        },
+        {
+            "x":15,
             "type":"Box",
-            "props":{"y":-2,"x":0},
+            "props":{"y":-1.9999999999999762,"x":0},
             "nodeParent":1,
             "label":"Box",
             "isOpen":true,
@@ -41,33 +62,13 @@
                 {
                     "x":30,
                     "type":"Image",
-                    "props":{"y":2,"skin":"res/hall/bg.jpg","name":"bg"},
-                    "nodeParent":446,
-                    "label":"Image(bg)",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{},
-                            "frame":0,
-                            "__InPool":false
-                        }],
-                    "compId":2,
-                    "child":[
-                        ],
-                    "$LOCKED":false
-                },
-                {
-                    "x":30,
-                    "type":"Image",
-                    "props":{"y":5,"x":564,"skin":"res/hall/logo.png"},
+                    "props":{"y":5.000000000000009,"x":564,"skin":"res/hall/logo.png"},
                     "nodeParent":446,
                     "label":"Image",
-                    "isDirectory":false,
+                    "isOpen":true,
+                    "isDirectory":true,
                     "isAniNode":true,
-                    "hasChild":false,
+                    "hasChild":true,
                     "frames":[
                         {
                             "type":1,
@@ -77,7 +78,124 @@
                         }],
                     "compId":5,
                     "child":[
-                        ]
+                        {
+                            "x":45,
+                            "type":"Box",
+                            "props":{"y":-2.999999999999992,"x":-564},
+                            "nodeParent":5,
+                            "label":"Box",
+                            "isOpen":false,
+                            "isDirectory":true,
+                            "isAniNode":true,
+                            "hasChild":true,
+                            "frames":[
+                                {
+                                    "type":1,
+                                    "props":{"y":0,"x":0},
+                                    "frame":0,
+                                    "__InPool":false
+                                }],
+                            "compId":444,
+                            "child":[
+                                {
+                                    "type":"Button",
+                                    "props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"},
+                                    "nodeParent":444,
+                                    "label":"Button(backLobby)",
+                                    "isOpen":true,
+                                    "isDirectory":false,
+                                    "isAniNode":true,
+                                    "hasChild":false,
+                                    "frames":[
+                                        {
+                                            "type":1,
+                                            "props":{"label":"label"},
+                                            "frame":0,
+                                            "__InPool":false
+                                        }],
+                                    "compId":4,
+                                    "child":[
+                                        ]
+                                },
+                                {
+                                    "type":"Image",
+                                    "props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195},
+                                    "nodeParent":444,
+                                    "label":"Image(btnBg)",
+                                    "isDirectory":false,
+                                    "isAniNode":true,
+                                    "hasChild":false,
+                                    "frames":[
+                                        {
+                                            "type":1,
+                                            "props":{},
+                                            "frame":0,
+                                            "__InPool":false
+                                        }],
+                                    "compId":29,
+                                    "child":[
+                                        ]
+                                },
+                                {
+                                    "type":"Button",
+                                    "props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"},
+                                    "nodeParent":444,
+                                    "label":"Button(optionBtn)",
+                                    "isOpen":true,
+                                    "isDirectory":false,
+                                    "isAniNode":true,
+                                    "hasChild":false,
+                                    "frames":[
+                                        {
+                                            "type":1,
+                                            "props":{"label":"label"},
+                                            "frame":0,
+                                            "__InPool":false
+                                        }],
+                                    "compId":6,
+                                    "child":[
+                                        ]
+                                },
+                                {
+                                    "type":"Button",
+                                    "props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"},
+                                    "nodeParent":444,
+                                    "label":"Button(setupBtn)",
+                                    "isDirectory":false,
+                                    "isAniNode":true,
+                                    "hasChild":false,
+                                    "frames":[
+                                        {
+                                            "type":1,
+                                            "props":{"label":"label"},
+                                            "frame":0,
+                                            "__InPool":false
+                                        }],
+                                    "compId":7,
+                                    "child":[
+                                        ]
+                                },
+                                {
+                                    "type":"Button",
+                                    "props":{"y":223,"x":1345,"width":65,"var":"helpBtn","skin":"res/alert/helpBtn.png","height":68},
+                                    "nodeParent":444,
+                                    "label":"Button(helpBtn)",
+                                    "isDirectory":false,
+                                    "isAniNode":true,
+                                    "hasChild":false,
+                                    "frames":[
+                                        {
+                                            "type":1,
+                                            "props":{"label":"label"},
+                                            "frame":0,
+                                            "__InPool":false
+                                        }],
+                                    "compId":8,
+                                    "child":[
+                                        ]
+                                }],
+                            "$HIDDEN":false
+                        }]
                 },
                 {
                     "x":30,
@@ -413,6 +531,7 @@
                     "props":{"y":424,"x":795,"skin":"res/share/tip_bg.png"},
                     "nodeParent":446,
                     "label":"Image",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -602,6 +721,7 @@
                     "props":{"y":188,"x":166,"width":0,"var":"stateAni_1","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(stateAni_1)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -963,6 +1083,7 @@
                     "props":{"y":172,"x":414,"width":0,"var":"light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(light_16)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -1343,6 +1464,7 @@
                     "props":{"y":245,"x":651,"width":0,"var":"light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(light_35)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -1783,6 +1905,7 @@
                     "props":{"y":610,"x":651,"width":0,"var":"light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(light_57)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -2143,6 +2266,7 @@
                     "props":{"y":718,"x":417,"width":0,"var":"light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(light_78)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -2443,6 +2567,7 @@
                     "props":{"y":718,"x":197,"width":0,"var":"light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(light_92)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -2743,6 +2868,7 @@
                     "props":{"y":342,"x":156,"width":0,"var":"light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(light_117)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -3183,6 +3309,7 @@
                     "props":{"y":185,"x":156,"width":0,"var":"light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(light_127)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -3503,6 +3630,7 @@
                     "props":{"y":173,"x":1014,"width":0,"var":"_light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_15)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -3803,6 +3931,7 @@
                     "props":{"y":174,"x":1255,"width":0,"var":"_light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_30)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -4283,6 +4412,7 @@
                     "props":{"y":561,"x":1266,"width":0,"var":"_light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_54)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -4483,6 +4613,7 @@
                     "props":{"y":717,"x":1256,"width":0,"var":"_light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_64)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -4543,6 +4674,7 @@
                     "props":{"y":719,"x":905,"width":0,"var":"_light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_86)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -4803,6 +4935,7 @@
                     "props":{"y":719,"x":1112,"width":0,"var":"_light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_73)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -4843,6 +4976,7 @@
                     "props":{"y":719,"x":1145,"width":0,"var":"_light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_71)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -4923,6 +5057,7 @@
                     "props":{"y":719,"x":1209,"width":0,"var":"_light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_67)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -5083,6 +5218,7 @@
                     "props":{"y":715,"x":780,"width":0,"var":"_light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_94)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -5243,6 +5379,7 @@
                     "props":{"y":291,"x":771,"width":0,"var":"_light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_120)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -5303,6 +5440,7 @@
                     "props":{"y":343,"x":771,"width":0,"var":"_light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_117)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -5323,6 +5461,7 @@
                     "props":{"y":359,"x":771,"width":0,"var":"_light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0},
                     "nodeParent":446,
                     "label":"Animation(_light_116)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -5756,129 +5895,8 @@
                     "compId":443,
                     "child":[
                         ]
-                }]
-        },
-        {
-            "x":15,
-            "type":"Box",
-            "props":{"y":0,"x":0},
-            "nodeParent":1,
-            "label":"Box",
-            "isOpen":true,
-            "isDirectory":true,
-            "isAniNode":true,
-            "hasChild":true,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":0,"x":0},
-                    "frame":0,
-                    "__InPool":false
                 }],
-            "compId":444,
-            "child":[
-                {
-                    "x":30,
-                    "type":"Button",
-                    "props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"},
-                    "nodeParent":444,
-                    "label":"Button(backLobby)",
-                    "isOpen":true,
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{"label":"label"},
-                            "frame":0,
-                            "__InPool":false
-                        }],
-                    "compId":4,
-                    "child":[
-                        ]
-                },
-                {
-                    "x":30,
-                    "type":"Image",
-                    "props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195},
-                    "nodeParent":444,
-                    "label":"Image(btnBg)",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{},
-                            "frame":0,
-                            "__InPool":false
-                        }],
-                    "compId":29,
-                    "child":[
-                        ]
-                },
-                {
-                    "x":30,
-                    "type":"Button",
-                    "props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"},
-                    "nodeParent":444,
-                    "label":"Button(optionBtn)",
-                    "isOpen":true,
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{"label":"label"},
-                            "frame":0,
-                            "__InPool":false
-                        }],
-                    "compId":6,
-                    "child":[
-                        ]
-                },
-                {
-                    "x":30,
-                    "type":"Button",
-                    "props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"},
-                    "nodeParent":444,
-                    "label":"Button(setupBtn)",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{"label":"label"},
-                            "frame":0,
-                            "__InPool":false
-                        }],
-                    "compId":7,
-                    "child":[
-                        ]
-                },
-                {
-                    "x":30,
-                    "type":"Button",
-                    "props":{"y":223,"x":1345,"width":65,"var":"helpBtn","skin":"res/alert/helpBtn.png","height":68},
-                    "nodeParent":444,
-                    "label":"Button(helpBtn)",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{"label":"label"},
-                            "frame":0,
-                            "__InPool":false
-                        }],
-                    "compId":8,
-                    "child":[
-                        ]
-                }]
+            "$HIDDEN":false
         }],
     "animations":[
         {

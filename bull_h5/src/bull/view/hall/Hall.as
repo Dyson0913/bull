@@ -5,6 +5,7 @@ package bull.view.hall
 	import conf.SRoomInfo;
 	import conf.SRoomInfos;
 	import laya.events.Event;
+	import laya.utils.Color;
 	import laya.utils.Handler;
 	import laya.utils.Tween;
 	import laya.utils.Ease;	
@@ -70,8 +71,9 @@ package bull.view.hall
 		private function onReturnClick(e:Event):void
 		{
 			// TODO Auto Generated method stub			
-			//Alert.show(Light.error.getError("2"), "", AlertPanel);
-			 
+		}
+		
+		private function callCarryInPanel(data:int,flg:String):void{
 			
 		}
 		

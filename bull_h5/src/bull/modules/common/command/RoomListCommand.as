@@ -6,6 +6,10 @@ package bull.modules.common.command
 	import conf.SRoomConfig;
 	import conf.SRoomInfos;
 	
+	import com.lightUI.core.Light;
+	import com.lightUI.components.alert.Alert;
+	import bull.view.alert.AlertPanel;
+	
 	import bull.modules.common.model.BullProtoModel;
 	import bull.modules.common.model.data.Data;
 	import bull.modules.common.model.data.vo.HallRoomVO;
@@ -46,8 +50,11 @@ package bull.modules.common.command
 			
 			var bulldata:Data = getSingleton(Data.NAME) as Data;
 			
-			//TODO error handle
-			if ( param.get_room_list_rsp.error_code != 0) return;
+			if ( param.get_room_list_rsp.error_code != 0)
+			{
+				Alert.show("无法取得桌资讯!", "", AlertPanel);
+				return;
+			}
 			
 			var list:SRoomInfos = param.get_room_list_rsp.room_infos as SRoomInfos;
 			var l:int = list.roominfo.length;
@@ -59,6 +66,11 @@ package bull.modules.common.command
 			bulldata.hallData.roomList = roomList;
 			
 			//TODO 己經在桌內處理
+			//if ( param.get_room_list_rsp.room_type)
+			//{
+				//Alert.show("己經在遊戲!", "", AlertPanel);
+			//}
+			
 		}
 	}
 }

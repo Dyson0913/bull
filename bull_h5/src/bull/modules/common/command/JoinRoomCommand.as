@@ -6,6 +6,9 @@ package bull.modules.common.command
 	import conf.SRoomConfig;
 	import conf.SRoomInfo;
 	
+	import com.lightUI.core.Light;
+	import com.lightUI.components.alert.Alert;
+	import bull.view.alert.AlertPanel;
 	
 	import bull.events.BullNotification;
 	import bull.modules.common.model.data.Data;
@@ -62,7 +65,7 @@ package bull.modules.common.command
 				hallData.Token = e.try_enter_table_rsp.token;
 				
 				sentNotification(BullNotification.GET_USER_BALANCE, true);
-//				(getModel(HallSocketService.NAME) as HallSocketService).close();
+				(getModel(HallSocketService.NAME) as HallSocketService).close();
 			}else{
 				trace("error code: " + e.try_enter_table_rsp.error_code);
 				Alert.show(Light.error.getError(e.try_enter_table_rsp.error_code.toString()),"",AlertPanel);

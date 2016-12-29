@@ -30,12 +30,14 @@ package bull.modules.room.mediator
 	import light.car.view.alert.AlertCancelPanel;
 	import bull.view.room.BullScene;
 	
+	import bull.modules.common.model.data.Data;
+	
 	import msg.ENCSType;
 	
 	public class BullScenceMediator extends Mediator implements IMediator
 	{
 		public var perLoadService:PreLoadService;
-		//public var roomSocketService:RoomSocketService;
+		public var roomSocketService:RoomSocketService;
 		public var roomData:RoomData;
 		public var userInfoData:UserInfoData;
 		private var num:int;
@@ -48,7 +50,7 @@ package bull.modules.room.mediator
 		}
 		
 		override public function getInjector():Array{
-			return ["perLoadService","userInfoData"];
+			return ["roomSocketService","perLoadService","userInfoData"];
 		}
 		
 		override public function setViewComponent(viewComponent:Object):void{
@@ -70,8 +72,8 @@ package bull.modules.room.mediator
 			
 			showOrHideBtnGroup(false);
 			
-			//addNotifiction(CarNotification.RoomSocketClose);
-			//addNotifiction(CarNotification.ExitRoomEvent);
+			addNotifiction(BullNotification.RoomSocketClose);
+			addNotifiction(BullNotification.ExitRoomEvent);
 		}
 		
 		/**
@@ -117,10 +119,10 @@ package bull.modules.room.mediator
 		{
 			switch(noti.getName())
 			{
-				case CarNotification.RoomSocketClose:
+				case BullNotification.RoomSocketClose:
 					dispose();
 					break;
-				case CarNotification.ExitRoomEvent:
+				case BullNotification.ExitRoomEvent:
 					exitRoom();
 			}
 		}
@@ -219,7 +221,8 @@ package bull.modules.room.mediator
 			}
 		}
 		
-		public function exitRoom():void{
+		public function exitRoom():void {
+				
 			perLoadService.loadHall();
 			sentNotification(BullNotification.Leave_Game);
 			dispose();

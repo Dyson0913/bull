@@ -22,6 +22,8 @@ package bull.modules.common.model.data
 		
 		public var injector:Array = ["hallData","userInfoData"];
 		
+		
+		
 		public function Data()
 		{
 			super();

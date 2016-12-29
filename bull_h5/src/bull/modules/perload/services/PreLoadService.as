@@ -179,7 +179,7 @@ package bull.modules.perload.services
 				break;				
 				case "room":
 					trace("sentNotification",BullNotification.ROOM_SOCKET_CONNECT);					
-					//sentNotification(BullNotification.ROOM_SOCKET_CONNECT);
+					sentNotification(BullNotification.ROOM_SOCKET_CONNECT);
 					break;
 				default:
 					break;

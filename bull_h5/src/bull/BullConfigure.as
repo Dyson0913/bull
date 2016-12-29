@@ -20,11 +20,10 @@ package bull
 	//import light.car.modules.common.command.BetSameAsLastTimeCommand;
 	//import light.car.modules.common.command.CommitRoundCommand;
 	
-	//import light.car.modules.common.command.ConnectRoomCommand;	
+	import bull.modules.common.command.ConnectRoomCommand;	
 	//import light.car.modules.common.command.HeartBeatCommand;
 	import bull.modules.common.command.JoinRoomCommand;
-	
-	//import light.car.modules.common.command.LoginRoomCommand;
+	import bull.modules.common.command.LoginRoomCommand;	
 	//import light.car.modules.common.command.RoomConfigCommand;
 	
 	//import light.car.modules.common.command.SettlementRoundCommand;
@@ -49,7 +48,7 @@ package bull
 	//import light.car.modules.room.command.CarryInCommand;
 	import bull.modules.room.command.EnterRoomCommand;
 	import bull.modules.room.mediator.BullScenceMediator;
-	//import light.car.modules.room.services.RoomSocketService;
+	import bull.modules.room.services.RoomSocketService;
 	import bull.view.alert.AlertPanel;
 	import bull.view.alert.MusicSetPanel;
 	import bull.view.alert.RulePanel;
@@ -84,6 +83,7 @@ package bull
 			//大廳登入
 			registerCommand(BullNotification.LOGIN_HALL_RQS, LoginHallCommand);
 			registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(), LoginHallCommand);
+			registerCommand(BullNotification.Leave_Game, LoginHallCommand);
 			
 			//要求桌列表
 			registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString(), RoomListCommand);
@@ -96,15 +96,17 @@ package bull
 			//向平台檢查金額
 			registerCommand(BullNotification.GET_USER_BALANCE, UserBalanceCommand);
 			
+			//進入遊戲
 			registerCommand(BullNotification.ENTER_ROOM, EnterRoomCommand);
 			
-			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT, ConnectRoomCommand);
-			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT_COMPLETE, ConnectRoomCommand);
-			//registerCommand(CarNotification.ROOM_SOCKET_CONNECT_FAILED, ConnectRoomCommand);		
+			//連接遊戲SERVER
+			registerCommand(BullNotification.ROOM_SOCKET_CONNECT, ConnectRoomCommand);
+			registerCommand(BullNotification.ROOM_SOCKET_CONNECT_COMPLETE, ConnectRoomCommand);
+			registerCommand(BullNotification.ROOM_SOCKET_CONNECT_FAILED, ConnectRoomCommand);		
 			
-			
-			//registerCommand(CarNotification.LOGIN_ROOM_RQS, LoginRoomCommand);
-			//registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(), LoginRoomCommand);
+			//遊戲登入
+			registerCommand(BullNotification.LOGIN_ROOM_RQS, LoginRoomCommand);
+			registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(), LoginRoomCommand);
 			//			
 			//
 			
@@ -150,7 +152,7 @@ package bull
 			registerModel(new PreLoadService(PreLoadService.NAME));
 			registerModel(new BullProtoModel(BullProtoModel.NAME));
 			registerModel(new HallSocketService(HallSocketService.NAME));
-			//registerModel(new RoomSocketService(RoomSocketService.NAME));
+			registerModel(new RoomSocketService(RoomSocketService.NAME));
 			
 			registerModel(new WebService(WebService.NAME));
 			//registerModel(new CarModel(CarModel.NAME,new CarData()));
@@ -168,9 +170,10 @@ package bull
 			registerMediator(new SmallLoadingMediator(SmallLoadingMediator.NAME,SmallLoading));
 			registerMediator(new TipsLoadMediator(TipsLoadMediator.NAME), TipsLoadPanel);
 			registerMediator(new HallMediator(HallMediator.NAME),Hall);
-			registerMediator(new BullScenceMediator(BullScenceMediator.NAME),BullScene);
-			registerMediator(new AssetInMediator(AssetInMediator.NAME),AssetsInPanel);
+			registerMediator(new BullScenceMediator(BullScenceMediator.NAME), BullScene);
 			registerMediator(new AlertMediator(AlertMediator.NAME),AlertPanel);
+			registerMediator(new AssetInMediator(AssetInMediator.NAME),AssetsInPanel);
+			
 			
 			registerMediator(new MusicSetMediator(MusicSetMediator.NAME),MusicSetPanel);
 			registerMediator(new RuleMediator(RuleMediator.NAME),RulePanel);

@@ -47,6 +47,13 @@ package bull.modules.common.command
 		private function hallLoginReqHandler():void{
 			
 			var bullData:Data = getSingleton(Data.NAME) as Data;
+			
+			bullData.hallData.lobbyLogin = false;
+			
+			trace("lobby bullData.roomLogin ===========" + bullData.hallData.lobbyLogin);		
+			
+			
+			
 			bullData.truthLogin = true;
 			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
 			var out:CS = proto.msg_proto.getCS();			
@@ -61,8 +68,17 @@ package bull.modules.common.command
 		}
 		
 		private function hallLoginRspHandler(msg:CS):void{
-			trace("hallLoginRspHandler",msg);
+			trace("hall hallLoginRspHandler",msg);
 			var bullData:Data = getSingleton(Data.NAME) as Data;
+			
+			trace("hall bullData.roomLogin ===========" + bullData.hallData.roomLogin);
+			trace("hall bullData.lobbyLogin ===========" + bullData.hallData.lobbyLogin);
+			
+			if ( bullData.hallData.lobbyLogin ) return;
+			bullData.hallData.lobbyLogin = true;
+						
+			trace("after hall bullData.lobbyLogin ===========" + bullData.hallData.lobbyLogin);
+			
 			if(bullData.truthLogin){
 				//(getMediator(HallMediator.NAME) as HallMediator).sendHeartBeat();				
 			}
@@ -74,6 +90,12 @@ package bull.modules.common.command
 		
 		private function returnHallReq():void
 		{
+			trace("-----------------back to hall");
+			var bullData:Data = getSingleton(Data.NAME) as Data;
+			bullData.hallData.roomLogin = false;
+			trace("returnHallReq bullData.roomLogin ===========" + bullData.hallData.roomLogin);
+			return;
+			
 			var proto:CarProtoModel = getModel(CarProtoModel.NAME) as CarProtoModel;
 			var out:CS = proto.msg_proto.getCS();
 			out.msg_type = ENCSType.CS_TYPE_RETURN_HALL_REQ;
