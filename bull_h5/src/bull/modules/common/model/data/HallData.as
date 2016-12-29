@@ -21,8 +21,7 @@ package bull.modules.common.model.data
 		public var port:int
 		public var Token:Long;
 		
-		public var lobbyLogin:Boolean = true;
-		public var roomLogin:Boolean = false;
+		public var ViewIn:String = "Lobby";
 		
 		
 		public function getHallRoomInfoById(tableId:int):HallRoomVO{

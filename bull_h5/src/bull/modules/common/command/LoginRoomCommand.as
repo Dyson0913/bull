@@ -42,6 +42,7 @@ package bull.modules.common.command
 			trace("onLoginRoomRqs");
 			
 			var bullData:Data = getSingleton(Data.NAME) as Data;			
+			bullData.hallData.ViewIn = "game";
 			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
 			var out:CS = proto.msg_proto.getCS();			
 			out.msg_type = ENCSType.CS_TYPE_LOGIN_REQ;
@@ -74,18 +75,19 @@ package bull.modules.common.command
 			
 			trace("room onLoginRoomRsp" + cs);								
 			
-			var bullData:Data = getSingleton(Data.NAME) as Data;
-			if ( !bullData.hallData.roomLogin ) return;
-						
+			var bullData:Data = getSingleton(Data.NAME) as Data;			
+			if ( bullData.hallData.ViewIn != "game")
+			{
+				trace("room 目前在大廳 return");
+				return;
+			}			
+			
 			//TODO
 			//(getMediator(BullScenceMediator.NAME) as BullScenceMediator).sendHeartBeat();			
-			bullData.hallData.roomLogin = true;
-			trace("room bullData.roomLogin ===========" + bullData.hallData.roomLogin);
-			trace("room bullData.lobbyLogin ===========" + bullData.hallData.lobbyLogin);
+			bullData.hallData.roomLogin = false;
 			
 			//請求房間列表
-			//sentNotification(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString());	
-			
+			sentNotification(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString());						
 			return;
 			
 			//var carData:CarData = getSingleton(CarData.NAME) as CarData;

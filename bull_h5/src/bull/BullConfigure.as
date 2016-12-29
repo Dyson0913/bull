@@ -22,6 +22,7 @@ package bull
 	
 	import bull.modules.common.command.ConnectRoomCommand;	
 	//import light.car.modules.common.command.HeartBeatCommand;
+	import bull.modules.common.command.TryJoinRoomCommand;
 	import bull.modules.common.command.JoinRoomCommand;
 	import bull.modules.common.command.LoginRoomCommand;	
 	//import light.car.modules.common.command.RoomConfigCommand;
@@ -90,8 +91,8 @@ package bull
 			registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString(), RoomListCommand);
 			
 			//請求加入房間
-			registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString(), JoinRoomCommand);
-			registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_RSP.toString(), JoinRoomCommand);
+			registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString(), TryJoinRoomCommand);
+			registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_RSP.toString(), TryJoinRoomCommand);
 			
 			//向平台檢查金額
 			registerCommand(BullNotification.GET_USER_BALANCE, UserBalanceCommand);
@@ -107,11 +108,9 @@ package bull
 			//遊戲登入
 			registerCommand(BullNotification.LOGIN_ROOM_RQS, LoginRoomCommand);
 			registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(), LoginRoomCommand);
-			//			
-			//
 			
-			
-			//
+			registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString(), JoinRoomCommand);
+			registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(), JoinRoomCommand);
 			
 			
 //			registerCommand(MessageID.ROOM_CONFIG_NOTIFY.toString(), RoomConfigCommand);
