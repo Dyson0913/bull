@@ -14,6 +14,8 @@ package bull.modules.room.mediator
 	import laya.resource.Texture;
 	import laya.utils.Handler;
 	import laya.utils.Timer;
+	import laya.utils.Tween;
+	import laya.utils.Ease;	
 	
 	import bull.events.BullNotification;
 	import light.car.events.CarSceneEvent;
@@ -59,21 +61,29 @@ package bull.modules.room.mediator
 			view.backLobby.on(Event.CLICK, this,onReturnClick);
 			
 			
-			//view.on(ScenceManagerEvent.UI_SHOW,this, onUIShow);
-			//view.on(ScenceManagerEvent.UI_HIDE,this, onUIHide);
+			view.on(ScenceManagerEvent.UI_SHOW,this, onUIShow);
+			view.on(ScenceManagerEvent.UI_HIDE,this, onUIHide);
 			//view.on(CarSceneEvent.START_BET, this, onBetHandler);
 			
 			view.optionBtn.on(Event.CLICK, this, onClick);
 			view.setupBtn.on(Event.CLICK, this, onClick);
 			view.helpBtn.on(Event.CLICK,this, onClick);			
 			view.CarryInBtn.on(Event.CLICK,this, onClick);			
-			view.PlayerListBtn.on(Event.CLICK,this, onClick);
+			view.PlayerListBtn.on(Event.CLICK, this, onClick);					
+			view.btn_display(false);
 			
 			
-			showOrHideBtnGroup(false);
+			
+			
 			
 			addNotifiction(BullNotification.RoomSocketClose);
 			addNotifiction(BullNotification.ExitRoomEvent);
+		}
+		
+		
+		override public function onInitialize():void 
+		{ 
+			trace("===========================init");
 		}
 		
 		/**
@@ -86,34 +96,34 @@ package bull.modules.room.mediator
 			{
 				case view.helpBtn:
 					sentNotification(MusicSetMediator.SHOW_MUSIC_SET_PANEL);
-					showOrHideBtnGroup(!view.btnBg.visible);
+					view.btn_display(!view.btnBg.visible);
 				break;					
 				case view.setupBtn:
 					sentNotification(RuleMediator.SHOW_RULE_PANEL);
-					showOrHideBtnGroup(!view.btnBg.visible);
+					view.btn_display(!view.btnBg.visible);
 				break;
 				
 				case view.CarryInBtn:
-					showOrHideBtnGroup(!view.btnBg.visible);
+					view.btn_display(!view.btnBg.visible);
 				break;
 				
 				case view.PlayerListBtn:
-					showOrHideBtnGroup(!view.btnBg.visible);
+					view.btn_display(!view.btnBg.visible);
 				break;
 				
 				case view.optionBtn:
-					showOrHideBtnGroup(!view.btnBg.visible);
+					view.btn_display(!view.btnBg.visible);
 				break;
 			}
 		}
 		
-		/**
-		 * 隐藏或显示设置按钮状态 
-		 */		
-		private function showOrHideBtnGroup(flag:Boolean):void
-		{
-			view.btnBg.visible = view.setupBtn.visible = view.helpBtn.visible = view.CarryInBtn.visible = view.PlayerListBtn.visible = flag;
-		}
+		///**
+		 //* 隐藏或显示设置按钮状态 
+		 //*/		
+		//private function showOrHideBtnGroup(flag:Boolean):void
+		//{
+			//view.btnBg.visible = view.setupBtn.visible = view.helpBtn.visible = view.CarryInBtn.visible = view.PlayerListBtn.visible = flag;
+		//}
 		
         override public function handler(noti:INotification):void
 		{
@@ -188,15 +198,17 @@ package bull.modules.room.mediator
 			sentNotification(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),param);
 		}
 		
-		private function onUIShow():void{
-			//先别影藏 等数据请求回来再显示
-			view.roomData = roomData;
-			view.userInfoData = userInfoData;
-			roomData.initClipConfig();
-			view.initSelectClip();
+		private function onUIShow():void {
 			
-			view.img_cash.visible = view.img_coin.visible = false;
-			roomData.chipsType == MoneyType.CASH ? view.img_cash.visible = true : view.img_coin.visible =true;
+			
+			//先别影藏 等数据请求回来再显示
+			//view.roomData = roomData;
+			//view.userInfoData = userInfoData;
+			//roomData.initClipConfig();
+			//view.initSelectClip();
+			//
+			//view.img_cash.visible = view.img_coin.visible = false;
+			//roomData.chipsType == MoneyType.CASH ? view.img_cash.visible = true : view.img_coin.visible =true;
 			view.showme();
 			
 		}
@@ -223,6 +235,8 @@ package bull.modules.room.mediator
 		
 		public function exitRoom():void {
 				
+		
+			
 			perLoadService.loadHall();
 			sentNotification(BullNotification.Leave_Game);
 			dispose();

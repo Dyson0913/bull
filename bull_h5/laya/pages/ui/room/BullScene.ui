@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":8,
+    "selecteID":11,
     "props":{"width":1400,"sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -38,7 +38,7 @@
             "compId":2,
             "child":[
                 ],
-            "$LOCKED":true
+            "$LOCKED":false
         },
         {
             "x":15,
@@ -179,6 +179,90 @@
                     "__InPool":false
                 }],
             "compId":10,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"UIView",
+            "source":"ui/room/HistoryRecord.ui",
+            "props":{"y":87,"x":-173,"var":"HistoryRecord"},
+            "nodeParent":1,
+            "label":"UIView(HistoryRecord)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":278,"x":273},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":11,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"UIView",
+            "source":"ui/room/InfoBoard.ui",
+            "props":{"y":800,"x":92,"var":"InfoBoard"},
+            "nodeParent":1,
+            "label":"UIView(InfoBoard)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":878,"x":655},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":12,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"UIView",
+            "source":"ui/room/BankerBoard.ui",
+            "props":{"y":-81,"x":347,"var":"bankerBoard"},
+            "nodeParent":1,
+            "label":"UIView(bankerBoard)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":-50,"x":729},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":13,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"UIView",
+            "source":"ui/room/BetChip.ui",
+            "props":{"y":803,"x":426,"var":"BetChip"},
+            "nodeParent":1,
+            "label":"UIView(BetChip)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":366,"x":458},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":16,
             "child":[
                 ]
         }],
