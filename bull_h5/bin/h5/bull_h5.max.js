@@ -917,6 +917,8 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.HALL_SOCKET_CONNECT="hallSocketConnect";
 		BullNotification.HALL_SOCKET_CONNECT_COMPLETE="hallSocketConnectComplete";
 		BullNotification.HALL_SOCKET_CONNECT_FAILED="hallSocketConnectFailed";
+		BullNotification.HALL_HEART_BEAT="hallHeartBeat";
+		BullNotification.ROOM_HEART_BEAT="roomHeartBeat";
 		BullNotification.LOGIN_HALL_RQS="loginHallRequest";
 		BullNotification.Close_BGM="Close_BGM";
 		BullNotification.ROOM_SOCKET_CONNECT="roomSocketConnect";
@@ -20944,6 +20946,29 @@ var Laya=window.Laya=(function(window,document){
 	})(Node)
 
 
+	//class com.iflash.events.Event extends laya.events.Event
+	var Event=(function(_super){
+		function Event(type,bubbles,cancelable){
+			this.bubbles=false;
+			this.cancelable=false;
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			Event.__super.call(this);
+			this.type=type;
+			this.bubbles=bubbles;
+			this.cancelable=cancelable;
+		}
+
+		__class(Event,'com.iflash.events.Event',_super);
+		var __proto=Event.prototype;
+		__proto.clone=function(){
+			return new com.iflash.events.Event(this.type);
+		}
+
+		return Event;
+	})(Event1)
+
+
 	//class com.lightMVC.parrerns.Model extends com.lightMVC.core.Node
 	var Model=(function(_super){
 		function Model(modelName,data){
@@ -21026,29 +21051,6 @@ var Laya=window.Laya=(function(window,document){
 		Model.NAME="Model";
 		return Model;
 	})(Node)
-
-
-	//class com.iflash.events.Event extends laya.events.Event
-	var Event=(function(_super){
-		function Event(type,bubbles,cancelable){
-			this.bubbles=false;
-			this.cancelable=false;
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			Event.__super.call(this);
-			this.type=type;
-			this.bubbles=bubbles;
-			this.cancelable=cancelable;
-		}
-
-		__class(Event,'com.iflash.events.Event',_super);
-		var __proto=Event.prototype;
-		__proto.clone=function(){
-			return new com.iflash.events.Event(this.type);
-		}
-
-		return Event;
-	})(Event1)
 
 
 	//class bull.modules.common.model.data.Data extends laya.events.EventDispatcher
@@ -28303,6 +28305,8 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand("hallSocketConnectFailed",ConnectHallCommand);
 			this.registerCommand("loginHallRequest",LoginHallCommand);
 			this.registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(),LoginHallCommand);
+			this.registerCommand(BullNotification.HALL_HEART_BEAT.toString(),HallHeartBeatCommand);
+			this.registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),HallHeartBeatCommand);
 			this.registerCommand(BullNotification.Leave_Game,LoginHallCommand);
 			this.registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString(),RoomListCommand);
 			this.registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString(),RoomListCommand);
@@ -28315,6 +28319,8 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand("roomSocketConnectFailed",ConnectRoomCommand);
 			this.registerCommand("loginRoomRequest",LoginRoomCommand);
 			this.registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(),LoginRoomCommand);
+			this.registerCommand(BullNotification.ROOM_HEART_BEAT.toString(),RoomHeartBeatCommand);
+			this.registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),RoomHeartBeatCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString(),JoinRoomCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(),JoinRoomCommand);
 		}
@@ -28551,6 +28557,7 @@ var Laya=window.Laya=(function(window,document){
 		__proto.setViewComponent=function(viewComponent){
 			_super.prototype.setViewComponent.call(this,viewComponent);
 			this.hallData.addEventListener("change",this,this.onRoomListChange);
+			this.view.backLobby.on("click",this,this.onReturnClick);
 			this.view.helpBtn.on("click",this,this.onClick);
 			this.view.setupBtn.on("click",this,this.onClick);
 			this.view.optionBtn.on("click",this,this.onClick);
@@ -28568,6 +28575,10 @@ var Laya=window.Laya=(function(window,document){
 			if(notification.getName()=="Close_BGM"){
 				SoundManager.stopMusic();
 			}
+		}
+
+		__proto.onReturnClick=function(e){
+			this.dispose();
 		}
 
 		__proto.onGBtnClick=function(e){
@@ -28668,7 +28679,7 @@ var Laya=window.Laya=(function(window,document){
 				return;
 			}
 			this.num++;
-			this.sentNotification(BullNotification.HALL_HEART_BEAT);
+			this.sentNotification("hallHeartBeat");
 		}
 
 		__proto.startHeartCount=function(){
@@ -28686,6 +28697,12 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.receiveHeartBeat=function(){
 			this.num=0;
+		}
+
+		__proto.dispose=function(){
+			this.clearTimer();
+			this.hallSocketService.close();
+			this.view.clear();
 		}
 
 		__getset(0,__proto,'view',function(){
@@ -28772,6 +28789,46 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		return ConnectRoomCommand;
+	})(Command)
+
+
+	//class bull.modules.common.command.HallHeartBeatCommand extends com.lightMVC.parrerns.Command
+	var HallHeartBeatCommand=(function(_super){
+		function HallHeartBeatCommand(){
+			HallHeartBeatCommand.__super.call(this);
+		}
+
+		__class(HallHeartBeatCommand,'bull.modules.common.command.HallHeartBeatCommand',_super);
+		var __proto=HallHeartBeatCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==BullNotification.HALL_HEART_BEAT.toString()){
+				this.heartReqHandler();
+				}else if(notification.getName()==ENCSType.CS_TYPE_HEART_BEAT_RSP.toString()){
+				this.heartRspHandler(notification.getBody());
+			}
+		}
+
+		__proto.heartReqHandler=function(){
+			var bullData=this.getSingleton("Data");
+			bullData.hallHeartBeat=true;
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=3;
+			out.heart_beat_req=proto.msg_proto.getHeartBeatReq()
+			var socket=this.getModel("hallSocketService");
+			socket.sentMsg(out);
+		}
+
+		__proto.heartRspHandler=function(cs){
+			console.log("heartRspHandler");
+			var bullData=this.getSingleton("Data");
+			if(!bullData.hallHeartBeat)return;
+			bullData.hallHeartBeat=false;
+			(this.getMediator("hallMediator")).receiveHeartBeat();
+		}
+
+		return HallHeartBeatCommand;
 	})(Command)
 
 
@@ -28867,8 +28924,6 @@ var Laya=window.Laya=(function(window,document){
 				console.log("hall 在遊戲 return");
 				return;
 			}
-			if (bullData.truthLogin){}
-				bullData.truthLogin=false;
 			this.sentNotification(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString());
 		}
 
@@ -28942,109 +28997,11 @@ var Laya=window.Laya=(function(window,document){
 				console.log("room 目前在大廳 return");
 				return;
 			}
-			bullData.hallData.roomLogin=false;
 			this.sentNotification(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString());
 			return;
 		}
 
 		return LoginRoomCommand;
-	})(Command)
-
-
-	//class bull.modules.common.command.RoomListCommand extends com.lightMVC.parrerns.Command
-	var RoomListCommand=(function(_super){
-		function RoomListCommand(){
-			RoomListCommand.__super.call(this);
-		}
-
-		__class(RoomListCommand,'bull.modules.common.command.RoomListCommand',_super);
-		var __proto=RoomListCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString()){
-				this.roomListRequestHandler();
-				}else if(notification.getName()==ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString()){
-				this.roomListResponseHandler(notification.getBody());
-			}
-		}
-
-		__proto.roomListRequestHandler=function(){
-			var proto=this.getModel("bullProtoModel");
-			var out=proto.msg_proto.getCS();
-			out.msg_type=11;
-			out.get_room_list_req=proto.msg_proto.getSGetRoomListReq()
-			var socket=this.getModel("hallSocketService");
-			socket.sentMsg(out);
-		}
-
-		__proto.roomListResponseHandler=function(param){
-			console.log("roomListResponseHandler",param);
-			var bulldata=this.getSingleton("Data");
-			if (param.get_room_list_rsp.error_code !=0){
-				Alert.show("无法取得桌资讯!","",AlertPanel);
-				return;
-			};
-			var list=param.get_room_list_rsp.room_infos;
-			var l=list.roominfo.length;
-			var roomList=[];
-			for (var i=0;i < l;i++){
-				roomList.push(list.roominfo[i]);
-			}
-			bulldata.hallData.roomList=roomList;
-		}
-
-		return RoomListCommand;
-	})(Command)
-
-
-	//class bull.modules.common.command.TryJoinRoomCommand extends com.lightMVC.parrerns.Command
-	var TryJoinRoomCommand=(function(_super){
-		function TryJoinRoomCommand(){
-			TryJoinRoomCommand.__super.call(this);
-		}
-
-		__class(TryJoinRoomCommand,'bull.modules.common.command.TryJoinRoomCommand',_super);
-		var __proto=TryJoinRoomCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString()){
-				this.joinRoomRqsHandler();
-				}else if(notification.getName()==ENCSType.CS_TYPE_TRY_ENTER_TABLE_RSP.toString()){
-				this.joinRoomRspHandler(notification.getBody());
-			}
-		}
-
-		__proto.joinRoomRqsHandler=function(){
-			console.log("try joinRoomRqsHandler");
-			var proto=this.getModel("bullProtoModel");
-			var out=proto.msg_proto.getCS();
-			out.msg_type=13;
-			out.try_enter_table_req=proto.msg_proto.getSTryEnterTableReq();
-			var bullData=this.getSingleton("Data");
-			var roominfo=bullData.hallData.roomList [bullData.hallData.join_room_idx];
-			var config=roominfo.config;
-			out.try_enter_table_req.room_type=config.room_type;
-			out.try_enter_table_req.room_id=config.room_id;
-			var socket=this.getModel("hallSocketService");
-			socket.sentMsg(out);
-		}
-
-		__proto.joinRoomRspHandler=function(e){
-			console.log("try joinRoomRspHandler",e);
-			if (e.try_enter_table_rsp.error_code==0){
-				var hallData=this.getSingleton("hallData");
-				hallData.ip=e.try_enter_table_rsp.net_address.ip;
-				hallData.port=e.try_enter_table_rsp.net_address.port;
-				hallData.Token=e.try_enter_table_rsp.token;
-				this.sentNotification("getUserBalance",true);
-				(this.getModel("hallSocketService")).close();
-				}else{
-				console.log("error code: "+e.try_enter_table_rsp.error_code);
-				Alert.show(Light.error.getError(e.try_enter_table_rsp.error_code.toString()),"",AlertPanel);
-			}
-		}
-
-		return TryJoinRoomCommand;
 	})(Command)
 
 
@@ -29153,6 +29110,143 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
+
+
+	//class bull.modules.common.command.RoomHeartBeatCommand extends com.lightMVC.parrerns.Command
+	var RoomHeartBeatCommand=(function(_super){
+		function RoomHeartBeatCommand(){
+			RoomHeartBeatCommand.__super.call(this);
+		}
+
+		__class(RoomHeartBeatCommand,'bull.modules.common.command.RoomHeartBeatCommand',_super);
+		var __proto=RoomHeartBeatCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="roomHeartBeat"){
+				this.heartReqHandler();
+				}else if(notification.getName()==ENCSType.CS_TYPE_HEART_BEAT_RSP.toString()){
+				this.heartRspHandler(notification.getBody());
+			}
+		}
+
+		__proto.heartReqHandler=function(){
+			var bullData=this.getSingleton("Data");
+			bullData.roomHeartBeat=true;
+			var socket=this.getModel("roomSocketService");
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=3;
+			out.heart_beat_req=proto.msg_proto.getHeartBeatReq()
+			socket.sentMsg(out);
+		}
+
+		__proto.heartRspHandler=function(cs){
+			console.log("Room heartRspHandler");
+			var bullData=this.getSingleton("Data");
+			if(!bullData.roomHeartBeat)return;
+			bullData.roomHeartBeat=false;
+			(this.getMediator("BullScenceMediator")).receiveHeartBeat();
+		}
+
+		return RoomHeartBeatCommand;
+	})(Command)
+
+
+	//class bull.modules.common.command.RoomListCommand extends com.lightMVC.parrerns.Command
+	var RoomListCommand=(function(_super){
+		function RoomListCommand(){
+			RoomListCommand.__super.call(this);
+		}
+
+		__class(RoomListCommand,'bull.modules.common.command.RoomListCommand',_super);
+		var __proto=RoomListCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString()){
+				this.roomListRequestHandler();
+				}else if(notification.getName()==ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString()){
+				this.roomListResponseHandler(notification.getBody());
+			}
+		}
+
+		__proto.roomListRequestHandler=function(){
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=11;
+			out.get_room_list_req=proto.msg_proto.getSGetRoomListReq()
+			var socket=this.getModel("hallSocketService");
+			socket.sentMsg(out);
+		}
+
+		__proto.roomListResponseHandler=function(param){
+			console.log("roomListResponseHandler",param);
+			var bulldata=this.getSingleton("Data");
+			if (param.get_room_list_rsp.error_code !=0){
+				Alert.show("无法取得桌资讯!","",AlertPanel);
+				return;
+			};
+			var list=param.get_room_list_rsp.room_infos;
+			var l=list.roominfo.length;
+			var roomList=[];
+			for (var i=0;i < l;i++){
+				roomList.push(list.roominfo[i]);
+			}
+			bulldata.hallData.roomList=roomList;
+		}
+
+		return RoomListCommand;
+	})(Command)
+
+
+	//class bull.modules.common.command.TryJoinRoomCommand extends com.lightMVC.parrerns.Command
+	var TryJoinRoomCommand=(function(_super){
+		function TryJoinRoomCommand(){
+			TryJoinRoomCommand.__super.call(this);
+		}
+
+		__class(TryJoinRoomCommand,'bull.modules.common.command.TryJoinRoomCommand',_super);
+		var __proto=TryJoinRoomCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString()){
+				this.joinRoomRqsHandler();
+				}else if(notification.getName()==ENCSType.CS_TYPE_TRY_ENTER_TABLE_RSP.toString()){
+				this.joinRoomRspHandler(notification.getBody());
+			}
+		}
+
+		__proto.joinRoomRqsHandler=function(){
+			console.log("try joinRoomRqsHandler");
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=13;
+			out.try_enter_table_req=proto.msg_proto.getSTryEnterTableReq();
+			var bullData=this.getSingleton("Data");
+			var roominfo=bullData.hallData.roomList [bullData.hallData.join_room_idx];
+			var config=roominfo.config;
+			out.try_enter_table_req.room_type=config.room_type;
+			out.try_enter_table_req.room_id=config.room_id;
+			var socket=this.getModel("hallSocketService");
+			socket.sentMsg(out);
+		}
+
+		__proto.joinRoomRspHandler=function(e){
+			console.log("try joinRoomRspHandler",e);
+			if (e.try_enter_table_rsp.error_code==0){
+				var hallData=this.getSingleton("hallData");
+				hallData.ip=e.try_enter_table_rsp.net_address.ip;
+				hallData.port=e.try_enter_table_rsp.net_address.port;
+				hallData.Token=e.try_enter_table_rsp.token;
+				this.sentNotification("getUserBalance",true);
+				(this.getModel("hallSocketService")).close();
+				}else{
+				console.log("error code: "+e.try_enter_table_rsp.error_code);
+				Alert.show(Light.error.getError(e.try_enter_table_rsp.error_code.toString()),"",AlertPanel);
+			}
+		}
+
+		return TryJoinRoomCommand;
+	})(Command)
 
 
 	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
@@ -29841,7 +29935,7 @@ var Laya=window.Laya=(function(window,document){
 				return;
 			}
 			this.num++;
-			this.sentNotification(/*no*/this.CarNotification.ROOM_HEART_BEAT);
+			this.sentNotification("roomHeartBeat");
 		}
 
 		__proto.startHeartCount=function(){
@@ -31747,23 +31841,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
-
-
 	/**
 	*场景管理器
 	*@author light-k
@@ -31964,6 +32041,23 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
+
+
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -46460,6 +46554,107 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
+	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
+	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
+	*
+	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.HSlider;
+		*import laya.ui.VSlider;
+		*import laya.utils.Handler;
+		*public class VSlider_Example
+		*{
+			*private var vSlider:VSlider;
+			*public function VSlider_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
+				*}
+			*private function onLoadComplete():void
+			*{
+				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+				*vSlider.min=0;//设置 vSlider 最低位置值。
+				*vSlider.max=10;//设置 vSlider 最高位置值。
+				*vSlider.value=2;//设置 vSlider 当前位置值。
+				*vSlider.tick=1;//设置 vSlider 刻度值。
+				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
+				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+				*}
+			*private function onChange(value:Number):void
+			*{
+				*trace("滑块的位置： value="+value);
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*var vSlider;
+	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
+	*function onLoadComplete(){
+		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+		*vSlider.min=0;//设置 vSlider 最低位置值。
+		*vSlider.max=10;//设置 vSlider 最高位置值。
+		*vSlider.value=2;//设置 vSlider 当前位置值。
+		*vSlider.tick=1;//设置 vSlider 刻度值。
+		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
+		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+		*}
+	*function onChange(value){
+		*console.log("滑块的位置： value="+value);
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*import HSlider=laya.ui.HSlider;
+	*import VSlider=laya.ui.VSlider;
+	*import Handler=laya.utils.Handler;
+	*class VSlider_Example {
+		*private vSlider:VSlider;
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
+			*}
+		*private onLoadComplete():void {
+			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+			*this.vSlider.min=0;//设置 vSlider 最低位置值。
+			*this.vSlider.max=10;//设置 vSlider 最高位置值。
+			*this.vSlider.value=2;//设置 vSlider 当前位置值。
+			*this.vSlider.tick=1;//设置 vSlider 刻度值。
+			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
+			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
+			*}
+		*private onChange(value:number):void {
+			*console.log("滑块的位置： value="+value);
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.Slider
+	*/
+	//class laya.ui.VSlider extends laya.ui.Slider
+	var VSlider=(function(_super){
+		function VSlider(){VSlider.__super.call(this);;
+		};
+
+		__class(VSlider,'laya.ui.VSlider',_super);
+		return VSlider;
+	})(Slider)
+
+
+	/**
 	*<code>TextInput</code> 类用于创建显示对象以显示和输入文本。
 	*
 	*@example 以下示例代码，创建了一个 <code>TextInput</code> 实例。
@@ -46772,107 +46967,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return TextInput;
 	})(Label)
-
-
-	/**
-	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
-	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
-	*
-	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.HSlider;
-		*import laya.ui.VSlider;
-		*import laya.utils.Handler;
-		*public class VSlider_Example
-		*{
-			*private var vSlider:VSlider;
-			*public function VSlider_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
-				*}
-			*private function onLoadComplete():void
-			*{
-				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-				*vSlider.min=0;//设置 vSlider 最低位置值。
-				*vSlider.max=10;//设置 vSlider 最高位置值。
-				*vSlider.value=2;//设置 vSlider 当前位置值。
-				*vSlider.tick=1;//设置 vSlider 刻度值。
-				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
-				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-				*}
-			*private function onChange(value:Number):void
-			*{
-				*trace("滑块的位置： value="+value);
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*var vSlider;
-	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
-	*function onLoadComplete(){
-		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-		*vSlider.min=0;//设置 vSlider 最低位置值。
-		*vSlider.max=10;//设置 vSlider 最高位置值。
-		*vSlider.value=2;//设置 vSlider 当前位置值。
-		*vSlider.tick=1;//设置 vSlider 刻度值。
-		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
-		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-		*}
-	*function onChange(value){
-		*console.log("滑块的位置： value="+value);
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*import HSlider=laya.ui.HSlider;
-	*import VSlider=laya.ui.VSlider;
-	*import Handler=laya.utils.Handler;
-	*class VSlider_Example {
-		*private vSlider:VSlider;
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
-			*}
-		*private onLoadComplete():void {
-			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-			*this.vSlider.min=0;//设置 vSlider 最低位置值。
-			*this.vSlider.max=10;//设置 vSlider 最高位置值。
-			*this.vSlider.value=2;//设置 vSlider 当前位置值。
-			*this.vSlider.tick=1;//设置 vSlider 刻度值。
-			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
-			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
-			*}
-		*private onChange(value:number):void {
-			*console.log("滑块的位置： value="+value);
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.Slider
-	*/
-	//class laya.ui.VSlider extends laya.ui.Slider
-	var VSlider=(function(_super){
-		function VSlider(){VSlider.__super.call(this);;
-		};
-
-		__class(VSlider,'laya.ui.VSlider',_super);
-		return VSlider;
-	})(Slider)
 
 
 	/**
@@ -49440,7 +49534,6 @@ var Laya=window.Laya=(function(window,document){
 			Hall.__super.call(this);
 			this.Ginit.visible=this.GHigh.visible=this.GLowEnter.visible=this.GHighEnter.visible=true;
 			this.Minit.visible=this.MHigh.visible=this.MLowEnter.visible=this.MHighEnter.visible=false;
-			this.backLobby.on("click",this,this.onReturnClick);
 			Tween.to(this.mqrqueue,{x:this.mqrqueue.x-600 },15000,null,Handler.create(this,this.showmarque));
 			for (var i=0;i < 128;i++){
 				if (i % 2==1){
@@ -49469,8 +49562,6 @@ var Laya=window.Laya=(function(window,document){
 			Tween.to(this.mqrqueue,{x:this.mqrqueue.x-600 },15000,null,Handler.create(this,this.showmarque));
 		}
 
-		__proto.onReturnClick=function(e){}
-		// TODO Auto Generated method stub
 		__proto.callCarryInPanel=function(data,flg){}
 		__proto.show_G=function(){
 			this.Ginit.visible=this.GHigh.visible=this.GLowEnter.visible=this.GHighEnter.visible=true;
@@ -49769,25 +49860,6 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -49804,6 +49876,25 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
 
 
 	/**
@@ -49908,26 +49999,6 @@ var Laya=window.Laya=(function(window,document){
 		__proto.createChildren=function(){}
 		return NodeTool;
 	})(NodeToolUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
-	var NodeTreeSetting=(function(_super){
-		function NodeTreeSetting(){
-			NodeTreeSetting.__super.call(this);
-			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
-			this.createView(NodeTreeSettingUI.uiView);
-		}
-
-		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
-		var __proto=NodeTreeSetting.prototype;
-		//inits();
-		__proto.createChildren=function(){}
-		return NodeTreeSetting;
-	})(NodeTreeSettingUI)
 
 
 	/**
@@ -50171,6 +50242,26 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return NodeTree;
 	})(NodeTreeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
+	var NodeTreeSetting=(function(_super){
+		function NodeTreeSetting(){
+			NodeTreeSetting.__super.call(this);
+			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
+			this.createView(NodeTreeSettingUI.uiView);
+		}
+
+		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
+		var __proto=NodeTreeSetting.prototype;
+		//inits();
+		__proto.createChildren=function(){}
+		return NodeTreeSetting;
+	})(NodeTreeSettingUI)
 
 
 	/**
@@ -50814,8 +50905,8 @@ var Laya=window.Laya=(function(window,document){
 4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (67):warning:Shape This variable is not defined.
 5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (74):warning:CarNotification.ENTER_ROOM This variable is not defined.
 6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (84):warning:CarNotification.SHOW_CARRY_IN_PANEL This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (175):warning:CarNotification.ENTER_ROOM This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (86):warning:CarProtoModel.NAME This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (181):warning:CarNotification.ENTER_ROOM This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (83):warning:CarProtoModel.NAME This variable is not defined.
 9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (84):warning:roomSocketService.close This variable is not defined.
 10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
 11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
@@ -50831,7 +50922,6 @@ var Laya=window.Laya=(function(window,document){
 21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
 22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
 23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (149):warning:CarNotification.ROOM_HEART_BEAT This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (172):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (172):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
 */

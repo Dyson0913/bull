@@ -11,7 +11,8 @@ package bull
 	import bull.modules.perload.services.PreLoadService;
 	
 	import bull.modules.common.command.ConnectHallCommand;
-	
+	import bull.modules.common.command.HallHeartBeatCommand
+	import bull.modules.common.command.RoomHeartBeatCommand;	
 	import bull.modules.common.command.LoginHallCommand;
 	import bull.modules.common.command.RoomListCommand;
 	
@@ -21,7 +22,6 @@ package bull
 	//import light.car.modules.common.command.CommitRoundCommand;
 	
 	import bull.modules.common.command.ConnectRoomCommand;	
-	//import light.car.modules.common.command.HeartBeatCommand;
 	import bull.modules.common.command.TryJoinRoomCommand;
 	import bull.modules.common.command.JoinRoomCommand;
 	import bull.modules.common.command.LoginRoomCommand;	
@@ -84,6 +84,11 @@ package bull
 			//大廳登入
 			registerCommand(BullNotification.LOGIN_HALL_RQS, LoginHallCommand);
 			registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(), LoginHallCommand);
+			
+			//大廳心跳
+			registerCommand(BullNotification.HALL_HEART_BEAT.toString(),  HallHeartBeatCommand);
+			registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),  HallHeartBeatCommand);
+			
 			registerCommand(BullNotification.Leave_Game, LoginHallCommand);
 			
 			//要求桌列表
@@ -109,6 +114,11 @@ package bull
 			registerCommand(BullNotification.LOGIN_ROOM_RQS, LoginRoomCommand);
 			registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(), LoginRoomCommand);
 			
+			//遊戲心跳			
+			registerCommand(BullNotification.ROOM_HEART_BEAT.toString(),  RoomHeartBeatCommand);
+			registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),  RoomHeartBeatCommand);
+			
+			//加入房間
 			registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString(), JoinRoomCommand);
 			registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(), JoinRoomCommand);
 			

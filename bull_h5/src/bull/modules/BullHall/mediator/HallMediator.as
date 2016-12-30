@@ -52,7 +52,7 @@ package bull.modules.BullHall.mediator
 			
 			//資料更新通知	
 			hallData.addEventListener(LightEvent.CHANGE, this, onRoomListChange);			
-			
+			view.backLobby.on(Event.CLICK, this, onReturnClick);
 			//view.list.on(LightEvent.ITEM_CLICK,this,onListItemClick);
 			
 			//view.on(ScenceManagerEvent.UI_HIDE,this, onHideHandler);
@@ -82,6 +82,12 @@ package bull.modules.BullHall.mediator
 			if(notification.getName() == BullNotification.Close_BGM){				
 				SoundManager.stopMusic();
 			}
+		}
+		
+		private function onReturnClick(e:Event):void
+		{
+			
+			dispose();
 		}
 		
 		private function onGBtnClick(e:Event):void
@@ -223,6 +229,12 @@ package bull.modules.BullHall.mediator
 		public function receiveHeartBeat():void
 		{
 			num = 0;
+		}
+		
+		public function dispose():void{
+			clearTimer();
+			hallSocketService.close();			
+			view.clear();
 		}
 	}
 }

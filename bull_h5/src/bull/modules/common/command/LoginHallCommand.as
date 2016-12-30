@@ -70,11 +70,8 @@ package bull.modules.common.command
 				return;			
 			}
 			
-			if (bullData.truthLogin) {
-				//TODO 
-				//(getMediator(HallMediator.NAME) as HallMediator).sendHeartBeat();				
-			}
-			bullData.truthLogin = false;
+			//TODO
+			//(getMediator(HallMediator.NAME) as HallMediator).sendHeartBeat();
 			
 			//請求房間列表
 			sentNotification(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString());				

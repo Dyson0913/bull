@@ -156,7 +156,7 @@ package bull.modules.room.mediator
 				return;
 			}
 			num++;
-			sentNotification(CarNotification.ROOM_HEART_BEAT);
+			sentNotification(BullNotification.ROOM_HEART_BEAT);
 		}
 		
 		private function startHeartCount():void{

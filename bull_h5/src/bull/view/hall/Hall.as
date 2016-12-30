@@ -31,7 +31,7 @@ package bull.view.hall
 			Minit.visible = MHigh.visible = MLowEnter.visible =	MHighEnter.visible = false;
 			
 			
-			backLobby.on(Event.CLICK, this, onReturnClick);
+			
 			
 			Tween.to(mqrqueue, { x:mqrqueue.x - 600 }, 15000, null, Handler.create(this, showmarque));
 			
@@ -68,10 +68,7 @@ package bull.view.hall
 			Tween.to(mqrqueue, { x:mqrqueue.x - 600 }, 15000,null, Handler.create(this,showmarque));
 		}
 		
-		private function onReturnClick(e:Event):void
-		{
-			// TODO Auto Generated method stub			
-		}
+		
 		
 		private function callCarryInPanel(data:int,flg:String):void{
 			

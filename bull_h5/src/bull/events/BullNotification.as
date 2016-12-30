@@ -20,6 +20,9 @@ package bull.events
 		public static const HALL_SOCKET_CONNECT_COMPLETE:String = "hallSocketConnectComplete";//////////////连接大厅成功
 		public static const HALL_SOCKET_CONNECT_FAILED:String = "hallSocketConnectFailed";//////////////////连接大厅失败
 		
+		public static const HALL_HEART_BEAT:String = "hallHeartBeat";
+		public static const ROOM_HEART_BEAT:String = "roomHeartBeat";
+		
 		public static const LOGIN_HALL_RQS:String = "loginHallRequest";//////////////////登录大厅请求		
 		
 		public static const Close_BGM:String = "Close_BGM";//////////////關閉大廳音效
@@ -51,6 +54,8 @@ package bull.events
 		public static const ROUND_COMMIT_RSP:String="roundCommitRsp";/////////////////////////确认局下注返回消息
 		public static const ROUND_SETTLEMENT_RSP:String="roundSettlementRsp";
 		public static const Change_Scene:String = "car.Change_Scene"; //切换场景，主要是用于大厅和游戏场景切换
+		
+		
 		
 		public static const Scene_Hall:String = "Scene_Hall"; 	//大厅场景
 		public static const Scene_Game:String = "Scene_Game";	//游戏场景

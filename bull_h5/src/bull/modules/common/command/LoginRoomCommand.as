@@ -83,8 +83,7 @@ package bull.modules.common.command
 			}			
 			
 			//TODO
-			//(getMediator(BullScenceMediator.NAME) as BullScenceMediator).sendHeartBeat();			
-			bullData.hallData.roomLogin = false;
+			//(getMediator(BullScenceMediator.NAME) as BullScenceMediator).sendHeartBeat();
 			
 			//請求房間列表
 			sentNotification(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString());						
