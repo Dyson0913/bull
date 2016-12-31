@@ -25,7 +25,7 @@ package bull.modules.room.mediator
 	import bull.modules.common.mediator.RuleMediator;
 	import light.car.modules.common.model.data.CarData;
 	import light.car.modules.common.model.data.MoneyType;
-	import light.car.modules.common.model.data.RoomData;
+	import bull.modules.common.model.data.RoomData;
 	import light.car.modules.common.model.data.UserInfoData;
 	import light.car.modules.common.model.param.BetParam;
 	import bull.modules.perload.services.PreLoadService;
@@ -54,7 +54,7 @@ package bull.modules.room.mediator
 		}
 		
 		override public function getInjector():Array{
-			return ["roomSocketService","perLoadService","userInfoData"];
+			return ["roomData","roomSocketService","perLoadService","userInfoData"];
 		}
 		
 		override public function setViewComponent(viewComponent:Object):void{
@@ -80,6 +80,10 @@ package bull.modules.room.mediator
 			{
 				view.TestPanel.on(LightEvent.ITEM_CLICK, this, ontest);
 			}
+			
+			//notify
+			addNotifiction(BullNotification.STATE_CHANGE);
+			
 			
 			addNotifiction(BullNotification.RoomSocketClose);
 			addNotifiction(BullNotification.ExitRoomEvent);
@@ -125,20 +129,15 @@ package bull.modules.room.mediator
 					view.btn_display(!view.btnBg.visible);
 				break;
 			}
-		}
-		
-		///**
-		 //* 隐藏或显示设置按钮状态 
-		 //*/		
-		//private function showOrHideBtnGroup(flag:Boolean):void
-		//{
-			//view.btnBg.visible = view.setupBtn.visible = view.helpBtn.visible = view.CarryInBtn.visible = view.PlayerListBtn.visible = flag;
-		//}
+		}		
 		
         override public function handler(noti:INotification):void
 		{
 			switch(noti.getName())
 			{
+				case BullNotification.STATE_CHANGE:
+					state_change();
+				break;
 				case BullNotification.RoomSocketClose:
 					dispose();
 					break;
@@ -147,6 +146,31 @@ package bull.modules.room.mediator
 			}
 		}
 
+		public function state_change():void 
+		{
+			switch( roomData.State) 
+			{
+				case RoomData.START:
+					view.start();
+				break;
+				case RoomData.BANKER:
+					view.banker();
+				break;
+				case RoomData.BET:
+					view.bet();
+				break;
+				case RoomData.BET_CHECK:
+					view.betCheck();
+				break;
+				case RoomData.DEAL:
+					view.deal();
+				break;
+				case RoomData.END:
+					view.end();
+				break;
+			}
+		}
+		
 		private function getPlayerInfoCallback(param:Object):void
 		{
 			trace("getPlayerInfoCallback!!!!!!!!!!!!!!!!!!");

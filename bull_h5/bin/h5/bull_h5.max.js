@@ -925,6 +925,7 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.ROOM_SOCKET_CONNECT_COMPLETE="roomSocketConnectComplete";
 		BullNotification.ROOM_SOCKET_CONNECT_FAILED="roomSocketConnectFailed";
 		BullNotification.LOGIN_ROOM_RQS="loginRoomRequest";
+		BullNotification.STATE_CHANGE="STATE_CHANGE";
 		BullNotification.SOCKET_CONNECT="socketConnect";
 		BullNotification.ONLOGIN="onLogin";
 		BullNotification.START_ROOM_LIST="startRoomList";
@@ -1117,103 +1118,6 @@ var Laya=window.Laya=(function(window,document){
 		Event.INSTAGE_CHANGED="instagechanged";
 		Event.CACHEFRAMEINDEX_CHANGED="cacheframeindexchanged";
 		return Event;
-	})()
-
-
-	//class bull.modules.BullHall.common.Common
-	var Common=(function(){
-		function Common(){};
-		__class(Common,'bull.modules.BullHall.common.Common');
-		Common.CASH=1;
-		Common.COIN=2;
-		Common.GameWidth=920;
-		Common.GameHeight=610;
-		Common.appId="4126d6e9e679c9574dc799e06fc70e6a";
-		Common.path="";
-		Common.SwfName="BullHallSkin";
-		Common.isWeb=false;
-		Common.isOpenServer=true;
-		Common.curTableId=-1;
-		Common.isFirstConnect=true;
-		Common.isOtherPlaceLogin=false;
-		return Common;
-	})()
-
-
-	//class BullHall.manager.LayerManager
-	var LayerManager1=(function(){
-		function LayerManager(){
-			this.loadingMask=null;
-			this.root=null;
-			this._layerBottom=null;
-			this._layerMiddle=null;
-			this._layerTop=null;
-			this._layerTopMask=null;
-			if (LayerManager._singleton){
-				throw new Error("只能用getInstance()来获取实例");
-			}
-		}
-
-		__class(LayerManager,'BullHall.manager.LayerManager',null,'LayerManager1');
-		var __proto=LayerManager.prototype;
-		__proto.init=function(root){
-			this.root=root;
-			this._layerBottom=new /*no*/this.Sprite();
-			this._layerMiddle=new /*no*/this.Sprite();
-			this._layerTop=new /*no*/this.Sprite();
-			root.addChild(this._layerBottom);
-			root.addChild(this._layerMiddle);
-			root.addChild(this._layerTop);
-			this.loadingMask=new kg.core.manager.layerManager.LayerMask();
-			this.loadingMask.init(root);
-		}
-
-		__proto.showPopUp=function(disObj){
-			if(this._layerTopMask==null){
-				this._layerTopMask=new /*no*/this.Shape();
-				this._layerTopMask.graphics.beginFill(0,0.5);
-				this._layerTopMask.graphics.drawRect(0,0,BullHall.common.Common.GameWidth,BullHall.common.Common.GameHeight);
-				this._layerTopMask.graphics.endFill();
-			}
-			this._layerTop.addChild(this._layerTopMask);
-			this._layerTop.addChild(disObj);
-		}
-
-		__proto.hidePopUp=function(disObj){
-			if(this._layerTop.contains(this._layerTopMask))
-				this._layerTop.removeChild(this._layerTopMask);
-			if(this._layerTop.contains(disObj))
-				this._layerTop.removeChild(disObj);
-		}
-
-		__proto.clear=function(){
-			this.loadingMask.clear();
-		}
-
-		__getset(0,__proto,'layerBottom',function(){
-			return this._layerBottom;
-		});
-
-		__getset(0,__proto,'layerMiddle',function(){
-			return this._layerMiddle;
-		});
-
-		__getset(0,__proto,'layerTop',function(){
-			return this._layerTop;
-		});
-
-		LayerManager.getInstance=function(){
-			if (!LayerManager._instance){
-				LayerManager._singleton=false;
-				LayerManager._instance=new LayerManager();
-				LayerManager._singleton=true;
-			}
-			return LayerManager._instance;
-		}
-
-		LayerManager._singleton=true;
-		LayerManager._instance=null
-		return LayerManager;
 	})()
 
 
@@ -19648,6 +19552,300 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
+	//class com.lightUI.comman.bet.BetInfoVO
+	var BetInfoVO=(function(){
+		function BetInfoVO(value,rate){
+			this.value=0;
+			this.rate=0;
+			this.count=0;
+			(value===void 0)&& (value=0);
+			(rate===void 0)&& (rate=0);
+			this.value=value;
+			this.rate=rate;
+		}
+
+		__class(BetInfoVO,'com.lightUI.comman.bet.BetInfoVO');
+		var __proto=BetInfoVO.prototype;
+		__proto.clone=function(){
+			var re=new BetInfoVO();
+			re.value=this.value;
+			re.rate=this.rate;
+			re.count=this.count;
+			return re;
+		}
+
+		__proto.toString=function(){
+			return "["+this.value+"]";
+		}
+
+		return BetInfoVO;
+	})()
+
+
+	//class com.lightUI.comman.bet.BetSlipParam
+	var BetSlipParam=(function(){
+		function BetSlipParam(){
+			this.chips=null;
+			this.remainder=0;
+		}
+
+		__class(BetSlipParam,'com.lightUI.comman.bet.BetSlipParam');
+		var __proto=BetSlipParam.prototype;
+		//////////////余数 正常情况》=0-1表示少于最低筹码 无法拆分
+		__proto.toString=function(){
+			return this.chips.join(",")+"remainder:"+this.remainder;
+		}
+
+		return BetSlipParam;
+	})()
+
+
+	/**
+	*
+	*@author light-k
+	*
+	*example:
+	*var split:BetSplit=new BetSplit();
+	*split.splitBet(1500);
+	*
+	*
+	*
+	*public static var type1ChipArr:Array=[
+	*new BetInfoVO(1,1),
+	*new BetInfoVO(5,1),
+	*new BetInfoVO(10,7),
+	*new BetInfoVO(20,1),
+	*new BetInfoVO(50,5),
+	*new BetInfoVO(100,999)
+	*];
+	*
+	*public static var type2ChipArr:Array=[
+	*new BetInfoVO(10,1),
+	*new BetInfoVO(50,1),
+	*new BetInfoVO(100,7),
+	*new BetInfoVO(500,1),
+	*new BetInfoVO(1000,5),
+	*new BetInfoVO(5000,999)
+	*];
+	*
+	*
+	*/
+	//class com.lightUI.comman.bet.BetSplit
+	var BetSplit=(function(){
+		function BetSplit(){
+			this._betConfig=[];
+			this._bets=null;
+			this._remainder=0;
+		}
+
+		__class(BetSplit,'com.lightUI.comman.bet.BetSplit');
+		var __proto=BetSplit.prototype;
+		/**
+		*撤销筹码
+		*@param chips
+		*@param revoke
+		*@return
+		*
+		*/
+		__proto.revoke=function(chips,revoke){
+			chips.sort(this.sortOnPrice);
+			var re=[];
+			var rl=revoke.length;
+			for (var i=0;i < rl;i++){
+				re.push(this.revokeHandler(chips,revoke[i]));
+			}
+			return re;
+		}
+
+		__proto.revokeHandler=function(chips,revoke){
+			var re=new RevokeParam();
+			var slip;
+			var cl=chips.length;
+			for (var i=0;i < cl;i++){
+				if(chips[i].value==revoke.value){
+					re.remove.push(revoke.clone());
+					chips.splice(i,1);
+					console.log("找到替换筹码",chips,"\n",re);
+					return re;
+					}else if(chips[i].value > revoke.value){
+					re.split.push(chips[i]);
+					re.add=this.splitBet(chips[i].value-revoke.value).chips;
+					chips.splice(i,1);
+					chips=this.concatVector(chips,re.add);
+					chips.sort(this.sortOnPrice);
+					console.log("需要找零",chips,"\n",re);
+					return re;
+				}
+			};
+			var value=revoke.value;
+			var temp=0;
+			for (var j=cl-1;j >=0;j--){
+				temp=value-chips[j].value;
+				if(temp > 0){
+					value=temp;
+					re.remove.push(chips[j]);
+					chips.splice(j,1);
+					}else if(temp==0){
+					value=temp;
+					re.remove.push(chips[j]);
+					chips.splice(j,1);
+					console.log("凑整： ",re)
+					return re;
+				}else {}
+			}
+			console.log("数据可能有错误");
+			return null;
+		}
+
+		__proto.sortOnPrice=function(a,b){
+			var av=a.value;
+			var bv=b.value;
+			if(av > bv){
+				return 1;
+				}else if(av < bv){
+				return-1;
+				}else {
+				return 0;
+			}
+		}
+
+		__proto.concatVector=function(v1,v2){
+			var l=v2.length;
+			for (var i=0;i < l;i++){
+				v1.push(v2[i]);
+			}
+			return v1;
+		}
+
+		__proto.getMinChip=function(){
+			return this._betConfig[0];
+		}
+
+		__proto.getChip=function(value){
+			for (var i=0;i < this._betConfig.length;i++){
+				if((this._betConfig [i]).value==value)return this._betConfig[i];
+			}
+			return null;
+		}
+
+		__proto.getChipByID=function(id){
+			if(id <=this._betConfig.length)return this._betConfig[id];
+			return null;
+		}
+
+		__proto.sunOfChips=function(chips){
+			var l=chips.length;
+			var sun=0;
+			for (var i=0;i < l;i++){
+				sun+=(chips [i]).value;
+			}
+			return sun;
+		}
+
+		/**
+		*将整体的注额拆分成筹码
+		*@param value 整体注额
+		*@return 拆分后的筹码数组
+		*
+		*/
+		__proto.splitBet=function(value){
+			(value===void 0)&& (value=2000);
+			var re=new BetSlipParam();
+			if(value < this._betConfig[0].value){
+				re.remainder=-1;
+				return re;
+			}
+			this._bets=[];
+			this.splitBetHandler(value);
+			re.chips=this._bets;
+			re.remainder=this._remainder;
+			this.clear();
+			return re;
+		}
+
+		__proto.splitBetHandler=function(value){
+			(value===void 0)&& (value=2000);
+			if(value==0){
+				return true;
+			};
+			var minchip=this.getMinChip();
+			var tempvalue=value;
+			var n=0;
+			var l=this._betConfig.length;
+			for (var i=0;i < l;i++){
+				n=this._betConfig[i].rate;
+				for (var j=0;j < n;j++){
+					tempvalue=value-this._betConfig[i].value;
+					if(tempvalue >=minchip.value){
+						this._bets.push(this._betConfig[i].clone());
+						value=tempvalue;
+						console.log("继续分",this._betConfig[i],tempvalue)
+						}else if(tempvalue < minchip.value && tempvalue >=0){
+						this._bets.push(this._betConfig[i].clone());
+						value=tempvalue;
+						this._remainder=tempvalue;
+						console.log("分完了",this._remainder);
+						return true;
+						}else{
+						return this.splitBetHandler(value);
+					}
+				}
+			}
+			return this.splitBetHandler(value);
+		}
+
+		__proto.clear=function(){
+			this._bets=null;
+			this._remainder=NaN;
+		}
+
+		__proto.sorton=function(d1,d2){
+			if(d1.value > d2.value){
+				return 1;
+				}else if(d1.value < d2.value){
+				return-1;
+				}else{
+				return 0;
+			}
+		}
+
+		__getset(0,__proto,'betConfig',function(){
+			return this._betConfig;
+			},function(value){
+			this._betConfig=value;
+			this._betConfig.sort(this.sorton);
+		});
+
+		return BetSplit;
+	})()
+
+
+	/**
+	*
+	*@author light-k
+	*
+	*/
+	//class com.lightUI.comman.bet.RevokeParam
+	var RevokeParam=(function(){
+		function RevokeParam(){
+			this.remove=[];
+			this.split=[];
+			this.add=new Array;
+		}
+
+		__class(RevokeParam,'com.lightUI.comman.bet.RevokeParam');
+		var __proto=RevokeParam.prototype;
+		__proto.toString=function(){
+			var re="remove: "+this.remove.toString()+"\n";
+			re+="split: "+this.split.toString()+"\n";
+			re+="add: "+this.add.toString()+"\n";
+			return re;
+		}
+
+		return RevokeParam;
+	})()
+
+
 	/**
 	*
 	*@author light-k
@@ -20947,29 +21145,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Node)
 
 
-	//class com.iflash.events.Event extends laya.events.Event
-	var Event=(function(_super){
-		function Event(type,bubbles,cancelable){
-			this.bubbles=false;
-			this.cancelable=false;
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			Event.__super.call(this);
-			this.type=type;
-			this.bubbles=bubbles;
-			this.cancelable=cancelable;
-		}
-
-		__class(Event,'com.iflash.events.Event',_super);
-		var __proto=Event.prototype;
-		__proto.clone=function(){
-			return new com.iflash.events.Event(this.type);
-		}
-
-		return Event;
-	})(Event1)
-
-
 	//class com.lightMVC.parrerns.Model extends com.lightMVC.core.Node
 	var Model=(function(_super){
 		function Model(modelName,data){
@@ -21054,18 +21229,42 @@ var Laya=window.Laya=(function(window,document){
 	})(Node)
 
 
+	//class com.iflash.events.Event extends laya.events.Event
+	var Event=(function(_super){
+		function Event(type,bubbles,cancelable){
+			this.bubbles=false;
+			this.cancelable=false;
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			Event.__super.call(this);
+			this.type=type;
+			this.bubbles=bubbles;
+			this.cancelable=cancelable;
+		}
+
+		__class(Event,'com.iflash.events.Event',_super);
+		var __proto=Event.prototype;
+		__proto.clone=function(){
+			return new com.iflash.events.Event(this.type);
+		}
+
+		return Event;
+	})(Event1)
+
+
 	//class bull.modules.common.model.data.Data extends laya.events.EventDispatcher
 	var Data=(function(_super){
 		function Data(){
 			this.states=0;
 			this.hallData=null;
+			this.roomData=null;
 			this.userInfoData=null;
 			this.uid=NaN;
 			this.token=null;
 			this.truthLogin=false;
 			this.hallHeartBeat=false;
 			this.roomHeartBeat=false;
-			this.injector=["hallData","userInfoData"];
+			this.injector=["hallData","roomData","userInfoData"];
 			Data.__super.call(this);
 		}
 
@@ -28324,6 +28523,7 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),RoomHeartBeatCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString(),JoinRoomCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(),JoinRoomCommand);
+			this.registerCommand(ENCSType.CS_TYPE_TIMER_NOTIFY.toString(),StateCommand);
 			this.registerCommand("TestOrder",TestCommand);
 		}
 
@@ -28335,6 +28535,7 @@ var Laya=window.Laya=(function(window,document){
 			this.registerModel(new WebService("WebService"));
 			this.asSingleton("Data",Data)
 			this.asSingleton("hallData",HallData);
+			this.asSingleton("roomData",RoomData);
 			this.asSingleton("userInfoData",UserInfoData);
 			this.asSingleton("ConfigData",ConfigData);
 		}
@@ -28756,6 +28957,113 @@ var Laya=window.Laya=(function(window,document){
 	})(Command)
 
 
+	/**
+	*这里处理大厅的socket连接
+	*@author light-k
+	*
+	*/
+	//class bull.modules.BullHall.service.HallSocketService extends com.lightMVC.parrerns.Model
+	var HallSocketService=(function(_super){
+		function HallSocketService(modelName,data){
+			this._socket=null;
+			this.bullProtoModel=null;
+			this.num=0;
+			this.timer=null;
+			HallSocketService.__super.call(this,modelName,data);
+			this._socket=new SocketConnect();
+			this._socket.addEventListener("connect",this,this.onSocketConnect);
+			this._socket.addEventListener("close",this,this.onSocketClose);
+			this._socket.addEventListener("receive",this,this.onMessageReveived);
+			this._socket.addEventListener("connectFail",this,this.onConnectionFailed);
+		}
+
+		__class(HallSocketService,'bull.modules.BullHall.service.HallSocketService',_super);
+		var __proto=HallSocketService.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
+		__proto.getInjector=function(){
+			return ["bullProtoModel"];
+		}
+
+		__proto.onConnectionFailed=function(e){
+			console.log("连接失败");
+		}
+
+		__proto.connect=function(host,port){
+			this._socket.connect(host,port);
+		}
+
+		__proto.sentMsg=function(message){
+			if(message.msg_type !=3)
+				console.log("发送消息给服务端：type:",message.msg_type," msg:",message);
+			else
+			console.log("心跳消息给服务端：type:",message.msg_type," msg:",message);
+			var byte=message.encode().toBuffer();
+			var builder=this.bullProtoModel.msg_proto.CS_Builer();
+			var temp=builder.decode(byte);
+			var test=new Byte(byte);
+			this._socket.sent(byte);
+		}
+
+		__proto.onSocketConnect=function(e){
+			console.log("大厅连接成功");
+			this.num=0;
+			this.sentNotification("hallSocketConnectComplete");
+		}
+
+		__proto.close=function(){
+			console.log("大厅SocketClose");
+			this._socket.close();
+			this.num=0;
+		}
+
+		__proto.onSocketClose=function(e){
+			this.clearTimer();
+			Alert.show("您的网络异常，请检查网络!","",AlertPanel,null,Handler.create(this,this.alertClose));
+		}
+
+		__proto.alertClose=function(){}
+		__proto.onMessageReveived=function(e){
+			var msgbyte=e.data;
+			var input=this.bullProtoModel.msg_proto.CS_Builer().decode(msgbyte.buffer);
+			if(input.msg_type !=4)
+				console.log("大厅服务端返回消息 type：",input.msg_type," msg:"+input);
+			else
+			console.log("大厅心跳包返回消息 type：",input.msg_type," msg:"+input);
+			var input=this.bullProtoModel.msg_proto.CS_Builer().decode(msgbyte.buffer);
+			this.sentNotification(input.msg_type.toString(),input);
+		}
+
+		__proto.reconnect=function(){
+			if(this.num>2){
+				this.clearTimer();
+				Alert.show("网络异常，请检查网络!","",AlertPanel,null,Handler.create(this,this.alertClose));
+				return;
+			}
+			this.startTimer();
+			this.num++;
+			var config=this.getSingleton("ConfigData");
+			this.connect(config.ip,config.port);
+		}
+
+		__proto.startTimer=function(){
+			if(!this.timer){
+				this.timer=new Timer();
+				this.timer.loop(5000,this,this.reconnect);
+			}
+		}
+
+		__proto.clearTimer=function(){
+			this.timer.clear(this,this.reconnect);
+			this.timer=null;
+			this.num=0;
+			this._socket.close();
+		}
+
+		HallSocketService.NAME="hallSocketService";
+		return HallSocketService;
+	})(Model)
+
+
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
 	var ConnectRoomCommand=(function(_super){
 		function ConnectRoomCommand(){
@@ -29046,113 +29354,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Command)
 
 
-	/**
-	*这里处理大厅的socket连接
-	*@author light-k
-	*
-	*/
-	//class bull.modules.BullHall.service.HallSocketService extends com.lightMVC.parrerns.Model
-	var HallSocketService=(function(_super){
-		function HallSocketService(modelName,data){
-			this._socket=null;
-			this.bullProtoModel=null;
-			this.num=0;
-			this.timer=null;
-			HallSocketService.__super.call(this,modelName,data);
-			this._socket=new SocketConnect();
-			this._socket.addEventListener("connect",this,this.onSocketConnect);
-			this._socket.addEventListener("close",this,this.onSocketClose);
-			this._socket.addEventListener("receive",this,this.onMessageReveived);
-			this._socket.addEventListener("connectFail",this,this.onConnectionFailed);
-		}
-
-		__class(HallSocketService,'bull.modules.BullHall.service.HallSocketService',_super);
-		var __proto=HallSocketService.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
-		__proto.getInjector=function(){
-			return ["bullProtoModel"];
-		}
-
-		__proto.onConnectionFailed=function(e){
-			console.log("连接失败");
-		}
-
-		__proto.connect=function(host,port){
-			this._socket.connect(host,port);
-		}
-
-		__proto.sentMsg=function(message){
-			if(message.msg_type !=3)
-				console.log("发送消息给服务端：type:",message.msg_type," msg:",message);
-			else
-			console.log("心跳消息给服务端：type:",message.msg_type," msg:",message);
-			var byte=message.encode().toBuffer();
-			var builder=this.bullProtoModel.msg_proto.CS_Builer();
-			var temp=builder.decode(byte);
-			var test=new Byte(byte);
-			this._socket.sent(byte);
-		}
-
-		__proto.onSocketConnect=function(e){
-			console.log("大厅连接成功");
-			this.num=0;
-			this.sentNotification("hallSocketConnectComplete");
-		}
-
-		__proto.close=function(){
-			console.log("大厅SocketClose");
-			this._socket.close();
-			this.num=0;
-		}
-
-		__proto.onSocketClose=function(e){
-			this.clearTimer();
-			Alert.show("您的网络异常，请检查网络!","",AlertPanel,null,Handler.create(this,this.alertClose));
-		}
-
-		__proto.alertClose=function(){}
-		__proto.onMessageReveived=function(e){
-			var msgbyte=e.data;
-			var input=this.bullProtoModel.msg_proto.CS_Builer().decode(msgbyte.buffer);
-			if(input.msg_type !=4)
-				console.log("大厅服务端返回消息 type：",input.msg_type," msg:"+input);
-			else
-			console.log("大厅心跳包返回消息 type：",input.msg_type," msg:"+input);
-			var input=this.bullProtoModel.msg_proto.CS_Builer().decode(msgbyte.buffer);
-			this.sentNotification(input.msg_type.toString(),input);
-		}
-
-		__proto.reconnect=function(){
-			if(this.num>2){
-				this.clearTimer();
-				Alert.show("网络异常，请检查网络!","",AlertPanel,null,Handler.create(this,this.alertClose));
-				return;
-			}
-			this.startTimer();
-			this.num++;
-			var config=this.getSingleton("ConfigData");
-			this.connect(config.ip,config.port);
-		}
-
-		__proto.startTimer=function(){
-			if(!this.timer){
-				this.timer=new Timer();
-				this.timer.loop(5000,this,this.reconnect);
-			}
-		}
-
-		__proto.clearTimer=function(){
-			this.timer.clear(this,this.reconnect);
-			this.timer=null;
-			this.num=0;
-			this._socket.close();
-		}
-
-		HallSocketService.NAME="hallSocketService";
-		return HallSocketService;
-	})(Model)
-
-
 	//class bull.modules.common.command.RoomListCommand extends com.lightMVC.parrerns.Command
 	var RoomListCommand=(function(_super){
 		function RoomListCommand(){
@@ -29278,103 +29479,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return TryJoinRoomCommand;
 	})(Command)
-
-
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__proto.getHallRoomInfoById=function(tableId){
-			var roomVo;
-			for(var $each_roomVo in this._roomList){
-				roomVo=this._roomList[$each_roomVo];
-				if(roomVo.id==tableId)return roomVo;
-			}
-			return null;
-		}
-
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
-	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
-	var UserInfoData=(function(_super){
-		function UserInfoData(){
-			this._name=null;
-			this._balance=0;
-			this._bonus=0;
-			this._moneyType=0;
-			this._headIcon=null;
-			UserInfoData.__super.call(this);
-		}
-
-		__class(UserInfoData,'bull.modules.common.model.data.UserInfoData',_super);
-		var __proto=UserInfoData.prototype;
-		__proto.toString=function(){
-			return "{name:"+this._name+",balance:"+this._balance+":bonus:"+this._bonus+"}";
-		}
-
-		__getset(0,__proto,'moneyType',function(){
-			return this._moneyType;
-			},function(value){
-			this._moneyType=value;
-		});
-
-		__getset(0,__proto,'name',function(){
-			return this._name;
-			},function(value){
-			this._name=value;
-			this.dispatchEventDelay(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'balance',function(){
-			return this._balance;
-			},function(value){
-			console.log("userbalance sss");
-			this._balance=value;
-			this.dispatchEventDelay(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'bonus',function(){
-			return this._bonus;
-			},function(value){
-			this._bonus=value;
-			this.dispatchEventDelay(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'headIcon',function(){
-			return this._headIcon;
-			},function(value){
-			this._headIcon=value;
-		});
-
-		UserInfoData.NAME="userInfoData";
-		return UserInfoData;
-	})(EventDispatcher)
 
 
 	//class bull.modules.common.mediator.AlertMediator extends com.lightMVC.parrerns.Mediator
@@ -29504,6 +29608,47 @@ var Laya=window.Laya=(function(window,document){
 		AssetInMediator.NAME="assetInMediator";
 		return AssetInMediator;
 	})(Mediator)
+
+
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__proto.getHallRoomInfoById=function(tableId){
+			var roomVo;
+			for(var $each_roomVo in this._roomList){
+				roomVo=this._roomList[$each_roomVo];
+				if(roomVo.id==tableId)return roomVo;
+			}
+			return null;
+		}
+
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
 
 
 	/**
@@ -29655,6 +29800,345 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.data.RoomData extends com.iflash.events.EventDispatcher
+	var RoomData=(function(_super){
+		function RoomData(){
+			this.id=0;
+			this.name="";
+			this.State=0;
+			this.RoundID=0;
+			this.LeftTime=0;
+			this._carLocation=0;
+			this._lotteruResult=0;
+			this._status=0;
+			this._otherUserBets=[0,0,0,0,0,0,0,0];
+			this._selfBets=[0,0,0,0,0,0,0,0];
+			this.cash=false;
+			this.coin=false;
+			this.nm=false;
+			this.betTime=0;
+			this.confirmTime=0;
+			this.countTime=0;
+			this._playerBalance=null;
+			this._playerSavedBet=[];
+			this._hitHistoryAry=[];
+			this._hitStatisticsAry=[0,0,0,0,0,0,0,0];
+			this._roundInfo=null;
+			this._roundResult=null;
+			this._chipsType=0;
+			this.dataSelectClips=null;
+			this.login=false;
+			this.xutou=false;
+			this.chongzhi=false;
+			RoomData.__super.call(this);
+			this.chipTool=new BetSplit();
+		}
+
+		__class(RoomData,'bull.modules.common.model.data.RoomData',_super);
+		var __proto=RoomData.prototype;
+		__proto.transformChipVoList=function(ary,moneyType){
+			var chips=[];
+			var chipVO;
+			for(var i=0;i<ary.length;i++){
+				var bet=ary[i].amount;
+				if(moneyType==/*no*/this.MoneyType.CASH)bet=bet / 100;
+				var chip=this.chipTool.getChip(bet);
+				if(!chip){
+					var temp=this.chipTool.splitBet(bet);
+					for (var j=0;j < temp.chips.length;j++){
+						chip=temp.chips[j];
+						chipVO=new light.car.modules.common.model.data.vo.ChipVO(true,ary[i].item_id,chip.value);
+						chips.push(chipVO);
+					}
+					}else{
+					chipVO=new light.car.modules.common.model.data.vo.ChipVO(true,ary[i].item_id,bet);
+					chips.push(chipVO);
+				}
+			}
+			return chips;
+		}
+
+		/**
+		*自己撤销下注
+		*
+		*/
+		__proto.cancelBetSelf=function(userInfo){
+			for (var i=0;i < this._selfBets.length;i++){
+				userInfo.balance+=Number(this._selfBets[i]);
+				this._selfBets[i]=0;
+			}
+			this.event("cancelBetSelf");
+		}
+
+		/**
+		*看自己是否已经下注
+		*@return
+		*
+		*/
+		__proto.isSelfBet=function(){
+			for (var i=0;i < this._selfBets.length;i++){
+				if(this._selfBets[i] > 0)return true;
+			}
+			return false;
+		}
+
+		__proto.getBets=function(){
+			var re=[];
+			for (var i=0;i < 8;i++){
+				re.push(this._otherUserBets[i]+this._selfBets[i]);
+			}
+			return re;
+		}
+
+		__proto.getChipByID=function(id){
+			if(id >=this.chips.length)return-1;
+			return this.chips[id];
+		}
+
+		__proto.clear=function(){
+			this._selfBets=[0,0,0,0,0,0,0,0,0];
+			this._otherUserBets=[0,0,0,0,0,0,0,0,0];
+			this.xutou=false;
+		}
+
+		__proto.startBet=function(roundID){
+			this.clear();
+			/*no*/this.status=/*no*/this.RoomStatusType.START_BET;
+			this.dispatchEvent(new Event(/*no*/this.START_BET));
+		}
+
+		__proto.endBet=function(){
+			/*no*/this.status=/*no*/this.RoomStatusType.END_BET;
+			this.dispatchEvent(new Event(/*no*/this.END_BET));
+		}
+
+		__proto.addBetSelf=function(id,amount){
+			var selfBet=Number(this._selfBets[id]);
+			selfBet+=Number(amount);
+			this._selfBets[id]=selfBet;
+		}
+
+		__proto.addBetsSelf=function(bets){
+			var bet;
+			for (var i=0;i < bets.length;i++){
+				bet=bets[i];
+				this.addBetSelf(bet.type,bet.value);
+			}
+			this.event("addBetSelf",[bets]);
+		}
+
+		__proto.getBetSelf=function(id){
+			return this._selfBets[id];
+		}
+
+		__proto.removeBetSelf=function(id,amount){
+			this._selfBets[id]-=amount;
+		}
+
+		__proto.deldelAllSelfBet=function(){
+			var sun=0;
+			var l=this._selfBets.length;
+			for (var i=0;i < l;i++){
+				if(this._selfBets[i] > 0){
+					sun+=this._selfBets[i];
+					this.removeBetSelf(i,this._selfBets[i]);
+				}
+			}
+			return sun;
+		}
+
+		__proto.upDataBets=function(values){
+			var betInfo;
+			for (var i=0;i < values.length;i++){
+				betInfo=values[i];
+				var bet=betInfo.amount.toNumber();
+				bet=this.chipsType==/*no*/this.MoneyType.CASH ? bet / 100 :bet;
+				var otherBets=bet-this.getBetSelf(betInfo.item_id);
+				if(otherBets >=0){
+					if(otherBets > this._otherUserBets[betInfo.item_id]){
+						console.log("增加筹码",otherBets-this._otherUserBets[betInfo.item_id]);
+						var chip=new light.car.modules.common.model.data.vo.ChipVO(false,betInfo.item_id,otherBets-this._otherUserBets[betInfo.item_id]);
+						this.event("addBet",chip);
+						}else if(otherBets < this._otherUserBets[betInfo.item_id]){
+						console.log("减少筹码",this._otherUserBets[betInfo.item_id]-otherBets);
+						var remove_chip=new light.car.modules.common.model.data.vo.ChipVO(false,betInfo.item_id,this._otherUserBets[betInfo.item_id]-otherBets);
+						this.event("removeBet",remove_chip);
+					}
+					this._otherUserBets[betInfo.item_id]=otherBets;
+				}
+			}
+		}
+
+		__proto.toString=function(){
+			return "{name:"+this.id+",status:"+/*no*/this.status+",leftTime:"+/*no*/this.leftTime+"}";
+		}
+
+		/**
+		*初始化选择筹码配置
+		*/
+		__proto.initClipConfig=function(){
+			var objData=Light.loader.getRes("clipConfig");
+			if(objData==null)
+				return;
+			this.dataSelectClips=[];
+			var objItem;
+			var $each_objItem;
+			for($each_objItem in objData){
+				objItem=objData[$each_objItem];
+				var dataSelectClip=new light.car.modules.common.model.data.vo.ClipConfigVo();
+				dataSelectClip.type=objItem.type;
+				dataSelectClip.selectClips=String(objItem.value).split("、");
+				dataSelectClip.clipConfigs=String(objItem.config).split("、");
+				this.dataSelectClips.push(dataSelectClip);
+			}
+		}
+
+		/**
+		*根据筹码类型，获取当前选择筹码面板的筹码
+		*@param clipType
+		*@return
+		*/
+		__proto.getClipBets=function(clipType){
+			if(this.dataSelectClips==null || this.dataSelectClips.length==0)
+				return null;
+			for (var j=0;j < this.dataSelectClips.length;j++){
+				var dataSelectClip=this.dataSelectClips[j];
+				if(dataSelectClip.type==clipType)
+					return dataSelectClip;
+			}
+			return null;
+		}
+
+		__proto.addOtherUserBet=function(type,value){
+			this._otherUserBets[type]+=value;
+		}
+
+		__proto.getOtherUserBet=function(type){
+			return this._otherUserBets[type];
+		}
+
+		__proto.minusOtherUserBet=function(type,value){
+			this._otherUserBets[type]-=value;
+		}
+
+		__getset(0,__proto,'playerBalance',function(){
+			return this._playerBalance;
+			},function(value){
+			this._playerBalance=value;
+			this.dispatchEvent(new Event(/*no*/this.USER_BALANCE_CHANGE));
+		});
+
+		__getset(0,__proto,'chipsType',function(){
+			return this._chipsType;
+			},function(value){
+			this._chipsType=value;
+		});
+
+		__getset(0,__proto,'roundInfo',function(){
+			return this._roundInfo;
+			},function(value){
+			if(!value)return;
+			/*no*/this.roundid=String(value.round_id);
+			/*no*/this.status=value.round_state;
+			/*no*/this.leftTime=Math.round((value.state_remain_time).toNumber()/ 1000);
+			var ary=[];
+			for(var i=0;i<value.player_bets.length;i++){
+				var amount=this.chipsType==/*no*/this.MoneyType.CASH ? value.player_bets[i].amount /100:value.player_bets[i].amount;
+				var chipVo=new light.car.modules.common.model.data.vo.ChipVO(true,value.player_bets[i].item_id,amount);
+				ary.push(chipVo);
+			}
+			this.addBetsSelf(ary);
+			this.upDataBets(value.total_bets);
+			this._roundInfo=value;
+		});
+
+		__getset(0,__proto,'hitStatisticsAry',function(){
+			return this._hitStatisticsAry;
+			},function(value){
+			if(value==null || value.length==0)
+				this._hitStatisticsAry=[0,0,0,0,0,0,0,0];
+			else{
+				for(var i=0;i<value.length;i++){
+					this._hitStatisticsAry[value[i].id]=value[i].num;
+				}
+			}
+		});
+
+		__getset(0,__proto,'hitHistoryAry',function(){
+			return this._hitHistoryAry;
+			},function(value){
+			this._hitHistoryAry=value;
+		});
+
+		// }
+		__getset(0,__proto,'carLocation',function(){
+			return this._carLocation;
+			},function(value){
+			this._carLocation=value;
+		});
+
+		__getset(0,__proto,'roundResult',function(){
+			return this._roundResult;
+			},function(result){
+			this.carLocation=result.location_id;
+			this._roundResult=result;
+			/*no*/this.status=/*no*/this.RoomStatusType.LOTTERY_DRAW;
+			this.dispatchEvent(new Event(/*no*/this.LOTTERY_DRAW));
+		});
+
+		__getset(0,__proto,'playerSavedBet',function(){
+			return this._playerSavedBet;
+			},function(value){
+			this._playerSavedBet=value;
+			this.dispatchEvent(new Event(/*no*/this.LASTTIME_BET_RECORD));
+		});
+
+		__getset(0,__proto,'lotteruResult',function(){
+			return this._lotteruResult;
+			},function(value){
+			this._lotteruResult=value;
+		});
+
+		__getset(0,__proto,'chips',null,function(value){
+			var temp=JSON.parse(value);
+			var config=[];
+			for (var i=0;i < temp.length;i++){
+				config.push(new BetInfoVO(temp[i][0],temp[i][1]));
+			}
+			if(config.length==0)throw new Error("筹码配置信息错误");
+			this.chipTool.betConfig=config;
+		});
+
+		__getset(0,__proto,'tableInfo',null,function(value){
+			/*no*/this.state=value.table_state;
+			this.carLocation=value.cur_location_id;
+			this.hitHistoryAry=value.item_id;
+			this.hitStatisticsAry=value.item_hit_sts;
+			this.roundInfo=value.cur_round;
+			this.betTime=value.bet_time / 1000;
+			this.confirmTime=value.confirm_time / 1000;
+			this.countTime=value.cashing_time / 1000;
+			this.playerBalance=value.player_balance;
+			this.playerSavedBet=value.player_saved_bet;
+			this.dispatchEvent(new LightEvent(/*no*/this.UPDATA));
+		});
+
+		RoomData.NAME="roomData";
+		RoomData.START=1;
+		RoomData.BANKER=2;
+		RoomData.BET=3;
+		RoomData.BET_CHECK=4;
+		RoomData.DEAL=5;
+		RoomData.END=6;
+		RoomData.ADD_BET="addBet";
+		RoomData.REMOVE_BET="removeBet";
+		RoomData.ADD_BET_SELF="addBetSelf";
+		RoomData.REMOVE_BET_SELF="removeBetSelf";
+		RoomData.CANCEL_BET_SELF="cancelBetSelf";
+		return RoomData;
+	})(EventDispatcher)
+
+
 	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
 	var SmallLoadingMediator=(function(_super){
 		function SmallLoadingMediator(mediatorName,viewComponent){
@@ -29675,28 +30159,60 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
-	var EnterRoomCommand=(function(_super){
-		function EnterRoomCommand(){
-			EnterRoomCommand.__super.call(this);
+	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
+	var UserInfoData=(function(_super){
+		function UserInfoData(){
+			this._name=null;
+			this._balance=0;
+			this._bonus=0;
+			this._moneyType=0;
+			this._headIcon=null;
+			UserInfoData.__super.call(this);
 		}
 
-		__class(EnterRoomCommand,'bull.modules.room.command.EnterRoomCommand',_super);
-		var __proto=EnterRoomCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="enterRoom"){
-				this.enterRoomRqsHandler(notification.getBody());
-			}
+		__class(UserInfoData,'bull.modules.common.model.data.UserInfoData',_super);
+		var __proto=UserInfoData.prototype;
+		__proto.toString=function(){
+			return "{name:"+this._name+",balance:"+this._balance+":bonus:"+this._bonus+"}";
 		}
 
-		__proto.enterRoomRqsHandler=function(data){
-			var preLoad=this.getModel("perLoadService");
-			preLoad.loadRoom();
-		}
+		__getset(0,__proto,'moneyType',function(){
+			return this._moneyType;
+			},function(value){
+			this._moneyType=value;
+		});
 
-		return EnterRoomCommand;
-	})(Command)
+		__getset(0,__proto,'name',function(){
+			return this._name;
+			},function(value){
+			this._name=value;
+			this.dispatchEventDelay(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'balance',function(){
+			return this._balance;
+			},function(value){
+			console.log("userbalance sss");
+			this._balance=value;
+			this.dispatchEventDelay(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'bonus',function(){
+			return this._bonus;
+			},function(value){
+			this._bonus=value;
+			this.dispatchEventDelay(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'headIcon',function(){
+			return this._headIcon;
+			},function(value){
+			this._headIcon=value;
+		});
+
+		UserInfoData.NAME="userInfoData";
+		return UserInfoData;
+	})(EventDispatcher)
 
 
 	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
@@ -29725,6 +30241,30 @@ var Laya=window.Laya=(function(window,document){
 		BullProtoModel.NAME="bullProtoModel";
 		return BullProtoModel;
 	})(Model)
+
+
+	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
+	var EnterRoomCommand=(function(_super){
+		function EnterRoomCommand(){
+			EnterRoomCommand.__super.call(this);
+		}
+
+		__class(EnterRoomCommand,'bull.modules.room.command.EnterRoomCommand',_super);
+		var __proto=EnterRoomCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="enterRoom"){
+				this.enterRoomRqsHandler(notification.getBody());
+			}
+		}
+
+		__proto.enterRoomRqsHandler=function(data){
+			var preLoad=this.getModel("perLoadService");
+			preLoad.loadRoom();
+		}
+
+		return EnterRoomCommand;
+	})(Command)
 
 
 	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
@@ -29774,182 +30314,32 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.room.mediator.BullScenceMediator extends com.lightMVC.parrerns.Mediator
-	var BullScenceMediator=(function(_super){
-		function BullScenceMediator(mediatorName,viewComponent){
-			this.perLoadService=null;
-			this.roomSocketService=null;
-			this.roomData=null;
-			this.userInfoData=null;
-			this.num=0;
-			this.timer=null;
-			(mediatorName===void 0)&& (mediatorName="");
-			BullScenceMediator.__super.call(this,"BullScenceMediator",viewComponent);
+	//class bull.modules.room.command.StateCommand extends com.lightMVC.parrerns.Command
+	var StateCommand=(function(_super){
+		function StateCommand(){
+			StateCommand.__super.call(this);
 		}
 
-		__class(BullScenceMediator,'bull.modules.room.mediator.BullScenceMediator',_super);
-		var __proto=BullScenceMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.getInjector=function(){
-			return ["roomSocketService","perLoadService","userInfoData"];
-		}
-
-		__proto.setViewComponent=function(viewComponent){
-			_super.prototype.setViewComponent.call(this,viewComponent);
-			console.log("BullScenceMediator setViewComponent")
-			this.view.backLobby.on("click",this,this.onReturnClick);
-			this.view.on("uiShow",this,this.onUIShow);
-			this.view.on("uiHide",this,this.onUIHide);
-			this.view.optionBtn.on("click",this,this.onClick);
-			this.view.setupBtn.on("click",this,this.onClick);
-			this.view.helpBtn.on("click",this,this.onClick);
-			this.view.CarryInBtn.on("click",this,this.onClick);
-			this.view.PlayerListBtn.on("click",this,this.onClick);
-			this.view.btn_display(false);
-			if (this.view["TestPanel"] !=undefined){
-				this.view.TestPanel.on("item_click",this,this.ontest);
+		__class(StateCommand,'bull.modules.room.command.StateCommand',_super);
+		var __proto=StateCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_TIMER_NOTIFY.toString()){
+				this.State(notification.getBody());
 			}
-			this.addNotifiction("RoomSocketClose");
-			this.addNotifiction("ExitRoomEvent");
-		}
-
-		__proto.onInitialize=function(){
-			console.log("===========================init");
-		}
-
-		__proto.ontest=function(cmd){
-			this.sentNotification("TestOrder",cmd);
-		}
-
-		/**
-		*点击设置上的按钮
-		*/
-		__proto.onClick=function(e){
-			console.log("onClick:"+e.target);
-			switch(e.target){
-				case this.view.helpBtn:
-					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
-					this.view.btn_display(!this.view.btnBg.visible);
-					break ;
-				case this.view.setupBtn:
-					this.sentNotification("car.SHOW_RULE_PANEL");
-					this.view.btn_display(!this.view.btnBg.visible);
-					break ;
-				case this.view.CarryInBtn:
-					this.view.btn_display(!this.view.btnBg.visible);
-					break ;
-				case this.view.PlayerListBtn:
-					this.view.btn_display(!this.view.btnBg.visible);
-					break ;
-				case this.view.optionBtn:
-					this.view.btn_display(!this.view.btnBg.visible);
-					break ;
-				}
 		}
 
 		//}
-		__proto.handler=function(noti){
-			switch(noti.getName()){
-				case "RoomSocketClose":
-					this.dispose();
-					break ;
-				case "ExitRoomEvent":
-					this.exitRoom();
-				}
+		__proto.State=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.State=cs.timer_notify.status;
+			bullData.roomData.RoundID=cs.timer_notify.order_id;
+			bullData.roomData.LeftTime=cs.timer_notify.timeLeft;
+			this.sentNotification("STATE_CHANGE");
 		}
 
-		__proto.getPlayerInfoCallback=function(param){
-			console.log("getPlayerInfoCallback!!!!!!!!!!!!!!!!!!");
-			console.log(param);
-		}
-
-		__proto.sendHeartBeat=function(){
-			this.startHeartCount();
-			this.sendMsg();
-		}
-
-		__proto.sendMsg=function(){
-			if(this.num > 2){
-				this.clearTimer();
-				this.roomSocketService.reconnect();
-				return;
-			}
-			this.num++;
-			this.sentNotification("roomHeartBeat");
-		}
-
-		__proto.startHeartCount=function(){
-			if(!this.timer){
-				this.timer=new Timer();
-				this.timer.loop(5000,this,this.sendMsg);
-			}
-		}
-
-		__proto.clearTimer=function(){
-			if(!this.timer)return;
-			this.timer.clear(this,this.sendMsg);
-			this.timer=null;
-			this.num=0;
-		}
-
-		__proto.receiveHeartBeat=function(){
-			this.num=0;
-		}
-
-		__proto.onCarryInClick=function(){
-			this.sentNotification(/*no*/this.CarNotification.GET_USER_BALANCE);
-		}
-
-		__proto.onCZClick=function(e){
-			if(this.roomData.chongzhi)return;
-			this.sentNotification(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_REQ.toString());
-		}
-
-		__proto.onXTClick=function(e){
-			if(this.roomData.xutou)return;
-			this.sentNotification(ENCSType.CS_TYPE_PLAYER_SAVED_BET_REQ.toString());
-		}
-
-		__proto.onBetHandler=function(param){
-			this.sentNotification(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),param);
-		}
-
-		__proto.onUIShow=function(){
-			this.view.showme();
-		}
-
-		__proto.onUIHide=function(){
-			this.view.hideme();
-		}
-
-		__proto.onReturnClick=function(){
-			console.log("onReturnClick exit room");
-			this.exitRoom();
-		}
-
-		__proto.exitRoomCall=function(data,flg){
-			if(flg=="ok_btn"){
-				this.exitRoom();
-			}
-		}
-
-		__proto.exitRoom=function(){
-			this.perLoadService.loadHall();
-			this.sentNotification(BullNotification.Leave_Game);
-			this.dispose();
-		}
-
-		__proto.dispose=function(){
-			this.view.clear();
-		}
-
-		__getset(0,__proto,'view',function(){
-			return this.getViewComponent();
-		});
-
-		BullScenceMediator.NAME="BullScenceMediator";
-		return BullScenceMediator;
-	})(Mediator)
+		return StateCommand;
+	})(Command)
 
 
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
@@ -30202,6 +30592,210 @@ var Laya=window.Laya=(function(window,document){
 		PreLoadService.NAME="perLoadService";
 		return PreLoadService;
 	})(Model)
+
+
+	//class bull.modules.room.mediator.BullScenceMediator extends com.lightMVC.parrerns.Mediator
+	var BullScenceMediator=(function(_super){
+		function BullScenceMediator(mediatorName,viewComponent){
+			this.perLoadService=null;
+			this.roomSocketService=null;
+			this.roomData=null;
+			this.userInfoData=null;
+			this.num=0;
+			this.timer=null;
+			(mediatorName===void 0)&& (mediatorName="");
+			BullScenceMediator.__super.call(this,"BullScenceMediator",viewComponent);
+		}
+
+		__class(BullScenceMediator,'bull.modules.room.mediator.BullScenceMediator',_super);
+		var __proto=BullScenceMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return ["roomData","roomSocketService","perLoadService","userInfoData"];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			_super.prototype.setViewComponent.call(this,viewComponent);
+			console.log("BullScenceMediator setViewComponent")
+			this.view.backLobby.on("click",this,this.onReturnClick);
+			this.view.on("uiShow",this,this.onUIShow);
+			this.view.on("uiHide",this,this.onUIHide);
+			this.view.optionBtn.on("click",this,this.onClick);
+			this.view.setupBtn.on("click",this,this.onClick);
+			this.view.helpBtn.on("click",this,this.onClick);
+			this.view.CarryInBtn.on("click",this,this.onClick);
+			this.view.PlayerListBtn.on("click",this,this.onClick);
+			this.view.btn_display(false);
+			if (this.view["TestPanel"] !=undefined){
+				this.view.TestPanel.on("item_click",this,this.ontest);
+			}
+			this.addNotifiction("STATE_CHANGE");
+			this.addNotifiction("RoomSocketClose");
+			this.addNotifiction("ExitRoomEvent");
+		}
+
+		__proto.onInitialize=function(){
+			console.log("===========================init");
+		}
+
+		__proto.ontest=function(cmd){
+			this.sentNotification("TestOrder",cmd);
+		}
+
+		/**
+		*点击设置上的按钮
+		*/
+		__proto.onClick=function(e){
+			console.log("onClick:"+e.target);
+			switch(e.target){
+				case this.view.helpBtn:
+					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
+					this.view.btn_display(!this.view.btnBg.visible);
+					break ;
+				case this.view.setupBtn:
+					this.sentNotification("car.SHOW_RULE_PANEL");
+					this.view.btn_display(!this.view.btnBg.visible);
+					break ;
+				case this.view.CarryInBtn:
+					this.view.btn_display(!this.view.btnBg.visible);
+					break ;
+				case this.view.PlayerListBtn:
+					this.view.btn_display(!this.view.btnBg.visible);
+					break ;
+				case this.view.optionBtn:
+					this.view.btn_display(!this.view.btnBg.visible);
+					break ;
+				}
+		}
+
+		__proto.handler=function(noti){
+			switch(noti.getName()){
+				case "STATE_CHANGE":
+					this.state_change();
+					break ;
+				case "RoomSocketClose":
+					this.dispose();
+					break ;
+				case "ExitRoomEvent":
+					this.exitRoom();
+				}
+		}
+
+		__proto.state_change=function(){
+			switch(this.roomData.State){
+				case 1:
+					this.view.start();
+					break ;
+				case 2:
+					this.view.banker();
+					break ;
+				case 3:
+					this.view.bet();
+					break ;
+				case 4:
+					this.view.betCheck();
+					break ;
+				case 5:
+					this.view.deal();
+					break ;
+				case 6:
+					this.view.end();
+					break ;
+				}
+		}
+
+		__proto.getPlayerInfoCallback=function(param){
+			console.log("getPlayerInfoCallback!!!!!!!!!!!!!!!!!!");
+			console.log(param);
+		}
+
+		__proto.sendHeartBeat=function(){
+			this.startHeartCount();
+			this.sendMsg();
+		}
+
+		__proto.sendMsg=function(){
+			if(this.num > 2){
+				this.clearTimer();
+				this.roomSocketService.reconnect();
+				return;
+			}
+			this.num++;
+			this.sentNotification("roomHeartBeat");
+		}
+
+		__proto.startHeartCount=function(){
+			if(!this.timer){
+				this.timer=new Timer();
+				this.timer.loop(5000,this,this.sendMsg);
+			}
+		}
+
+		__proto.clearTimer=function(){
+			if(!this.timer)return;
+			this.timer.clear(this,this.sendMsg);
+			this.timer=null;
+			this.num=0;
+		}
+
+		__proto.receiveHeartBeat=function(){
+			this.num=0;
+		}
+
+		__proto.onCarryInClick=function(){
+			this.sentNotification(/*no*/this.CarNotification.GET_USER_BALANCE);
+		}
+
+		__proto.onCZClick=function(e){
+			if(this.roomData.chongzhi)return;
+			this.sentNotification(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_REQ.toString());
+		}
+
+		__proto.onXTClick=function(e){
+			if(this.roomData.xutou)return;
+			this.sentNotification(ENCSType.CS_TYPE_PLAYER_SAVED_BET_REQ.toString());
+		}
+
+		__proto.onBetHandler=function(param){
+			this.sentNotification(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),param);
+		}
+
+		__proto.onUIShow=function(){
+			this.view.showme();
+		}
+
+		__proto.onUIHide=function(){
+			this.view.hideme();
+		}
+
+		__proto.onReturnClick=function(){
+			console.log("onReturnClick exit room");
+			this.exitRoom();
+		}
+
+		__proto.exitRoomCall=function(data,flg){
+			if(flg=="ok_btn"){
+				this.exitRoom();
+			}
+		}
+
+		__proto.exitRoom=function(){
+			this.perLoadService.loadHall();
+			this.sentNotification(BullNotification.Leave_Game);
+			this.dispose();
+		}
+
+		__proto.dispose=function(){
+			this.view.clear();
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.getViewComponent();
+		});
+
+		BullScenceMediator.NAME="BullScenceMediator";
+		return BullScenceMediator;
+	})(Mediator)
 
 
 	//class bull.modules.room.services.RoomSocketService extends com.lightMVC.parrerns.Model
@@ -49690,7 +50284,6 @@ var Laya=window.Laya=(function(window,document){
 			Tween.to(this.InfoBoard,{y:this.InfoBoard.y-96 },1000,Ease.backIn);
 			Tween.to(this.bankerBoard,{y:this.bankerBoard.y+76 },1000,Ease.backIn);
 			Tween.to(this.BetChip,{y:this.BetChip.y-138 },1000,Ease.backIn);
-			this.HistoryRecord
 		}
 
 		__proto.hideme=function(){
@@ -49704,6 +50297,30 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.btn_display=function(show){
 			this.btnBg.visible=this.setupBtn.visible=this.helpBtn.visible=this.CarryInBtn.visible=this.PlayerListBtn.visible=show;
+		}
+
+		__proto.start=function(){
+			console.log("start");
+		}
+
+		__proto.banker=function(){
+			console.log("banker");
+		}
+
+		__proto.bet=function(){
+			console.log("bet");
+		}
+
+		__proto.betCheck=function(){
+			console.log("betCheck");
+		}
+
+		__proto.deal=function(){
+			console.log("deal");
+		}
+
+		__proto.end=function(){
+			console.log("end");
 		}
 
 		__proto.onReturnClick=function(e){}
@@ -50994,36 +51611,53 @@ var Laya=window.Laya=(function(window,document){
 	})(SmallPanelUI)
 
 
-	Laya.__init([EventDispatcher1,LocalStorage,Timer,Browser,Proxy,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,Dialog]);
+	Laya.__init([EventDispatcher1,Dialog,LocalStorage,Timer,Browser,Proxy,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile]);
 	new Main();
 
 })(window,document,Laya);
 
 
 /*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (36):warning:Sprite This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (37):warning:Sprite This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (38):warning:Sprite This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/manager/LayerManager.as (67):warning:Shape This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (74):warning:CarNotification.ENTER_ROOM This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (84):warning:CarNotification.SHOW_CARRY_IN_PANEL This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (181):warning:CarNotification.ENTER_ROOM This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (83):warning:CarProtoModel.NAME This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (84):warning:roomSocketService.close This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (181):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
+1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (74):warning:CarNotification.ENTER_ROOM This variable is not defined.
+2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (84):warning:CarNotification.SHOW_CARRY_IN_PANEL This variable is not defined.
+3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (181):warning:CarNotification.ENTER_ROOM This variable is not defined.
+4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (83):warning:CarProtoModel.NAME This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (84):warning:roomSocketService.close This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (172):warning:MoneyType.CASH This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (241):warning:status This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (241):warning:RoomStatusType.START_BET This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (242):warning:START_BET This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (247):warning:status This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (247):warning:RoomStatusType.END_BET This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (248):warning:END_BET This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (308):warning:MoneyType.CASH This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (327):warning:status This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (327):warning:leftTime This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (164):warning:USER_BALANCE_CHANGE This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (103):warning:roundid This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (104):warning:status This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (105):warning:leftTime This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (109):warning:MoneyType.CASH This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (256):warning:status This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (256):warning:RoomStatusType.LOTTERY_DRAW This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (257):warning:LOTTERY_DRAW This variable is not defined.
+27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (153):warning:LASTTIME_BET_RECORD This variable is not defined.
+28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (368):warning:state This variable is not defined.
+29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (380):warning:UPDATA This variable is not defined.
+30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
+31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
+32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
+33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
+34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
+35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
+36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
+37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
+38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
+39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
+40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
+41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (211):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
 */

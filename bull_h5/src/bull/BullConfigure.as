@@ -32,6 +32,8 @@ package bull
 	//import light.car.modules.common.command.StartBetCommand;
 	//import light.car.modules.common.command.TableInfoCommand;
 	
+	import bull.modules.room.command.StateCommand;
+	
 	import bull.modules.common.mediator.AlertMediator;
 	import bull.modules.common.mediator.AssetInMediator;	
 	import bull.modules.common.mediator.MusicSetMediator;
@@ -40,7 +42,7 @@ package bull
 	
 	import bull.modules.common.model.data.Data;
 	import bull.modules.common.model.data.HallData;
-	//import bull.modules.common.model.data.RoomData;
+	import bull.modules.common.model.data.RoomData;
 	import bull.modules.common.model.data.UserInfoData;
 	import bull.modules.common.services.WebService;
 	import bull.modules.BullHall.command.UserBalanceCommand;
@@ -124,8 +126,12 @@ package bull
 			registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(), JoinRoomCommand);
 			
 			
+			//TODO carry in
+			
 //			registerCommand(MessageID.ROOM_CONFIG_NOTIFY.toString(), RoomConfigCommand);
 			
+			registerCommand(ENCSType.CS_TYPE_TIMER_NOTIFY.toString(), StateCommand);
+
 			
 			//
 			//registerCommand(ENCSType.CS_TYPE_HEART_BEAT_REQ.toString(),  HeartBeatCommand);
@@ -173,7 +179,7 @@ package bull
 			
 			asSingleton(Data.NAME,Data)
 			asSingleton(HallData.NAME,HallData);
-			//asSingleton(RoomData.NAME,RoomData);
+			asSingleton(RoomData.NAME,RoomData);
 			asSingleton(UserInfoData.NAME,UserInfoData);
 			asSingleton(ConfigData.NAME,ConfigData);
 		}

@@ -36,7 +36,7 @@ package bull.events
 		
 		public static const LOGIN_ROOM_RQS:String = "loginRoomRequest";//////////////////登录房间请求
 		
-		
+		public static const STATE_CHANGE:String = "STATE_CHANGE";//////////////////狀態改變
 		
 		
 		public static const SOCKET_CONNECT:String = "socketConnect";////////////////通知连接服务器 

@@ -33,7 +33,7 @@ package bull.view.room
 			Tween.to(bankerBoard, { y:bankerBoard.y +76 }, 1000,Ease.backIn);
 			Tween.to(BetChip, { y:BetChip.y -138 }, 1000, Ease.backIn);
 			
-			HistoryRecord
+		
 		}
 		
 		public function hideme():void{
@@ -53,10 +53,42 @@ package bull.view.room
 			btnBg.visible = setupBtn.visible = helpBtn.visible = CarryInBtn.visible = PlayerListBtn.visible = show; 
 		}
 		
+		
+		public function start():void
+		{
+			trace("start");
+		}
+		
+		public function banker():void
+		{
+			trace("banker");
+		}
+		
+		public function bet():void
+		{
+			trace("bet");
+		}
+		
+		public function betCheck():void
+		{
+			trace("betCheck");
+		}
+		
+		public function deal():void
+		{
+			trace("deal");
+		}
+		
+		public function end():void
+		{
+			trace("end");
+		}
+		
 		private function onReturnClick(e:Event):void
 		{			
 			
 		}
+		
 		public function clear():void {
 		
 		}
