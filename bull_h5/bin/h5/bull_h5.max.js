@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.lightMVC.interfaces.INotification');
+	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -926,6 +926,7 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.ROOM_SOCKET_CONNECT_FAILED="roomSocketConnectFailed";
 		BullNotification.LOGIN_ROOM_RQS="loginRoomRequest";
 		BullNotification.STATE_CHANGE="STATE_CHANGE";
+		BullNotification.HISTORY_NOTIFY="HistoryNotify";
 		BullNotification.SOCKET_CONNECT="socketConnect";
 		BullNotification.ONLOGIN="onLogin";
 		BullNotification.START_ROOM_LIST="startRoomList";
@@ -28524,6 +28525,7 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString(),JoinRoomCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(),JoinRoomCommand);
 			this.registerCommand(ENCSType.CS_TYPE_TIMER_NOTIFY.toString(),StateCommand);
+			this.registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(),HistoryCommand);
 			this.registerCommand("TestOrder",TestCommand);
 		}
 
@@ -29731,75 +29733,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	/**
-	*规则面板
-	*/
-	//class bull.modules.common.mediator.RuleMediator extends com.lightMVC.parrerns.Mediator
-	var RuleMediator=(function(_super){
-		//显示规则说明面板事件
-		function RuleMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			RuleMediator.__super.call(this,mediatorName,viewComponent);
-		}
-
-		__class(RuleMediator,'bull.modules.common.mediator.RuleMediator',_super);
-		var __proto=RuleMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.getInjector=function(){
-			return [];
-		}
-
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.top.addChild(this.view);
-			this.view.visible=false;
-			PopupManager.centerPopUp(this.view);
-			console.log("RuleMediator setViewComponent visible:"+this.view.visible);
-			this.view.btnClose.on("click",this,this.onClose);
-			this.addNotifiction("car.SHOW_RULE_PANEL");
-			this.addNotifiction("car.HIDE_RULE_PANEL");
-			this.addNotifiction("scenceChange");
-		}
-
-		__proto.handler=function(notification){
-			switch(notification.getName()){
-				case "car.SHOW_RULE_PANEL":
-					this.onShow();
-					break ;
-				case "car.HIDE_RULE_PANEL":
-					this.onClose();
-					break ;
-				case "scenceChange":;
-					var curScene=notification.getBody();
-					console.log("MusicSetMediator 切换到游戏场景:"+curScene);
-					if(curScene==/*no*/this.CarNotification.Scene_Game || curScene==/*no*/this.CarNotification.Scene_Hall)
-						this.onClose();
-					break ;
-				}
-		}
-
-		__proto.onShow=function(){
-			console.log("RuleMediator onShow()");
-			Light.layer.top.addChild(this.view);
-			this.view.visible=true;
-		}
-
-		__proto.onClose=function(e){
-			console.log("RuleMediator onClose()");
-			this.view.close();
-		}
-
-		__getset(0,__proto,'view',function(){
-			return this.viewComponent;
-		});
-
-		RuleMediator.NAME="ruleMediator";
-		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
-		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
-		return RuleMediator;
-	})(Mediator)
-
-
 	//class bull.modules.common.model.data.RoomData extends com.iflash.events.EventDispatcher
 	var RoomData=(function(_super){
 		function RoomData(){
@@ -29808,6 +29741,9 @@ var Laya=window.Laya=(function(window,document){
 			this.State=0;
 			this.RoundID=0;
 			this.LeftTime=0;
+			this.history_Win_info=null;
+			this.history_lost_info=null;
+			this.history_result_info=null;
 			this._carLocation=0;
 			this._lotteruResult=0;
 			this._status=0;
@@ -30139,6 +30075,75 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
+	/**
+	*规则面板
+	*/
+	//class bull.modules.common.mediator.RuleMediator extends com.lightMVC.parrerns.Mediator
+	var RuleMediator=(function(_super){
+		//显示规则说明面板事件
+		function RuleMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			RuleMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(RuleMediator,'bull.modules.common.mediator.RuleMediator',_super);
+		var __proto=RuleMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.top.addChild(this.view);
+			this.view.visible=false;
+			PopupManager.centerPopUp(this.view);
+			console.log("RuleMediator setViewComponent visible:"+this.view.visible);
+			this.view.btnClose.on("click",this,this.onClose);
+			this.addNotifiction("car.SHOW_RULE_PANEL");
+			this.addNotifiction("car.HIDE_RULE_PANEL");
+			this.addNotifiction("scenceChange");
+		}
+
+		__proto.handler=function(notification){
+			switch(notification.getName()){
+				case "car.SHOW_RULE_PANEL":
+					this.onShow();
+					break ;
+				case "car.HIDE_RULE_PANEL":
+					this.onClose();
+					break ;
+				case "scenceChange":;
+					var curScene=notification.getBody();
+					console.log("MusicSetMediator 切换到游戏场景:"+curScene);
+					if(curScene==/*no*/this.CarNotification.Scene_Game || curScene==/*no*/this.CarNotification.Scene_Hall)
+						this.onClose();
+					break ;
+				}
+		}
+
+		__proto.onShow=function(){
+			console.log("RuleMediator onShow()");
+			Light.layer.top.addChild(this.view);
+			this.view.visible=true;
+		}
+
+		__proto.onClose=function(e){
+			console.log("RuleMediator onClose()");
+			this.view.close();
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.viewComponent;
+		});
+
+		RuleMediator.NAME="ruleMediator";
+		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
+		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
+		return RuleMediator;
+	})(Mediator)
+
+
 	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
 	var SmallLoadingMediator=(function(_super){
 		function SmallLoadingMediator(mediatorName,viewComponent){
@@ -30314,34 +30319,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.room.command.StateCommand extends com.lightMVC.parrerns.Command
-	var StateCommand=(function(_super){
-		function StateCommand(){
-			StateCommand.__super.call(this);
-		}
-
-		__class(StateCommand,'bull.modules.room.command.StateCommand',_super);
-		var __proto=StateCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_TIMER_NOTIFY.toString()){
-				this.State(notification.getBody());
-			}
-		}
-
-		//}
-		__proto.State=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.State=cs.timer_notify.status;
-			bullData.roomData.RoundID=cs.timer_notify.order_id;
-			bullData.roomData.LeftTime=cs.timer_notify.timeLeft;
-			this.sentNotification("STATE_CHANGE");
-		}
-
-		return StateCommand;
-	})(Command)
-
-
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
 	var WebService=(function(_super){
 		function WebService(modelName,data){
@@ -30438,6 +30415,69 @@ var Laya=window.Laya=(function(window,document){
 		WebService.NAME="WebService";
 		return WebService;
 	})(Model)
+
+
+	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
+	var HistoryCommand=(function(_super){
+		function HistoryCommand(){
+			HistoryCommand.__super.call(this);
+		}
+
+		__class(HistoryCommand,'bull.modules.room.command.HistoryCommand',_super);
+		var __proto=HistoryCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
+				this.State(notification.getBody());
+			}
+		}
+
+		__proto.State=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.history_Win_info.length=0;
+			bullData.roomData.history_lost_info.length=0;
+			bullData.roomData.history_result_info.length=0;
+			for (var i=0;i < 4;i++){
+				bullData.roomData.history_Win_info=[cs.histroy_notify.win_info._1,cs.histroy_notify.win_info._2,cs.histroy_notify.win_info._3,cs.histroy_notify.win_info._4];
+				bullData.roomData.history_lost_info=[cs.histroy_notify.lose_info._1,cs.histroy_notify.lose_info._2,cs.histroy_notify.lose_info._3,cs.histroy_notify.lose_info._4];
+			};
+			var n=cs.histroy_notify.result_info.length;
+			for (var i=0;i < n;i++){
+				bullData.roomData.history_result_info.push([cs.histroy_notify.result_info._1,cs.histroy_notify.result_info._2,cs.histroy_notify.result_info._3,cs.histroy_notify.result_info._4]);
+			}
+			this.sentNotification("HistoryNotify");
+		}
+
+		return HistoryCommand;
+	})(Command)
+
+
+	//class bull.modules.room.command.StateCommand extends com.lightMVC.parrerns.Command
+	var StateCommand=(function(_super){
+		function StateCommand(){
+			StateCommand.__super.call(this);
+		}
+
+		__class(StateCommand,'bull.modules.room.command.StateCommand',_super);
+		var __proto=StateCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_TIMER_NOTIFY.toString()){
+				this.State(notification.getBody());
+			}
+		}
+
+		//}
+		__proto.State=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.State=cs.timer_notify.status;
+			bullData.roomData.RoundID=cs.timer_notify.order_id;
+			bullData.roomData.LeftTime=cs.timer_notify.timeLeft;
+			this.sentNotification("STATE_CHANGE");
+		}
+
+		return StateCommand;
+	})(Command)
 
 
 	//class bull.modules.perload.services.PreLoadService extends com.lightMVC.parrerns.Model
@@ -30630,6 +30670,7 @@ var Laya=window.Laya=(function(window,document){
 				this.view.TestPanel.on("item_click",this,this.ontest);
 			}
 			this.addNotifiction("STATE_CHANGE");
+			this.addNotifiction("HistoryNotify");
 			this.addNotifiction("RoomSocketClose");
 			this.addNotifiction("ExitRoomEvent");
 		}
@@ -30673,6 +30714,9 @@ var Laya=window.Laya=(function(window,document){
 				case "STATE_CHANGE":
 					this.state_change();
 					break ;
+				case "HistoryNotify":
+					this.history_update();
+					break ;
 				case "RoomSocketClose":
 					this.dispose();
 					break ;
@@ -30702,6 +30746,10 @@ var Laya=window.Laya=(function(window,document){
 					this.view.end();
 					break ;
 				}
+		}
+
+		__proto.history_update=function(){
+			this.view.HistoryBoard.update_info(this.roomData.history_Win_info,this.roomData.history_lost_info,this.roomData.history_result_info);
 		}
 
 		__proto.getPlayerInfoCallback=function(param){
@@ -32473,23 +32521,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
-
-
 	/**
 	*场景管理器
 	*@author light-k
@@ -32690,6 +32721,23 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
+
+
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -48704,7 +48752,7 @@ var Laya=window.Laya=(function(window,document){
 			this.helpBtn=null;
 			this.PlayerListBtn=null;
 			this.CarryInBtn=null;
-			this.HistoryRecord=null;
+			this.HistoryBoard=null;
 			this.InfoBoard=null;
 			this.bankerBoard=null;
 			this.BetChip=null;
@@ -48715,7 +48763,7 @@ var Laya=window.Laya=(function(window,document){
 		__class(BullSceneUI,'ui.ui.room.BullSceneUI',_super);
 		var __proto=BullSceneUI.prototype;
 		__proto.createChildren=function(){
-			View.regComponent("ui.ui.room.HistoryRecordUI",HistoryRecordUI);
+			View.regComponent("bull.view.room.HistoryRecord",HistoryRecord);
 			View.regComponent("ui.ui.room.InfoBoardUI",InfoBoardUI);
 			View.regComponent("ui.ui.room.BankerBoardUI",BankerBoardUI);
 			View.regComponent("ui.ui.room.BetChipUI",BetChipUI);
@@ -48725,9 +48773,87 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryRecord","runtime":"ui.ui.room.HistoryRecordUI"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoBoard","runtime":"ui.ui.room.InfoBoardUI"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerBoard","runtime":"ui.ui.room.BankerBoardUI"}},{"type":"BetChip","props":{"y":803,"x":426,"var":"BetChip","runtime":"ui.ui.room.BetChipUI"}},{"type":"Test","props":{"y":583,"x":28,"var":"TestPanel","runtime":"bull.view.room.TestBoard"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryBoard","runtime":"bull.view.room.HistoryRecord"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoBoard","runtime":"ui.ui.room.InfoBoardUI"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerBoard","runtime":"ui.ui.room.BankerBoardUI"}},{"type":"BetChip","props":{"y":803,"x":426,"var":"BetChip","runtime":"ui.ui.room.BetChipUI"}},{"type":"Test","props":{"y":533,"x":3,"var":"TestPanel","runtime":"bull.view.room.TestBoard"}}]};}
 		]);
 		return BullSceneUI;
+	})(View)
+
+
+	//class ui.ui.room.HistoryRecordUI extends laya.ui.View
+	var HistoryRecordUI=(function(_super){
+		function HistoryRecordUI(){
+			this.Hidding_Recode=null;
+			this.Showing_Recode=null;
+			this.spade_0=null;
+			this.spade_1=null;
+			this.spade_2=null;
+			this.spade_3=null;
+			this.spade_4=null;
+			this.spade_5=null;
+			this.spade_6=null;
+			this.spade_7=null;
+			this.spade_8=null;
+			this.spade_9=null;
+			this.spade_10=null;
+			this.spade_11=null;
+			this.heart_0=null;
+			this.heart_1=null;
+			this.heart_2=null;
+			this.heart_3=null;
+			this.heart_4=null;
+			this.heart_5=null;
+			this.heart_6=null;
+			this.heart_7=null;
+			this.heart_8=null;
+			this.heart_9=null;
+			this.heart_10=null;
+			this.heart_11=null;
+			this.club_0=null;
+			this.club_1=null;
+			this.club_2=null;
+			this.club_3=null;
+			this.club_4=null;
+			this.club_5=null;
+			this.club_6=null;
+			this.club_7=null;
+			this.club_8=null;
+			this.club_9=null;
+			this.club_10=null;
+			this.club_11=null;
+			this.diamond_0=null;
+			this.diamond_1=null;
+			this.diamond_2=null;
+			this.diamond_3=null;
+			this.diamond_4=null;
+			this.diamond_5=null;
+			this.diamond_6=null;
+			this.diamond_7=null;
+			this.diamond_8=null;
+			this.diamond_9=null;
+			this.diamond_10=null;
+			this.diamond_11=null;
+			this.spade_win=null;
+			this.spade_lost=null;
+			this.heart_win=null;
+			this.heart_lost=null;
+			this.club_win=null;
+			this.club_lost=null;
+			this.diamond_win=null;
+			this.diamond_lost=null;
+			HistoryRecordUI.__super.call(this);
+		}
+
+		__class(HistoryRecordUI,'ui.ui.room.HistoryRecordUI',_super);
+		var __proto=HistoryRecordUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(HistoryRecordUI.uiView);
+		}
+
+		__static(HistoryRecordUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":169,"name":"Record","height":421},"child":[{"type":"Image","props":{"y":0,"x":0,"var":"Hidding_Recode","skin":"res/gameScene/未展开胜负记录.png"}},{"type":"Box","props":{"y":0,"x":0,"var":"Showing_Recode"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/展开胜负记录.png"}},{"type":"Animation","props":{"y":126,"x":24,"var":"spade_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":150,"x":24,"var":"spade_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":174,"x":24,"width":0,"var":"spade_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":198,"x":24,"width":0,"var":"spade_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":221,"x":25,"var":"spade_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":245,"x":25,"var":"spade_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":269,"x":25,"width":0,"var":"spade_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":293,"x":25,"width":0,"var":"spade_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":315,"x":25,"var":"spade_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":339,"x":25,"var":"spade_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":363,"x":25,"width":0,"var":"spade_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":387,"x":25,"width":0,"var":"spade_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":61,"var":"heart_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":61,"var":"heart_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":61,"width":0,"var":"heart_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":61,"width":0,"var":"heart_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":62,"var":"heart_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":62,"var":"heart_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":62,"width":0,"var":"heart_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":62,"width":0,"var":"heart_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":62,"var":"heart_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":62,"var":"heart_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":62,"width":0,"var":"heart_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":62,"width":0,"var":"heart_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":97,"var":"club_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":97,"var":"club_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":97,"width":0,"var":"club_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":97,"width":0,"var":"club_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":98,"var":"club_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":98,"var":"club_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":98,"width":0,"var":"club_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":98,"width":0,"var":"club_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":98,"var":"club_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":98,"var":"club_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":98,"width":0,"var":"club_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":98,"width":0,"var":"club_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":133,"var":"diamond_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":133,"var":"diamond_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":133,"width":0,"var":"diamond_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":133,"width":0,"var":"diamond_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":134,"var":"diamond_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":134,"var":"diamond_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":134,"width":0,"var":"diamond_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":134,"width":0,"var":"diamond_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":134,"var":"diamond_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":134,"var":"diamond_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":134,"width":0,"var":"diamond_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":134,"width":0,"var":"diamond_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Label","props":{"y":78,"x":14,"var":"spade_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":14,"var":"spade_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":51,"var":"heart_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":51,"var":"heart_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":87,"var":"club_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":87,"var":"club_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":123,"var":"diamond_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":123,"var":"diamond_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}}]}]};}
+		]);
+		return HistoryRecordUI;
 	})(View)
 
 
@@ -48740,6 +48866,15 @@ var Laya=window.Laya=(function(window,document){
 			this.btn_3=null;
 			this.btn_4=null;
 			this.btn_5=null;
+			this.btn_6=null;
+			this.btn_7=null;
+			this.btn_8=null;
+			this.btn_9=null;
+			this.btn_10=null;
+			this.btn_11=null;
+			this.btn_12=null;
+			this.btn_13=null;
+			this.btn_14=null;
 			TestUI.__super.call(this);
 		}
 
@@ -48751,7 +48886,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(TestUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":600,"height":80},"child":[{"type":"Button","props":{"y":0,"x":0,"width":80,"var":"btn_0","skin":"res/gameScene/CarryIn.png","name":"btn_0","label":"Start","height":66}},{"type":"Button","props":{"y":1,"x":74,"width":80,"var":"btn_1","skin":"res/gameScene/CarryIn.png","name":"btn_1","label":"Banker","height":66}},{"type":"Button","props":{"y":0,"x":146,"width":80,"var":"btn_2","skin":"res/gameScene/CarryIn.png","name":"btn_2","label":"Bet","height":66}},{"type":"Button","props":{"y":0,"x":214,"width":80,"var":"btn_3","skin":"res/gameScene/CarryIn.png","name":"btn_3","label":"BetCheck","height":66}},{"type":"Button","props":{"y":-2,"x":292,"width":80,"var":"btn_4","skin":"res/gameScene/CarryIn.png","name":"btn_4","label":"Deal","height":66}},{"type":"Button","props":{"y":0,"x":363,"width":80,"var":"btn_5","skin":"res/gameScene/CarryIn.png","name":"btn_5","label":"End","height":66}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":600,"height":200},"child":[{"type":"Button","props":{"y":0,"x":0,"width":80,"var":"btn_0","skin":"res/gameScene/CarryIn.png","name":"btn_0","label":"Start","height":66}},{"type":"Button","props":{"y":1,"x":74,"width":80,"var":"btn_1","skin":"res/gameScene/CarryIn.png","name":"btn_1","label":"Banker","height":66}},{"type":"Button","props":{"y":0,"x":146,"width":80,"var":"btn_2","skin":"res/gameScene/CarryIn.png","name":"btn_2","label":"Bet","height":66}},{"type":"Button","props":{"y":0,"x":214,"width":80,"var":"btn_3","skin":"res/gameScene/CarryIn.png","name":"btn_3","label":"BetCheck","height":66}},{"type":"Button","props":{"y":-2,"x":292,"width":80,"var":"btn_4","skin":"res/gameScene/CarryIn.png","name":"btn_4","label":"Deal","height":66}},{"type":"Button","props":{"y":0,"x":363,"width":80,"var":"btn_5","skin":"res/gameScene/CarryIn.png","name":"btn_5","label":"End","height":66}},{"type":"Button","props":{"y":60,"x":2,"width":80,"var":"btn_6","skin":"res/gameScene/CarryIn.png","name":"btn_6","label":"hisotryNotify","height":66}},{"type":"Button","props":{"y":61,"x":76,"width":80,"var":"btn_7","skin":"res/gameScene/CarryIn.png","name":"btn_7","label":"AlluserNotify","height":66}},{"type":"Button","props":{"y":60,"x":158,"width":80,"var":"btn_8","skin":"res/gameScene/CarryIn.png","name":"btn_8","label":"OneuserNotify","height":66}},{"type":"Button","props":{"y":58,"x":241,"width":80,"var":"btn_9","skin":"res/gameScene/CarryIn.png","name":"btn_9","label":"BetNotify","height":66}},{"type":"Button","props":{"y":60,"x":320,"width":80,"var":"btn_10","skin":"res/gameScene/CarryIn.png","name":"btn_10","label":"cardnotify","height":66}},{"type":"Button","props":{"y":59,"x":402,"width":80,"var":"btn_11","skin":"res/gameScene/CarryIn.png","name":"btn_11","label":"Calulatnotify","height":66}},{"type":"Button","props":{"y":132,"x":11,"width":80,"var":"btn_12","skin":"res/gameScene/CarryIn.png","name":"btn_12","label":"BankerListNotify","height":66}},{"type":"Button","props":{"y":131,"x":102,"width":80,"var":"btn_13","skin":"res/gameScene/CarryIn.png","name":"btn_13","label":"BankerNotify","height":66}},{"type":"Button","props":{"y":129,"x":197,"width":80,"var":"btn_14","skin":"res/gameScene/CarryIn.png","name":"btn_14","label":"Banker_caludat_Notify","height":66}}]};}
 		]);
 		return TestUI;
 	})(View)
@@ -48903,82 +49038,6 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":540,"height":110},"child":[{"type":"Animation","props":{"y":7,"x":10,"var":"Coin_0","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Animation","props":{"y":22,"x":98,"var":"Coin_1","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Animation","props":{"y":24,"x":188,"var":"Coin_2","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Animation","props":{"y":24,"x":277,"var":"Coin_3","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Animation","props":{"y":24,"x":367,"var":"Coin_4","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Animation","props":{"y":25,"x":458,"var":"Coin_5","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Image","props":{"y":-6,"x":1,"var":"Coin_light","skin":"res/gameScene/筹码光.png"}},{"type":"Image","props":{"y":81,"x":35,"var":"Selcet_Arrow","skin":"res/gameScene/筹码指向.png"}}]};}
 		]);
 		return BetChipUI;
-	})(View)
-
-
-	//class ui.ui.room.HistoryRecordUI extends laya.ui.View
-	var HistoryRecordUI=(function(_super){
-		function HistoryRecordUI(){
-			this.spade_0=null;
-			this.spade_1=null;
-			this.spade_2=null;
-			this.spade_3=null;
-			this.spade_4=null;
-			this.spade_5=null;
-			this.spade_6=null;
-			this.spade_7=null;
-			this.spade_8=null;
-			this.spade_9=null;
-			this.spade_10=null;
-			this.spade_11=null;
-			this.heart_0=null;
-			this.heart_1=null;
-			this.heart_2=null;
-			this.heart_3=null;
-			this.heart_4=null;
-			this.heart_5=null;
-			this.heart_6=null;
-			this.heart_7=null;
-			this.heart_8=null;
-			this.heart_9=null;
-			this.heart_10=null;
-			this.heart_11=null;
-			this.club_0=null;
-			this.club_1=null;
-			this.club_2=null;
-			this.club_3=null;
-			this.club_4=null;
-			this.club_5=null;
-			this.club_6=null;
-			this.club_7=null;
-			this.club_8=null;
-			this.club_9=null;
-			this.club_10=null;
-			this.club_11=null;
-			this.diamond_0=null;
-			this.diamond_1=null;
-			this.diamond_2=null;
-			this.diamond_3=null;
-			this.diamond_4=null;
-			this.diamond_5=null;
-			this.diamond_6=null;
-			this.diamond_7=null;
-			this.diamond_8=null;
-			this.diamond_9=null;
-			this.diamond_10=null;
-			this.diamond_11=null;
-			this.spade_win=null;
-			this.spade_lost=null;
-			this.heart_win=null;
-			this.heart_lost=null;
-			this.club_win=null;
-			this.club_lost=null;
-			this.diamond_win=null;
-			this.diamond_lost=null;
-			HistoryRecordUI.__super.call(this);
-		}
-
-		__class(HistoryRecordUI,'ui.ui.room.HistoryRecordUI',_super);
-		var __proto=HistoryRecordUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(HistoryRecordUI.uiView);
-		}
-
-		__static(HistoryRecordUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":169,"height":421},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/展开胜负记录.png"}},{"type":"Animation","props":{"y":126,"x":24,"var":"spade_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":150,"x":24,"var":"spade_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":174,"x":24,"width":0,"var":"spade_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":198,"x":24,"width":0,"var":"spade_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":221,"x":25,"var":"spade_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":245,"x":25,"var":"spade_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":269,"x":25,"width":0,"var":"spade_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":293,"x":25,"width":0,"var":"spade_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":315,"x":25,"var":"spade_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":339,"x":25,"var":"spade_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":363,"x":25,"width":0,"var":"spade_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":387,"x":25,"width":0,"var":"spade_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":61,"var":"heart_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":61,"var":"heart_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":61,"width":0,"var":"heart_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":61,"width":0,"var":"heart_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":62,"var":"heart_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":62,"var":"heart_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":62,"width":0,"var":"heart_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":62,"width":0,"var":"heart_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":62,"var":"heart_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":62,"var":"heart_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":62,"width":0,"var":"heart_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":62,"width":0,"var":"heart_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":97,"var":"club_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":97,"var":"club_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":97,"width":0,"var":"club_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":97,"width":0,"var":"club_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":98,"var":"club_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":98,"var":"club_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":98,"width":0,"var":"club_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":98,"width":0,"var":"club_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":98,"var":"club_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":98,"var":"club_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":98,"width":0,"var":"club_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":98,"width":0,"var":"club_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":133,"var":"diamond_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":133,"var":"diamond_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":133,"width":0,"var":"diamond_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":133,"width":0,"var":"diamond_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":134,"var":"diamond_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":134,"var":"diamond_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":134,"width":0,"var":"diamond_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":134,"width":0,"var":"diamond_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":134,"var":"diamond_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":134,"var":"diamond_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":134,"width":0,"var":"diamond_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":134,"width":0,"var":"diamond_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Label","props":{"y":78,"x":14,"var":"spade_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":14,"var":"spade_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":51,"var":"heart_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":51,"var":"heart_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":87,"var":"club_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":87,"var":"club_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":123,"var":"diamond_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":123,"var":"diamond_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}}]};}
-		]);
-		return HistoryRecordUI;
 	})(View)
 
 
@@ -50280,7 +50339,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.showme=function(){
 			console.log("showme showme");
-			Tween.to(this.HistoryRecord,{x:this.HistoryRecord.x+173 },1000,Ease.backIn);
+			Tween.to(this.HistoryBoard,{x:this.HistoryBoard.x+173 },1000,Ease.backIn);
 			Tween.to(this.InfoBoard,{y:this.InfoBoard.y-96 },1000,Ease.backIn);
 			Tween.to(this.bankerBoard,{y:this.bankerBoard.y+76 },1000,Ease.backIn);
 			Tween.to(this.BetChip,{y:this.BetChip.y-138 },1000,Ease.backIn);
@@ -50289,7 +50348,7 @@ var Laya=window.Laya=(function(window,document){
 		__proto.hideme=function(){
 			console.log("hideme")
 			this.btn_display(false);
-			this.HistoryRecord.x=-173;
+			this.HistoryBoard.x=-173;
 			this.InfoBoard.y=800;
 			this.bankerBoard.y=-81;
 			this.BetChip.y=803;
@@ -50327,6 +50386,64 @@ var Laya=window.Laya=(function(window,document){
 		__proto.clear=function(){}
 		return BullScene;
 	})(BullSceneUI)
+
+
+	//class bull.view.room.HistoryRecord extends ui.ui.room.HistoryRecordUI
+	var HistoryRecord=(function(_super){
+		function HistoryRecord(){
+			HistoryRecord.__super.call(this);
+		}
+
+		__class(HistoryRecord,'bull.view.room.HistoryRecord',_super);
+		var __proto=HistoryRecord.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			this.Showing_Recode.on("click",this,this.onShow);
+			this.Hidding_Recode.on("click",this,this.onHide);
+		}
+
+		__proto.onShow=function(e){
+			this.Showing_Recode.visible=false;
+			this.Hidding_Recode.visible=true;
+		}
+
+		__proto.onHide=function(e){
+			this.Showing_Recode.visible=true;
+			this.Hidding_Recode.visible=false;
+		}
+
+		__proto.update_info=function(win,lost,result){
+			if (win.length==0){
+				this.spade_win.text=this.heart_win.text=this.club_win.text=this.diamond_win.text="";
+			}
+			else{
+				this.spade_win.text=win[0];
+				this.heart_win.text=win[1];
+				this.club_win.text=win [2];
+				this.diamond_win.text=win[3];
+			}
+			if (lost.length==0){
+				this.spade_lost.text=this.heart_lost.text=this.club_lost.text=this.diamond_lost.text="";
+			}
+			else{
+				this.spade_lost.text=lost[0];
+				this.heart_lost.text=lost[1];
+				this.club_lost.text=lost [2];
+				this.diamond_lost.text=lost[3];
+			};
+			var n=result.length;
+			for (var i=0;i < n;i++){
+				this["spade_"+i].text=result[0];
+				this["heart_"+i].text=result[1];
+				this["club_"+i].text=result[2];
+				this["diamond_"+i].text=result[3];
+			}
+		}
+
+		__proto.hide=function(){}
+		__proto.show=function(){}
+		return HistoryRecord;
+	})(HistoryRecordUI)
 
 
 	//class bull.view.room.TestBoard extends ui.ui.room.TestUI
@@ -50724,6 +50841,26 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
+	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
+	var NodeTreeSetting=(function(_super){
+		function NodeTreeSetting(){
+			NodeTreeSetting.__super.call(this);
+			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
+			this.createView(NodeTreeSettingUI.uiView);
+		}
+
+		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
+		var __proto=NodeTreeSetting.prototype;
+		//inits();
+		__proto.createChildren=function(){}
+		return NodeTreeSetting;
+	})(NodeTreeSettingUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
 	//class laya.debug.view.nodeInfo.nodetree.NodeTree extends laya.debug.ui.debugui.NodeTreeUI
 	var NodeTree=(function(_super){
 		function NodeTree(){
@@ -50961,26 +51098,6 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return NodeTree;
 	})(NodeTreeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
-	var NodeTreeSetting=(function(_super){
-		function NodeTreeSetting(){
-			NodeTreeSetting.__super.call(this);
-			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
-			this.createView(NodeTreeSettingUI.uiView);
-		}
-
-		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
-		var __proto=NodeTreeSetting.prototype;
-		//inits();
-		__proto.createChildren=function(){}
-		return NodeTreeSetting;
-	})(NodeTreeSettingUI)
 
 
 	/**
@@ -51611,7 +51728,7 @@ var Laya=window.Laya=(function(window,document){
 	})(SmallPanelUI)
 
 
-	Laya.__init([EventDispatcher1,Dialog,LocalStorage,Timer,Browser,Proxy,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile]);
+	Laya.__init([EventDispatcher1,LocalStorage,Timer,Browser,Proxy,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,Dialog]);
 	new Main();
 
 })(window,document,Laya);
@@ -51624,29 +51741,29 @@ var Laya=window.Laya=(function(window,document){
 4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (83):warning:CarProtoModel.NAME This variable is not defined.
 5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (84):warning:roomSocketService.close This variable is not defined.
 6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (172):warning:MoneyType.CASH This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (241):warning:status This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (241):warning:RoomStatusType.START_BET This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (242):warning:START_BET This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (247):warning:status This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (247):warning:RoomStatusType.END_BET This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (248):warning:END_BET This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (308):warning:MoneyType.CASH This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (327):warning:status This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (327):warning:leftTime This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (164):warning:USER_BALANCE_CHANGE This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (103):warning:roundid This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (104):warning:status This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (105):warning:leftTime This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (109):warning:MoneyType.CASH This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (256):warning:status This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (256):warning:RoomStatusType.LOTTERY_DRAW This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (257):warning:LOTTERY_DRAW This variable is not defined.
-27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (153):warning:LASTTIME_BET_RECORD This variable is not defined.
-28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (368):warning:state This variable is not defined.
-29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (380):warning:UPDATA This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (174):warning:MoneyType.CASH This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (243):warning:status This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (243):warning:RoomStatusType.START_BET This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (244):warning:START_BET This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (249):warning:status This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (249):warning:RoomStatusType.END_BET This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (250):warning:END_BET This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (310):warning:MoneyType.CASH This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (329):warning:status This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (329):warning:leftTime This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (166):warning:USER_BALANCE_CHANGE This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (105):warning:roundid This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (106):warning:status This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (107):warning:leftTime This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (111):warning:MoneyType.CASH This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:status This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:RoomStatusType.LOTTERY_DRAW This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (259):warning:LOTTERY_DRAW This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (155):warning:LASTTIME_BET_RECORD This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (370):warning:state This variable is not defined.
+27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (382):warning:UPDATA This variable is not defined.
+28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
+29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
 30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
 31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
 32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
@@ -51658,6 +51775,6 @@ var Laya=window.Laya=(function(window,document){
 38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
 39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
 40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (211):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (222):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
 42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
 */

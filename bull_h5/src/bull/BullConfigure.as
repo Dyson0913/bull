@@ -33,6 +33,7 @@ package bull
 	//import light.car.modules.common.command.TableInfoCommand;
 	
 	import bull.modules.room.command.StateCommand;
+	import bull.modules.room.command.HistoryCommand;
 	
 	import bull.modules.common.mediator.AlertMediator;
 	import bull.modules.common.mediator.AssetInMediator;	
@@ -130,7 +131,10 @@ package bull
 			
 //			registerCommand(MessageID.ROOM_CONFIG_NOTIFY.toString(), RoomConfigCommand);
 			
+			//notify
 			registerCommand(ENCSType.CS_TYPE_TIMER_NOTIFY.toString(), StateCommand);
+			registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(), HistoryCommand);
+			
 
 			
 			//

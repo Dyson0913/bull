@@ -83,6 +83,7 @@ package bull.modules.room.mediator
 			
 			//notify
 			addNotifiction(BullNotification.STATE_CHANGE);
+			addNotifiction(BullNotification.HISTORY_NOTIFY);
 			
 			
 			addNotifiction(BullNotification.RoomSocketClose);
@@ -138,6 +139,10 @@ package bull.modules.room.mediator
 				case BullNotification.STATE_CHANGE:
 					state_change();
 				break;
+				case BullNotification.HISTORY_NOTIFY:
+					history_update();
+				break;
+				
 				case BullNotification.RoomSocketClose:
 					dispose();
 					break;
@@ -170,6 +175,12 @@ package bull.modules.room.mediator
 				break;
 			}
 		}
+		
+		public function history_update():void 
+		{
+			view.HistoryBoard.update_info(roomData.history_Win_info, roomData.history_lost_info, roomData.history_result_info);			
+		}
+		
 		
 		private function getPlayerInfoCallback(param:Object):void
 		{

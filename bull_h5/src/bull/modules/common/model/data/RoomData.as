@@ -35,11 +35,14 @@ package bull.modules.common.model.data
 		public static const BET_CHECK:int = 4;
 		public static const DEAL:int = 5;
 		public static const END:int = 6;
-
-
 		
 		public var RoundID:int;			//局ID
 		public var LeftTime:int;     //剩余时间 SEC
+		
+		//hisotry
+		public var history_Win_info:Array;
+		public var history_lost_info:Array;
+		public var history_result_info:Array;
 		
 		
 		

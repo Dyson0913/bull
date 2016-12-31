@@ -1,6 +1,7 @@
 package bull.view.room
 {
 	import laya.events.Event;
+	import ui.ui.room.HistoryRecordUI;
 	
 	import laya.utils.Tween;
 	import laya.utils.Ease;	
@@ -28,7 +29,8 @@ package bull.view.room
 		public function showme():void{
 			trace("showme showme");
 			
-			Tween.to(HistoryRecord, { x:HistoryRecord.x + 173 },1000,Ease.backIn);
+			
+			Tween.to(HistoryBoard, { x:HistoryBoard.x + 173 },1000,Ease.backIn);
 			Tween.to(InfoBoard, { y:InfoBoard.y - 96 }, 1000,Ease.backIn);
 			Tween.to(bankerBoard, { y:bankerBoard.y +76 }, 1000,Ease.backIn);
 			Tween.to(BetChip, { y:BetChip.y -138 }, 1000, Ease.backIn);
@@ -42,7 +44,7 @@ package bull.view.room
 			//clear();
 			btn_display(false);
 			
-			HistoryRecord.x = -173;
+			HistoryBoard.x = -173;
 			InfoBoard.y = 800;
 			bankerBoard.y = -81;
 			BetChip.y = 803;

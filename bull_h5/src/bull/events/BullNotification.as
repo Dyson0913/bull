@@ -38,6 +38,9 @@ package bull.events
 		
 		public static const STATE_CHANGE:String = "STATE_CHANGE";//////////////////狀態改變
 		
+		//notify
+		public static const HISTORY_NOTIFY:String = "HistoryNotify";//////////////////狀態改變
+		
 		
 		public static const SOCKET_CONNECT:String = "socketConnect";////////////////通知连接服务器 
 		public static const ONLOGIN:String = "onLogin";/////////////////////////////登录成功   发送房间列表
