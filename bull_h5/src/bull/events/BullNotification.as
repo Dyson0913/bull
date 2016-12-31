@@ -39,7 +39,15 @@ package bull.events
 		public static const STATE_CHANGE:String = "STATE_CHANGE";//////////////////狀態改變
 		
 		//notify
-		public static const HISTORY_NOTIFY:String = "HistoryNotify";//////////////////狀態改變
+		public static const HISTORY_NOTIFY:String = "HistoryNotify";
+		public static const USER_NOTIFY:String = "usernotify";
+		public static const CARD_NOTIFY:String = "cardnotify";
+		public static const SETTLE_NOTIFY:String = "settlenotify";
+		
+		//banker_notify
+		public static const BANKER_LIST:String = "bankerlist";
+		public static const New_Banker:String = "newbanker";
+		public static const BANKER_CALCU:String = "Bankercalcu";
 		
 		
 		public static const SOCKET_CONNECT:String = "socketConnect";////////////////通知连接服务器 

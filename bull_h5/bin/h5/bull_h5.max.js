@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
+	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -927,6 +927,12 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.LOGIN_ROOM_RQS="loginRoomRequest";
 		BullNotification.STATE_CHANGE="STATE_CHANGE";
 		BullNotification.HISTORY_NOTIFY="HistoryNotify";
+		BullNotification.USER_NOTIFY="usernotify";
+		BullNotification.CARD_NOTIFY="cardnotify";
+		BullNotification.SETTLE_NOTIFY="settlenotify";
+		BullNotification.BANKER_LIST="bankerlist";
+		BullNotification.New_Banker="newbanker";
+		BullNotification.BANKER_CALCU="Bankercalcu";
 		BullNotification.SOCKET_CONNECT="socketConnect";
 		BullNotification.ONLOGIN="onLogin";
 		BullNotification.START_ROOM_LIST="startRoomList";
@@ -28526,6 +28532,14 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(),JoinRoomCommand);
 			this.registerCommand(ENCSType.CS_TYPE_TIMER_NOTIFY.toString(),StateCommand);
 			this.registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(),HistoryCommand);
+			this.registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(),UserNotifyCommand);
+			this.registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(),UserNotifyCommand);
+			this.registerCommand(ENCSType.CS_TYPE_BET_NOTIFY.toString(),/*no*/this.BetNotifyommand);
+			this.registerCommand(ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString(),DealCardNotifyCommand);
+			this.registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyCommand);
+			this.registerCommand(ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString(),BankerNotifyCommand);
+			this.registerCommand(ENCSType.CS_TYPE_BANKER_NOTIFY.toString(),BankerNotifyCommand);
+			this.registerCommand(ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString(),BankerNotifyCommand);
 			this.registerCommand("TestOrder",TestCommand);
 		}
 
@@ -28915,47 +28929,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			if(param.uid){
-				bullData.uid=param.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if(param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
-
-
 	/**
 	*这里处理大厅的socket连接
 	*@author light-k
@@ -29061,6 +29034,47 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
+
+
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			if(param.uid){
+				bullData.uid=param.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if(param.access_token)bullData.token=param.access_token;
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -29609,48 +29623,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__proto.getHallRoomInfoById=function(tableId){
-			var roomVo;
-			for(var $each_roomVo in this._roomList){
-				roomVo=this._roomList[$each_roomVo];
-				if(roomVo.id==tableId)return roomVo;
-			}
-			return null;
-		}
-
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
 	/**
 	*设置声音面板
 	*/
@@ -29731,6 +29703,117 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__proto.getHallRoomInfoById=function(tableId){
+			var roomVo;
+			for(var $each_roomVo in this._roomList){
+				roomVo=this._roomList[$each_roomVo];
+				if(roomVo.id==tableId)return roomVo;
+			}
+			return null;
+		}
+
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
+
+
+	/**
+	*规则面板
+	*/
+	//class bull.modules.common.mediator.RuleMediator extends com.lightMVC.parrerns.Mediator
+	var RuleMediator=(function(_super){
+		//显示规则说明面板事件
+		function RuleMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			RuleMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(RuleMediator,'bull.modules.common.mediator.RuleMediator',_super);
+		var __proto=RuleMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.top.addChild(this.view);
+			this.view.visible=false;
+			PopupManager.centerPopUp(this.view);
+			console.log("RuleMediator setViewComponent visible:"+this.view.visible);
+			this.view.btnClose.on("click",this,this.onClose);
+			this.addNotifiction("car.SHOW_RULE_PANEL");
+			this.addNotifiction("car.HIDE_RULE_PANEL");
+			this.addNotifiction("scenceChange");
+		}
+
+		__proto.handler=function(notification){
+			switch(notification.getName()){
+				case "car.SHOW_RULE_PANEL":
+					this.onShow();
+					break ;
+				case "car.HIDE_RULE_PANEL":
+					this.onClose();
+					break ;
+				case "scenceChange":;
+					var curScene=notification.getBody();
+					console.log("MusicSetMediator 切换到游戏场景:"+curScene);
+					if(curScene==/*no*/this.CarNotification.Scene_Game || curScene==/*no*/this.CarNotification.Scene_Hall)
+						this.onClose();
+					break ;
+				}
+		}
+
+		__proto.onShow=function(){
+			console.log("RuleMediator onShow()");
+			Light.layer.top.addChild(this.view);
+			this.view.visible=true;
+		}
+
+		__proto.onClose=function(e){
+			console.log("RuleMediator onClose()");
+			this.view.close();
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.viewComponent;
+		});
+
+		RuleMediator.NAME="ruleMediator";
+		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
+		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
+		return RuleMediator;
+	})(Mediator)
+
+
 	//class bull.modules.common.model.data.RoomData extends com.iflash.events.EventDispatcher
 	var RoomData=(function(_super){
 		function RoomData(){
@@ -29742,6 +29825,17 @@ var Laya=window.Laya=(function(window,document){
 			this.history_Win_info=null;
 			this.history_lost_info=null;
 			this.history_result_info=null;
+			this.player_num=0;
+			this.playerList=null;
+			this.card_info=null;
+			this.settle_banker_id=null;
+			this.settle_win_money=null;
+			this.settle_hand_money=null;
+			this.settle_User_info=null;
+			this.banker_num=0;
+			this.bankerlist=null;
+			this.newBaner_info=null;
+			this.Banker_calcu_info=null;
 			this._carLocation=0;
 			this._lotteruResult=0;
 			this._status=0;
@@ -30073,95 +30167,6 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
-	/**
-	*规则面板
-	*/
-	//class bull.modules.common.mediator.RuleMediator extends com.lightMVC.parrerns.Mediator
-	var RuleMediator=(function(_super){
-		//显示规则说明面板事件
-		function RuleMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			RuleMediator.__super.call(this,mediatorName,viewComponent);
-		}
-
-		__class(RuleMediator,'bull.modules.common.mediator.RuleMediator',_super);
-		var __proto=RuleMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.getInjector=function(){
-			return [];
-		}
-
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.top.addChild(this.view);
-			this.view.visible=false;
-			PopupManager.centerPopUp(this.view);
-			console.log("RuleMediator setViewComponent visible:"+this.view.visible);
-			this.view.btnClose.on("click",this,this.onClose);
-			this.addNotifiction("car.SHOW_RULE_PANEL");
-			this.addNotifiction("car.HIDE_RULE_PANEL");
-			this.addNotifiction("scenceChange");
-		}
-
-		__proto.handler=function(notification){
-			switch(notification.getName()){
-				case "car.SHOW_RULE_PANEL":
-					this.onShow();
-					break ;
-				case "car.HIDE_RULE_PANEL":
-					this.onClose();
-					break ;
-				case "scenceChange":;
-					var curScene=notification.getBody();
-					console.log("MusicSetMediator 切换到游戏场景:"+curScene);
-					if(curScene==/*no*/this.CarNotification.Scene_Game || curScene==/*no*/this.CarNotification.Scene_Hall)
-						this.onClose();
-					break ;
-				}
-		}
-
-		__proto.onShow=function(){
-			console.log("RuleMediator onShow()");
-			Light.layer.top.addChild(this.view);
-			this.view.visible=true;
-		}
-
-		__proto.onClose=function(e){
-			console.log("RuleMediator onClose()");
-			this.view.close();
-		}
-
-		__getset(0,__proto,'view',function(){
-			return this.viewComponent;
-		});
-
-		RuleMediator.NAME="ruleMediator";
-		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
-		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
-		return RuleMediator;
-	})(Mediator)
-
-
-	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
-	var SmallLoadingMediator=(function(_super){
-		function SmallLoadingMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
-		}
-
-		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
-		var __proto=SmallLoadingMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.loadingMask.lodingMask=viewComponent;
-		}
-
-		SmallLoadingMediator.NAME="smallLoadingMediator";
-		return SmallLoadingMediator;
-	})(Mediator)
-
-
 	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
 	var UserInfoData=(function(_super){
 		function UserInfoData(){
@@ -30218,6 +30223,26 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
+	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
+	var SmallLoadingMediator=(function(_super){
+		function SmallLoadingMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
+		}
+
+		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
+		var __proto=SmallLoadingMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.loadingMask.lodingMask=viewComponent;
+		}
+
+		SmallLoadingMediator.NAME="smallLoadingMediator";
+		return SmallLoadingMediator;
+	})(Mediator)
+
+
 	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
 	var BullProtoModel=(function(_super){
 		function BullProtoModel(modelName,data){
@@ -30246,27 +30271,47 @@ var Laya=window.Laya=(function(window,document){
 	})(Model)
 
 
-	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
-	var EnterRoomCommand=(function(_super){
-		function EnterRoomCommand(){
-			EnterRoomCommand.__super.call(this);
+	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
+	var BankerNotifyCommand=(function(_super){
+		function BankerNotifyCommand(){
+			BankerNotifyCommand.__super.call(this);
 		}
 
-		__class(EnterRoomCommand,'bull.modules.room.command.EnterRoomCommand',_super);
-		var __proto=EnterRoomCommand.prototype;
+		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
+		var __proto=BankerNotifyCommand.prototype;
 		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
 		__proto.handler=function(notification){
-			if(notification.getName()=="enterRoom"){
-				this.enterRoomRqsHandler(notification.getBody());
+			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
+				this.bankerlist(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
+				this.newbaner(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
+				this.banker_calcu(notification.getBody());
 			}
 		}
 
-		__proto.enterRoomRqsHandler=function(data){
-			var preLoad=this.getModel("perLoadService");
-			preLoad.loadRoom();
+		__proto.bankerlist=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
+			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
+			this.sentNotification("bankerlist");
 		}
 
-		return EnterRoomCommand;
+		__proto.newbaner=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.newBaner_info=cs.banker_notify;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.banker_calcu=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
+			this.sentNotification("Bankercalcu");
+		}
+
+		return BankerNotifyCommand;
 	})(Command)
 
 
@@ -30415,66 +30460,56 @@ var Laya=window.Laya=(function(window,document){
 	})(Model)
 
 
-	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
-	var HistoryCommand=(function(_super){
-		function HistoryCommand(){
-			HistoryCommand.__super.call(this);
+	//class bull.modules.room.command.DealCardNotifyCommand extends com.lightMVC.parrerns.Command
+	var DealCardNotifyCommand=(function(_super){
+		function DealCardNotifyCommand(){
+			DealCardNotifyCommand.__super.call(this);
 		}
 
-		__class(HistoryCommand,'bull.modules.room.command.HistoryCommand',_super);
-		var __proto=HistoryCommand.prototype;
+		__class(DealCardNotifyCommand,'bull.modules.room.command.DealCardNotifyCommand',_super);
+		var __proto=DealCardNotifyCommand.prototype;
 		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
 		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
-				this.State(notification.getBody());
+			if(notification.getName()==ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString()){
+				this.deal(notification.getBody());
 			}
 		}
 
-		__proto.State=function(cs){
+		__proto.deal=function(cs){
 			var bullData=this.getSingleton("Data");
-			bullData.roomData.history_Win_info.length=0;
-			bullData.roomData.history_lost_info.length=0;
-			bullData.roomData.history_result_info.length=0;
-			for (var i=0;i < 4;i++){
-				bullData.roomData.history_Win_info=[cs.histroy_notify.win_info._1,cs.histroy_notify.win_info._2,cs.histroy_notify.win_info._3,cs.histroy_notify.win_info._4];
-				bullData.roomData.history_lost_info=[cs.histroy_notify.lose_info._1,cs.histroy_notify.lose_info._2,cs.histroy_notify.lose_info._3,cs.histroy_notify.lose_info._4];
-			};
-			var n=cs.histroy_notify.result_info.length;
-			for (var i=0;i < n;i++){
-				bullData.roomData.history_result_info.push([cs.histroy_notify.result_info._1,cs.histroy_notify.result_info._2,cs.histroy_notify.result_info._3,cs.histroy_notify.result_info._4]);
-			}
-			this.sentNotification("HistoryNotify");
+			bullData.roomData.card_info.push(cs.deal_card_notify.banker);
+			bullData.roomData.card_info.push(cs.deal_card_notify._1);
+			bullData.roomData.card_info.push(cs.deal_card_notify._2);
+			bullData.roomData.card_info.push(cs.deal_card_notify._3);
+			bullData.roomData.card_info.push(cs.deal_card_notify._4);
+			this.sentNotification("cardnotify");
 		}
 
-		return HistoryCommand;
+		return DealCardNotifyCommand;
 	})(Command)
 
 
-	//class bull.modules.room.command.StateCommand extends com.lightMVC.parrerns.Command
-	var StateCommand=(function(_super){
-		function StateCommand(){
-			StateCommand.__super.call(this);
+	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
+	var EnterRoomCommand=(function(_super){
+		function EnterRoomCommand(){
+			EnterRoomCommand.__super.call(this);
 		}
 
-		__class(StateCommand,'bull.modules.room.command.StateCommand',_super);
-		var __proto=StateCommand.prototype;
+		__class(EnterRoomCommand,'bull.modules.room.command.EnterRoomCommand',_super);
+		var __proto=EnterRoomCommand.prototype;
 		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
 		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_TIMER_NOTIFY.toString()){
-				this.State(notification.getBody());
+			if(notification.getName()=="enterRoom"){
+				this.enterRoomRqsHandler(notification.getBody());
 			}
 		}
 
-		//}
-		__proto.State=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.State=cs.timer_notify.status;
-			bullData.roomData.RoundID=cs.timer_notify.order_id;
-			bullData.roomData.LeftTime=cs.timer_notify.timeLeft;
-			this.sentNotification("STATE_CHANGE");
+		__proto.enterRoomRqsHandler=function(data){
+			var preLoad=this.getModel("perLoadService");
+			preLoad.loadRoom();
 		}
 
-		return StateCommand;
+		return EnterRoomCommand;
 	})(Command)
 
 
@@ -30630,6 +30665,132 @@ var Laya=window.Laya=(function(window,document){
 		PreLoadService.NAME="perLoadService";
 		return PreLoadService;
 	})(Model)
+
+
+	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
+	var HistoryCommand=(function(_super){
+		function HistoryCommand(){
+			HistoryCommand.__super.call(this);
+		}
+
+		__class(HistoryCommand,'bull.modules.room.command.HistoryCommand',_super);
+		var __proto=HistoryCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
+				this.State(notification.getBody());
+			}
+		}
+
+		__proto.State=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.history_Win_info.length=0;
+			bullData.roomData.history_lost_info.length=0;
+			bullData.roomData.history_result_info.length=0;
+			for (var i=0;i < 4;i++){
+				bullData.roomData.history_Win_info=[cs.histroy_notify.win_info._1,cs.histroy_notify.win_info._2,cs.histroy_notify.win_info._3,cs.histroy_notify.win_info._4];
+				bullData.roomData.history_lost_info=[cs.histroy_notify.lose_info._1,cs.histroy_notify.lose_info._2,cs.histroy_notify.lose_info._3,cs.histroy_notify.lose_info._4];
+			};
+			var n=cs.histroy_notify.result_info.length;
+			for (var i=0;i < n;i++){
+				bullData.roomData.history_result_info.push([cs.histroy_notify.result_info._1,cs.histroy_notify.result_info._2,cs.histroy_notify.result_info._3,cs.histroy_notify.result_info._4]);
+			}
+			this.sentNotification("HistoryNotify");
+		}
+
+		return HistoryCommand;
+	})(Command)
+
+
+	//class bull.modules.room.command.SettleNotifyCommand extends com.lightMVC.parrerns.Command
+	var SettleNotifyCommand=(function(_super){
+		function SettleNotifyCommand(){
+			SettleNotifyCommand.__super.call(this);
+		}
+
+		__class(SettleNotifyCommand,'bull.modules.room.command.SettleNotifyCommand',_super);
+		var __proto=SettleNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString()){
+				this.settle(notification.getBody());
+			}
+		}
+
+		__proto.settle=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.settle_banker_id=cs.calculate_notify.banker_id;
+			bullData.roomData.settle_win_money=cs.calculate_notify.win_money;
+			bullData.roomData.settle_hand_money=cs.calculate_notify.hand_money;
+			bullData.roomData.settle_User_info=cs.calculate_notify.user_info_s;
+			this.sentNotification("settlenotify");
+		}
+
+		return SettleNotifyCommand;
+	})(Command)
+
+
+	//class bull.modules.room.command.StateCommand extends com.lightMVC.parrerns.Command
+	var StateCommand=(function(_super){
+		function StateCommand(){
+			StateCommand.__super.call(this);
+		}
+
+		__class(StateCommand,'bull.modules.room.command.StateCommand',_super);
+		var __proto=StateCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_TIMER_NOTIFY.toString()){
+				this.State(notification.getBody());
+			}
+		}
+
+		//}
+		__proto.State=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.State=cs.timer_notify.status;
+			bullData.roomData.RoundID=cs.timer_notify.order_id;
+			bullData.roomData.LeftTime=cs.timer_notify.timeLeft;
+			this.sentNotification("STATE_CHANGE");
+		}
+
+		return StateCommand;
+	})(Command)
+
+
+	//class bull.modules.room.command.UserNotifyCommand extends com.lightMVC.parrerns.Command
+	var UserNotifyCommand=(function(_super){
+		function UserNotifyCommand(){
+			UserNotifyCommand.__super.call(this);
+		}
+
+		__class(UserNotifyCommand,'bull.modules.room.command.UserNotifyCommand',_super);
+		var __proto=UserNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString()){
+				this.alluser(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString()){
+				this.oneuser(notification.getBody());
+			}
+		}
+
+		__proto.alluser=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.player_num=cs.all_user_info_notify.player_count;
+			bullData.roomData.playerList=cs.all_user_info_notify.user_info_s;
+			this.sentNotification("usernotify");
+		}
+
+		__proto.oneuser=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.playerList.push(cs.one_user_info_notify.user_info);
+			this.sentNotification("usernotify");
+		}
+
+		return UserNotifyCommand;
+	})(Command)
 
 
 	//class bull.modules.room.mediator.BullScenceMediator extends com.lightMVC.parrerns.Mediator
@@ -50701,6 +50862,25 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -50717,25 +50897,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
 
 
 	/**
@@ -51733,53 +51894,54 @@ var Laya=window.Laya=(function(window,document){
 	})(SmallPanelUI)
 
 
-	Laya.__init([EventDispatcher1,LocalStorage,Timer,Browser,Proxy,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,Dialog]);
+	Laya.__init([EventDispatcher1,Dialog,LocalStorage,Timer,Browser,Proxy,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile]);
 	new Main();
 
 })(window,document,Laya);
 
 
 /*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (74):warning:CarNotification.ENTER_ROOM This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (84):warning:CarNotification.SHOW_CARRY_IN_PANEL This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (180):warning:CarNotification.ENTER_ROOM This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (83):warning:CarProtoModel.NAME This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (84):warning:roomSocketService.close This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (174):warning:MoneyType.CASH This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (243):warning:status This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (243):warning:RoomStatusType.START_BET This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (244):warning:START_BET This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (249):warning:status This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (249):warning:RoomStatusType.END_BET This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (250):warning:END_BET This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (310):warning:MoneyType.CASH This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (329):warning:status This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (329):warning:leftTime This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (166):warning:USER_BALANCE_CHANGE This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (105):warning:roundid This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (106):warning:status This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (107):warning:leftTime This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (111):warning:MoneyType.CASH This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:status This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:RoomStatusType.LOTTERY_DRAW This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (259):warning:LOTTERY_DRAW This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (155):warning:LASTTIME_BET_RECORD This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (370):warning:state This variable is not defined.
-27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (382):warning:UPDATA This variable is not defined.
-28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
-29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
-30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
-31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
-32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
-33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
-34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
-35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
-36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
-37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
-38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
-39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
-40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (222):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
+1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/BullConfigure.as (119):warning:BetNotifyommand This variable is not defined.
+2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (74):warning:CarNotification.ENTER_ROOM This variable is not defined.
+3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (84):warning:CarNotification.SHOW_CARRY_IN_PANEL This variable is not defined.
+4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (180):warning:CarNotification.ENTER_ROOM This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (83):warning:CarProtoModel.NAME This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (84):warning:roomSocketService.close This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (183):warning:MoneyType.CASH This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (252):warning:status This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (252):warning:RoomStatusType.START_BET This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (253):warning:START_BET This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:status This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:RoomStatusType.END_BET This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (259):warning:END_BET This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (319):warning:MoneyType.CASH This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (338):warning:status This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (338):warning:leftTime This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (175):warning:USER_BALANCE_CHANGE This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (114):warning:roundid This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (115):warning:status This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (116):warning:leftTime This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (120):warning:MoneyType.CASH This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (267):warning:status This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (267):warning:RoomStatusType.LOTTERY_DRAW This variable is not defined.
+27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (268):warning:LOTTERY_DRAW This variable is not defined.
+28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (164):warning:LASTTIME_BET_RECORD This variable is not defined.
+29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (379):warning:state This variable is not defined.
+30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (391):warning:UPDATA This variable is not defined.
+31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
+32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
+33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
+34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
+35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
+36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
+37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
+38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
+39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
+40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
+41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
+42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (222):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
 */

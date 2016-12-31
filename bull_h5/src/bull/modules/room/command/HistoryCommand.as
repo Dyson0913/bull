@@ -4,9 +4,7 @@ package bull.modules.room.command
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
 	
-	import bull.events.BullNotification;
-	import light.car.modules.common.model.data.HallData;
-	import light.car.modules.common.model.data.RoomData;
+	import bull.events.BullNotification;	
 	import bull.modules.perload.services.PreLoadService;
 	import bull.modules.common.model.data.Data;
 	

@@ -8,6 +8,9 @@ package bull.modules.common.model.data
 	import com.lightUI.comman.bet.BetSplit;
 	import com.lightUI.core.Light;
 	import com.lightUI.events.LightEvent;
+	import conf.SBankerCalcInfo;
+	import conf.SUserInfo;
+	import msg.SBankerNotify;
 	
 	import conf.BetInfo;
 	import conf.Money;
@@ -44,15 +47,25 @@ package bull.modules.common.model.data
 		public var history_lost_info:Array;
 		public var history_result_info:Array;
 		
+		//playerlist
+		public var player_num:int;
+		public var playerList:Array;
 		
+		//card_info
+		public var card_info:Array;
 		
+		//settle_info		
+		public var settle_banker_id:Long;
+		public var settle_win_money:Long;
+		public var settle_hand_money:Long;		
+		public var settle_User_info:Array;
 		
+		//banker_info
+		public var banker_num:int;
+		public var bankerlist:Array;
 		
-		
-		
-		
-		
-		
+		public var newBaner_info:SBankerNotify;
+		public var Banker_calcu_info:SBankerCalcInfo;
 		
 		
 		

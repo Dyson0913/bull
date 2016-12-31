@@ -34,6 +34,10 @@ package bull
 	
 	import bull.modules.room.command.StateCommand;
 	import bull.modules.room.command.HistoryCommand;
+	import bull.modules.room.command.UserNotifyCommand;
+	import bull.modules.room.command.DealCardNotifyCommand;
+	import bull.modules.room.command.SettleNotifyCommand;
+	import bull.modules.room.command.BankerNotifyCommand;
 	
 	import bull.modules.common.mediator.AlertMediator;
 	import bull.modules.common.mediator.AssetInMediator;	
@@ -134,17 +138,17 @@ package bull
 			//notify
 			registerCommand(ENCSType.CS_TYPE_TIMER_NOTIFY.toString(), StateCommand);
 			registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(), HistoryCommand);
-			registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(), UserNotifyommand);
-			registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(), UserNotifyommand);
+			registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
+			registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
 			registerCommand(ENCSType.CS_TYPE_BET_NOTIFY.toString(), BetNotifyommand);
-			registerCommand(ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString(),DealNotifyommand);
-			registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyommand);
-			registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyommand);
+			registerCommand(ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString(),DealCardNotifyCommand);
+			registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyCommand);
+			
 			
 			//上庄
-			registerCommand(ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString(),BankerNotifyommand);
-			registerCommand(ENCSType.CS_TYPE_BANKER_NOTIFY.toString(),BankerNotifyommand);
-			registerCommand(ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString(),BankerNotifyommand);
+			registerCommand(ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString(),BankerNotifyCommand);
+			registerCommand(ENCSType.CS_TYPE_BANKER_NOTIFY.toString(),BankerNotifyCommand);
+			registerCommand(ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString(),BankerNotifyCommand);
 			
 			
 //			registerCommand(MessageID.USERINFO_REQUEST.toString(),UserInfoCommand);
