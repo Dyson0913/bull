@@ -75,9 +75,9 @@ package bull.modules.room.mediator
 			view.btn_display(false);
 			
 			
-			//TEST CMD
+			//TEST CMD			
 			if ( view["TestPanel"] != undefined)
-			{
+			{				
 				view.TestPanel.on(LightEvent.ITEM_CLICK, this, ontest);
 			}
 			

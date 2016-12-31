@@ -20,6 +20,7 @@ package bull.modules.common.model.data
 		public var ip:String
 		public var port:int
 		public var Token:Long;
+		public var Cash_Type:int;
 		
 		public var ViewIn:String = "Lobby";
 		

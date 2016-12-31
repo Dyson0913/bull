@@ -5,6 +5,7 @@ package bull.view.hall
 	import conf.SRoomInfo;
 	import conf.SRoomInfos;
 	import laya.events.Event;
+	import laya.ui.Image;
 	import laya.utils.Color;
 	import laya.utils.Handler;
 	import laya.utils.Tween;
@@ -27,11 +28,8 @@ package bull.view.hall
 		public function Hall()
 		{
 			super();		
-			Ginit.visible = GHigh.visible =GLowEnter.visible = GHighEnter.visible = true;			
-			Minit.visible = MHigh.visible = MLowEnter.visible =	MHighEnter.visible = false;
-			
-			
-			
+			GLowEnter.visible = GHighEnter.visible = true;			
+			MLowEnter.visible =	MHighEnter.visible = false;			
 			
 			Tween.to(mqrqueue, { x:mqrqueue.x - 600 }, 15000, null, Handler.create(this, showmarque));
 			
@@ -59,6 +57,15 @@ package bull.view.hall
 			}
 			SoundManager.playMusic(SoundPath.Lobby_BGM, 100);
 			
+			
+			
+		}
+		
+		private function onLowEnter(e:Event):void
+		{
+			trace("onLowEnter");
+			
+			
 		}
 		
 		private function showmarque():void
@@ -76,15 +83,19 @@ package bull.view.hall
 		
 		public function show_G():void
 		{
-			Ginit.visible = GHigh.visible =GLowEnter.visible = GHighEnter.visible = true;			
-			Minit.visible = MHigh.visible = MLowEnter.visible =	MHighEnter.visible = false;
+			GLowEnter.visible = GHighEnter.visible = true;			
+			MLowEnter.visible =	MHighEnter.visible = false;
+			init_box.source  = Light.loader.getRes("res/hall/img_Ginit.png");			
+			high_box.source = Light.loader.getRes("res/hall/img_GHigh.png");		
 			
 		}
 		
 		public function show_M():void
 		{
-			Ginit.visible = GHigh.visible = GLowEnter.visible = GHighEnter.visible = false;			
-			Minit.visible = MHigh.visible = MLowEnter.visible = MHighEnter.visible = true;		
+			GLowEnter.visible = GHighEnter.visible = false;			
+			MLowEnter.visible = MHighEnter.visible = true;
+			init_box.source  = Light.loader.getRes("res/hall/img_Minit.png");			
+			high_box.source = Light.loader.getRes("res/hall/img_MHigh.png");	
 		}
 			
 		

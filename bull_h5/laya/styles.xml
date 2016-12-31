@@ -5,4 +5,6 @@
    <item name="res/hall/img_Ginit.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
    <item name="res/gameScene/InfoBoard.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
    <item name="res/gameScene/BankerBoard.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
+   <item name="res/hall/img_MHigh.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
+   <item name="res/hall/img_Minit.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
 </res>

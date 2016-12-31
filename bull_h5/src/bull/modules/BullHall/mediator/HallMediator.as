@@ -5,6 +5,7 @@ package bull.modules.BullHall.mediator
 	import com.lightMVC.parrerns.Mediator;
 	import com.lightUI.events.LightEvent;
 	import com.lightUI.events.ScenceManagerEvent;
+	import conf.ENMoneyType;
 	
 	import laya.events.Event;
 	import laya.utils.Timer;
@@ -66,13 +67,18 @@ package bull.modules.BullHall.mediator
 			view.GBtn.on(Event.CLICK, this, onGBtnClick);
 			view.MBtn.on(Event.CLICK, this, onMBtnClick);
 			
-			view.MLowEnter.on(Event.CLICK, this, onMLowEnter);
-			view.MHighEnter.on(Event.CLICK, this, onMHighEnter);
 			
-			view.GLowEnter.on(Event.CLICK, this, onGLowEnter);
-			view.GHighEnter.on(Event.CLICK, this, onGHighEnter);
+			view.init_box.on(Event.CLICK, this, onLowEnter);			
+			view.GLowEnter.on(Event.CLICK, this, onLowEnter);
+			view.MLowEnter.on(Event.CLICK, this, onLowEnter);			
+			
+			view.high_box.on(Event.CLICK, this, onHighEnter);
+			view.MHighEnter.on(Event.CLICK, this, onHighEnter);			
+			view.GHighEnter.on(Event.CLICK, this, onHighEnter);
 			
 			addNotifiction(BullNotification.Close_BGM);
+			
+			hallData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN;
 			
 			showOrHideBtnGroup(false);			
 		}
@@ -92,40 +98,33 @@ package bull.modules.BullHall.mediator
 		
 		private function onGBtnClick(e:Event):void
 		{		
+			hallData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN;			
 			view.showRoomList([hallData.roomList[0], hallData.roomList[1]]);
 			view.show_G();
 		}
 		
 		private function onMBtnClick(e:Event):void
 		{			
+			hallData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;
 			view.showRoomList([hallData.roomList[2], hallData.roomList[3]]);
 			view.show_M();
 		}
 		
-		private function onMLowEnter(e:Event):void
+		
+		private function onLowEnter(e:Event):void
 		{
-			hallData.join_room_idx = 0;
+			if ( hallData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN) hallData.join_room_idx = 0;
+			else hallData.join_room_idx = 2;
 			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+		}
 			
-		}
 		
-		private function onMHighEnter(e:Event):void
+		private function onHighEnter(e:Event):void
 		{
-			hallData.join_room_idx = 1;
+			if ( hallData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN) hallData.join_room_idx = 1;
+			else hallData.join_room_idx = 3;
 			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
-		}
-		
-		private function onGLowEnter(e:Event):void
-		{
-			hallData.join_room_idx = 2;
-			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
-		}
-		
-		private function onGHighEnter(e:Event):void
-		{
-			hallData.join_room_idx = 3;
-			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
-		}
+		}		
 		
 		
 		/**

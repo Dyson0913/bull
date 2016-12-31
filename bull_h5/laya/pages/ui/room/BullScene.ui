@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":11,
+    "selecteID":18,
     "props":{"width":1400,"sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -270,7 +270,7 @@
             "x":15,
             "type":"UIView",
             "source":"ui/room/Test.ui",
-            "props":{"y":533,"x":3,"var":"TestPanel","runtime":"bull.view.room.TestBoard"},
+            "props":{"y":519,"x":51,"var":"TestPanel","runtime":"bull.view.room.TestBoard"},
             "nodeParent":1,
             "label":"UIView(TestPanel)",
             "isDirectory":false,
@@ -279,11 +279,11 @@
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":612,"x":343},
+                    "props":{"y":484,"x":260},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":17,
+            "compId":18,
             "child":[
                 ]
         }],

@@ -134,38 +134,21 @@ package bull
 			//notify
 			registerCommand(ENCSType.CS_TYPE_TIMER_NOTIFY.toString(), StateCommand);
 			registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(), HistoryCommand);
+			registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(), UserNotifyommand);
+			registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(), UserNotifyommand);
+			registerCommand(ENCSType.CS_TYPE_BET_NOTIFY.toString(), BetNotifyommand);
+			registerCommand(ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString(),DealNotifyommand);
+			registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyommand);
+			registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyommand);
 			
-
+			//上庄
+			registerCommand(ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString(),BankerNotifyommand);
+			registerCommand(ENCSType.CS_TYPE_BANKER_NOTIFY.toString(),BankerNotifyommand);
+			registerCommand(ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString(),BankerNotifyommand);
 			
-			//
-			//registerCommand(ENCSType.CS_TYPE_HEART_BEAT_REQ.toString(),  HeartBeatCommand);
-			//registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),  HeartBeatCommand);
-//			registerCommand(MessageID.ROOM_STAUS_TOTIFY.toString(), RoomStatusCommand);
-//			registerCommand(MessageID.ROOM_STAUS_REQUEST.toString(), RoomStatusCommand);
-//			registerCommand(MessageID.ROOM_STAUS_RESPONSE.toString(), RoomStatusCommand);
-			
-			//registerCommand(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),BetCommand);
-			//registerCommand(ENCSType.CS_TYPE_PLAYER_BET_RSP.toString(),BetCommand);
-			//registerCommand(ENCSType.CS_TYPE_ROUND_SUM_BETS_NOTIFY.toString(),BetCommand);
-			//registerCommand(ENCSType.CS_TYPE_PLAYER_SAVED_BET_REQ.toString(),BetSameAsLastTimeCommand);
-			//registerCommand(ENCSType.CS_TYPE_PLAYER_SAVED_BET_RSP.toString(),BetSameAsLastTimeCommand);
-			//
-			//registerCommand(ENCSType.CS_TYPE_CARRY_IN_REQ.toString(),CarryInCommand);
-			//registerCommand(ENCSType.CS_TYPE_CARRY_IN_RSP.toString(),CarryInCommand);
-			
-//			registerCommand(ENCSType.CS_TYPE_TABLE_INFO_NOTIFY.toString(), TableInfoCommand);
-//			registerCommand(ENCSType.CS_TYPE_ROUND_SUM_BETS_NOTIFY.toString(), 
-			
-			//registerCommand(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_REQ.toString(), BetCancelCommand);
-			//registerCommand(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_RSP.toString(),BetCancelCommand);
 			
 //			registerCommand(MessageID.USERINFO_REQUEST.toString(),UserInfoCommand);
 //			registerCommand(MessageID.USERINFO_RESPONSE.toString(), UserInfoCommand);
-			
-			//registerCommand(ENCSType.CS_TYPE_TABLE_INFO_NOTIFY.toString(), TableInfoCommand);		//通知游戏桌信息
-			//registerCommand(ENCSType.CS_TYPE_ROUND_START_NOTIFY.toString(),StartBetCommand);			//开始下注
-			//registerCommand(ENCSType.CS_TYPE_ROUND_COMMIT_NOTIFY.toString(),CommitRoundCommand);		//确认下注
-			//registerCommand(ENCSType.CS_TYPE_ROUND_CASH_NOTIFY.toString(),SettlementRoundCommand);			//开始结算
 			
 			registerCommand(BullNotification.TestOrder, TestCommand);
 		}
