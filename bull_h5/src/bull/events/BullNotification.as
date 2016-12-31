@@ -61,5 +61,8 @@ package bull.events
 		public static const Scene_Game:String = "Scene_Game";	//游戏场景
 		public static const RoomSocketClose:String = "RoomSocketClose" ;
 		public static const ExitRoomEvent:String = "ExitRoomEvent";
+		
+		
+		public static const TestOrder:String = "TestOrder";
 	}
 }

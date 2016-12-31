@@ -4,8 +4,10 @@ package bull.modules.room.mediator
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Mediator;
 	import com.lightUI.components.alert.Alert;
-	import com.lightUI.core.Light;
+	import com.lightUI.core.Light;	
 	import com.lightUI.events.ScenceManagerEvent;
+	
+	import com.lightUI.events.LightEvent;
 	
 	import laya.display.BitmapFont;
 	import laya.display.Text;
@@ -38,7 +40,7 @@ package bull.modules.room.mediator
 	
 	public class BullScenceMediator extends Mediator implements IMediator
 	{
-		public var perLoadService:PreLoadService;
+		public var perLoadService:PreLoadService;		
 		public var roomSocketService:RoomSocketService;
 		public var roomData:RoomData;
 		public var userInfoData:UserInfoData;
@@ -73,8 +75,11 @@ package bull.modules.room.mediator
 			view.btn_display(false);
 			
 			
-			
-			
+			//TEST CMD
+			if ( view["TestPanel"] != undefined)
+			{
+				view.TestPanel.on(LightEvent.ITEM_CLICK, this, ontest);
+			}
 			
 			addNotifiction(BullNotification.RoomSocketClose);
 			addNotifiction(BullNotification.ExitRoomEvent);
@@ -84,6 +89,11 @@ package bull.modules.room.mediator
 		override public function onInitialize():void 
 		{ 
 			trace("===========================init");
+		}
+		
+		private function ontest(cmd:int):void 
+		{
+			sentNotification(BullNotification.TestOrder,cmd);
 		}
 		
 		/**

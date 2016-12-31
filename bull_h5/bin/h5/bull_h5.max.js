@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
+	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -943,6 +943,7 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.Scene_Game="Scene_Game";
 		BullNotification.RoomSocketClose="RoomSocketClose";
 		BullNotification.ExitRoomEvent="ExitRoomEvent";
+		BullNotification.TestOrder="TestOrder";
 		return BullNotification;
 	})()
 
@@ -28323,9 +28324,9 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),RoomHeartBeatCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString(),JoinRoomCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(),JoinRoomCommand);
+			this.registerCommand("TestOrder",TestCommand);
 		}
 
-		//registerCommand(ENCSType.CS_TYPE_ROUND_CASH_NOTIFY.toString(),SettlementRoundCommand);//开始结算
 		__proto.initModel=function(){
 			this.registerModel(new PreLoadService("perLoadService"));
 			this.registerModel(new BullProtoModel("bullProtoModel"));
@@ -29005,6 +29006,46 @@ var Laya=window.Laya=(function(window,document){
 	})(Command)
 
 
+	//class bull.modules.common.command.RoomHeartBeatCommand extends com.lightMVC.parrerns.Command
+	var RoomHeartBeatCommand=(function(_super){
+		function RoomHeartBeatCommand(){
+			RoomHeartBeatCommand.__super.call(this);
+		}
+
+		__class(RoomHeartBeatCommand,'bull.modules.common.command.RoomHeartBeatCommand',_super);
+		var __proto=RoomHeartBeatCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="roomHeartBeat"){
+				this.heartReqHandler();
+				}else if(notification.getName()==ENCSType.CS_TYPE_HEART_BEAT_RSP.toString()){
+				this.heartRspHandler(notification.getBody());
+			}
+		}
+
+		__proto.heartReqHandler=function(){
+			var bullData=this.getSingleton("Data");
+			bullData.roomHeartBeat=true;
+			var socket=this.getModel("roomSocketService");
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=3;
+			out.heart_beat_req=proto.msg_proto.getHeartBeatReq()
+			socket.sentMsg(out);
+		}
+
+		__proto.heartRspHandler=function(cs){
+			console.log("Room heartRspHandler");
+			var bullData=this.getSingleton("Data");
+			if(!bullData.roomHeartBeat)return;
+			bullData.roomHeartBeat=false;
+			(this.getMediator("BullScenceMediator")).receiveHeartBeat();
+		}
+
+		return RoomHeartBeatCommand;
+	})(Command)
+
+
 	/**
 	*这里处理大厅的socket连接
 	*@author light-k
@@ -29112,46 +29153,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Model)
 
 
-	//class bull.modules.common.command.RoomHeartBeatCommand extends com.lightMVC.parrerns.Command
-	var RoomHeartBeatCommand=(function(_super){
-		function RoomHeartBeatCommand(){
-			RoomHeartBeatCommand.__super.call(this);
-		}
-
-		__class(RoomHeartBeatCommand,'bull.modules.common.command.RoomHeartBeatCommand',_super);
-		var __proto=RoomHeartBeatCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="roomHeartBeat"){
-				this.heartReqHandler();
-				}else if(notification.getName()==ENCSType.CS_TYPE_HEART_BEAT_RSP.toString()){
-				this.heartRspHandler(notification.getBody());
-			}
-		}
-
-		__proto.heartReqHandler=function(){
-			var bullData=this.getSingleton("Data");
-			bullData.roomHeartBeat=true;
-			var socket=this.getModel("roomSocketService");
-			var proto=this.getModel("bullProtoModel");
-			var out=proto.msg_proto.getCS();
-			out.msg_type=3;
-			out.heart_beat_req=proto.msg_proto.getHeartBeatReq()
-			socket.sentMsg(out);
-		}
-
-		__proto.heartRspHandler=function(cs){
-			console.log("Room heartRspHandler");
-			var bullData=this.getSingleton("Data");
-			if(!bullData.roomHeartBeat)return;
-			bullData.roomHeartBeat=false;
-			(this.getMediator("BullScenceMediator")).receiveHeartBeat();
-		}
-
-		return RoomHeartBeatCommand;
-	})(Command)
-
-
 	//class bull.modules.common.command.RoomListCommand extends com.lightMVC.parrerns.Command
 	var RoomListCommand=(function(_super){
 		function RoomListCommand(){
@@ -29195,6 +29196,36 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		return RoomListCommand;
+	})(Command)
+
+
+	//class bull.modules.common.command.TestCommand extends com.lightMVC.parrerns.Command
+	var TestCommand=(function(_super){
+		function TestCommand(){
+			TestCommand.__super.call(this);
+		}
+
+		__class(TestCommand,'bull.modules.common.command.TestCommand',_super);
+		var __proto=TestCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="TestOrder"){
+				this.onLoginRoomRqs(notification.getBody());
+			}
+		}
+
+		__proto.onLoginRoomRqs=function(cmd){
+			console.log("Test "+cmd);
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=13;
+			out.try_enter_table_req=proto.msg_proto.getSTryEnterTableReq()
+			out.try_enter_table_req.room_id=cmd;
+			var socket=this.getModel("roomSocketService");
+			socket.sentMsg(out);
+		}
+
+		return TestCommand;
 	})(Command)
 
 
@@ -29743,104 +29774,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
-	var WebService=(function(_super){
-		function WebService(modelName,data){
-			this.webApi=new KGH5();
-			WebService.__super.call(this,modelName,data);
-		}
-
-		__class(WebService,'bull.modules.common.services.WebService',_super);
-		var __proto=WebService.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
-		__proto.getInjector=function(){
-			return [];
-		}
-
-		// ExternalInterface.addCallback("getUserBalanceCallBack",getUserBalanceCallBack);
-		__proto.getUserBalance=function(callback){
-			this.webApi.getUserBalance(callback);
-		}
-
-		__proto.parseInfo=function(callback){
-			var browserStr=Browser.document.location.href.toString();
-			var askIndex=browserStr.indexOf("?");
-			var paramAry=browserStr.substr(askIndex+1).split("&");
-			var param=new WebParam();
-			for (var i=0;i<paramAry.length;i++){
-				var ary=paramAry[i].split("=");
-				var key=ary[0];
-				var value=ary[1];
-				param[key]=value;
-				console.log("key: "+key+",  value: "+value);
-			}
-		}
-
-		//appModel.assess_token=param.access_token;
-		__proto.getUserBalanceCallBack=function(param){
-			var userMoneyNum=0;
-			if(/*no*/this.appModel.hallAppModel.room_type==2){
-				userMoneyNum+=Number(param.cash);
-			}
-			else if(/*no*/this.appModel.hallAppModel.room_type==3){
-				userMoneyNum+=Number(param.nm);
-			}
-			else if(/*no*/this.appModel.hallAppModel.room_type==1){
-				userMoneyNum+=Number(param.coin);
-			};
-			var roomOb=/*no*/this.appModel.hallAppModel.roomLists[/*no*/this.appModel.hallAppModel.join_group];
-			var roomParam=/*no*/this.appModel.hallAppModel.roomParam;
-			roomParam.roomID=roomOb["roomId"];
-			roomParam.roomType=roomOb["roomType"];
-			roomParam.lobby_token=/*no*/this.appModel.hallAppModel.Lobby_token;
-			roomParam.roomlimit=roomOb["roomLimit"];
-			roomParam.bankerlimit=roomOb["bankerLimit"];
-			roomParam.ip=/*no*/this.appModel.hallAppModel.join_IP;
-			roomParam.port=String(/*no*/this.appModel.hallAppModel.join_Port);
-			roomParam.moneyCoin=Number(param.coin);
-			roomParam.moneyCash=Number(param.cash);
-			roomParam.moneyNm=Number(param.nm);
-			roomParam.minBet=roomOb["minBet"];
-			roomParam.maxBet=roomOb["maxBet"];
-			roomParam.clipType=/*no*/this.appModel.hallAppModel.room_type;
-			var name,name2,minBetStr,maxBetStr;
-			if(/*no*/this.appModel.hallAppModel.room_type==1){
-			}
-			else{
-			}
-			name=roomOb["roomName"];
-			roomParam.roomName=roomOb["roomName"];
-			roomParam.roomName2=roomOb["roomName"];
-		}
-
-		WebService.resolveBrowserParam=function(){
-			var param=new WebParam();
-			param.uid=1014495;
-			param.access_token="7b8007aaaef180fb1c0d78bc9c4b5589";
-			return param;
-			var browserStr=Browser.document.location.href.toString();
-			var askIndex=browserStr.indexOf("?");
-			var paramAry=browserStr.substr(askIndex+1).split("&");
-			var param=new WebParam();
-			for (var i=0;i<paramAry.length;i++){
-				var ary=paramAry[i].split("=");
-				var key=ary[0];
-				var value=ary[1];
-				param[key]=value;
-				console.log("key: "+key+",  value: "+value);
-			}
-			if(!param.uid){
-				param.uid=1014495;
-				param.access_token="6908dfe04342b2458fb006435eab8e48";
-			}
-			return param;
-		}
-
-		WebService.NAME="WebService";
-		return WebService;
-	})(Model)
-
-
 	//class bull.modules.room.mediator.BullScenceMediator extends com.lightMVC.parrerns.Mediator
 	var BullScenceMediator=(function(_super){
 		function BullScenceMediator(mediatorName,viewComponent){
@@ -29873,12 +29806,19 @@ var Laya=window.Laya=(function(window,document){
 			this.view.CarryInBtn.on("click",this,this.onClick);
 			this.view.PlayerListBtn.on("click",this,this.onClick);
 			this.view.btn_display(false);
+			if (this.view["TestPanel"] !=undefined){
+				this.view.TestPanel.on("item_click",this,this.ontest);
+			}
 			this.addNotifiction("RoomSocketClose");
 			this.addNotifiction("ExitRoomEvent");
 		}
 
 		__proto.onInitialize=function(){
 			console.log("===========================init");
+		}
+
+		__proto.ontest=function(cmd){
+			this.sentNotification("TestOrder",cmd);
 		}
 
 		/**
@@ -30010,6 +29950,104 @@ var Laya=window.Laya=(function(window,document){
 		BullScenceMediator.NAME="BullScenceMediator";
 		return BullScenceMediator;
 	})(Mediator)
+
+
+	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
+	var WebService=(function(_super){
+		function WebService(modelName,data){
+			this.webApi=new KGH5();
+			WebService.__super.call(this,modelName,data);
+		}
+
+		__class(WebService,'bull.modules.common.services.WebService',_super);
+		var __proto=WebService.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		// ExternalInterface.addCallback("getUserBalanceCallBack",getUserBalanceCallBack);
+		__proto.getUserBalance=function(callback){
+			this.webApi.getUserBalance(callback);
+		}
+
+		__proto.parseInfo=function(callback){
+			var browserStr=Browser.document.location.href.toString();
+			var askIndex=browserStr.indexOf("?");
+			var paramAry=browserStr.substr(askIndex+1).split("&");
+			var param=new WebParam();
+			for (var i=0;i<paramAry.length;i++){
+				var ary=paramAry[i].split("=");
+				var key=ary[0];
+				var value=ary[1];
+				param[key]=value;
+				console.log("key: "+key+",  value: "+value);
+			}
+		}
+
+		//appModel.assess_token=param.access_token;
+		__proto.getUserBalanceCallBack=function(param){
+			var userMoneyNum=0;
+			if(/*no*/this.appModel.hallAppModel.room_type==2){
+				userMoneyNum+=Number(param.cash);
+			}
+			else if(/*no*/this.appModel.hallAppModel.room_type==3){
+				userMoneyNum+=Number(param.nm);
+			}
+			else if(/*no*/this.appModel.hallAppModel.room_type==1){
+				userMoneyNum+=Number(param.coin);
+			};
+			var roomOb=/*no*/this.appModel.hallAppModel.roomLists[/*no*/this.appModel.hallAppModel.join_group];
+			var roomParam=/*no*/this.appModel.hallAppModel.roomParam;
+			roomParam.roomID=roomOb["roomId"];
+			roomParam.roomType=roomOb["roomType"];
+			roomParam.lobby_token=/*no*/this.appModel.hallAppModel.Lobby_token;
+			roomParam.roomlimit=roomOb["roomLimit"];
+			roomParam.bankerlimit=roomOb["bankerLimit"];
+			roomParam.ip=/*no*/this.appModel.hallAppModel.join_IP;
+			roomParam.port=String(/*no*/this.appModel.hallAppModel.join_Port);
+			roomParam.moneyCoin=Number(param.coin);
+			roomParam.moneyCash=Number(param.cash);
+			roomParam.moneyNm=Number(param.nm);
+			roomParam.minBet=roomOb["minBet"];
+			roomParam.maxBet=roomOb["maxBet"];
+			roomParam.clipType=/*no*/this.appModel.hallAppModel.room_type;
+			var name,name2,minBetStr,maxBetStr;
+			if(/*no*/this.appModel.hallAppModel.room_type==1){
+			}
+			else{
+			}
+			name=roomOb["roomName"];
+			roomParam.roomName=roomOb["roomName"];
+			roomParam.roomName2=roomOb["roomName"];
+		}
+
+		WebService.resolveBrowserParam=function(){
+			var param=new WebParam();
+			param.uid=1014495;
+			param.access_token="7b8007aaaef180fb1c0d78bc9c4b5589";
+			return param;
+			var browserStr=Browser.document.location.href.toString();
+			var askIndex=browserStr.indexOf("?");
+			var paramAry=browserStr.substr(askIndex+1).split("&");
+			var param=new WebParam();
+			for (var i=0;i<paramAry.length;i++){
+				var ary=paramAry[i].split("=");
+				var key=ary[0];
+				var value=ary[1];
+				param[key]=value;
+				console.log("key: "+key+",  value: "+value);
+			}
+			if(!param.uid){
+				param.uid=1014495;
+				param.access_token="6908dfe04342b2458fb006435eab8e48";
+			}
+			return param;
+		}
+
+		WebService.NAME="WebService";
+		return WebService;
+	})(Model)
 
 
 	//class bull.modules.perload.services.PreLoadService extends com.lightMVC.parrerns.Model
@@ -31841,6 +31879,23 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
+
+
 	/**
 	*场景管理器
 	*@author light-k
@@ -32041,23 +32096,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
-
-
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -48076,6 +48114,7 @@ var Laya=window.Laya=(function(window,document){
 			this.InfoBoard=null;
 			this.bankerBoard=null;
 			this.BetChip=null;
+			this.TestPanel=null;
 			BullSceneUI.__super.call(this);
 		}
 
@@ -48086,14 +48125,41 @@ var Laya=window.Laya=(function(window,document){
 			View.regComponent("ui.ui.room.InfoBoardUI",InfoBoardUI);
 			View.regComponent("ui.ui.room.BankerBoardUI",BankerBoardUI);
 			View.regComponent("ui.ui.room.BetChipUI",BetChipUI);
+			View.regComponent("bull.view.room.TestBoard",TestBoard);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BullSceneUI.uiView);
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryRecord","runtime":"ui.ui.room.HistoryRecordUI"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoBoard","runtime":"ui.ui.room.InfoBoardUI"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerBoard","runtime":"ui.ui.room.BankerBoardUI"}},{"type":"BetChip","props":{"y":803,"x":426,"var":"BetChip","runtime":"ui.ui.room.BetChipUI"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryRecord","runtime":"ui.ui.room.HistoryRecordUI"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoBoard","runtime":"ui.ui.room.InfoBoardUI"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerBoard","runtime":"ui.ui.room.BankerBoardUI"}},{"type":"BetChip","props":{"y":803,"x":426,"var":"BetChip","runtime":"ui.ui.room.BetChipUI"}},{"type":"Test","props":{"y":583,"x":28,"var":"TestPanel","runtime":"bull.view.room.TestBoard"}}]};}
 		]);
 		return BullSceneUI;
+	})(View)
+
+
+	//class ui.ui.room.TestUI extends laya.ui.View
+	var TestUI=(function(_super){
+		function TestUI(){
+			this.btn_0=null;
+			this.btn_1=null;
+			this.btn_2=null;
+			this.btn_3=null;
+			this.btn_4=null;
+			this.btn_5=null;
+			TestUI.__super.call(this);
+		}
+
+		__class(TestUI,'ui.ui.room.TestUI',_super);
+		var __proto=TestUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(TestUI.uiView);
+		}
+
+		__static(TestUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":600,"height":80},"child":[{"type":"Button","props":{"y":0,"x":0,"width":80,"var":"btn_0","skin":"res/gameScene/CarryIn.png","name":"btn_0","label":"Start","height":66}},{"type":"Button","props":{"y":1,"x":74,"width":80,"var":"btn_1","skin":"res/gameScene/CarryIn.png","name":"btn_1","label":"Banker","height":66}},{"type":"Button","props":{"y":0,"x":146,"width":80,"var":"btn_2","skin":"res/gameScene/CarryIn.png","name":"btn_2","label":"Bet","height":66}},{"type":"Button","props":{"y":0,"x":214,"width":80,"var":"btn_3","skin":"res/gameScene/CarryIn.png","name":"btn_3","label":"BetCheck","height":66}},{"type":"Button","props":{"y":-2,"x":292,"width":80,"var":"btn_4","skin":"res/gameScene/CarryIn.png","name":"btn_4","label":"Deal","height":66}},{"type":"Button","props":{"y":0,"x":363,"width":80,"var":"btn_5","skin":"res/gameScene/CarryIn.png","name":"btn_5","label":"End","height":66}}]};}
+		]);
+		return TestUI;
 	})(View)
 
 
@@ -48101,7 +48167,6 @@ var Laya=window.Laya=(function(window,document){
 	var small_loadingUI=(function(_super){
 		function small_loadingUI(){
 			this.ani1=null;
-			this.anim=null;
 			small_loadingUI.__super.call(this);
 		}
 
@@ -48113,7 +48178,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(small_loadingUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":600,"height":400},"child":[{"type":"Image","props":{"y":179,"x":315,"var":"anim","skin":"res/smallLoading/chip_10.png","pivotY":29,"pivotX":26},"compId":2},{"type":"Label","props":{"y":229,"x":211,"width":236,"text":"努力加载中。。。","height":25,"fontSize":24,"color":"#fdfbfb","align":"center"}}],"animations":[{"nodes":[{"target":2,"keyframes":{"y":[{"value":179,"tweenMethod":"linearNone","tween":true,"target":2,"key":"y","index":0}],"rotation":[{"value":0,"tweenMethod":"linearNone","tween":true,"target":2,"key":"rotation","index":0},{"value":360,"tweenMethod":"linearNone","tween":true,"target":2,"key":"rotation","index":15}]}}],"name":"ani1","id":1,"frameRate":24,"action":0}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"animations":[{"nodes":[{"target":2,"keyframes":{"y":[{"value":179,"tweenMethod":"linearNone","tween":true,"target":2,"key":"y","index":0}],"rotation":[{"value":0,"tweenMethod":"linearNone","tween":true,"target":2,"key":"rotation","index":0},{"value":360,"tweenMethod":"linearNone","tween":true,"target":2,"key":"rotation","index":15}]}}],"name":"ani1","id":1,"frameRate":24,"action":0}]};}
 		]);
 		return small_loadingUI;
 	})(View)
@@ -49647,6 +49712,43 @@ var Laya=window.Laya=(function(window,document){
 	})(BullSceneUI)
 
 
+	//class bull.view.room.TestBoard extends ui.ui.room.TestUI
+	var TestBoard=(function(_super){
+		function TestBoard(){
+			TestBoard.__super.call(this);
+		}
+
+		__class(TestBoard,'bull.view.room.TestBoard',_super);
+		var __proto=TestBoard.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			console.log("TestBoard Init");
+			this.btn_0.on("click",this,this.onTestClick);
+			this.btn_1.on("click",this,this.onTestClick);
+			this.btn_2.on("click",this,this.onTestClick);
+			this.btn_3.on("click",this,this.onTestClick);
+			this.btn_4.on("click",this,this.onTestClick);
+			this.btn_5.on("click",this,this.onTestClick);
+		}
+
+		__proto.onTestClick=function(e){
+			var s=e.target.name;
+			s=s.substr(4,1);
+			this.event("item_click",parseInt(s));
+		}
+
+		__proto.hide=function(){
+			console.log("TestBoard hide");
+		}
+
+		__proto.show=function(){
+			console.log("TestBoard show");
+		}
+
+		return TestBoard;
+	})(TestUI)
+
+
 	//class bull.view.smallLoading.SmallLoading extends ui.ui.smallLoading.small_loadingUI
 	var SmallLoading=(function(_super){
 		function SmallLoading(){
@@ -50911,17 +51013,17 @@ var Laya=window.Laya=(function(window,document){
 10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
 11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
 12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (172):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (181):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
 25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
 */

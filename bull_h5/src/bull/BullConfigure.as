@@ -15,6 +15,7 @@ package bull
 	import bull.modules.common.command.RoomHeartBeatCommand;	
 	import bull.modules.common.command.LoginHallCommand;
 	import bull.modules.common.command.RoomListCommand;
+	import bull.modules.common.command.TestCommand;
 	
 	//import light.car.modules.common.command.BetCancelCommand;
 	//import light.car.modules.common.command.BetCommand;
@@ -155,6 +156,8 @@ package bull
 			//registerCommand(ENCSType.CS_TYPE_ROUND_START_NOTIFY.toString(),StartBetCommand);			//开始下注
 			//registerCommand(ENCSType.CS_TYPE_ROUND_COMMIT_NOTIFY.toString(),CommitRoundCommand);		//确认下注
 			//registerCommand(ENCSType.CS_TYPE_ROUND_CASH_NOTIFY.toString(),SettlementRoundCommand);			//开始结算
+			
+			registerCommand(BullNotification.TestOrder, TestCommand);
 		}
 		
 		private function initModel():void{
