@@ -2,8 +2,8 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":23,
-    "props":{"width":1400,"sceneColor":"#000000","height":800},
+    "selecteID":27,
+    "props":{"width":679,"sceneColor":"#000000","height":416},
     "nodeParent":-1,
     "label":"View",
     "isOpen":true,
@@ -22,7 +22,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"},
+            "props":{"y":0,"x":0,"skin":"res/gameScene/结算中心底板.png"},
             "nodeParent":1,
             "label":"Image",
             "isDirectory":false,
@@ -31,42 +31,20 @@
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":284,"x":232,"skin":"res/gameScene/bg.jpg"},
+                    "props":{"y":280,"x":145,"skin":"res/gameScene/结算中心底板.png"},
                     "frame":0,
                     "__InPool":false
                 }],
             "compId":2,
-            "child":[
-                ],
-            "$LOCKED":false
-        },
-        {
-            "x":15,
-            "type":"Image",
-            "props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315},
-            "nodeParent":1,
-            "label":"Image(btnBg)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":4,
             "child":[
                 ]
         },
         {
             "x":15,
             "type":"Button",
-            "props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"},
+            "props":{"y":-1,"x":640,"skin":"res/gameScene/closeBtn.png"},
             "nodeParent":1,
-            "label":"Button(backLobby)",
-            "isOpen":true,
+            "label":"Button",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -83,182 +61,39 @@
         },
         {
             "x":15,
-            "type":"Button",
-            "props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"},
+            "type":"UIView",
+            "source":"ui/room/Settle_Info.ui",
+            "props":{"y":189,"x":196,"var":"info_0"},
             "nodeParent":1,
-            "label":"Button(optionBtn)",
-            "isOpen":true,
+            "label":"UIView(info_0)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"label":"label"},
+                    "props":{"y":213,"x":252},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":5,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Button",
-            "props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"},
-            "nodeParent":1,
-            "label":"Button(setupBtn)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"label":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":6,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Button",
-            "props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"},
-            "nodeParent":1,
-            "label":"Button(helpBtn)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"label":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":7,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Button",
-            "props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"},
-            "nodeParent":1,
-            "label":"Button(PlayerListBtn)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"label":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":9,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Button",
-            "props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"},
-            "nodeParent":1,
-            "label":"Button(CarryInBtn)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"label":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":10,
+            "compId":15,
             "child":[
                 ]
         },
         {
             "x":15,
             "type":"UIView",
-            "source":"ui/room/HistoryRecord.ui",
-            "props":{"y":87,"x":-173,"var":"HistoryBoard","runtime":"bull.view.room.HistoryRecord"},
+            "source":"ui/room/Settle_Info.ui",
+            "props":{"y":244,"x":196,"var":"info_1"},
             "nodeParent":1,
-            "label":"UIView(HistoryBoard)",
+            "label":"UIView(info_1)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":278,"x":273},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":11,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"UIView",
-            "source":"ui/room/InfoBoard.ui",
-            "props":{"y":800,"x":92,"var":"InfoBoard"},
-            "nodeParent":1,
-            "label":"UIView(InfoBoard)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":878,"x":655},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":12,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"UIView",
-            "source":"ui/room/BankerBoard.ui",
-            "props":{"y":-81,"x":347,"var":"bankerBoard"},
-            "nodeParent":1,
-            "label":"UIView(bankerBoard)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":-50,"x":729},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":13,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"UIView",
-            "source":"ui/room/BetChip.ui",
-            "props":{"y":803,"x":426,"var":"BetChip"},
-            "nodeParent":1,
-            "label":"UIView(BetChip)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":366,"x":458},
+                    "props":{"y":213,"x":252},
                     "frame":0,
                     "__InPool":false
                 }],
@@ -269,17 +104,37 @@
         {
             "x":15,
             "type":"UIView",
-            "source":"ui/room/Test.ui",
-            "props":{"y":519,"x":51,"var":"TestPanel","runtime":"bull.view.room.TestBoard"},
+            "source":"ui/room/Settle_Info.ui",
+            "props":{"y":296,"x":195,"var":"info_2"},
             "nodeParent":1,
-            "label":"UIView(TestPanel)",
+            "label":"UIView(info_2)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":484,"x":260},
+                    "props":{"y":213,"x":252},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":17,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Button",
+            "props":{"y":357,"x":265,"skin":"res/gameScene/Btn_bg.png"},
+            "nodeParent":1,
+            "label":"Button",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"label":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
@@ -289,111 +144,181 @@
         },
         {
             "x":15,
-            "type":"UIView",
-            "source":"ui/room/UserPanel.ui",
-            "props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"UserBoard"},
+            "type":"Label",
+            "props":{"y":366,"x":308,"width":43,"text":"确  定","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true},
             "nodeParent":1,
-            "label":"UIView(UserBoard)",
+            "label":"Label",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":265,"x":618},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
             "compId":19,
             "child":[
-                ],
-            "$HIDDEN":true
+                ]
         },
         {
             "x":15,
-            "type":"UIView",
-            "source":"ui/room/Settle.ui",
-            "props":{"y":170,"x":357,"visible":false,"var":"SellteBoard"},
+            "type":"Label",
+            "props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
             "nodeParent":1,
-            "label":"UIView(SellteBoard)",
+            "label":"Label",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":270,"x":448},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
             "compId":20,
             "child":[
-                ],
-            "$LOCKED":true,
-            "$HIDDEN":true
+                ]
         },
         {
             "x":15,
-            "type":"UIView",
-            "source":"ui/room/BankerSettle.ui",
-            "props":{"y":161,"x":274,"visible":false,"var":"BankerSettleBoard"},
+            "type":"Label",
+            "props":{"y":365,"x":489,"width":11,"text":"S","scaleY":2.3,"scaleX":2.3,"mouseEnabled":false,"height":14,"color":"#e53829","bold":true},
             "nodeParent":1,
-            "label":"UIView(BankerSettleBoard)",
+            "label":"Label",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":290,"x":643},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
             "compId":21,
             "child":[
-                ],
-            "$HIDDEN":true
+                ]
         },
         {
             "x":15,
-            "type":"UIView",
-            "source":"ui/room/BetZone.ui",
-            "props":{"y":237,"x":223,"visible":false,"var":"BetZoneBoard"},
+            "type":"Label",
+            "props":{"y":362,"x":470,"width":10,"text":"8","scaleY":2.5,"scaleX":2.5,"mouseEnabled":false,"height":16,"color":"#e53829","bold":true},
             "nodeParent":1,
-            "label":"UIView(BetZoneBoard)",
+            "label":"Label",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":350,"x":517},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
             "compId":22,
             "child":[
-                ],
-            "$HIDDEN":true
+                ]
         },
         {
             "x":15,
-            "type":"UIView",
-            "source":"ui/room/Timer.ui",
-            "props":{"y":539,"x":664,"visible":false,"var":"Timer"},
+            "type":"Label",
+            "props":{"y":324,"x":37,"width":83,"text":"+9999999","scaleY":1.5,"scaleX":1.5,"mouseEnabled":false,"height":16,"color":"#9fb23c","bold":false,"align":"center"},
             "nodeParent":1,
-            "label":"UIView(Timer)",
+            "label":"Label",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":514,"x":636},
+                    "props":{"text":"label"},
                     "frame":0,
                     "__InPool":false
                 }],
             "compId":23,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":294,"x":41,"skin":"res/gameScene/吉胜游戏平台.png"},
+            "nodeParent":1,
+            "label":"Image",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":307,"x":123,"skin":"res/gameScene/吉胜游戏平台.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":24,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":86,"x":106,"width":93,"text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"},
+            "nodeParent":1,
+            "label":"Label",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":25,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":119,"x":126,"width":93,"text":"6666666","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#f8f0ef","align":"left"},
+            "nodeParent":1,
+            "label":"Label",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":26,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":60,"x":6,"skin":"res/gameScene/庄家符号.png"},
+            "nodeParent":1,
+            "label":"Image",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":117,"x":122,"skin":"res/gameScene/庄家符号.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":27,
             "child":[
                 ]
         }],
