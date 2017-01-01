@@ -57,6 +57,7 @@ res\alert\img_rule_line.png:1482212097
 res\alert\img_seb_bg.png:1482212098
 res\alert\optionBtn.png:1482139063
 res\alert\setup.png:1482139102
+res\gameScene\5小牛.png:1483265056
 res\gameScene\applyBanker.png:1483061721
 res\gameScene\BankerBoard.png:1482212097
 res\gameScene\bg.jpg:1482212097
@@ -65,6 +66,7 @@ res\gameScene\CancelBet.png:1483006744
 res\gameScene\CarryIn.png:1483005878
 res\gameScene\CarryInBtn.png:1482739077
 res\gameScene\closeBtn.png:1483252225
+res\gameScene\club_2.png:1483264851
 res\gameScene\deBanker.png:1483061760
 res\gameScene\InfoBoard.png:1482212097
 res\gameScene\NO.1.png:1482212097
@@ -72,6 +74,7 @@ res\gameScene\NO.2.png:1482212097
 res\gameScene\NO.3.png:1482212097
 res\gameScene\PlayerListBtn.png:1482739198
 res\gameScene\PlayerListCloseBtn.png:1483251790
+res\gameScene\pokerBack.png:1483264526
 res\gameScene\SameBetBtn.png:1483076496
 res\gameScene\下庄结算底板.png:1482212097
 res\gameScene\下庄结算横条01.png:1482212095
@@ -85,6 +88,7 @@ res\gameScene\方片底条.png:1482212095
 res\gameScene\未展开胜负记录.png:1482212097
 res\gameScene\桌内玩家列表底板.png:1482212099
 res\gameScene\梅花底条.png:1482212097
+res\gameScene\牛九.png:1483265032
 res\gameScene\玩家信息底板.png:1482212099
 res\gameScene\玩家信息底板02.png:1482212099
 res\gameScene\筹码1.png:1482212097
