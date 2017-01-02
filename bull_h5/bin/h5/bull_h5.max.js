@@ -30866,6 +30866,7 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case this.view.optionBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
+					this.view.BetChip.set_gray();
 					break ;
 				}
 		}
@@ -50770,6 +50771,7 @@ var Laya=window.Laya=(function(window,document){
 			this.ligth_po=[1,89,179,268,358,448];
 			this.arror_po=[35,123,213,302,392,483];
 			this._pre_idx=0;
+			this.grayscaleFilter=null;
 			CoinSelect.__super.call(this);
 		}
 
@@ -50779,7 +50781,9 @@ var Laya=window.Laya=(function(window,document){
 			_super.prototype.createChildren.call(this);
 			for (var i=0;i < 6;i++){
 				this["Coin_"+i].on("click",this,this.onClick);
-			}
+			};
+			var grayscaleMat=[0.3086,0.6094,0.0820,0,0,0.3086,0.6094,0.0820,0,0,0.3086,0.6094,0.0820,0,0,0,0,0,1,0];
+			this.grayscaleFilter=new ColorFilter(grayscaleMat);
 		}
 
 		__proto.onClick=function(e){
@@ -50805,7 +50809,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.set_gray=function(){
-			this.Coin_5.filters=ColorFilter.GRAY;
+			this.Coin_5.filters=[this.grayscaleFilter];
 		}
 
 		__proto.test=function(){}
@@ -52294,7 +52298,7 @@ var Laya=window.Laya=(function(window,document){
 39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
 40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
 41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (224):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (225):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
 43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
 44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/poker.as (104):warning:idx_j This variable is not defined.
 */

@@ -131,6 +131,7 @@ package bull.modules.room.mediator
 				
 				case view.optionBtn:
 					view.btn_display(!view.btnBg.visible);
+					view.BetChip.set_gray();
 				break;
 			}
 		}		
