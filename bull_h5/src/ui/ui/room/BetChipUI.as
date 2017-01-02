@@ -4,16 +4,16 @@ package ui.ui.room {
 	import laya.display.*; 
 
 	public class BetChipUI extends View {
-		public var Coin_0:Animation;
-		public var Coin_1:Animation;
-		public var Coin_2:Animation;
-		public var Coin_3:Animation;
-		public var Coin_4:Animation;
-		public var Coin_5:Animation;
 		public var Coin_light:Image;
 		public var Selcet_Arrow:Image;
+		public var Coin_0:Image;
+		public var Coin_1:Image;
+		public var Coin_2:Image;
+		public var Coin_3:Image;
+		public var Coin_4:Image;
+		public var Coin_5:Image;
 
-		public static var uiView:Object ={"type":"View","props":{"width":540,"height":110},"child":[{"type":"Animation","props":{"y":7,"x":10,"var":"Coin_0","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Animation","props":{"y":22,"x":98,"var":"Coin_1","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Animation","props":{"y":24,"x":188,"var":"Coin_2","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Animation","props":{"y":24,"x":277,"var":"Coin_3","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Animation","props":{"y":24,"x":367,"var":"Coin_4","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Animation","props":{"y":25,"x":458,"var":"Coin_5","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"}},{"type":"Image","props":{"y":-6,"x":1,"var":"Coin_light","skin":"res/gameScene/筹码光.png"}},{"type":"Image","props":{"y":81,"x":35,"var":"Selcet_Arrow","skin":"res/gameScene/筹码指向.png"}}]};
+		public static var uiView:Object ={"type":"View","props":{"width":540,"height":110},"child":[{"type":"Image","props":{"y":-6,"x":1,"var":"Coin_light","skin":"res/gameScene/筹码光.png"}},{"type":"Image","props":{"y":79,"x":35,"width":26,"var":"Selcet_Arrow","skin":"res/gameScene/筹码指向.png","height":24}},{"type":"Image","props":{"y":7,"x":10,"var":"Coin_0","skin":"res/gameScene/chip_1.png","name":"Coin_0"}},{"type":"Image","props":{"y":24,"x":98,"var":"Coin_1","skin":"res/gameScene/chip_1.png","name":"Coin_1"}},{"type":"Image","props":{"y":24,"x":188,"var":"Coin_2","skin":"res/gameScene/chip_1.png","name":"Coin_2"}},{"type":"Image","props":{"y":24,"x":277,"var":"Coin_3","skin":"res/gameScene/chip_1.png","name":"Coin_3"}},{"type":"Image","props":{"y":24,"x":367,"var":"Coin_4","skin":"res/gameScene/chip_1.png","name":"Coin_4"}},{"type":"Image","props":{"y":24,"x":458,"var":"Coin_5","skin":"res/gameScene/chip_1.png","name":"Coin_5"}}]};
 		override protected function createChildren():void {
 			super.createChildren();
 			createView(uiView);

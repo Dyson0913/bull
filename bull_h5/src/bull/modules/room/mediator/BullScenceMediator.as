@@ -119,12 +119,14 @@ package bull.modules.room.mediator
 				
 				case view.CarryInBtn:
 					view.btn_display(!view.btnBg.visible);
-					view.TimerPanel.set_data([10]);
+					
+					view.BetChip.set_data([100,500,1000,5000,10000,"max"]);
+					//view.BetChip.set_data([1000,5000,10000,50000,100000,-1]);
 				break;
 				
 				case view.PlayerListBtn:
 					view.btn_display(!view.btnBg.visible);
-					view.TimerPanel.hide();
+					view.BetChip.set_gray();
 				break;
 				
 				case view.optionBtn:

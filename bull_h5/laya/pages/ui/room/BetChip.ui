@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":11,
+    "selecteID":13,
     "props":{"width":540,"sceneColor":"#000000","height":110},
     "nodeParent":-1,
     "label":"View",
@@ -19,126 +19,6 @@
         }],
     "compId":1,
     "child":[
-        {
-            "x":15,
-            "type":"Animation",
-            "props":{"y":7,"x":10,"var":"Coin_0","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"},
-            "nodeParent":1,
-            "label":"Animation(Coin_0)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":3,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Animation",
-            "props":{"y":22,"x":98,"var":"Coin_1","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"},
-            "nodeParent":1,
-            "label":"Animation(Coin_1)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":4,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Animation",
-            "props":{"y":24,"x":188,"var":"Coin_2","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"},
-            "nodeParent":1,
-            "label":"Animation(Coin_2)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":5,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Animation",
-            "props":{"y":24,"x":277,"var":"Coin_3","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"},
-            "nodeParent":1,
-            "label":"Animation(Coin_3)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":6,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Animation",
-            "props":{"y":24,"x":367,"var":"Coin_4","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"},
-            "nodeParent":1,
-            "label":"Animation(Coin_4)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":7,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Animation",
-            "props":{"y":25,"x":458,"var":"Coin_5","source":"res/gameScene/筹码1.png,res/gameScene/筹码10.png,res/gameScene/筹码100.png,res/gameScene/筹码100K.png,res/gameScene/筹码10M.png,res/gameScene/筹码10k.png,res/gameScene/筹码1M.png,res/gameScene/筹码1k.png,res/gameScene/筹码5.png,res/gameScene/筹码50.png,res/gameScene/筹码500.png,res/gameScene/筹码500K.png,res/gameScene/筹码50k.png,res/gameScene/筹码5M.png,res/gameScene/筹码5k.png,res/gameScene/筹码MAX.png"},
-            "nodeParent":1,
-            "label":"Animation(Coin_5)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":8,
-            "child":[
-                ]
-        },
         {
             "x":15,
             "type":"Image",
@@ -164,9 +44,10 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":81,"x":35,"var":"Selcet_Arrow","skin":"res/gameScene/筹码指向.png"},
+            "props":{"y":79,"x":35,"width":26,"var":"Selcet_Arrow","skin":"res/gameScene/筹码指向.png","height":24},
             "nodeParent":1,
             "label":"Image(Selcet_Arrow)",
+            "isOpen":true,
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -179,7 +60,134 @@
                 }],
             "compId":12,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":7,"x":10,"var":"Coin_0","skin":"res/gameScene/chip_1.png","name":"Coin_0"},
+            "nodeParent":1,
+            "label":"Image(Coin_0)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":178,"x":74,"skin":"res/gameScene/chip_1.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":13,
+            "child":[
+                ],
+            "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":24,"x":98,"var":"Coin_1","skin":"res/gameScene/chip_1.png","name":"Coin_1"},
+            "nodeParent":1,
+            "label":"Image(Coin_1)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":178,"x":74,"skin":"res/gameScene/chip_1.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":14,
+            "child":[
+                ],
+            "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":24,"x":188,"var":"Coin_2","skin":"res/gameScene/chip_1.png","name":"Coin_2"},
+            "nodeParent":1,
+            "label":"Image(Coin_2)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":178,"x":74,"skin":"res/gameScene/chip_1.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":15,
+            "child":[
+                ],
+            "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":24,"x":277,"var":"Coin_3","skin":"res/gameScene/chip_1.png","name":"Coin_3"},
+            "nodeParent":1,
+            "label":"Image(Coin_3)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":178,"x":74,"skin":"res/gameScene/chip_1.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":16,
+            "child":[
+                ],
+            "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":24,"x":367,"var":"Coin_4","skin":"res/gameScene/chip_1.png","name":"Coin_4"},
+            "nodeParent":1,
+            "label":"Image(Coin_4)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":178,"x":74,"skin":"res/gameScene/chip_1.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":17,
+            "child":[
+                ],
+            "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":24,"x":458,"var":"Coin_5","skin":"res/gameScene/chip_1.png","name":"Coin_5"},
+            "nodeParent":1,
+            "label":"Image(Coin_5)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":178,"x":74,"skin":"res/gameScene/chip_1.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":18,
+            "child":[
+                ],
+            "$HIDDEN":false
         }],
     "animations":[
         {

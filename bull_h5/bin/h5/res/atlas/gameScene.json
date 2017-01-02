@@ -147,10 +147,346 @@
             "rotated": false,
             "trimed": false
         },
-        "closeBtn.png": {
+        "chip_1.png": {
+            "frame": {
+                "x": 1344,
+                "y": 0,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_10.png": {
+            "frame": {
+                "x": 1422,
+                "y": 0,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_100.png": {
+            "frame": {
+                "x": 1344,
+                "y": 83,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_1000.png": {
+            "frame": {
+                "x": 1422,
+                "y": 83,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_10000.png": {
+            "frame": {
+                "x": 1344,
+                "y": 166,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_100000.png": {
+            "frame": {
+                "x": 1422,
+                "y": 166,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_1000000.png": {
             "frame": {
                 "x": 1220,
-                "y": 149,
+                "y": 209,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_10000000.png": {
+            "frame": {
+                "x": 1298,
+                "y": 249,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_5.png": {
+            "frame": {
+                "x": 1376,
+                "y": 249,
+                "w": 76,
+                "h": 82,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 82
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 82
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_50.png": {
+            "frame": {
+                "x": 1454,
+                "y": 249,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_500.png": {
+            "frame": {
+                "x": 1454,
+                "y": 332,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_5000.png": {
+            "frame": {
+                "x": 325,
+                "y": 89,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_50000.png": {
+            "frame": {
+                "x": 403,
+                "y": 89,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_500000.png": {
+            "frame": {
+                "x": 481,
+                "y": 89,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_5000000.png": {
+            "frame": {
+                "x": 559,
+                "y": 89,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "chip_max.png": {
+            "frame": {
+                "x": 637,
+                "y": 89,
+                "w": 76,
+                "h": 81,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 76,
+                "h": 81
+            },
+            "sourceSize": {
+                "w": 76,
+                "h": 81
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "closeBtn.png": {
+            "frame": {
+                "x": 715,
+                "y": 89,
                 "w": 41,
                 "h": 123,
                 "idx": 0
@@ -170,8 +506,8 @@
         },
         "club_2.png": {
             "frame": {
-                "x": 1344,
-                "y": 0,
+                "x": 758,
+                "y": 89,
                 "w": 76,
                 "h": 97,
                 "idx": 0
@@ -191,8 +527,8 @@
         },
         "deBanker.png": {
             "frame": {
-                "x": 1344,
-                "y": 99,
+                "x": 836,
+                "y": 89,
                 "w": 157,
                 "h": 189,
                 "idx": 0
@@ -213,7 +549,7 @@
         "InfoBoard.png": {
             "frame": {
                 "x": 0,
-                "y": 274,
+                "y": 292,
                 "w": 1238,
                 "h": 104,
                 "idx": 0
@@ -233,8 +569,8 @@
         },
         "NO.1.png": {
             "frame": {
-                "x": 1422,
-                "y": 0,
+                "x": 1220,
+                "y": 149,
                 "w": 38,
                 "h": 56,
                 "idx": 0
@@ -254,8 +590,8 @@
         },
         "NO.2.png": {
             "frame": {
-                "x": 1462,
-                "y": 0,
+                "x": 758,
+                "y": 188,
                 "w": 38,
                 "h": 56,
                 "idx": 0
@@ -275,8 +611,8 @@
         },
         "NO.3.png": {
             "frame": {
-                "x": 149,
-                "y": 191,
+                "x": 1500,
+                "y": 0,
                 "w": 38,
                 "h": 56,
                 "idx": 0
@@ -296,8 +632,8 @@
         },
         "PlayerListBtn.png": {
             "frame": {
-                "x": 1263,
-                "y": 209,
+                "x": 1240,
+                "y": 332,
                 "w": 68,
                 "h": 207,
                 "idx": 0
@@ -317,7 +653,7 @@
         },
         "PlayerListCloseBtn.png": {
             "frame": {
-                "x": 325,
+                "x": 995,
                 "y": 89,
                 "w": 41,
                 "h": 129,
@@ -338,8 +674,8 @@
         },
         "SameBetBtn.png": {
             "frame": {
-                "x": 1333,
-                "y": 290,
+                "x": 1310,
+                "y": 415,
                 "w": 167,
                 "h": 219,
                 "idx": 0
@@ -360,7 +696,7 @@
         "下庄结算底板.png": {
             "frame": {
                 "x": 0,
-                "y": 380,
+                "y": 541,
                 "w": 836,
                 "h": 453,
                 "idx": 0
@@ -380,8 +716,8 @@
         },
         "下庄结算横条01.png": {
             "frame": {
-                "x": 189,
-                "y": 220,
+                "x": 0,
+                "y": 259,
                 "w": 818,
                 "h": 27,
                 "idx": 0
@@ -402,7 +738,7 @@
         "下庄结算横条02.png": {
             "frame": {
                 "x": 0,
-                "y": 835,
+                "y": 398,
                 "w": 818,
                 "h": 27,
                 "idx": 0
@@ -422,8 +758,8 @@
         },
         "人民币￥底板.png": {
             "frame": {
-                "x": 1009,
-                "y": 228,
+                "x": 1310,
+                "y": 333,
                 "w": 122,
                 "h": 32,
                 "idx": 0
@@ -443,8 +779,8 @@
         },
         "倒计时01.png": {
             "frame": {
-                "x": 368,
-                "y": 89,
+                "x": 820,
+                "y": 398,
                 "w": 106,
                 "h": 101,
                 "idx": 0
@@ -464,8 +800,8 @@
         },
         "倒计时02.png": {
             "frame": {
-                "x": 476,
-                "y": 89,
+                "x": 928,
+                "y": 398,
                 "w": 114,
                 "h": 114,
                 "idx": 0
@@ -485,8 +821,8 @@
         },
         "倒计时03.png": {
             "frame": {
-                "x": 592,
-                "y": 89,
+                "x": 1044,
+                "y": 398,
                 "w": 123,
                 "h": 123,
                 "idx": 0
@@ -506,8 +842,8 @@
         },
         "吉胜游戏平台.png": {
             "frame": {
-                "x": 717,
-                "y": 89,
+                "x": 1310,
+                "y": 367,
                 "w": 118,
                 "h": 28,
                 "idx": 0
@@ -528,7 +864,7 @@
         "展开胜负记录.png": {
             "frame": {
                 "x": 838,
-                "y": 380,
+                "y": 514,
                 "w": 169,
                 "h": 423,
                 "idx": 0
@@ -548,8 +884,8 @@
         },
         "庄家符号.png": {
             "frame": {
-                "x": 1133,
-                "y": 228,
+                "x": 1298,
+                "y": 209,
                 "w": 38,
                 "h": 38,
                 "idx": 0
@@ -569,8 +905,8 @@
         },
         "方片底条.png": {
             "frame": {
-                "x": 837,
-                "y": 89,
+                "x": 995,
+                "y": 228,
                 "w": 194,
                 "h": 36,
                 "idx": 0
@@ -590,8 +926,8 @@
         },
         "未展开胜负记录.png": {
             "frame": {
-                "x": 717,
-                "y": 127,
+                "x": 0,
+                "y": 427,
                 "w": 169,
                 "h": 91,
                 "idx": 0
@@ -612,7 +948,7 @@
         "桌内玩家列表底板.png": {
             "frame": {
                 "x": 1009,
-                "y": 418,
+                "y": 541,
                 "w": 288,
                 "h": 680,
                 "idx": 0
@@ -632,8 +968,8 @@
         },
         "梅花底条.png": {
             "frame": {
-                "x": 1009,
-                "y": 380,
+                "x": 171,
+                "y": 501,
                 "w": 193,
                 "h": 36,
                 "idx": 0
@@ -654,7 +990,7 @@
         "牌背.png": {
             "frame": {
                 "x": 1299,
-                "y": 511,
+                "y": 636,
                 "w": 189,
                 "h": 264,
                 "idx": 0
@@ -675,7 +1011,7 @@
         "牌面.png": {
             "frame": {
                 "x": 1299,
-                "y": 777,
+                "y": 902,
                 "w": 190,
                 "h": 264,
                 "idx": 0
@@ -695,8 +1031,8 @@
         },
         "牛九.png": {
             "frame": {
-                "x": 888,
-                "y": 127,
+                "x": 325,
+                "y": 172,
                 "w": 120,
                 "h": 48,
                 "idx": 0
@@ -716,8 +1052,8 @@
         },
         "玩家信息底板.png": {
             "frame": {
-                "x": 0,
-                "y": 1100,
+                "x": 171,
+                "y": 427,
                 "w": 267,
                 "h": 50,
                 "idx": 0
@@ -737,8 +1073,8 @@
         },
         "玩家信息底板02.png": {
             "frame": {
-                "x": 0,
-                "y": 864,
+                "x": 366,
+                "y": 479,
                 "w": 267,
                 "h": 50,
                 "idx": 0
@@ -756,346 +1092,10 @@
             "rotated": false,
             "trimed": false
         },
-        "筹码1.png": {
-            "frame": {
-                "x": 1299,
-                "y": 1043,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码10.png": {
-            "frame": {
-                "x": 1377,
-                "y": 1043,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码100.png": {
-            "frame": {
-                "x": 1455,
-                "y": 1043,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码100K.png": {
-            "frame": {
-                "x": 838,
-                "y": 805,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码10k.png": {
-            "frame": {
-                "x": 916,
-                "y": 805,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码10M.png": {
-            "frame": {
-                "x": 0,
-                "y": 916,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码1k.png": {
-            "frame": {
-                "x": 0,
-                "y": 999,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码1M.png": {
-            "frame": {
-                "x": 78,
-                "y": 916,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码5.png": {
-            "frame": {
-                "x": 78,
-                "y": 999,
-                "w": 76,
-                "h": 82,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 82
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 82
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码50.png": {
-            "frame": {
-                "x": 156,
-                "y": 916,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码500.png": {
-            "frame": {
-                "x": 156,
-                "y": 999,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码500K.png": {
-            "frame": {
-                "x": 234,
-                "y": 916,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码50k.png": {
-            "frame": {
-                "x": 234,
-                "y": 999,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码5k.png": {
-            "frame": {
-                "x": 269,
-                "y": 1082,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码5M.png": {
-            "frame": {
-                "x": 0,
-                "y": 1152,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
-        "筹码MAX.png": {
-            "frame": {
-                "x": 78,
-                "y": 1152,
-                "w": 76,
-                "h": 81,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 76,
-                "h": 81
-            },
-            "sourceSize": {
-                "w": 76,
-                "h": 81
-            },
-            "rotated": false,
-            "trimed": false
-        },
         "筹码光.png": {
             "frame": {
-                "x": 156,
-                "y": 1152,
+                "x": 635,
+                "y": 427,
                 "w": 94,
                 "h": 97,
                 "idx": 0
@@ -1116,7 +1116,7 @@
         "筹码指向.png": {
             "frame": {
                 "x": 1009,
-                "y": 177,
+                "y": 514,
                 "w": 26,
                 "h": 24,
                 "idx": 0
@@ -1136,8 +1136,8 @@
         },
         "红叉.png": {
             "frame": {
-                "x": 1009,
-                "y": 203,
+                "x": 1430,
+                "y": 367,
                 "w": 13,
                 "h": 16,
                 "idx": 0
@@ -1157,8 +1157,8 @@
         },
         "红心底条.png": {
             "frame": {
-                "x": 269,
-                "y": 864,
+                "x": 447,
+                "y": 214,
                 "w": 194,
                 "h": 36,
                 "idx": 0
@@ -1178,8 +1178,8 @@
         },
         "结算中心底板.png": {
             "frame": {
-                "x": 347,
-                "y": 1100,
+                "x": 0,
+                "y": 996,
                 "w": 679,
                 "h": 416,
                 "idx": 0
@@ -1199,8 +1199,8 @@
         },
         "结算玩家头像.png": {
             "frame": {
-                "x": 1490,
-                "y": 511,
+                "x": 643,
+                "y": 172,
                 "w": 46,
                 "h": 46,
                 "idx": 0
@@ -1220,8 +1220,8 @@
         },
         "绿勾.png": {
             "frame": {
-                "x": 1010,
-                "y": 127,
+                "x": 1191,
+                "y": 228,
                 "w": 27,
                 "h": 19,
                 "idx": 0
@@ -1241,8 +1241,8 @@
         },
         "网络状态条橙.png": {
             "frame": {
-                "x": 1033,
-                "y": 89,
+                "x": 1434,
+                "y": 333,
                 "w": 10,
                 "h": 20,
                 "idx": 0
@@ -1262,8 +1262,8 @@
         },
         "网络状态条红.png": {
             "frame": {
-                "x": 1024,
-                "y": 203,
+                "x": 1430,
+                "y": 385,
                 "w": 10,
                 "h": 20,
                 "idx": 0
@@ -1283,8 +1283,8 @@
         },
         "网络状态条绿.png": {
             "frame": {
-                "x": 1036,
-                "y": 203,
+                "x": 1442,
+                "y": 385,
                 "w": 10,
                 "h": 20,
                 "idx": 0
@@ -1304,8 +1304,8 @@
         },
         "网络状态条黄.png": {
             "frame": {
-                "x": 1037,
-                "y": 148,
+                "x": 1260,
+                "y": 149,
                 "w": 10,
                 "h": 20,
                 "idx": 0
@@ -1325,8 +1325,8 @@
         },
         "闲家下注区1.png": {
             "frame": {
-                "x": 465,
-                "y": 864,
+                "x": 1299,
+                "y": 1168,
                 "w": 221,
                 "h": 192,
                 "idx": 0
@@ -1346,8 +1346,8 @@
         },
         "闲家下注区2.png": {
             "frame": {
-                "x": 688,
-                "y": 888,
+                "x": 681,
+                "y": 996,
                 "w": 212,
                 "h": 192,
                 "idx": 0
@@ -1367,8 +1367,8 @@
         },
         "闲家下注区3.png": {
             "frame": {
-                "x": 0,
-                "y": 1251,
+                "x": 681,
+                "y": 1190,
                 "w": 213,
                 "h": 192,
                 "idx": 0
@@ -1388,8 +1388,8 @@
         },
         "闲家下注区4.png": {
             "frame": {
-                "x": 1028,
-                "y": 1100,
+                "x": 896,
+                "y": 1223,
                 "w": 222,
                 "h": 192,
                 "idx": 0
@@ -1409,8 +1409,8 @@
         },
         "黑桃底条.png": {
             "frame": {
-                "x": 347,
-                "y": 1058,
+                "x": 447,
+                "y": 172,
                 "w": 194,
                 "h": 36,
                 "idx": 0
