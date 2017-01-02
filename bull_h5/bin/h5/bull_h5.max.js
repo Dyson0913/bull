@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.lightMVC.interfaces.INotification');
+	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -362,7 +362,7 @@ var Laya=window.Laya=(function(window,document){
 			Browser.__init__();
 			Context.__init__();
 			Graphics.__init__();
-			Laya.timer=new Timer();
+			Laya.timer=new Timer1();
 			Laya.loader=new LoaderManager();
 			for (var i=0,n=plugins.length;i < n;i++){
 				if (plugins[i].enable)plugins[i].enable();
@@ -14817,7 +14817,7 @@ var Laya=window.Laya=(function(window,document){
 	*<code>Timer</code> 是时钟管理类。它是一个单例，可以通过 Laya.timer 访问。
 	*/
 	//class laya.utils.Timer
-	var Timer=(function(){
+	var Timer1=(function(){
 		var TimerHandler;
 		function Timer(){
 			this._delta=0;
@@ -14834,7 +14834,7 @@ var Laya=window.Laya=(function(window,document){
 			Laya.timer && Laya.timer.frameLoop(1,this,this._update);
 		}
 
-		__class(Timer,'laya.utils.Timer');
+		__class(Timer,'laya.utils.Timer',null,'Timer1');
 		var __proto=Timer.prototype;
 		/**
 		*@private
@@ -19937,7 +19937,7 @@ var Laya=window.Laya=(function(window,document){
 
 		Light.root=null
 		__static(Light,
-		['loader',function(){return this.loader=new LLoaderManager();},'scence',function(){return this.scence=new ScenceManager();},'layer',function(){return this.layer=new LayerManager();},'error',function(){return this.error=new ErrorManager();},'language',function(){return this.language=new LanguageManager();},'timer',function(){return this.timer=new Timer1();}
+		['loader',function(){return this.loader=new LLoaderManager();},'scence',function(){return this.scence=new ScenceManager();},'layer',function(){return this.layer=new LayerManager();},'error',function(){return this.error=new ErrorManager();},'language',function(){return this.language=new LanguageManager();},'timer',function(){return this.timer=new Timer2();}
 		]);
 		return Light;
 	})()
@@ -20426,7 +20426,7 @@ var Laya=window.Laya=(function(window,document){
 	*
 	*/
 	//class com.lightUI.manager.timer.Timer
-	var Timer1=(function(){
+	var Timer2=(function(){
 		function Timer(frameRate){
 			this._frameStep=1;
 			this._frameRate=NaN;
@@ -20440,7 +20440,7 @@ var Laya=window.Laya=(function(window,document){
 			this.frameRate=frameRate;
 		}
 
-		__class(Timer,'com.lightUI.manager.timer.Timer',null,'Timer1');
+		__class(Timer,'com.lightUI.manager.timer.Timer',null,'Timer2');
 		var __proto=Timer.prototype;
 		/**
 		*注册每帧被调用的函数
@@ -28899,7 +28899,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.startHeartCount=function(){
 			if(!this.timer){
-				this.timer=new Timer();
+				this.timer=new Timer1();
 				this.timer.loop(5000,this,this.sendMsg);
 			}
 		}
@@ -28927,47 +28927,6 @@ var Laya=window.Laya=(function(window,document){
 		HallMediator.NAME="hallMediator";
 		return HallMediator;
 	})(Mediator)
-
-
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			if(param.uid){
-				bullData.uid=param.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if(param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
 
 
 	/**
@@ -29060,7 +29019,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.startTimer=function(){
 			if(!this.timer){
-				this.timer=new Timer();
+				this.timer=new Timer1();
 				this.timer.loop(5000,this,this.reconnect);
 			}
 		}
@@ -29075,6 +29034,47 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
+
+
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			if(param.uid){
+				bullData.uid=param.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if(param.access_token)bullData.token=param.access_token;
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -29551,7 +29551,7 @@ var Laya=window.Laya=(function(window,document){
 		function AssetInMediator(mediatorName,viewComponent){
 			this.first=false;
 			this.timerId=0;
-			this.timer=new Timer1();
+			this.timer=new Timer2();
 			(mediatorName===void 0)&& (mediatorName="");
 			AssetInMediator.__super.call(this,mediatorName,viewComponent);
 		}
@@ -30271,6 +30271,50 @@ var Laya=window.Laya=(function(window,document){
 	})(Model)
 
 
+	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
+	var BankerNotifyCommand=(function(_super){
+		function BankerNotifyCommand(){
+			BankerNotifyCommand.__super.call(this);
+		}
+
+		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
+		var __proto=BankerNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
+				this.bankerlist(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
+				this.newbaner(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
+				this.banker_calcu(notification.getBody());
+			}
+		}
+
+		__proto.bankerlist=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
+			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.newbaner=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.newBaner_info=cs.banker_notify;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.banker_calcu=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
+			this.sentNotification("Bankercalcu");
+		}
+
+		return BankerNotifyCommand;
+	})(Command)
+
+
 	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
 	var TipsLoadMediator=(function(_super){
 		function TipsLoadMediator(mediatorName,viewComponent){
@@ -30316,79 +30360,6 @@ var Laya=window.Laya=(function(window,document){
 		TipsLoadMediator.NAME="tipsLoadMediator";
 		return TipsLoadMediator;
 	})(Mediator)
-
-
-	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
-	var BankerNotifyCommand=(function(_super){
-		function BankerNotifyCommand(){
-			BankerNotifyCommand.__super.call(this);
-		}
-
-		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
-		var __proto=BankerNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
-				this.bankerlist(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
-				this.newbaner(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
-				this.banker_calcu(notification.getBody());
-			}
-		}
-
-		__proto.bankerlist=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
-			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.newbaner=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.newBaner_info=cs.banker_notify;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.banker_calcu=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
-			this.sentNotification("Bankercalcu");
-		}
-
-		return BankerNotifyCommand;
-	})(Command)
-
-
-	//class bull.modules.room.command.DealCardNotifyCommand extends com.lightMVC.parrerns.Command
-	var DealCardNotifyCommand=(function(_super){
-		function DealCardNotifyCommand(){
-			DealCardNotifyCommand.__super.call(this);
-		}
-
-		__class(DealCardNotifyCommand,'bull.modules.room.command.DealCardNotifyCommand',_super);
-		var __proto=DealCardNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString()){
-				this.deal(notification.getBody());
-			}
-		}
-
-		__proto.deal=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.card_info.push(cs.deal_card_notify.banker);
-			bullData.roomData.card_info.push(cs.deal_card_notify._1);
-			bullData.roomData.card_info.push(cs.deal_card_notify._2);
-			bullData.roomData.card_info.push(cs.deal_card_notify._3);
-			bullData.roomData.card_info.push(cs.deal_card_notify._4);
-			this.sentNotification("cardnotify");
-		}
-
-		return DealCardNotifyCommand;
-	})(Command)
 
 
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
@@ -30489,6 +30460,35 @@ var Laya=window.Laya=(function(window,document){
 	})(Model)
 
 
+	//class bull.modules.room.command.DealCardNotifyCommand extends com.lightMVC.parrerns.Command
+	var DealCardNotifyCommand=(function(_super){
+		function DealCardNotifyCommand(){
+			DealCardNotifyCommand.__super.call(this);
+		}
+
+		__class(DealCardNotifyCommand,'bull.modules.room.command.DealCardNotifyCommand',_super);
+		var __proto=DealCardNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString()){
+				this.deal(notification.getBody());
+			}
+		}
+
+		__proto.deal=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.card_info.push(cs.deal_card_notify.banker);
+			bullData.roomData.card_info.push(cs.deal_card_notify._1);
+			bullData.roomData.card_info.push(cs.deal_card_notify._2);
+			bullData.roomData.card_info.push(cs.deal_card_notify._3);
+			bullData.roomData.card_info.push(cs.deal_card_notify._4);
+			this.sentNotification("cardnotify");
+		}
+
+		return DealCardNotifyCommand;
+	})(Command)
+
+
 	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
 	var EnterRoomCommand=(function(_super){
 		function EnterRoomCommand(){
@@ -30510,6 +30510,41 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		return EnterRoomCommand;
+	})(Command)
+
+
+	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
+	var HistoryCommand=(function(_super){
+		function HistoryCommand(){
+			HistoryCommand.__super.call(this);
+		}
+
+		__class(HistoryCommand,'bull.modules.room.command.HistoryCommand',_super);
+		var __proto=HistoryCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
+				this.State(notification.getBody());
+			}
+		}
+
+		__proto.State=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.history_Win_info.length=0;
+			bullData.roomData.history_lost_info.length=0;
+			bullData.roomData.history_result_info.length=0;
+			for (var i=0;i < 4;i++){
+				bullData.roomData.history_Win_info=[cs.histroy_notify.win_info._1,cs.histroy_notify.win_info._2,cs.histroy_notify.win_info._3,cs.histroy_notify.win_info._4];
+				bullData.roomData.history_lost_info=[cs.histroy_notify.lose_info._1,cs.histroy_notify.lose_info._2,cs.histroy_notify.lose_info._3,cs.histroy_notify.lose_info._4];
+			};
+			var n=cs.histroy_notify.result_info.length;
+			for (var i=0;i < n;i++){
+				bullData.roomData.history_result_info.push([cs.histroy_notify.result_info._1,cs.histroy_notify.result_info._2,cs.histroy_notify.result_info._3,cs.histroy_notify.result_info._4]);
+			}
+			this.sentNotification("HistoryNotify");
+		}
+
+		return HistoryCommand;
 	})(Command)
 
 
@@ -30667,41 +30702,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Model)
 
 
-	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
-	var HistoryCommand=(function(_super){
-		function HistoryCommand(){
-			HistoryCommand.__super.call(this);
-		}
-
-		__class(HistoryCommand,'bull.modules.room.command.HistoryCommand',_super);
-		var __proto=HistoryCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
-				this.State(notification.getBody());
-			}
-		}
-
-		__proto.State=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.history_Win_info.length=0;
-			bullData.roomData.history_lost_info.length=0;
-			bullData.roomData.history_result_info.length=0;
-			for (var i=0;i < 4;i++){
-				bullData.roomData.history_Win_info=[cs.histroy_notify.win_info._1,cs.histroy_notify.win_info._2,cs.histroy_notify.win_info._3,cs.histroy_notify.win_info._4];
-				bullData.roomData.history_lost_info=[cs.histroy_notify.lose_info._1,cs.histroy_notify.lose_info._2,cs.histroy_notify.lose_info._3,cs.histroy_notify.lose_info._4];
-			};
-			var n=cs.histroy_notify.result_info.length;
-			for (var i=0;i < n;i++){
-				bullData.roomData.history_result_info.push([cs.histroy_notify.result_info._1,cs.histroy_notify.result_info._2,cs.histroy_notify.result_info._3,cs.histroy_notify.result_info._4]);
-			}
-			this.sentNotification("HistoryNotify");
-		}
-
-		return HistoryCommand;
-	})(Command)
-
-
 	//class bull.modules.room.command.SettleNotifyCommand extends com.lightMVC.parrerns.Command
 	var SettleNotifyCommand=(function(_super){
 		function SettleNotifyCommand(){
@@ -30847,8 +30847,6 @@ var Laya=window.Laya=(function(window,document){
 		*/
 		__proto.onClick=function(e){
 			console.log("onClick:"+e.target);
-			this.view.PokerSet.set_data([]);
-			this.view.PokerSet.play();
 			switch(e.target){
 				case this.view.helpBtn:
 					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
@@ -30860,9 +30858,11 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case this.view.CarryInBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
+					this.view.TimerPanel.set_data([10]);
 					break ;
 				case this.view.PlayerListBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
+					this.view.TimerPanel.hide();
 					break ;
 				case this.view.optionBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
@@ -30935,7 +30935,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.startHeartCount=function(){
 			if(!this.timer){
-				this.timer=new Timer();
+				this.timer=new Timer1();
 				this.timer.loop(5000,this,this.sendMsg);
 			}
 		}
@@ -31102,7 +31102,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.startTimer=function(){
 			if(!this.timer){
-				this.timer=new Timer();
+				this.timer=new Timer1();
 				this.timer.loop(5000,this,this.countRect);
 			}
 		}
@@ -32682,23 +32682,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
-
-
 	/**
 	*场景管理器
 	*@author light-k
@@ -32899,6 +32882,23 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
+
+
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -48920,8 +48920,8 @@ var Laya=window.Laya=(function(window,document){
 			this.SellteBoard=null;
 			this.BankerSettleBoard=null;
 			this.BetZoneBoard=null;
-			this.Timer=null;
 			this.PokerSet=null;
+			this.TimerPanel=null;
 			BullSceneUI.__super.call(this);
 		}
 
@@ -48936,14 +48936,14 @@ var Laya=window.Laya=(function(window,document){
 			View.regComponent("ui.ui.room.SettleUI",SettleUI);
 			View.regComponent("ui.ui.room.BankerSettleUI",BankerSettleUI);
 			View.regComponent("ui.ui.room.BetZoneUI",BetZoneUI);
-			View.regComponent("ui.ui.room.TimerUI",TimerUI);
 			View.regComponent("bull.view.room.poker",poker);
+			View.regComponent("bull.view.room.Timer",Timer);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BullSceneUI.uiView);
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryBoard","runtime":"bull.view.room.HistoryRecord"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoBoard","runtime":"ui.ui.room.InfoBoardUI"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerBoard","runtime":"ui.ui.room.BankerBoardUI"}},{"type":"BetChip","props":{"y":803,"x":426,"var":"BetChip","runtime":"ui.ui.room.BetChipUI"}},{"type":"UserPanel","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"UserBoard","runtime":"ui.ui.room.UserPanelUI"}},{"type":"Settle","props":{"y":170,"x":357,"visible":false,"var":"SellteBoard","runtime":"ui.ui.room.SettleUI"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"BankerSettleBoard","runtime":"ui.ui.room.BankerSettleUI"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"BetZoneBoard","runtime":"ui.ui.room.BetZoneUI"}},{"type":"Timer","props":{"y":539,"x":664,"visible":false,"var":"Timer","runtime":"ui.ui.room.TimerUI"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"PokerSet","runtime":"bull.view.room.poker"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryBoard","runtime":"bull.view.room.HistoryRecord"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoBoard","runtime":"ui.ui.room.InfoBoardUI"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerBoard","runtime":"ui.ui.room.BankerBoardUI"}},{"type":"BetChip","props":{"y":803,"x":426,"var":"BetChip","runtime":"ui.ui.room.BetChipUI"}},{"type":"UserPanel","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"UserBoard","runtime":"ui.ui.room.UserPanelUI"}},{"type":"Settle","props":{"y":170,"x":357,"visible":false,"var":"SellteBoard","runtime":"ui.ui.room.SettleUI"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"BankerSettleBoard","runtime":"ui.ui.room.BankerSettleUI"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"BetZoneBoard","runtime":"ui.ui.room.BetZoneUI"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"PokerSet","runtime":"bull.view.room.poker"}},{"type":"Timer","props":{"y":539,"x":664,"visible":false,"var":"TimerPanel","runtime":"bull.view.room.Timer"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
@@ -49069,6 +49069,27 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"height":800},"child":[{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}}]};}
 		]);
 		return PokerUI;
+	})(View)
+
+
+	//class ui.ui.room.TimerUI extends laya.ui.View
+	var TimerUI=(function(_super){
+		function TimerUI(){
+			this.LeftTime=null;
+			TimerUI.__super.call(this);
+		}
+
+		__class(TimerUI,'ui.ui.room.TimerUI',_super);
+		var __proto=TimerUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(TimerUI.uiView);
+		}
+
+		__static(TimerUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":123,"height":123},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/倒计时03.png"}},{"type":"Image","props":{"y":1,"x":4,"skin":"res/gameScene/倒计时02.png"}},{"type":"Image","props":{"y":10,"x":10,"skin":"res/gameScene/倒计时01.png"}},{"type":"Label","props":{"y":47,"x":43,"width":20,"var":"LeftTime","text":"10","scaleY":2,"scaleX":2,"height":15,"color":"#ece7e7","align":"center"}}]};}
+		]);
+		return TimerUI;
 	})(View)
 
 
@@ -49388,25 +49409,6 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":470,"height":50},"child":[{"type":"Animation","props":{"y":-3,"x":6,"var":"Rank","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":4,"x":53,"var":"Light","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":6,"x":108,"var":"Head","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":13,"x":160,"width":93,"text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":14,"x":323,"width":80,"text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}}]};}
 		]);
 		return Settle_InfoUI;
-	})(View)
-
-
-	//class ui.ui.room.TimerUI extends laya.ui.View
-	var TimerUI=(function(_super){
-		function TimerUI(){TimerUI.__super.call(this);;
-		};
-
-		__class(TimerUI,'ui.ui.room.TimerUI',_super);
-		var __proto=TimerUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(TimerUI.uiView);
-		}
-
-		__static(TimerUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":100,"height":100},"child":[{"type":"Image","props":{"y":0,"x":-1,"skin":"res/gameScene/底板.png"}},{"type":"Label","props":{"y":30,"x":-18,"width":59,"text":"10","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"}}]};}
-		]);
-		return TimerUI;
 	})(View)
 
 
@@ -50827,7 +50829,7 @@ var Laya=window.Laya=(function(window,document){
 			[[221,445,-6],[251,445,-6],[281,445,-6],[310,445,-5],[340,445,-4]],
 			[[479,443,-3],[509,443,-3],[538,443,-2],[569,443,-2],[599,443,-1]],
 			[[733,445,0],[764,445,0],[793,445,0],[823,445,0],[854,445,0]],
-			[[987,445,3],[1018,445,3],[1047,445,3],[1078,445,3],[1109,445,3]]];
+			[[987,445,1],[1018,445,3],[1047,445,3],[1078,445,3],[1109,445,3]]];
 			this._scale=[[0.43,0.42],[0.46,0.46],[0.46,0.46],[0.46,0.46],[0.46,0.46]];
 			poker.__super.call(this);
 		}
@@ -50836,10 +50838,6 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=poker.prototype;
 		__proto.createChildren=function(){
 			_super.prototype.createChildren.call(this);
-		}
-
-		__proto.hide=function(){
-			console.log("TestBoard hide");
 		}
 
 		__proto.set_data=function(data){
@@ -50897,8 +50895,60 @@ var Laya=window.Laya=(function(window,document){
 			}
 		}
 
+		//TODO　報牌型
+		__proto.hide=function(){
+			for(var i=0;i< 5;i++){
+				for (var j=0;j < 5;j++){
+					Tween.to(this["poker_"+i+"_"+j],{x:649,y:-156},500,Ease.cubicOut);
+				}
+			}
+		}
+
+		__proto.test=function(){}
 		return poker;
 	})(PokerUI)
+
+
+	//class bull.view.room.Timer extends ui.ui.room.TimerUI
+	var Timer=(function(_super){
+		function Timer(){
+			this._time=0;
+			Timer.__super.call(this);
+		}
+
+		__class(Timer,'bull.view.room.Timer',_super);
+		var __proto=Timer.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+		}
+
+		__proto.hide=function(){
+			this.visible=false;
+			this._time=0;
+			Laya.timer.clear(this,this.timerHandler);
+		}
+
+		__proto.set_data=function(data){
+			this.visible=true;
+			this._time=data[0];
+			this.LeftTime.text=this._time.toString();
+			Laya.timer.loop(1000,this,this.timerHandler);
+		}
+
+		__proto.timerHandler=function(){
+			this._time-=1;
+			this.LeftTime.text=this._time.toString();
+			if (this._time==0){
+				Laya.timer.clear(this,this.timerHandler);
+			}
+			if(this._time <=3){
+				SoundManager.playSound(SoundPath.CountTick);
+			}
+		}
+
+		__proto.test=function(){}
+		return Timer;
+	})(TimerUI)
 
 
 	//class bull.view.smallLoading.SmallLoading extends ui.ui.smallLoading.small_loadingUI
@@ -52146,7 +52196,7 @@ var Laya=window.Laya=(function(window,document){
 	})(SmallPanelUI)
 
 
-	Laya.__init([EventDispatcher1,LocalStorage,Timer,ShareObjectMgr,Browser,Proxy,Render,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,Dialog]);
+	Laya.__init([EventDispatcher1,LocalStorage,ShareObjectMgr,Timer1,Browser,Proxy,Render,WebGLContext,View,WebGLContext2D,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile,Dialog]);
 	new Main();
 
 })(window,document,Laya);
@@ -52194,7 +52244,7 @@ var Laya=window.Laya=(function(window,document){
 39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
 40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
 41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (222):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (223):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
 43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
-44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/poker.as (109):warning:idx_j This variable is not defined.
+44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/poker.as (104):warning:idx_j This variable is not defined.
 */

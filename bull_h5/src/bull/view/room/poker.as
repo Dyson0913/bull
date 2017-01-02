@@ -31,11 +31,6 @@ package bull.view.room
 		{
 			super.createChildren();						
 			
-		}		
-		
-		public function hide():void
-		{
-			trace("TestBoard hide");
 		}
 		
 		public function set_data(data:Array):void
@@ -115,11 +110,23 @@ package bull.view.room
 			}
 		}
 		
+		public function hide():void
+		{			
+			for(var i:int =0;i< 5;i++)
+			{
+				for (var j = 0; j < 5; j++)
+				{
+					Tween.to(this["poker_" + i + "_" + j], { x:649,y:-156}, 500, Ease.cubicOut);						
+				}
+			}
+		}
+		
 		
 		private function test():void
 		{
 			//view.PokerSet.set_data([]);
 			//view.PokerSet.play();
+			//view.PokerSet.hide();
 		}		
 	}
 

@@ -104,8 +104,7 @@ package bull.modules.room.mediator
 		private function onClick(e:Event):void
 		{
 			trace("onClick:" + e.target);
-			view.PokerSet.set_data([]);
-			view.PokerSet.play();
+			
 			
 			switch(e.target)
 			{
@@ -120,10 +119,12 @@ package bull.modules.room.mediator
 				
 				case view.CarryInBtn:
 					view.btn_display(!view.btnBg.visible);
+					view.TimerPanel.set_data([10]);
 				break;
 				
 				case view.PlayerListBtn:
 					view.btn_display(!view.btnBg.visible);
+					view.TimerPanel.hide();
 				break;
 				
 				case view.optionBtn:
