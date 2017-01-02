@@ -21,9 +21,30 @@
             "rotated": false,
             "trimed": false
         },
-        "tip_bg.png": {
+        "Light.png": {
             "frame": {
                 "x": 0,
+                "y": 335,
+                "w": 42,
+                "h": 43,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 42,
+                "h": 43
+            },
+            "sourceSize": {
+                "w": 42,
+                "h": 43
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "tip_bg.png": {
+            "frame": {
+                "x": 44,
                 "y": 335,
                 "w": 257,
                 "h": 70,

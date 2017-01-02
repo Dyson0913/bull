@@ -42,7 +42,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":4,"x":53,"var":"Light","skin":"res/share/明灯.png"},
+            "props":{"y":4,"x":53,"var":"Light","skin":"res/share/Light.png"},
             "nodeParent":1,
             "label":"Image(Light)",
             "isDirectory":false,
@@ -51,7 +51,7 @@
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":344,"x":234,"skin":"res/share/明灯.png"},
+                    "props":{"y":344,"x":234,"skin":"res/share/Light.png"},
                     "frame":0,
                     "__InPool":false
                 }],

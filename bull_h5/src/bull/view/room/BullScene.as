@@ -35,6 +35,7 @@ package bull.view.room
 			Tween.to(bankerBoard, { y:bankerBoard.y +76 }, 1000,Ease.backIn);
 			Tween.to(BetChip, { y:BetChip.y -138 }, 1000, Ease.backIn);
 			
+			
 		
 		}
 		

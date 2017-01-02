@@ -57,6 +57,7 @@ res\alert\img_rule_line.png:1482212097
 res\alert\img_seb_bg.png:1482212098
 res\alert\optionBtn.png:1482139063
 res\alert\setup.png:1482139102
+res\gameScene\1420X800-主界面.jpg:1483324832
 res\gameScene\5小牛.png:1483265056
 res\gameScene\applyBanker.png:1483061721
 res\gameScene\BankerBoard.png:1482212097
@@ -74,12 +75,14 @@ res\gameScene\NO.2.png:1482212097
 res\gameScene\NO.3.png:1482212097
 res\gameScene\PlayerListBtn.png:1482739198
 res\gameScene\PlayerListCloseBtn.png:1483251790
-res\gameScene\pokerBack.png:1483264526
 res\gameScene\SameBetBtn.png:1483076496
 res\gameScene\下庄结算底板.png:1482212097
 res\gameScene\下庄结算横条01.png:1482212095
 res\gameScene\下庄结算横条02.png:1482212097
 res\gameScene\人民币￥底板.png:1482212095
+res\gameScene\倒计时01.png:1483327345
+res\gameScene\倒计时02.png:1483327345
+res\gameScene\倒计时03.png:1483327345
 res\gameScene\吉胜游戏平台.png:1482212097
 res\gameScene\展开胜负记录.png:1482212097
 res\gameScene\庄家符号.png:1482212097
@@ -88,6 +91,8 @@ res\gameScene\方片底条.png:1482212095
 res\gameScene\未展开胜负记录.png:1482212097
 res\gameScene\桌内玩家列表底板.png:1482212099
 res\gameScene\梅花底条.png:1482212097
+res\gameScene\牌背.png:1483327530
+res\gameScene\牌面.png:1483327345
 res\gameScene\牛九.png:1483265032
 res\gameScene\玩家信息底板.png:1482212099
 res\gameScene\玩家信息底板02.png:1482212099
@@ -144,8 +149,8 @@ res\hall\MBtn.png:1482473892
 res\hall\MEnter.png:1482474211
 res\hall\RightArrow.png:1481613054
 res\share\btn_bg.png:1482212097
+res\share\Light.png:1483320652
 res\share\tip_bg.png:1482212097
-res\share\明灯.png:1482212097
 res\tipLoading\loading.jpg:1482212099
 res\tipLoading\loading_bar.png:1482801775
 res\tipLoading\loading_bg.png:1482801775

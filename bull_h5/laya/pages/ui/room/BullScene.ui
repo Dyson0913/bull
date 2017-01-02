@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":24,
+    "selecteID":32,
     "props":{"width":1400,"sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -378,21 +378,22 @@
         },
         {
             "x":15,
-            "type":"Image",
-            "props":{"y":114,"x":1083,"var":"poker","skin":"res/gameScene/pokerBack.png"},
+            "type":"UIView",
+            "source":"ui/room/Poker.ui",
+            "props":{"y":0,"x":0,"visible":false,"var":"PokerSet","runtime":"bull.view.room.poker"},
             "nodeParent":1,
-            "label":"Image(poker)",
+            "label":"UIView(PokerSet)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":357,"x":983,"skin":"res/gameScene/pokerBack.png"},
+                    "props":{"y":324,"x":728},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":24,
+            "compId":32,
             "child":[
                 ]
         }],

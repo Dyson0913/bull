@@ -15,9 +15,7 @@ package bull.modules.room.mediator
 	import laya.maths.Rectangle;
 	import laya.resource.Texture;
 	import laya.utils.Handler;
-	import laya.utils.Timer;
-	import laya.utils.Tween;
-	import laya.utils.Ease;	
+	import laya.utils.Timer;	
 	
 	import bull.events.BullNotification;
 	import light.car.events.CarSceneEvent;
@@ -72,8 +70,7 @@ package bull.modules.room.mediator
 			view.helpBtn.on(Event.CLICK,this, onClick);			
 			view.CarryInBtn.on(Event.CLICK,this, onClick);			
 			view.PlayerListBtn.on(Event.CLICK, this, onClick);					
-			view.btn_display(false);
-			
+			view.btn_display(false);			
 			
 			//TEST CMD			
 			if ( view["TestPanel"] != undefined)
@@ -106,7 +103,10 @@ package bull.modules.room.mediator
 		 */		
 		private function onClick(e:Event):void
 		{
-			trace("onClick:"+e.target);
+			trace("onClick:" + e.target);
+			view.PokerSet.set_data([]);
+			view.PokerSet.play();
+			
 			switch(e.target)
 			{
 				case view.helpBtn:
