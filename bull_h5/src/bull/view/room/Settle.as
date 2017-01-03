@@ -48,7 +48,7 @@ package bull.view.room
 			Lost_amount.text = "-¥1234.567890";
 			Win_amount.text = "+¥1234.567890";
 			
-			
+			Head.loadImage("http://statics.kgame63.com/common/images/avatars/1.png", 0, 0, 68, 67);
 		}
 		
 		private function test():void
