@@ -88,7 +88,6 @@ res\gameScene\chip_5000000.png:1482212097
 res\gameScene\chip_max.png:1482212097
 res\gameScene\closeBtn.png:1483252225
 res\gameScene\deBanker.png:1483061760
-res\gameScene\glass.png:1482731484
 res\gameScene\HeadIcon.jpg:1479464515
 res\gameScene\InfoBoard.png:1482212097
 res\gameScene\NO.1.png:1482212097
@@ -99,6 +98,10 @@ res\gameScene\PlayerListCloseBtn.png:1483251790
 res\gameScene\SameBetBtn.png:1483076496
 res\gameScene\settlelost.png:1483434963
 res\gameScene\settleWin.png:1483428349
+res\gameScene\vscroll$bar.png:1482212098
+res\gameScene\vscroll$down.png:1483438233
+res\gameScene\vscroll$up.png:1483438146
+res\gameScene\vscroll.png:1482212099
 res\gameScene\下庄结算底板.png:1482212097
 res\gameScene\下庄结算横条01.png:1482212095
 res\gameScene\下庄结算横条02.png:1482212097
