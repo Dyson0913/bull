@@ -5,6 +5,9 @@ package bull.view.room
 	import laya.filters.ColorFilter;
 	
 	import laya.events.Event;
+	import laya.utils.Tween;
+	import laya.utils.Ease;
+	import laya.utils.Handler;
 	
 	import ui.ui.room.BankerBoardUI
 	
@@ -49,9 +52,26 @@ package bull.view.room
 		{
 			Title.text = data[0];
 			BankerTimes.text = data[1];
-			Money.text = data[2];			
+			Money.text = data[2];
+			
+			//0.3 0.3
+			Banker_ani.visible = true;
+			Banker_ani.alpha = 0;			
+			Tween.to(Banker_ani, { x:212, y:150,alpha:1,scaleX:1 , scaleY:1 }, 1000, Ease.cubicOut, Handler.create(this, ani_mid));			
 		}
 		
+		private function ani_mid( ):void 
+		{			
+			Tween.to(Banker_ani, { x:26, y:5, alpha:0, scaleX:0.3 , scaleY:0.3 }, 1000,Ease.cubicOut, Handler.create(this, ani_ok));			
+		}
+		
+		private function ani_ok( ):void 
+		{
+			Banker_ani.visible = false;
+			Banker_ani.x = 563;
+			Banker_ani.y = 5;					
+			Banker_ani.alpha = 0;		
+		}
 		
 		
 		private function test():void

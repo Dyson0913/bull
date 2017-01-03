@@ -9,6 +9,8 @@
     "hall": { "url": "res/atlas/hall.json","type":"atlas"},    
     "alert": { "url": "res/atlas/alert.json","type":"atlas"},    
     "share": { "url": "res/atlas/share.json","type":"atlas"},
+    "SettleWin.fnt": { "url": "BitmapFont/settleWin.fnt", "type":"xml"},
+    "Settlelost.fnt": { "url": "BitmapFont/settlelost.fnt", "type":"xml"},
     "GameSprite": { "url": "res/atlas/gameScene.json","type":"atlas"},    
     "error_code": { "url": "res/config/error_code.json", "type":"json"},
     "assetsIn": { "url": "res/atlas/assetsIn.json", "type":"atlas"},
@@ -28,7 +30,7 @@
             "assets":["hall","assetsIn","share"]
         },
         "room":{
-            "assets":["GameSprite","assetsIn","alert"]
+            "assets":["GameSprite","assetsIn","alert","SettleWin.fnt","Settlelost.fnt"]
         },
         "config":{
             "assets":["language","error_code","msg_proto","conf_proto"]

@@ -61,6 +61,20 @@ package bull.modules.room.mediator
 			view.backLobby.on(Event.CLICK, this,onReturnClick);
 			
 			
+			var settlewinFont:BitmapFont = new BitmapFont();
+			var fnt:XmlDom = Light.loader.getRes("SettleWin.fnt");
+			var fntTxt:Texture = Light.loader.getRes("res/gameScene/settleWin.png");
+			settlewinFont.parseFont(fnt,fntTxt);
+			Text.registerBitmapFont("SettleWin", settlewinFont);
+			
+			var settlelostFont:BitmapFont = new BitmapFont();
+			fnt = Light.loader.getRes("Settlelost.fnt");
+			fntTxt = Light.loader.getRes("res/gameScene/settlelost.png");
+			settlelostFont.parseFont(fnt,fntTxt);
+			Text.registerBitmapFont("SettleLost", settlelostFont);
+			
+			
+			
 			view.on(ScenceManagerEvent.UI_SHOW,this, onUIShow);
 			view.on(ScenceManagerEvent.UI_HIDE,this, onUIHide);
 			//view.on(CarSceneEvent.START_BET, this, onBetHandler);
@@ -120,7 +134,7 @@ package bull.modules.room.mediator
 				case view.CarryInBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					view.BetZoneBoard.set_data([]);					
+					view.SettleBoard.set_data(["jjj",99999,"111"]);					
 				break;
 				
 				case view.PlayerListBtn:

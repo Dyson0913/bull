@@ -11,6 +11,10 @@ assetsIn\ok.png:1480924594
 assetsIn\smallPanel.png:1480924594
 assetsIn\split.png:1480924594
 assetsIn\warn2.png:1480924594
+BitmapFont\settlelost.fnt:1483434963
+BitmapFont\settlelost.png:1483434963
+BitmapFont\settleWin.fnt:1483428349
+BitmapFont\settleWin.png:1483428349
 comp\bg.png:1480414350
 comp\blank.png:1480414349
 comp\btn_close.png:1480414350
@@ -83,7 +87,6 @@ res\gameScene\chip_500000.png:1482212097
 res\gameScene\chip_5000000.png:1482212097
 res\gameScene\chip_max.png:1482212097
 res\gameScene\closeBtn.png:1483252225
-res\gameScene\club_2.png:1483264851
 res\gameScene\deBanker.png:1483061760
 res\gameScene\InfoBoard.png:1482212097
 res\gameScene\NO.1.png:1482212097
@@ -92,9 +95,12 @@ res\gameScene\NO.3.png:1482212097
 res\gameScene\PlayerListBtn.png:1482739198
 res\gameScene\PlayerListCloseBtn.png:1483251790
 res\gameScene\SameBetBtn.png:1483076496
+res\gameScene\settlelost.png:1483434963
+res\gameScene\settleWin.png:1483428349
 res\gameScene\下庄结算底板.png:1482212097
 res\gameScene\下庄结算横条01.png:1482212095
 res\gameScene\下庄结算横条02.png:1482212097
+res\gameScene\乘号.png:1482212099
 res\gameScene\人民币￥底板.png:1482212095
 res\gameScene\倒计时01.png:1483327345
 res\gameScene\倒计时02.png:1483327345
@@ -122,6 +128,9 @@ res\gameScene\网络状态条橙.png:1482212097
 res\gameScene\网络状态条红.png:1482212097
 res\gameScene\网络状态条绿.png:1482212097
 res\gameScene\网络状态条黄.png:1482212097
+res\gameScene\轮庄大头像名字底板.png:1482212095
+res\gameScene\轮庄提示大头像.png:1482212095
+res\gameScene\轮庄提示彩带.png:1482212095
 res\gameScene\闲家下注区1.png:1482212097
 res\gameScene\闲家下注区2.png:1482212097
 res\gameScene\闲家下注区3.png:1482212097

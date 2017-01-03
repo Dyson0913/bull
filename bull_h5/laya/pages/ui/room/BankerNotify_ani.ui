@@ -2,8 +2,8 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":6,
-    "props":{"width":470,"sceneColor":"#000000","height":50},
+    "selecteID":5,
+    "props":{"width":318,"sceneColor":"#000000","height":260},
     "nodeParent":-1,
     "label":"View",
     "isOpen":true,
@@ -21,17 +21,17 @@
     "child":[
         {
             "x":15,
-            "type":"Animation",
-            "props":{"y":-3,"x":6,"var":"Rank","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"},
+            "type":"Image",
+            "props":{"y":71,"x":82,"skin":"res/gameScene/轮庄提示大头像.png"},
             "nodeParent":1,
-            "label":"Animation(Rank)",
+            "label":"Image",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{},
+                    "props":{"y":206,"x":281,"skin":"res/gameScene/轮庄提示大头像.png"},
                     "frame":0,
                     "__InPool":false
                 }],
@@ -42,16 +42,16 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":4,"x":53,"var":"Light","skin":"res/share/Light.png"},
+            "props":{"y":231,"x":88,"skin":"res/gameScene/轮庄大头像名字底板.png"},
             "nodeParent":1,
-            "label":"Image(Light)",
+            "label":"Image",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":344,"x":234,"skin":"res/share/Light.png"},
+                    "props":{"y":375,"x":369,"skin":"res/gameScene/轮庄大头像名字底板.png"},
                     "frame":0,
                     "__InPool":false
                 }],
@@ -62,16 +62,16 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":6,"x":108,"var":"Head","skin":"res/gameScene/结算玩家头像.png"},
+            "props":{"y":5,"x":0,"skin":"res/gameScene/轮庄提示彩带.png"},
             "nodeParent":1,
-            "label":"Image(Head)",
+            "label":"Image",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":257,"x":326,"skin":"res/gameScene/结算玩家头像.png"},
+                    "props":{"y":201,"x":224,"skin":"res/gameScene/轮庄提示彩带.png"},
                     "frame":0,
                     "__InPool":false
                 }],
@@ -82,7 +82,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":13,"x":160,"width":93,"var":"Name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"},
+            "props":{"y":233,"x":91,"width":94,"var":"Name","scaleY":1.5,"scaleX":1.5,"height":16,"color":"#f6eeee","align":"center"},
             "nodeParent":1,
             "label":"Label(Name)",
             "isDirectory":false,
@@ -96,26 +96,6 @@
                     "__InPool":false
                 }],
             "compId":5,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Label",
-            "props":{"y":14,"x":323,"width":80,"var":"Money","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"},
-            "nodeParent":1,
-            "label":"Label(Money)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"text":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":6,
             "child":[
                 ]
         }],

@@ -29623,6 +29623,48 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__proto.getHallRoomInfoById=function(tableId){
+			var roomVo;
+			for(var $each_roomVo in this._roomList){
+				roomVo=this._roomList[$each_roomVo];
+				if(roomVo.id==tableId)return roomVo;
+			}
+			return null;
+		}
+
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
+
+
 	/**
 	*设置声音面板
 	*/
@@ -29701,48 +29743,6 @@ var Laya=window.Laya=(function(window,document){
 		MusicSetMediator.HIDE_MUSIC_SET_PANEL="car.HIDE_MUSIC_SET_PANEL";
 		return MusicSetMediator;
 	})(Mediator)
-
-
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__proto.getHallRoomInfoById=function(tableId){
-			var roomVo;
-			for(var $each_roomVo in this._roomList){
-				roomVo=this._roomList[$each_roomVo];
-				if(roomVo.id==tableId)return roomVo;
-			}
-			return null;
-		}
-
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
 
 
 	/**
@@ -30167,6 +30167,26 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
+	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
+	var SmallLoadingMediator=(function(_super){
+		function SmallLoadingMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
+		}
+
+		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
+		var __proto=SmallLoadingMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.loadingMask.lodingMask=viewComponent;
+		}
+
+		SmallLoadingMediator.NAME="smallLoadingMediator";
+		return SmallLoadingMediator;
+	})(Mediator)
+
+
 	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
 	var UserInfoData=(function(_super){
 		function UserInfoData(){
@@ -30223,26 +30243,6 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
-	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
-	var SmallLoadingMediator=(function(_super){
-		function SmallLoadingMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
-		}
-
-		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
-		var __proto=SmallLoadingMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.loadingMask.lodingMask=viewComponent;
-		}
-
-		SmallLoadingMediator.NAME="smallLoadingMediator";
-		return SmallLoadingMediator;
-	})(Mediator)
-
-
 	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
 	var BullProtoModel=(function(_super){
 		function BullProtoModel(modelName,data){
@@ -30269,50 +30269,6 @@ var Laya=window.Laya=(function(window,document){
 		BullProtoModel.NAME="bullProtoModel";
 		return BullProtoModel;
 	})(Model)
-
-
-	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
-	var BankerNotifyCommand=(function(_super){
-		function BankerNotifyCommand(){
-			BankerNotifyCommand.__super.call(this);
-		}
-
-		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
-		var __proto=BankerNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
-				this.bankerlist(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
-				this.newbaner(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
-				this.banker_calcu(notification.getBody());
-			}
-		}
-
-		__proto.bankerlist=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
-			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.newbaner=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.newBaner_info=cs.banker_notify;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.banker_calcu=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
-			this.sentNotification("Bankercalcu");
-		}
-
-		return BankerNotifyCommand;
-	})(Command)
 
 
 	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
@@ -30360,6 +30316,50 @@ var Laya=window.Laya=(function(window,document){
 		TipsLoadMediator.NAME="tipsLoadMediator";
 		return TipsLoadMediator;
 	})(Mediator)
+
+
+	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
+	var BankerNotifyCommand=(function(_super){
+		function BankerNotifyCommand(){
+			BankerNotifyCommand.__super.call(this);
+		}
+
+		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
+		var __proto=BankerNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
+				this.bankerlist(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
+				this.newbaner(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
+				this.banker_calcu(notification.getBody());
+			}
+		}
+
+		__proto.bankerlist=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
+			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.newbaner=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.newBaner_info=cs.banker_notify;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.banker_calcu=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
+			this.sentNotification("Bankercalcu");
+		}
+
+		return BankerNotifyCommand;
+	})(Command)
 
 
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
@@ -30817,6 +30817,16 @@ var Laya=window.Laya=(function(window,document){
 			_super.prototype.setViewComponent.call(this,viewComponent);
 			console.log("BullScenceMediator setViewComponent")
 			this.view.backLobby.on("click",this,this.onReturnClick);
+			var settlewinFont=new BitmapFont();
+			var fnt=Light.loader.getRes("SettleWin.fnt");
+			var fntTxt=Light.loader.getRes("res/gameScene/settleWin.png");
+			settlewinFont.parseFont(fnt,fntTxt);
+			Text.registerBitmapFont("SettleWin",settlewinFont);
+			var settlelostFont=new BitmapFont();
+			fnt=Light.loader.getRes("Settlelost.fnt");
+			fntTxt=Light.loader.getRes("res/gameScene/settlelost.png");
+			settlelostFont.parseFont(fnt,fntTxt);
+			Text.registerBitmapFont("SettleLost",settlelostFont);
 			this.view.on("uiShow",this,this.onUIShow);
 			this.view.on("uiHide",this,this.onUIHide);
 			this.view.optionBtn.on("click",this,this.onClick);
@@ -30858,7 +30868,7 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case this.view.CarryInBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
-					this.view.BetZoneBoard.set_data([]);
+					this.view.SettleBoard.set_data(["jjj",99999,"111"]);
 					break ;
 				case this.view.PlayerListBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
@@ -32681,23 +32691,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
-
-
 	/**
 	*场景管理器
 	*@author light-k
@@ -32898,6 +32891,23 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
+
+
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -48909,18 +48919,20 @@ var Laya=window.Laya=(function(window,document){
 			this.deapply=null;
 			this.bankerapply=null;
 			this.Money=null;
+			this.Banker_ani=null;
 			BankerBoardUI.__super.call(this);
 		}
 
 		__class(BankerBoardUI,'ui.ui.room.BankerBoardUI',_super);
 		var __proto=BankerBoardUI.prototype;
 		__proto.createChildren=function(){
+			View.regComponent("ui.ui.room.BankerNotify_aniUI",BankerNotify_aniUI);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BankerBoardUI.uiView);
 		}
 
 		__static(BankerBoardUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":50,"var":"Title","text":"吉胜游戏平台","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":427,"width":56,"var":"BankerTimes","text":"1/15次","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Button","props":{"y":9,"x":527,"var":"deapply","stateNum":"3","skin":"res/gameScene/deBanker.png"}},{"type":"Button","props":{"y":8,"x":527,"var":"bankerapply","stateNum":"3","skin":"res/gameScene/applyBanker.png"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Money","text":"999999","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":50,"var":"Title","text":"吉胜游戏平台","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":427,"width":56,"var":"BankerTimes","text":"1/15次","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Button","props":{"y":9,"x":527,"var":"deapply","stateNum":"3","skin":"res/gameScene/deBanker.png"}},{"type":"Button","props":{"y":8,"x":527,"var":"bankerapply","stateNum":"3","skin":"res/gameScene/applyBanker.png"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Money","text":"999999","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"BankerNotify_ani","props":{"y":5,"x":563,"visible":false,"var":"Banker_ani","scaleY":0.3,"scaleX":0.3,"runtime":"ui.ui.room.BankerNotify_aniUI"}}]};}
 		]);
 		return BankerBoardUI;
 	})(View)
@@ -48971,10 +48983,10 @@ var Laya=window.Laya=(function(window,document){
 			this.PlayerListBtn=null;
 			this.CarryInBtn=null;
 			this.HistoryBoard=null;
-			this.InfoBoard=null;
-			this.bankerBoard=null;
+			this.InfoPanel=null;
+			this.bankerPanel=null;
 			this.UserBoard=null;
-			this.SellteBoard=null;
+			this.SettleBoard=null;
 			this.BankerSettleBoard=null;
 			this.BetZoneBoard=null;
 			this.PokerSet=null;
@@ -48987,10 +48999,10 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=BullSceneUI.prototype;
 		__proto.createChildren=function(){
 			View.regComponent("bull.view.room.HistoryRecord",HistoryRecord);
-			View.regComponent("bull.view.room.InfoBoard",this.InfoBoard);
-			View.regComponent("bull.view.room.bankerBoard",this.bankerBoard);
+			View.regComponent("bull.view.room.InfoBoard",InfoBoard);
+			View.regComponent("bull.view.room.bankerBoard",bankerBoard);
 			View.regComponent("ui.ui.room.UserPanelUI",UserPanelUI);
-			View.regComponent("ui.ui.room.SettleUI",SettleUI);
+			View.regComponent("bull.view.room.Settle",Settle);
 			View.regComponent("ui.ui.room.BankerSettleUI",BankerSettleUI);
 			View.regComponent("bull.view.room.BetZone",BetZone);
 			View.regComponent("bull.view.room.poker",poker);
@@ -49001,7 +49013,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryBoard","runtime":"bull.view.room.HistoryRecord"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoBoard","runtime":"bull.view.room.InfoBoard"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerBoard","runtime":"bull.view.room.bankerBoard"}},{"type":"UserPanel","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"UserBoard","runtime":"ui.ui.room.UserPanelUI"}},{"type":"Settle","props":{"y":170,"x":357,"visible":false,"var":"SellteBoard","runtime":"ui.ui.room.SettleUI"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"BankerSettleBoard","runtime":"ui.ui.room.BankerSettleUI"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"BetZoneBoard","runtime":"bull.view.room.BetZone"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"PokerSet","runtime":"bull.view.room.poker"}},{"type":"Timer","props":{"y":474,"x":645,"visible":false,"var":"TimerPanel","runtime":"bull.view.room.Timer"}},{"type":"BetChip","props":{"y":802.9999999999999,"x":426.00000000000006,"var":"BetChip","runtime":"bull.view.room.CoinSelect"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryBoard","runtime":"bull.view.room.HistoryRecord"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoPanel","runtime":"bull.view.room.InfoBoard"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerPanel","runtime":"bull.view.room.bankerBoard"}},{"type":"UserPanel","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"UserBoard","runtime":"ui.ui.room.UserPanelUI"}},{"type":"Settle","props":{"y":170,"x":357,"visible":false,"var":"SettleBoard","runtime":"bull.view.room.Settle"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"BankerSettleBoard","runtime":"ui.ui.room.BankerSettleUI"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"BetZoneBoard","runtime":"bull.view.room.BetZone"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"PokerSet","runtime":"bull.view.room.poker"}},{"type":"Timer","props":{"y":474,"x":645,"visible":false,"var":"TimerPanel","runtime":"bull.view.room.Timer"}},{"type":"BetChip","props":{"y":802.9999999999999,"x":426.00000000000006,"var":"BetChip","runtime":"bull.view.room.CoinSelect"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
@@ -49183,6 +49195,39 @@ var Laya=window.Laya=(function(window,document){
 	})(View)
 
 
+	//class ui.ui.room.SettleUI extends laya.ui.View
+	var SettleUI=(function(_super){
+		function SettleUI(){
+			this.Btn_close=null;
+			this.info_0=null;
+			this.info_1=null;
+			this.info_2=null;
+			this.Btn_ok=null;
+			this.banker_Money=null;
+			this.BankerName=null;
+			this.Name=null;
+			this.Curren_Money=null;
+			this.Isbanker=null;
+			this.Win_amount=null;
+			this.Lost_amount=null;
+			SettleUI.__super.call(this);
+		}
+
+		__class(SettleUI,'ui.ui.room.SettleUI',_super);
+		var __proto=SettleUI.prototype;
+		__proto.createChildren=function(){
+			View.regComponent("ui.ui.room.Settle_InfoUI",Settle_InfoUI);
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(SettleUI.uiView);
+		}
+
+		__static(SettleUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":679,"height":416},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/结算中心底板.png"}},{"type":"Button","props":{"y":-1,"x":640,"var":"Btn_close","skin":"res/gameScene/closeBtn.png","name":"Btn_close"}},{"type":"Settle_Info","props":{"y":189,"x":196,"var":"info_0","runtime":"ui.ui.room.Settle_InfoUI"}},{"type":"Settle_Info","props":{"y":244,"x":196,"var":"info_1","runtime":"ui.ui.room.Settle_InfoUI"}},{"type":"Settle_Info","props":{"y":296,"x":195,"var":"info_2","runtime":"ui.ui.room.Settle_InfoUI"}},{"type":"Button","props":{"y":357,"x":265,"var":"Btn_ok","skin":"res/gameScene/Btn_bg.png","name":"Btn_ok"}},{"type":"Label","props":{"y":366,"x":308,"width":43,"text":"确  定","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":365,"x":489,"width":11,"text":"S","scaleY":2.3,"scaleX":2.3,"mouseEnabled":false,"height":14,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":362,"x":470,"width":10,"text":"8","scaleY":2.5,"scaleX":2.5,"mouseEnabled":false,"height":16,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":324,"x":37,"width":83,"var":"banker_Money","text":"+9999999","scaleY":1.5,"scaleX":1.5,"mouseEnabled":false,"height":16,"color":"#9fb23c","bold":false,"align":"center"}},{"type":"Image","props":{"y":294,"x":41,"var":"BankerName","skin":"res/gameScene/吉胜游戏平台.png"}},{"type":"Label","props":{"y":86,"x":106,"width":93,"var":"Name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":119,"x":126,"width":93,"var":"Curren_Money","text":"6666666","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#f8f0ef","align":"left"}},{"type":"Image","props":{"y":60,"x":6,"var":"Isbanker","skin":"res/gameScene/庄家符号.png"}},{"type":"Label","props":{"y":87,"x":270,"width":389,"var":"Win_amount","text":"+¥1234.56","height":60,"font":"settleWin","align":"center"}},{"type":"Label","props":{"y":37,"x":274,"width":389,"var":"Lost_amount","text":"-¥1234.56","height":60,"font":"settlelost","align":"center"}}]};}
+		]);
+		return SettleUI;
+	})(View)
+
+
 	//class ui.ui.room.TimerUI extends laya.ui.View
 	var TimerUI=(function(_super){
 		function TimerUI(){
@@ -49300,6 +49345,27 @@ var Laya=window.Laya=(function(window,document){
 	})(View)
 
 
+	//class ui.ui.room.BankerNotify_aniUI extends laya.ui.View
+	var BankerNotify_aniUI=(function(_super){
+		function BankerNotify_aniUI(){
+			this.Name=null;
+			BankerNotify_aniUI.__super.call(this);
+		}
+
+		__class(BankerNotify_aniUI,'ui.ui.room.BankerNotify_aniUI',_super);
+		var __proto=BankerNotify_aniUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(BankerNotify_aniUI.uiView);
+		}
+
+		__static(BankerNotify_aniUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":318,"height":260},"child":[{"type":"Image","props":{"y":71,"x":82,"skin":"res/gameScene/轮庄提示大头像.png"}},{"type":"Image","props":{"y":231,"x":88,"skin":"res/gameScene/轮庄大头像名字底板.png"}},{"type":"Image","props":{"y":5,"x":0,"skin":"res/gameScene/轮庄提示彩带.png"}},{"type":"Label","props":{"y":233,"x":91,"width":94,"var":"Name","scaleY":1.5,"scaleX":1.5,"height":16,"color":"#f6eeee","align":"center"}}]};}
+		]);
+		return BankerNotify_aniUI;
+	})(View)
+
+
 	//class ui.ui.room.BankerSettleUI extends laya.ui.View
 	var BankerSettleUI=(function(_super){
 		function BankerSettleUI(){BankerSettleUI.__super.call(this);;
@@ -49384,36 +49450,14 @@ var Laya=window.Laya=(function(window,document){
 	})(View)
 
 
-	//class ui.ui.room.SettleUI extends laya.ui.View
-	var SettleUI=(function(_super){
-		function SettleUI(){
-			this.info_0=null;
-			this.info_1=null;
-			this.info_2=null;
-			SettleUI.__super.call(this);
-		}
-
-		__class(SettleUI,'ui.ui.room.SettleUI',_super);
-		var __proto=SettleUI.prototype;
-		__proto.createChildren=function(){
-			View.regComponent("ui.ui.room.Settle_InfoUI",Settle_InfoUI);
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(SettleUI.uiView);
-		}
-
-		__static(SettleUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":679,"height":416},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/结算中心底板.png"}},{"type":"Button","props":{"y":-1,"x":640,"skin":"res/gameScene/closeBtn.png"}},{"type":"Settle_Info","props":{"y":189,"x":196,"var":"info_0","runtime":"ui.ui.room.Settle_InfoUI"}},{"type":"Settle_Info","props":{"y":244,"x":196,"var":"info_1","runtime":"ui.ui.room.Settle_InfoUI"}},{"type":"Settle_Info","props":{"y":296,"x":195,"var":"info_2","runtime":"ui.ui.room.Settle_InfoUI"}},{"type":"Button","props":{"y":357,"x":265,"skin":"res/gameScene/Btn_bg.png"}},{"type":"Label","props":{"y":366,"x":308,"width":43,"text":"确  定","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":365,"x":489,"width":11,"text":"S","scaleY":2.3,"scaleX":2.3,"mouseEnabled":false,"height":14,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":362,"x":470,"width":10,"text":"8","scaleY":2.5,"scaleX":2.5,"mouseEnabled":false,"height":16,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":324,"x":37,"width":83,"text":"+9999999","scaleY":1.5,"scaleX":1.5,"mouseEnabled":false,"height":16,"color":"#9fb23c","bold":false,"align":"center"}},{"type":"Image","props":{"y":294,"x":41,"skin":"res/gameScene/吉胜游戏平台.png"}},{"type":"Label","props":{"y":86,"x":106,"width":93,"text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":119,"x":126,"width":93,"text":"6666666","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#f8f0ef","align":"left"}},{"type":"Image","props":{"y":60,"x":6,"skin":"res/gameScene/庄家符号.png"}}]};}
-		]);
-		return SettleUI;
-	})(View)
-
-
 	//class ui.ui.room.Settle_InfoUI extends laya.ui.View
 	var Settle_InfoUI=(function(_super){
 		function Settle_InfoUI(){
 			this.Rank=null;
 			this.Light=null;
 			this.Head=null;
+			this.Name=null;
+			this.Money=null;
 			Settle_InfoUI.__super.call(this);
 		}
 
@@ -49425,7 +49469,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(Settle_InfoUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":470,"height":50},"child":[{"type":"Animation","props":{"y":-3,"x":6,"var":"Rank","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":4,"x":53,"var":"Light","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":6,"x":108,"var":"Head","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":13,"x":160,"width":93,"text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":14,"x":323,"width":80,"text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":470,"height":50},"child":[{"type":"Animation","props":{"y":-3,"x":6,"var":"Rank","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":4,"x":53,"var":"Light","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":6,"x":108,"var":"Head","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":13,"x":160,"width":93,"var":"Name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":14,"x":323,"width":80,"var":"Money","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}}]};}
 		]);
 		return Settle_InfoUI;
 	})(View)
@@ -50746,6 +50790,20 @@ var Laya=window.Laya=(function(window,document){
 			this.Title.text=data[0];
 			this.BankerTimes.text=data[1];
 			this.Money.text=data[2];
+			this.Banker_ani.visible=true;
+			this.Banker_ani.alpha=0;
+			Tween.to(this.Banker_ani,{x:212,y:150,alpha:1,scaleX:1 ,scaleY:1 },1000,Ease.cubicOut,Handler.create(this,this.ani_mid));
+		}
+
+		__proto.ani_mid=function(){
+			Tween.to(this.Banker_ani,{x:26,y:5,alpha:0,scaleX:0.3 ,scaleY:0.3 },1000,Ease.cubicOut,Handler.create(this,this.ani_ok));
+		}
+
+		__proto.ani_ok=function(){
+			this.Banker_ani.visible=false;
+			this.Banker_ani.x=563;
+			this.Banker_ani.y=5;
+			this.Banker_ani.alpha=0;
 		}
 
 		__proto.test=function(){}
@@ -50813,8 +50871,8 @@ var Laya=window.Laya=(function(window,document){
 		__proto.showme=function(){
 			console.log("showme showme");
 			Tween.to(this.HistoryBoard,{x:this.HistoryBoard.x+173 },1000,Ease.backIn);
-			Tween.to(this.InfoBoard,{y:this.InfoBoard.y-96 },1000,Ease.backIn);
-			Tween.to(this.bankerBoard,{y:this.bankerBoard.y+76 },1000,Ease.backIn);
+			Tween.to(this.InfoPanel,{y:this.InfoPanel.y-96 },1000,Ease.backIn);
+			Tween.to(this.bankerPanel,{y:this.bankerPanel.y+76 },1000,Ease.backIn);
 			Tween.to(this.BetChip,{y:this.BetChip.y-138 },1000,Ease.backIn);
 		}
 
@@ -50822,8 +50880,8 @@ var Laya=window.Laya=(function(window,document){
 			console.log("hideme")
 			this.btn_display(false);
 			this.HistoryBoard.x=-173;
-			this.InfoBoard.y=800;
-			this.bankerBoard.y=-81;
+			this.InfoPanel.y=800;
+			this.bankerPanel.y=-81;
 			this.BetChip.y=803;
 		}
 
@@ -51107,6 +51165,40 @@ var Laya=window.Laya=(function(window,document){
 		__proto.test=function(){}
 		return poker;
 	})(PokerUI)
+
+
+	//class bull.view.room.Settle extends ui.ui.room.SettleUI
+	var Settle=(function(_super){
+		function Settle(){
+			Settle.__super.call(this);
+		}
+
+		__class(Settle,'bull.view.room.Settle',_super);
+		var __proto=Settle.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			this.Btn_ok.on("click",this,this.onClick);
+			this.Btn_close.on("click",this,this.onClick);
+		}
+
+		__proto.onClick=function(e){
+			this.visible=false;
+		}
+
+		//event(LightEvent.ITEM_CLICK,parseInt(s));
+		__proto.set_data=function(data){
+			this.visible=true;
+			this.Name.text=data[0];
+			this.Curren_Money.text=data[1];
+			this.Win_amount.font="SettleWin";
+			this.Lost_amount.font="SettleLost";
+			this.Lost_amount.text="-¥1234.567890";
+			this.Win_amount.text="+¥1234.567890";
+		}
+
+		__proto.test=function(){}
+		return Settle;
+	})(SettleUI)
 
 
 	//class bull.view.room.Timer extends ui.ui.room.TimerUI
@@ -51509,26 +51601,6 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
-	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
-	var NodeTreeSetting=(function(_super){
-		function NodeTreeSetting(){
-			NodeTreeSetting.__super.call(this);
-			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
-			this.createView(NodeTreeSettingUI.uiView);
-		}
-
-		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
-		var __proto=NodeTreeSetting.prototype;
-		//inits();
-		__proto.createChildren=function(){}
-		return NodeTreeSetting;
-	})(NodeTreeSettingUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
 	//class laya.debug.view.nodeInfo.nodetree.NodeTree extends laya.debug.ui.debugui.NodeTreeUI
 	var NodeTree=(function(_super){
 		function NodeTree(){
@@ -51766,6 +51838,26 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return NodeTree;
 	})(NodeTreeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
+	var NodeTreeSetting=(function(_super){
+		function NodeTreeSetting(){
+			NodeTreeSetting.__super.call(this);
+			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
+			this.createView(NodeTreeSettingUI.uiView);
+		}
+
+		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
+		var __proto=NodeTreeSetting.prototype;
+		//inits();
+		__proto.createChildren=function(){}
+		return NodeTreeSetting;
+	})(NodeTreeSettingUI)
 
 
 	/**
@@ -52444,7 +52536,7 @@ var Laya=window.Laya=(function(window,document){
 39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
 40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
 41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (225):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (239):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
 43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
 44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/poker.as (104):warning:idx_j This variable is not defined.
 */

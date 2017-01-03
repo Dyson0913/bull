@@ -31,8 +31,8 @@ package bull.view.room
 			
 			
 			Tween.to(HistoryBoard, { x:HistoryBoard.x + 173 },1000,Ease.backIn);
-			Tween.to(InfoBoard, { y:InfoBoard.y - 96 }, 1000,Ease.backIn);
-			Tween.to(bankerBoard, { y:bankerBoard.y +76 }, 1000,Ease.backIn);
+			Tween.to(InfoPanel, { y:InfoPanel.y - 96 }, 1000,Ease.backIn);
+			Tween.to(bankerPanel, { y:bankerPanel.y +76 }, 1000,Ease.backIn);
 			Tween.to(BetChip, { y:BetChip.y -138 }, 1000, Ease.backIn);
 			
 			
@@ -46,8 +46,8 @@ package bull.view.room
 			btn_display(false);
 			
 			HistoryBoard.x = -173;
-			InfoBoard.y = 800;
-			bankerBoard.y = -81;
+			InfoPanel.y = 800;
+			bankerPanel.y = -81;
 			BetChip.y = 803;
 		}
 		
