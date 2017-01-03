@@ -42,9 +42,9 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":5,"x":7,"width":59,"text":"100000","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"},
+            "props":{"y":8,"x":7,"width":59,"var":"amount","text":"100000","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"},
             "nodeParent":1,
-            "label":"Label",
+            "label":"Label(amount)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,

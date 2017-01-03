@@ -28929,47 +28929,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			if(param.uid){
-				bullData.uid=param.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if(param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
-
-
 	/**
 	*这里处理大厅的socket连接
 	*@author light-k
@@ -29075,6 +29034,47 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
+
+
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			if(param.uid){
+				bullData.uid=param.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if(param.access_token)bullData.token=param.access_token;
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -29745,6 +29745,75 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
+	/**
+	*规则面板
+	*/
+	//class bull.modules.common.mediator.RuleMediator extends com.lightMVC.parrerns.Mediator
+	var RuleMediator=(function(_super){
+		//显示规则说明面板事件
+		function RuleMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			RuleMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(RuleMediator,'bull.modules.common.mediator.RuleMediator',_super);
+		var __proto=RuleMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.top.addChild(this.view);
+			this.view.visible=false;
+			PopupManager.centerPopUp(this.view);
+			console.log("RuleMediator setViewComponent visible:"+this.view.visible);
+			this.view.btnClose.on("click",this,this.onClose);
+			this.addNotifiction("car.SHOW_RULE_PANEL");
+			this.addNotifiction("car.HIDE_RULE_PANEL");
+			this.addNotifiction("scenceChange");
+		}
+
+		__proto.handler=function(notification){
+			switch(notification.getName()){
+				case "car.SHOW_RULE_PANEL":
+					this.onShow();
+					break ;
+				case "car.HIDE_RULE_PANEL":
+					this.onClose();
+					break ;
+				case "scenceChange":;
+					var curScene=notification.getBody();
+					console.log("MusicSetMediator 切换到游戏场景:"+curScene);
+					if(curScene==/*no*/this.CarNotification.Scene_Game || curScene==/*no*/this.CarNotification.Scene_Hall)
+						this.onClose();
+					break ;
+				}
+		}
+
+		__proto.onShow=function(){
+			console.log("RuleMediator onShow()");
+			Light.layer.top.addChild(this.view);
+			this.view.visible=true;
+		}
+
+		__proto.onClose=function(e){
+			console.log("RuleMediator onClose()");
+			this.view.close();
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.viewComponent;
+		});
+
+		RuleMediator.NAME="ruleMediator";
+		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
+		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
+		return RuleMediator;
+	})(Mediator)
+
+
 	//class bull.modules.common.model.data.RoomData extends com.iflash.events.EventDispatcher
 	var RoomData=(function(_super){
 		function RoomData(){
@@ -30098,75 +30167,6 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
-	/**
-	*规则面板
-	*/
-	//class bull.modules.common.mediator.RuleMediator extends com.lightMVC.parrerns.Mediator
-	var RuleMediator=(function(_super){
-		//显示规则说明面板事件
-		function RuleMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			RuleMediator.__super.call(this,mediatorName,viewComponent);
-		}
-
-		__class(RuleMediator,'bull.modules.common.mediator.RuleMediator',_super);
-		var __proto=RuleMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.getInjector=function(){
-			return [];
-		}
-
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.top.addChild(this.view);
-			this.view.visible=false;
-			PopupManager.centerPopUp(this.view);
-			console.log("RuleMediator setViewComponent visible:"+this.view.visible);
-			this.view.btnClose.on("click",this,this.onClose);
-			this.addNotifiction("car.SHOW_RULE_PANEL");
-			this.addNotifiction("car.HIDE_RULE_PANEL");
-			this.addNotifiction("scenceChange");
-		}
-
-		__proto.handler=function(notification){
-			switch(notification.getName()){
-				case "car.SHOW_RULE_PANEL":
-					this.onShow();
-					break ;
-				case "car.HIDE_RULE_PANEL":
-					this.onClose();
-					break ;
-				case "scenceChange":;
-					var curScene=notification.getBody();
-					console.log("MusicSetMediator 切换到游戏场景:"+curScene);
-					if(curScene==/*no*/this.CarNotification.Scene_Game || curScene==/*no*/this.CarNotification.Scene_Hall)
-						this.onClose();
-					break ;
-				}
-		}
-
-		__proto.onShow=function(){
-			console.log("RuleMediator onShow()");
-			Light.layer.top.addChild(this.view);
-			this.view.visible=true;
-		}
-
-		__proto.onClose=function(e){
-			console.log("RuleMediator onClose()");
-			this.view.close();
-		}
-
-		__getset(0,__proto,'view',function(){
-			return this.viewComponent;
-		});
-
-		RuleMediator.NAME="ruleMediator";
-		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
-		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
-		return RuleMediator;
-	})(Mediator)
-
-
 	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
 	var UserInfoData=(function(_super){
 		function UserInfoData(){
@@ -30271,6 +30271,50 @@ var Laya=window.Laya=(function(window,document){
 	})(Model)
 
 
+	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
+	var BankerNotifyCommand=(function(_super){
+		function BankerNotifyCommand(){
+			BankerNotifyCommand.__super.call(this);
+		}
+
+		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
+		var __proto=BankerNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
+				this.bankerlist(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
+				this.newbaner(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
+				this.banker_calcu(notification.getBody());
+			}
+		}
+
+		__proto.bankerlist=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
+			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.newbaner=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.newBaner_info=cs.banker_notify;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.banker_calcu=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
+			this.sentNotification("Bankercalcu");
+		}
+
+		return BankerNotifyCommand;
+	})(Command)
+
+
 	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
 	var TipsLoadMediator=(function(_super){
 		function TipsLoadMediator(mediatorName,viewComponent){
@@ -30316,50 +30360,6 @@ var Laya=window.Laya=(function(window,document){
 		TipsLoadMediator.NAME="tipsLoadMediator";
 		return TipsLoadMediator;
 	})(Mediator)
-
-
-	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
-	var BankerNotifyCommand=(function(_super){
-		function BankerNotifyCommand(){
-			BankerNotifyCommand.__super.call(this);
-		}
-
-		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
-		var __proto=BankerNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
-				this.bankerlist(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
-				this.newbaner(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
-				this.banker_calcu(notification.getBody());
-			}
-		}
-
-		__proto.bankerlist=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
-			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.newbaner=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.newBaner_info=cs.banker_notify;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.banker_calcu=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
-			this.sentNotification("Bankercalcu");
-		}
-
-		return BankerNotifyCommand;
-	})(Command)
 
 
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
@@ -30858,15 +30858,13 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case this.view.CarryInBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
-					this.view.BetChip.set_data([100,500,1000,5000,10000,"max"]);
+					this.view.BetZoneBoard.set_data([]);
 					break ;
 				case this.view.PlayerListBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
-					this.view.BetChip.set_gray();
 					break ;
 				case this.view.optionBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
-					this.view.BetChip.set_gray();
 					break ;
 				}
 		}
@@ -47396,107 +47394,6 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
-	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
-	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
-	*
-	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.HSlider;
-		*import laya.ui.VSlider;
-		*import laya.utils.Handler;
-		*public class VSlider_Example
-		*{
-			*private var vSlider:VSlider;
-			*public function VSlider_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
-				*}
-			*private function onLoadComplete():void
-			*{
-				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-				*vSlider.min=0;//设置 vSlider 最低位置值。
-				*vSlider.max=10;//设置 vSlider 最高位置值。
-				*vSlider.value=2;//设置 vSlider 当前位置值。
-				*vSlider.tick=1;//设置 vSlider 刻度值。
-				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
-				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-				*}
-			*private function onChange(value:Number):void
-			*{
-				*trace("滑块的位置： value="+value);
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*var vSlider;
-	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
-	*function onLoadComplete(){
-		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-		*vSlider.min=0;//设置 vSlider 最低位置值。
-		*vSlider.max=10;//设置 vSlider 最高位置值。
-		*vSlider.value=2;//设置 vSlider 当前位置值。
-		*vSlider.tick=1;//设置 vSlider 刻度值。
-		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
-		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-		*}
-	*function onChange(value){
-		*console.log("滑块的位置： value="+value);
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*import HSlider=laya.ui.HSlider;
-	*import VSlider=laya.ui.VSlider;
-	*import Handler=laya.utils.Handler;
-	*class VSlider_Example {
-		*private vSlider:VSlider;
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
-			*}
-		*private onLoadComplete():void {
-			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-			*this.vSlider.min=0;//设置 vSlider 最低位置值。
-			*this.vSlider.max=10;//设置 vSlider 最高位置值。
-			*this.vSlider.value=2;//设置 vSlider 当前位置值。
-			*this.vSlider.tick=1;//设置 vSlider 刻度值。
-			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
-			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
-			*}
-		*private onChange(value:number):void {
-			*console.log("滑块的位置： value="+value);
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.Slider
-	*/
-	//class laya.ui.VSlider extends laya.ui.Slider
-	var VSlider=(function(_super){
-		function VSlider(){VSlider.__super.call(this);;
-		};
-
-		__class(VSlider,'laya.ui.VSlider',_super);
-		return VSlider;
-	})(Slider)
-
-
-	/**
 	*<code>TextInput</code> 类用于创建显示对象以显示和输入文本。
 	*
 	*@example 以下示例代码，创建了一个 <code>TextInput</code> 实例。
@@ -47809,6 +47706,107 @@ var Laya=window.Laya=(function(window,document){
 
 		return TextInput;
 	})(Label)
+
+
+	/**
+	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
+	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
+	*
+	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.HSlider;
+		*import laya.ui.VSlider;
+		*import laya.utils.Handler;
+		*public class VSlider_Example
+		*{
+			*private var vSlider:VSlider;
+			*public function VSlider_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
+				*}
+			*private function onLoadComplete():void
+			*{
+				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+				*vSlider.min=0;//设置 vSlider 最低位置值。
+				*vSlider.max=10;//设置 vSlider 最高位置值。
+				*vSlider.value=2;//设置 vSlider 当前位置值。
+				*vSlider.tick=1;//设置 vSlider 刻度值。
+				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
+				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+				*}
+			*private function onChange(value:Number):void
+			*{
+				*trace("滑块的位置： value="+value);
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*var vSlider;
+	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
+	*function onLoadComplete(){
+		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+		*vSlider.min=0;//设置 vSlider 最低位置值。
+		*vSlider.max=10;//设置 vSlider 最高位置值。
+		*vSlider.value=2;//设置 vSlider 当前位置值。
+		*vSlider.tick=1;//设置 vSlider 刻度值。
+		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
+		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+		*}
+	*function onChange(value){
+		*console.log("滑块的位置： value="+value);
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*import HSlider=laya.ui.HSlider;
+	*import VSlider=laya.ui.VSlider;
+	*import Handler=laya.utils.Handler;
+	*class VSlider_Example {
+		*private vSlider:VSlider;
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
+			*}
+		*private onLoadComplete():void {
+			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+			*this.vSlider.min=0;//设置 vSlider 最低位置值。
+			*this.vSlider.max=10;//设置 vSlider 最高位置值。
+			*this.vSlider.value=2;//设置 vSlider 当前位置值。
+			*this.vSlider.tick=1;//设置 vSlider 刻度值。
+			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
+			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
+			*}
+		*private onChange(value:number):void {
+			*console.log("滑块的位置： value="+value);
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.Slider
+	*/
+	//class laya.ui.VSlider extends laya.ui.Slider
+	var VSlider=(function(_super){
+		function VSlider(){VSlider.__super.call(this);;
+		};
+
+		__class(VSlider,'laya.ui.VSlider',_super);
+		return VSlider;
+	})(Slider)
 
 
 	/**
@@ -48903,6 +48901,65 @@ var Laya=window.Laya=(function(window,document){
 	})(View)
 
 
+	//class ui.ui.room.BankerBoardUI extends laya.ui.View
+	var BankerBoardUI=(function(_super){
+		function BankerBoardUI(){
+			this.Title=null;
+			this.BankerTimes=null;
+			this.deapply=null;
+			this.bankerapply=null;
+			this.Money=null;
+			BankerBoardUI.__super.call(this);
+		}
+
+		__class(BankerBoardUI,'ui.ui.room.BankerBoardUI',_super);
+		var __proto=BankerBoardUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(BankerBoardUI.uiView);
+		}
+
+		__static(BankerBoardUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":50,"var":"Title","text":"吉胜游戏平台","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":427,"width":56,"var":"BankerTimes","text":"1/15次","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Button","props":{"y":9,"x":527,"var":"deapply","stateNum":"3","skin":"res/gameScene/deBanker.png"}},{"type":"Button","props":{"y":8,"x":527,"var":"bankerapply","stateNum":"3","skin":"res/gameScene/applyBanker.png"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Money","text":"999999","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}}]};}
+		]);
+		return BankerBoardUI;
+	})(View)
+
+
+	//class ui.ui.room.BetZoneUI extends laya.ui.View
+	var BetZoneUI=(function(_super){
+		function BetZoneUI(){
+			this.zone_0=null;
+			this.zone_1=null;
+			this.zone_2=null;
+			this.zone_3=null;
+			this.total_amount_0=null;
+			this.total_amount_1=null;
+			this.total_amount_2=null;
+			this.total_amount_3=null;
+			this.self_amount_0=null;
+			this.self_amount_1=null;
+			this.self_amount_2=null;
+			this.self_amount_3=null;
+			BetZoneUI.__super.call(this);
+		}
+
+		__class(BetZoneUI,'ui.ui.room.BetZoneUI',_super);
+		var __proto=BetZoneUI.prototype;
+		__proto.createChildren=function(){
+			View.regComponent("ui.ui.room.Bet_TotalUI",Bet_TotalUI);
+			View.regComponent("ui.ui.room.Bet_selfUI",Bet_selfUI);
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(BetZoneUI.uiView);
+		}
+
+		__static(BetZoneUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"}},{"type":"Image","props":{"y":2,"x":252,"var":"zone_1","skin":"res/gameScene/闲家下注区3.png","name":"zone_1"}},{"type":"Image","props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"}},{"type":"Image","props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"}},{"type":"Bet_Total","props":{"y":4,"x":23,"var":"total_amount_0","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":264,"var":"total_amount_1","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":507,"var":"total_amount_2","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":750,"var":"total_amount_3","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"var":"self_amount_0","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"var":"self_amount_1","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"var":"self_amount_2","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"var":"self_amount_3","runtime":"ui.ui.room.Bet_selfUI"}}]};}
+		]);
+		return BetZoneUI;
+	})(View)
+
+
 	//class ui.ui.room.BullSceneUI extends laya.ui.View
 	var BullSceneUI=(function(_super){
 		function BullSceneUI(){
@@ -48930,12 +48987,12 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=BullSceneUI.prototype;
 		__proto.createChildren=function(){
 			View.regComponent("bull.view.room.HistoryRecord",HistoryRecord);
-			View.regComponent("ui.ui.room.InfoBoardUI",InfoBoardUI);
-			View.regComponent("ui.ui.room.BankerBoardUI",BankerBoardUI);
+			View.regComponent("bull.view.room.InfoBoard",this.InfoBoard);
+			View.regComponent("bull.view.room.bankerBoard",this.bankerBoard);
 			View.regComponent("ui.ui.room.UserPanelUI",UserPanelUI);
 			View.regComponent("ui.ui.room.SettleUI",SettleUI);
 			View.regComponent("ui.ui.room.BankerSettleUI",BankerSettleUI);
-			View.regComponent("ui.ui.room.BetZoneUI",BetZoneUI);
+			View.regComponent("bull.view.room.BetZone",BetZone);
 			View.regComponent("bull.view.room.poker",poker);
 			View.regComponent("bull.view.room.Timer",Timer);
 			View.regComponent("bull.view.room.CoinSelect",CoinSelect);
@@ -48944,7 +49001,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryBoard","runtime":"bull.view.room.HistoryRecord"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoBoard","runtime":"ui.ui.room.InfoBoardUI"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerBoard","runtime":"ui.ui.room.BankerBoardUI"}},{"type":"UserPanel","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"UserBoard","runtime":"ui.ui.room.UserPanelUI"}},{"type":"Settle","props":{"y":170,"x":357,"visible":false,"var":"SellteBoard","runtime":"ui.ui.room.SettleUI"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"BankerSettleBoard","runtime":"ui.ui.room.BankerSettleUI"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"BetZoneBoard","runtime":"ui.ui.room.BetZoneUI"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"PokerSet","runtime":"bull.view.room.poker"}},{"type":"Timer","props":{"y":474,"x":645,"visible":false,"var":"TimerPanel","runtime":"bull.view.room.Timer"}},{"type":"BetChip","props":{"y":802.9999999999999,"x":426.00000000000006,"var":"BetChip","runtime":"bull.view.room.CoinSelect"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryBoard","runtime":"bull.view.room.HistoryRecord"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoBoard","runtime":"bull.view.room.InfoBoard"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerBoard","runtime":"bull.view.room.bankerBoard"}},{"type":"UserPanel","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"UserBoard","runtime":"ui.ui.room.UserPanelUI"}},{"type":"Settle","props":{"y":170,"x":357,"visible":false,"var":"SellteBoard","runtime":"ui.ui.room.SettleUI"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"BankerSettleBoard","runtime":"ui.ui.room.BankerSettleUI"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"BetZoneBoard","runtime":"bull.view.room.BetZone"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"PokerSet","runtime":"bull.view.room.poker"}},{"type":"Timer","props":{"y":474,"x":645,"visible":false,"var":"TimerPanel","runtime":"bull.view.room.Timer"}},{"type":"BetChip","props":{"y":802.9999999999999,"x":426.00000000000006,"var":"BetChip","runtime":"bull.view.room.CoinSelect"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
@@ -49053,6 +49110,31 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":169,"name":"Record","height":421},"child":[{"type":"Image","props":{"y":0,"x":0,"var":"Hidding_Recode","skin":"res/gameScene/未展开胜负记录.png"}},{"type":"Box","props":{"y":0,"x":0,"var":"Showing_Recode"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/展开胜负记录.png"}},{"type":"Animation","props":{"y":126,"x":24,"var":"spade_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":150,"x":24,"var":"spade_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":174,"x":24,"width":0,"var":"spade_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":198,"x":24,"width":0,"var":"spade_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":221,"x":25,"var":"spade_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":245,"x":25,"var":"spade_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":269,"x":25,"width":0,"var":"spade_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":293,"x":25,"width":0,"var":"spade_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":315,"x":25,"var":"spade_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":339,"x":25,"var":"spade_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":363,"x":25,"width":0,"var":"spade_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":387,"x":25,"width":0,"var":"spade_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":61,"var":"heart_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":61,"var":"heart_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":61,"width":0,"var":"heart_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":61,"width":0,"var":"heart_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":62,"var":"heart_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":62,"var":"heart_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":62,"width":0,"var":"heart_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":62,"width":0,"var":"heart_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":62,"var":"heart_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":62,"var":"heart_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":62,"width":0,"var":"heart_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":62,"width":0,"var":"heart_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":97,"var":"club_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":97,"var":"club_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":97,"width":0,"var":"club_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":97,"width":0,"var":"club_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":98,"var":"club_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":98,"var":"club_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":98,"width":0,"var":"club_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":98,"width":0,"var":"club_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":98,"var":"club_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":98,"var":"club_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":98,"width":0,"var":"club_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":98,"width":0,"var":"club_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":133,"var":"diamond_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":133,"var":"diamond_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":133,"width":0,"var":"diamond_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":133,"width":0,"var":"diamond_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":134,"var":"diamond_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":134,"var":"diamond_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":134,"width":0,"var":"diamond_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":134,"width":0,"var":"diamond_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":134,"var":"diamond_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":134,"var":"diamond_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":134,"width":0,"var":"diamond_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":134,"width":0,"var":"diamond_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Label","props":{"y":78,"x":14,"var":"spade_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":14,"var":"spade_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":51,"var":"heart_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":51,"var":"heart_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":87,"var":"club_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":87,"var":"club_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":123,"var":"diamond_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":123,"var":"diamond_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}}]}]};}
 		]);
 		return HistoryRecordUI;
+	})(View)
+
+
+	//class ui.ui.room.InfoBoardUI extends laya.ui.View
+	var InfoBoardUI=(function(_super){
+		function InfoBoardUI(){
+			this.CarryIn=null;
+			this.Name=null;
+			this.Money=null;
+			this.Btn_CancelBet=null;
+			this.Btn_SameBet=null;
+			InfoBoardUI.__super.call(this);
+		}
+
+		__class(InfoBoardUI,'ui.ui.room.InfoBoardUI',_super);
+		var __proto=InfoBoardUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(InfoBoardUI.uiView);
+		}
+
+		__static(InfoBoardUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1238,"height":104},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/InfoBoard.png"}},{"type":"Button","props":{"y":48,"x":267,"var":"CarryIn","skin":"res/gameScene/CarryIn.png"}},{"type":"Label","props":{"y":23,"x":145,"width":102,"var":"Name","text":"Name","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"}},{"type":"Label","props":{"y":55,"x":144,"width":83,"var":"Money","text":"money","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"}},{"type":"Button","props":{"y":9,"x":1056,"var":"Btn_CancelBet","skin":"res/gameScene/CancelBet.png","name":"Btn_CancelBet"}},{"type":"Button","props":{"y":9,"x":894,"var":"Btn_SameBet","skin":"res/gameScene/SameBetBtn.png","name":"Btn_SameBet"}}]};}
+		]);
+		return InfoBoardUI;
 	})(View)
 
 
@@ -49218,31 +49300,6 @@ var Laya=window.Laya=(function(window,document){
 	})(View)
 
 
-	//class ui.ui.room.BankerBoardUI extends laya.ui.View
-	var BankerBoardUI=(function(_super){
-		function BankerBoardUI(){
-			this.Title=null;
-			this.BankerTimes=null;
-			this.deapply=null;
-			this.apply=null;
-			this.Money=null;
-			BankerBoardUI.__super.call(this);
-		}
-
-		__class(BankerBoardUI,'ui.ui.room.BankerBoardUI',_super);
-		var __proto=BankerBoardUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(BankerBoardUI.uiView);
-		}
-
-		__static(BankerBoardUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":50,"var":"Title","text":"吉胜游戏平台","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":427,"width":56,"var":"BankerTimes","text":"1/15次","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Button","props":{"y":9,"x":527,"var":"deapply","stateNum":"3","skin":"res/gameScene/deBanker.png"}},{"type":"Button","props":{"y":8,"x":527,"var":"apply","stateNum":"3","skin":"res/gameScene/applyBanker.png"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Money","text":"999999","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}}]};}
-		]);
-		return BankerBoardUI;
-	})(View)
-
-
 	//class ui.ui.room.BankerSettleUI extends laya.ui.View
 	var BankerSettleUI=(function(_super){
 		function BankerSettleUI(){BankerSettleUI.__super.call(this);;
@@ -49282,31 +49339,12 @@ var Laya=window.Laya=(function(window,document){
 	})(View)
 
 
-	//class ui.ui.room.BetZoneUI extends laya.ui.View
-	var BetZoneUI=(function(_super){
-		function BetZoneUI(){BetZoneUI.__super.call(this);;
-		};
-
-		__class(BetZoneUI,'ui.ui.room.BetZoneUI',_super);
-		var __proto=BetZoneUI.prototype;
-		__proto.createChildren=function(){
-			View.regComponent("ui.ui.room.Bet_TotalUI",Bet_TotalUI);
-			View.regComponent("ui.ui.room.Bet_selfUI",Bet_selfUI);
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(BetZoneUI.uiView);
-		}
-
-		__static(BetZoneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"skin":"res/gameScene/闲家下注区4.png"}},{"type":"Image","props":{"y":2,"x":252,"skin":"res/gameScene/闲家下注区3.png"}},{"type":"Image","props":{"y":3,"x":503,"skin":"res/gameScene/闲家下注区2.png"}},{"type":"Image","props":{"y":3,"x":747,"skin":"res/gameScene/闲家下注区1.png"}},{"type":"Bet_Total","props":{"y":4,"x":23,"runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":265,"runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":506,"runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":751,"runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"runtime":"ui.ui.room.Bet_selfUI"}}]};}
-		]);
-		return BetZoneUI;
-	})(View)
-
-
 	//class ui.ui.room.Bet_selfUI extends laya.ui.View
 	var Bet_selfUI=(function(_super){
-		function Bet_selfUI(){Bet_selfUI.__super.call(this);;
-		};
+		function Bet_selfUI(){
+			this.amount=null;
+			Bet_selfUI.__super.call(this);
+		}
 
 		__class(Bet_selfUI,'ui.ui.room.Bet_selfUI',_super);
 		var __proto=Bet_selfUI.prototype;
@@ -49316,7 +49354,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(Bet_selfUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":130,"height":40},"child":[{"type":"Image","props":{"y":3,"x":3,"skin":"res/gameScene/人民币￥底板.png"}},{"type":"Label","props":{"y":5,"x":7,"width":59,"text":"100000","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":130,"height":40},"child":[{"type":"Image","props":{"y":3,"x":3,"skin":"res/gameScene/人民币￥底板.png"}},{"type":"Label","props":{"y":8,"x":7,"width":59,"var":"amount","text":"100000","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"}}]};}
 		]);
 		return Bet_selfUI;
 	})(View)
@@ -49324,8 +49362,13 @@ var Laya=window.Laya=(function(window,document){
 
 	//class ui.ui.room.Bet_TotalUI extends laya.ui.View
 	var Bet_TotalUI=(function(_super){
-		function Bet_TotalUI(){Bet_TotalUI.__super.call(this);;
-		};
+		function Bet_TotalUI(){
+			this.bg_ani=null;
+			this.title=null;
+			this.amount=null;
+			this.light=null;
+			Bet_TotalUI.__super.call(this);
+		}
 
 		__class(Bet_TotalUI,'ui.ui.room.Bet_TotalUI',_super);
 		var __proto=Bet_TotalUI.prototype;
@@ -49335,34 +49378,9 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(Bet_TotalUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":200,"height":40},"child":[{"type":"Animation","props":{"y":3,"x":2,"source":"res/gameScene/黑桃底条.png,res/gameScene/红心底条.png,res/gameScene/梅花底条.png,res/gameScene/方片底条.png"}},{"type":"Label","props":{"y":6,"x":11,"width":31,"text":"总计:","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7"}},{"type":"Label","props":{"y":6,"x":71,"width":59,"text":"100000","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"}},{"type":"Image","props":{"y":-16,"x":-39,"skin":"res/share/Light.png"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":200,"height":40},"child":[{"type":"Animation","props":{"y":3,"x":2,"var":"bg_ani","source":"res/gameScene/黑桃底条.png,res/gameScene/红心底条.png,res/gameScene/梅花底条.png,res/gameScene/方片底条.png"}},{"type":"Label","props":{"y":10,"x":11,"width":31,"var":"title","text":"总计:","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7"}},{"type":"Label","props":{"y":11,"x":67,"width":59,"var":"amount","text":"1","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"}},{"type":"Image","props":{"y":-16,"x":-39,"var":"light","skin":"res/share/Light.png"}}]};}
 		]);
 		return Bet_TotalUI;
-	})(View)
-
-
-	//class ui.ui.room.InfoBoardUI extends laya.ui.View
-	var InfoBoardUI=(function(_super){
-		function InfoBoardUI(){
-			this.CarryIn=null;
-			this.Name=null;
-			this.Money=null;
-			this.Btn_CancelBet=null;
-			this.Btn_SameBet=null;
-			InfoBoardUI.__super.call(this);
-		}
-
-		__class(InfoBoardUI,'ui.ui.room.InfoBoardUI',_super);
-		var __proto=InfoBoardUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(InfoBoardUI.uiView);
-		}
-
-		__static(InfoBoardUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1238,"height":104},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/InfoBoard.png"}},{"type":"Button","props":{"y":48,"x":267,"var":"CarryIn","skin":"res/gameScene/CarryIn.png"}},{"type":"Label","props":{"y":23,"x":145,"width":102,"var":"Name","text":"Name","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"}},{"type":"Label","props":{"y":55,"x":144,"width":83,"var":"Money","text":"money","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"}},{"type":"Button","props":{"y":9,"x":1056,"var":"Btn_CancelBet","skin":"res/gameScene/CancelBet.png"}},{"type":"Button","props":{"y":9,"x":894,"var":"Btn_SameBet","skin":"res/gameScene/SameBetBtn.png"}}]};}
-		]);
-		return InfoBoardUI;
 	})(View)
 
 
@@ -50699,6 +50717,85 @@ var Laya=window.Laya=(function(window,document){
 	})(hallUI)
 
 
+	//class bull.view.room.bankerBoard extends ui.ui.room.BankerBoardUI
+	var bankerBoard=(function(_super){
+		function bankerBoard(){
+			bankerBoard.__super.call(this);
+		}
+
+		__class(bankerBoard,'bull.view.room.bankerBoard',_super);
+		var __proto=bankerBoard.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			this.bankerapply.on("click",this,this.onClick);
+			this.deapply.on("click",this,this.onClick);
+		}
+
+		__proto.onClick=function(e){
+			e.target
+			if (e.target==this.bankerapply){
+				console.log("bankerapply");
+			}
+			else if (e.target==this.deapply){
+				console.log("deapply");
+			}
+		}
+
+		//event(LightEvent.ITEM_CLICK,parseInt(s));
+		__proto.set_data=function(data){
+			this.Title.text=data[0];
+			this.BankerTimes.text=data[1];
+			this.Money.text=data[2];
+		}
+
+		__proto.test=function(){}
+		return bankerBoard;
+	})(BankerBoardUI)
+
+
+	//class bull.view.room.BetZone extends ui.ui.room.BetZoneUI
+	var BetZone=(function(_super){
+		function BetZone(){
+			BetZone.__super.call(this);
+		}
+
+		__class(BetZone,'bull.view.room.BetZone',_super);
+		var __proto=BetZone.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			for (var i=0;i < 4;i++){
+				this["zone_"+i].on("click",this,this.onClick);
+				this["total_amount_"+i]["bg_ani"].index=i;
+			}
+		}
+
+		__proto.onClick=function(e){
+			var s=e.target.name;
+			s=s.substr(5,1);
+			var idx=parseInt(s);
+			console.log("idx = "+idx);
+			this["total_amount_"+idx].visible=true;
+			this["total_amount_"+idx]["amount"].text=1;
+			this["total_amount_"+idx]["title"].visible=true;
+			this["total_amount_"+idx]["light"].visible=true;
+			this["self_amount_"+idx].visible=true;
+			this["self_amount_"+idx]["amount"].text=10000;
+		}
+
+		//event(LightEvent.ITEM_CLICK,parseInt(s));
+		__proto.set_data=function(data){
+			this.visible=true;
+			for (var i=0;i < 4;i++){
+				this["total_amount_"+i].visible=false;
+				this["self_amount_"+i].visible=false;
+			}
+		}
+
+		__proto.test=function(){}
+		return BetZone;
+	})(BetZoneUI)
+
+
 	//class bull.view.room.BullScene extends ui.ui.room.BullSceneUI
 	var BullScene=(function(_super){
 		function BullScene(){
@@ -50873,6 +50970,55 @@ var Laya=window.Laya=(function(window,document){
 		__proto.show=function(){}
 		return HistoryRecord;
 	})(HistoryRecordUI)
+
+
+	//class bull.view.room.InfoBoard extends ui.ui.room.InfoBoardUI
+	var InfoBoard=(function(_super){
+		function InfoBoard(){
+			InfoBoard.__super.call(this);
+		}
+
+		__class(InfoBoard,'bull.view.room.InfoBoard',_super);
+		var __proto=InfoBoard.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			this.Btn_CancelBet.on("click",this,this.onClick);
+			this.Btn_SameBet.on("click",this,this.onClick);
+			this.CarryIn.on("click",this,this.onClick);
+		}
+
+		__proto.onClick=function(e){
+			e.target
+			if (e.target==this.Btn_CancelBet){
+				console.log("Btn_CancelBet");
+			}
+			else if (e.target==this.Btn_SameBet){
+				console.log("Btn_SameBet");
+			}
+			else if (e.target==this.CarryIn){
+				console.log("CarryIn");
+			}
+		}
+
+		//event(LightEvent.ITEM_CLICK,parseInt(s));
+		__proto.set_data=function(data){
+			this.Name.text=data[0];
+			this.Money.text=data[1];
+		}
+
+		__proto.set_gray=function(){
+			this.Btn_CancelBet.disabled=true;
+			this.Btn_SameBet.disabled=true;
+		}
+
+		__proto.set_orge=function(){
+			this.Btn_CancelBet.disabled=false;
+			this.Btn_SameBet.disabled=false;
+		}
+
+		__proto.test=function(){}
+		return InfoBoard;
+	})(InfoBoardUI)
 
 
 	//class bull.view.room.poker extends ui.ui.room.PokerUI
@@ -51218,25 +51364,6 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -51253,6 +51380,25 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
 
 
 	/**
@@ -51357,6 +51503,26 @@ var Laya=window.Laya=(function(window,document){
 		__proto.createChildren=function(){}
 		return NodeTool;
 	})(NodeToolUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
+	var NodeTreeSetting=(function(_super){
+		function NodeTreeSetting(){
+			NodeTreeSetting.__super.call(this);
+			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
+			this.createView(NodeTreeSettingUI.uiView);
+		}
+
+		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
+		var __proto=NodeTreeSetting.prototype;
+		//inits();
+		__proto.createChildren=function(){}
+		return NodeTreeSetting;
+	})(NodeTreeSettingUI)
 
 
 	/**
@@ -51600,26 +51766,6 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return NodeTree;
 	})(NodeTreeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
-	var NodeTreeSetting=(function(_super){
-		function NodeTreeSetting(){
-			NodeTreeSetting.__super.call(this);
-			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
-			this.createView(NodeTreeSettingUI.uiView);
-		}
-
-		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
-		var __proto=NodeTreeSetting.prototype;
-		//inits();
-		__proto.createChildren=function(){}
-		return NodeTreeSetting;
-	})(NodeTreeSettingUI)
 
 
 	/**
@@ -52264,29 +52410,29 @@ var Laya=window.Laya=(function(window,document){
 5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (83):warning:CarProtoModel.NAME This variable is not defined.
 6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (84):warning:roomSocketService.close This variable is not defined.
 7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (183):warning:MoneyType.CASH This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (252):warning:status This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (252):warning:RoomStatusType.START_BET This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (253):warning:START_BET This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:status This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:RoomStatusType.END_BET This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (259):warning:END_BET This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (319):warning:MoneyType.CASH This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (338):warning:status This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (338):warning:leftTime This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (175):warning:USER_BALANCE_CHANGE This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (114):warning:roundid This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (115):warning:status This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (116):warning:leftTime This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (120):warning:MoneyType.CASH This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (267):warning:status This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (267):warning:RoomStatusType.LOTTERY_DRAW This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (268):warning:LOTTERY_DRAW This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (164):warning:LASTTIME_BET_RECORD This variable is not defined.
-27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (379):warning:state This variable is not defined.
-28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (391):warning:UPDATA This variable is not defined.
-29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
-30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (183):warning:MoneyType.CASH This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (252):warning:status This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (252):warning:RoomStatusType.START_BET This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (253):warning:START_BET This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:status This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:RoomStatusType.END_BET This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (259):warning:END_BET This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (319):warning:MoneyType.CASH This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (338):warning:status This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (338):warning:leftTime This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (175):warning:USER_BALANCE_CHANGE This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (114):warning:roundid This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (115):warning:status This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (116):warning:leftTime This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (120):warning:MoneyType.CASH This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (267):warning:status This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (267):warning:RoomStatusType.LOTTERY_DRAW This variable is not defined.
+27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (268):warning:LOTTERY_DRAW This variable is not defined.
+28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (164):warning:LASTTIME_BET_RECORD This variable is not defined.
+29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (379):warning:state This variable is not defined.
+30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (391):warning:UPDATA This variable is not defined.
 31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
 32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
 33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.

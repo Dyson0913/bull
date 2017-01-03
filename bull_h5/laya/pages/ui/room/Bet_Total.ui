@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":5,
+    "selecteID":4,
     "props":{"width":200,"sceneColor":"#000000","height":40},
     "nodeParent":-1,
     "label":"View",
@@ -22,9 +22,9 @@
         {
             "x":15,
             "type":"Animation",
-            "props":{"y":3,"x":2,"source":"res/gameScene/黑桃底条.png,res/gameScene/红心底条.png,res/gameScene/梅花底条.png,res/gameScene/方片底条.png"},
+            "props":{"y":3,"x":2,"var":"bg_ani","source":"res/gameScene/黑桃底条.png,res/gameScene/红心底条.png,res/gameScene/梅花底条.png,res/gameScene/方片底条.png"},
             "nodeParent":1,
-            "label":"Animation",
+            "label":"Animation(bg_ani)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -42,9 +42,9 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":6,"x":11,"width":31,"text":"总计:","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7"},
+            "props":{"y":10,"x":11,"width":31,"var":"title","text":"总计:","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7"},
             "nodeParent":1,
-            "label":"Label",
+            "label":"Label(title)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -57,14 +57,15 @@
                 }],
             "compId":3,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Label",
-            "props":{"y":6,"x":71,"width":59,"text":"100000","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"},
+            "props":{"y":11,"x":67,"width":59,"var":"amount","text":"1","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"},
             "nodeParent":1,
-            "label":"Label",
+            "label":"Label(amount)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -77,14 +78,15 @@
                 }],
             "compId":4,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Image",
-            "props":{"y":-16,"x":-39,"skin":"res/share/Light.png"},
+            "props":{"y":-16,"x":-39,"var":"light","skin":"res/share/Light.png"},
             "nodeParent":1,
-            "label":"Image",
+            "label":"Image(light)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
