@@ -134,7 +134,7 @@ package bull.modules.room.mediator
 				case view.CarryInBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					view.SettleBoard.set_data(["jjj",99999,"111"]);					
+					view.bankerPanel.set_data(["jjj",99999,"111",0,["player1","player2"],"[现金达到",-1]);
 				break;
 				
 				case view.PlayerListBtn:

@@ -28929,6 +28929,47 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			if(param.uid){
+				bullData.uid=param.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if(param.access_token)bullData.token=param.access_token;
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
+
+
 	/**
 	*这里处理大厅的socket连接
 	*@author light-k
@@ -29034,47 +29075,6 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
-
-
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			if(param.uid){
-				bullData.uid=param.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if(param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -29623,48 +29623,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__proto.getHallRoomInfoById=function(tableId){
-			var roomVo;
-			for(var $each_roomVo in this._roomList){
-				roomVo=this._roomList[$each_roomVo];
-				if(roomVo.id==tableId)return roomVo;
-			}
-			return null;
-		}
-
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
 	/**
 	*设置声音面板
 	*/
@@ -29743,6 +29701,48 @@ var Laya=window.Laya=(function(window,document){
 		MusicSetMediator.HIDE_MUSIC_SET_PANEL="car.HIDE_MUSIC_SET_PANEL";
 		return MusicSetMediator;
 	})(Mediator)
+
+
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__proto.getHallRoomInfoById=function(tableId){
+			var roomVo;
+			for(var $each_roomVo in this._roomList){
+				roomVo=this._roomList[$each_roomVo];
+				if(roomVo.id==tableId)return roomVo;
+			}
+			return null;
+		}
+
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
 
 
 	/**
@@ -30513,41 +30513,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Command)
 
 
-	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
-	var HistoryCommand=(function(_super){
-		function HistoryCommand(){
-			HistoryCommand.__super.call(this);
-		}
-
-		__class(HistoryCommand,'bull.modules.room.command.HistoryCommand',_super);
-		var __proto=HistoryCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
-				this.State(notification.getBody());
-			}
-		}
-
-		__proto.State=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.history_Win_info.length=0;
-			bullData.roomData.history_lost_info.length=0;
-			bullData.roomData.history_result_info.length=0;
-			for (var i=0;i < 4;i++){
-				bullData.roomData.history_Win_info=[cs.histroy_notify.win_info._1,cs.histroy_notify.win_info._2,cs.histroy_notify.win_info._3,cs.histroy_notify.win_info._4];
-				bullData.roomData.history_lost_info=[cs.histroy_notify.lose_info._1,cs.histroy_notify.lose_info._2,cs.histroy_notify.lose_info._3,cs.histroy_notify.lose_info._4];
-			};
-			var n=cs.histroy_notify.result_info.length;
-			for (var i=0;i < n;i++){
-				bullData.roomData.history_result_info.push([cs.histroy_notify.result_info._1,cs.histroy_notify.result_info._2,cs.histroy_notify.result_info._3,cs.histroy_notify.result_info._4]);
-			}
-			this.sentNotification("HistoryNotify");
-		}
-
-		return HistoryCommand;
-	})(Command)
-
-
 	//class bull.modules.perload.services.PreLoadService extends com.lightMVC.parrerns.Model
 	var PreLoadService=(function(_super){
 		function PreLoadService(proxyName){
@@ -30700,6 +30665,41 @@ var Laya=window.Laya=(function(window,document){
 		PreLoadService.NAME="perLoadService";
 		return PreLoadService;
 	})(Model)
+
+
+	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
+	var HistoryCommand=(function(_super){
+		function HistoryCommand(){
+			HistoryCommand.__super.call(this);
+		}
+
+		__class(HistoryCommand,'bull.modules.room.command.HistoryCommand',_super);
+		var __proto=HistoryCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
+				this.State(notification.getBody());
+			}
+		}
+
+		__proto.State=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.history_Win_info.length=0;
+			bullData.roomData.history_lost_info.length=0;
+			bullData.roomData.history_result_info.length=0;
+			for (var i=0;i < 4;i++){
+				bullData.roomData.history_Win_info=[cs.histroy_notify.win_info._1,cs.histroy_notify.win_info._2,cs.histroy_notify.win_info._3,cs.histroy_notify.win_info._4];
+				bullData.roomData.history_lost_info=[cs.histroy_notify.lose_info._1,cs.histroy_notify.lose_info._2,cs.histroy_notify.lose_info._3,cs.histroy_notify.lose_info._4];
+			};
+			var n=cs.histroy_notify.result_info.length;
+			for (var i=0;i < n;i++){
+				bullData.roomData.history_result_info.push([cs.histroy_notify.result_info._1,cs.histroy_notify.result_info._2,cs.histroy_notify.result_info._3,cs.histroy_notify.result_info._4]);
+			}
+			this.sentNotification("HistoryNotify");
+		}
+
+		return HistoryCommand;
+	})(Command)
 
 
 	//class bull.modules.room.command.SettleNotifyCommand extends com.lightMVC.parrerns.Command
@@ -30868,7 +30868,7 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case this.view.CarryInBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
-					this.view.SettleBoard.set_data(["jjj",99999,"111"]);
+					this.view.bankerPanel.set_data(["jjj",99999,"111",0,["player1","player2"],"[现金达到",-1]);
 					break ;
 				case this.view.PlayerListBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
@@ -47404,6 +47404,107 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
+	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
+	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
+	*
+	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.HSlider;
+		*import laya.ui.VSlider;
+		*import laya.utils.Handler;
+		*public class VSlider_Example
+		*{
+			*private var vSlider:VSlider;
+			*public function VSlider_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
+				*}
+			*private function onLoadComplete():void
+			*{
+				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+				*vSlider.min=0;//设置 vSlider 最低位置值。
+				*vSlider.max=10;//设置 vSlider 最高位置值。
+				*vSlider.value=2;//设置 vSlider 当前位置值。
+				*vSlider.tick=1;//设置 vSlider 刻度值。
+				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
+				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+				*}
+			*private function onChange(value:Number):void
+			*{
+				*trace("滑块的位置： value="+value);
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*var vSlider;
+	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
+	*function onLoadComplete(){
+		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+		*vSlider.min=0;//设置 vSlider 最低位置值。
+		*vSlider.max=10;//设置 vSlider 最高位置值。
+		*vSlider.value=2;//设置 vSlider 当前位置值。
+		*vSlider.tick=1;//设置 vSlider 刻度值。
+		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
+		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+		*}
+	*function onChange(value){
+		*console.log("滑块的位置： value="+value);
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*import HSlider=laya.ui.HSlider;
+	*import VSlider=laya.ui.VSlider;
+	*import Handler=laya.utils.Handler;
+	*class VSlider_Example {
+		*private vSlider:VSlider;
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
+			*}
+		*private onLoadComplete():void {
+			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+			*this.vSlider.min=0;//设置 vSlider 最低位置值。
+			*this.vSlider.max=10;//设置 vSlider 最高位置值。
+			*this.vSlider.value=2;//设置 vSlider 当前位置值。
+			*this.vSlider.tick=1;//设置 vSlider 刻度值。
+			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
+			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
+			*}
+		*private onChange(value:number):void {
+			*console.log("滑块的位置： value="+value);
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.Slider
+	*/
+	//class laya.ui.VSlider extends laya.ui.Slider
+	var VSlider=(function(_super){
+		function VSlider(){VSlider.__super.call(this);;
+		};
+
+		__class(VSlider,'laya.ui.VSlider',_super);
+		return VSlider;
+	})(Slider)
+
+
+	/**
 	*<code>TextInput</code> 类用于创建显示对象以显示和输入文本。
 	*
 	*@example 以下示例代码，创建了一个 <code>TextInput</code> 实例。
@@ -47716,107 +47817,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return TextInput;
 	})(Label)
-
-
-	/**
-	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
-	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
-	*
-	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.HSlider;
-		*import laya.ui.VSlider;
-		*import laya.utils.Handler;
-		*public class VSlider_Example
-		*{
-			*private var vSlider:VSlider;
-			*public function VSlider_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
-				*}
-			*private function onLoadComplete():void
-			*{
-				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-				*vSlider.min=0;//设置 vSlider 最低位置值。
-				*vSlider.max=10;//设置 vSlider 最高位置值。
-				*vSlider.value=2;//设置 vSlider 当前位置值。
-				*vSlider.tick=1;//设置 vSlider 刻度值。
-				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
-				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-				*}
-			*private function onChange(value:Number):void
-			*{
-				*trace("滑块的位置： value="+value);
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*var vSlider;
-	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
-	*function onLoadComplete(){
-		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-		*vSlider.min=0;//设置 vSlider 最低位置值。
-		*vSlider.max=10;//设置 vSlider 最高位置值。
-		*vSlider.value=2;//设置 vSlider 当前位置值。
-		*vSlider.tick=1;//设置 vSlider 刻度值。
-		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
-		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-		*}
-	*function onChange(value){
-		*console.log("滑块的位置： value="+value);
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*import HSlider=laya.ui.HSlider;
-	*import VSlider=laya.ui.VSlider;
-	*import Handler=laya.utils.Handler;
-	*class VSlider_Example {
-		*private vSlider:VSlider;
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
-			*}
-		*private onLoadComplete():void {
-			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-			*this.vSlider.min=0;//设置 vSlider 最低位置值。
-			*this.vSlider.max=10;//设置 vSlider 最高位置值。
-			*this.vSlider.value=2;//设置 vSlider 当前位置值。
-			*this.vSlider.tick=1;//设置 vSlider 刻度值。
-			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
-			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
-			*}
-		*private onChange(value:number):void {
-			*console.log("滑块的位置： value="+value);
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.Slider
-	*/
-	//class laya.ui.VSlider extends laya.ui.Slider
-	var VSlider=(function(_super){
-		function VSlider(){VSlider.__super.call(this);;
-		};
-
-		__class(VSlider,'laya.ui.VSlider',_super);
-		return VSlider;
-	})(Slider)
 
 
 	/**
@@ -48921,6 +48921,7 @@ var Laya=window.Laya=(function(window,document){
 			this.Money=null;
 			this.Banker_ani=null;
 			this.Head=null;
+			this.listHint=null;
 			BankerBoardUI.__super.call(this);
 		}
 
@@ -48928,12 +48929,13 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=BankerBoardUI.prototype;
 		__proto.createChildren=function(){
 			View.regComponent("ui.ui.room.BankerNotify_aniUI",BankerNotify_aniUI);
+			View.regComponent("ui.ui.room.BankerListHintUI",BankerListHintUI);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BankerBoardUI.uiView);
 		}
 
 		__static(BankerBoardUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"renderType":"mask","height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":50,"var":"Title","text":"吉胜游戏平台","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":427,"width":56,"var":"BankerTimes","text":"1/15次","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Button","props":{"y":9,"x":527,"var":"deapply","stateNum":"3","skin":"res/gameScene/deBanker.png"}},{"type":"Button","props":{"y":8,"x":527,"var":"bankerapply","stateNum":"3","skin":"res/gameScene/applyBanker.png"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Money","text":"999999","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"BankerNotify_ani","props":{"y":5,"x":563,"visible":false,"var":"Banker_ani","scaleY":0.3,"scaleX":0.3,"runtime":"ui.ui.room.BankerNotify_aniUI"}},{"type":"Image","props":{"y":11,"x":44,"width":60,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","height":60},"child":[{"type":"Sprite","props":{"y":-2,"x":-6,"renderType":"mask"},"child":[{"type":"Circle","props":{"y":33,"x":37,"radius":30,"lineWidth":1,"fillColor":"#ff0000"}}]}]}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"renderType":"mask","height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":50,"var":"Title","text":"吉胜游戏平台","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":427,"width":56,"var":"BankerTimes","text":"1/15次","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Button","props":{"y":9,"x":527,"var":"deapply","stateNum":"3","skin":"res/gameScene/deBanker.png"}},{"type":"Button","props":{"y":8,"x":527,"var":"bankerapply","stateNum":"3","skin":"res/gameScene/applyBanker.png"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Money","text":"999999","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"BankerNotify_ani","props":{"y":5,"x":563,"visible":false,"var":"Banker_ani","scaleY":0.3,"scaleX":0.3,"runtime":"ui.ui.room.BankerNotify_aniUI"}},{"type":"Image","props":{"y":11,"x":44,"width":60,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","height":60},"child":[{"type":"Sprite","props":{"y":-2,"x":-6,"renderType":"mask"},"child":[{"type":"Circle","props":{"y":33,"x":37,"radius":30,"lineWidth":1,"fillColor":"#ff0000"}}]}]},{"type":"BankerListHint","props":{"y":84,"x":473,"var":"listHint","runtime":"ui.ui.room.BankerListHintUI"}}]};}
 		]);
 		return BankerBoardUI;
 	})(View)
@@ -49344,6 +49346,42 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":310,"runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider","height":33},"child":[{"type":"HSlider","props":{"y":10,"x":58,"width":189,"var":"slider","skin":"assetsIn/hslider.png","showLabel":false,"height":16}},{"type":"Button","props":{"y":0,"x":0,"width":52,"var":"min_btn","skin":"assetsIn/lowest.png","height":27}},{"type":"Button","props":{"y":0,"x":251,"width":52,"var":"max_btn","skin":"assetsIn/highest.png","height":27}},{"type":"Image","props":{"y":10,"x":58,"width":188,"var":"slider_bar","skin":"assetsIn/bar_hslider.png","sizeGrid":"0,8,0,10","height":8}}]};}
 		]);
 		return AssetsInSliderUI;
+	})(View)
+
+
+	//class ui.ui.room.BankerListHintUI extends laya.ui.View
+	var BankerListHintUI=(function(_super){
+		function BankerListHintUI(){
+			this.bg=null;
+			this.BankerLimit=null;
+			this.title=null;
+			this.NextPoint=null;
+			this.NoPlayer=null;
+			this.Page=null;
+			this.player_0=null;
+			this.player_1=null;
+			this.player_2=null;
+			this.player_3=null;
+			this.player_4=null;
+			this.player_5=null;
+			this.player_6=null;
+			this.player_7=null;
+			this.player_8=null;
+			this.player_9=null;
+			BankerListHintUI.__super.call(this);
+		}
+
+		__class(BankerListHintUI,'ui.ui.room.BankerListHintUI',_super);
+		var __proto=BankerListHintUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(BankerListHintUI.uiView);
+		}
+
+		__static(BankerListHintUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":310,"height":400},"child":[{"type":"Image","props":{"y":0,"x":0,"width":310,"var":"bg","skin":"res/gameScene/特殊tips底板.png","height":392,"sizeGrid":"44,22,51,20"}},{"type":"Label","props":{"y":6,"x":82,"width":80,"text":"等待坐庄队列","scaleY":2,"scaleX":2,"height":15,"color":"#b6c325","bold":true}},{"type":"Label","props":{"y":40,"x":116,"width":57,"var":"BankerLimit","text":"9999","scaleY":1.7,"scaleX":1.7,"height":15,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":41,"x":202,"width":58,"text":" 可申请]","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":41,"x":21,"width":58,"var":"title","text":"[现金达到","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Image","props":{"y":69,"x":15,"var":"NextPoint","skin":"res/gameScene/next.png"}},{"type":"Label","props":{"y":80,"x":43,"width":141,"var":"NoPlayer","text":"暂时没有等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"center"}},{"type":"Label","props":{"y":347,"x":108,"width":58,"var":"Page","text":"1/10","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":68,"x":90,"width":127,"var":"player_0","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":93,"x":90,"width":127,"var":"player_1","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":122,"x":89,"width":127,"var":"player_2","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":150,"x":89,"width":127,"var":"player_3","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":179,"x":90,"width":127,"var":"player_4","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":206,"x":90,"width":127,"var":"player_5","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":232,"x":90,"width":127,"var":"player_6","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":260,"x":90,"width":127,"var":"player_7","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":289,"x":90,"width":127,"var":"player_8","text":"9 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":317,"x":79,"width":128,"var":"player_9","text":"10 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}}]};}
+		]);
+		return BankerListHintUI;
 	})(View)
 
 
@@ -50671,7 +50709,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(RulePanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":833,"text":"规则说明","height":612},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_rule.png"}},{"type":"Button","props":{"y":-1,"x":793,"var":"btnClose","skin":"res/alert/btn_close.png"}},{"type":"Image","props":{"y":64,"x":13,"skin":"res/alert/img_rule_1.png"}},{"type":"TextArea","props":{"y":97,"x":36,"width":781,"text":" 百人牛牛是牛牛游戏的升级版，是可以提供100人及以上玩家同时进行的简单“押注类”扑克游戏，玩家可坐庄，闲家分别与庄家比较牌型大小来定输赢。","height":45,"color":"#f3e4e4"}},{"type":"Image","props":{"y":153,"x":30,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":164,"x":16,"skin":"res/alert/img_rule_2.png"}},{"type":"TextArea","props":{"y":204,"x":23,"width":781,"text":"进入游戏：百人牛牛是随到随玩，您可以随时进入或退出游戏。 申请坐庄：玩家如果满足游戏坐庄条件，就能申请坐庄，进入申请上庄列表。 闲家下注：下注分为四个下注区，游戏开始后，除庄家外，所有玩家都可以下注。 发牌：加注时间结束后，系统将同时发出五副手牌。 结算：每位闲家赢得自己下注的金额，庄家赢闲家所输掉的下注金额，不同牌型倍数不一，结算时玩家的下注筹码乘上牌型倍数即为结算金额。","height":82,"color":"#f3efef"}},{"type":"Image","props":{"y":272,"x":19,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":287,"x":19,"skin":"res/alert/img_rule_3.png"}},{"type":"TextArea","props":{"y":349,"x":21,"width":782,"text":"无牛：五张牌中，任意三张牌点数之和都不能组成10的倍数。 牛一：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是1，赔一倍。 牛二：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是2，赔一倍。 牛三：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是3，赔一倍。 牛四：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是4，赔一倍。 牛五：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是5，赔一倍。 牛六：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是6，赔一倍。 牛七：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是7，赔二倍。 牛八：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是8，赔三倍。 牛九：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是9，赔四倍。 牛牛：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是0，赔五倍。 五小牛：五张牌中，都小于或等于五，且五张牌点数之和小于或等于10，赔十倍。 四炸：即五张牌中有四张一样的牌，此时无需有牛赔十倍。 五花牛：五张十以上的花牌（不包括十）组成的牛牛，赔十倍。 牌型大小：五花牛>四炸>五小牛>牛牛>牛九>牛八>牛七>牛六>牛五>牛四>牛三>牛二>牛一>没牛。 如牌型大小一样，则比较最大单张牌的牌点：K>Q>J>10>9>8>7>6>5>4>3>2>A。","height":157,"color":"#eedfdf"}},{"type":"TextArea","props":{"y":7,"x":408,"width":66,"text":"规则说明","scaleY":1.5,"scaleX":1.5,"height":26,"color":"#f3e9e9"}},{"type":"VScrollBar","props":{"y":53,"x":799,"width":17,"value":5,"touchScrollEnable":true,"skin":"res/gameScene/vscroll.png","height":506}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":833,"text":"规则说明","height":612},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_rule.png"}},{"type":"Button","props":{"y":-1,"x":793,"var":"btnClose","skin":"res/alert/btn_close.png"}},{"type":"Image","props":{"y":64,"x":13,"skin":"res/alert/img_rule_1.png"}},{"type":"TextArea","props":{"y":97,"x":36,"width":781,"text":" 百人牛牛是牛牛游戏的升级版，是可以提供100人及以上玩家同时进行的简单“押注类”扑克游戏，玩家可坐庄，闲家分别与庄家比较牌型大小来定输赢。","height":45,"color":"#f3e4e4"}},{"type":"Image","props":{"y":153,"x":30,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":164,"x":16,"skin":"res/alert/img_rule_2.png"}},{"type":"TextArea","props":{"y":204,"x":23,"width":781,"text":"进入游戏：百人牛牛是随到随玩，您可以随时进入或退出游戏。 申请坐庄：玩家如果满足游戏坐庄条件，就能申请坐庄，进入申请上庄列表。 闲家下注：下注分为四个下注区，游戏开始后，除庄家外，所有玩家都可以下注。 发牌：加注时间结束后，系统将同时发出五副手牌。 结算：每位闲家赢得自己下注的金额，庄家赢闲家所输掉的下注金额，不同牌型倍数不一，结算时玩家的下注筹码乘上牌型倍数即为结算金额。","height":82,"color":"#f3efef"}},{"type":"Image","props":{"y":272,"x":19,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":287,"x":19,"skin":"res/alert/img_rule_3.png"}},{"type":"TextArea","props":{"y":349,"x":21,"width":782,"text":"无牛：五张牌中，任意三张牌点数之和都不能组成10的倍数。 牛一：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是1，赔一倍。 牛二：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是2，赔一倍。 牛三：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是3，赔一倍。 牛四：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是4，赔一倍。 牛五：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是5，赔一倍。 牛六：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是6，赔一倍。 牛七：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是7，赔二倍。 牛八：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是8，赔三倍。 牛九：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是9，赔四倍。 牛牛：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是0，赔五倍。 五小牛：五张牌中，都小于或等于五，且五张牌点数之和小于或等于10，赔十倍。 四炸：即五张牌中有四张一样的牌，此时无需有牛赔十倍。 五花牛：五张十以上的花牌（不包括十）组成的牛牛，赔十倍。 牌型大小：五花牛>四炸>五小牛>牛牛>牛九>牛八>牛七>牛六>牛五>牛四>牛三>牛二>牛一>没牛。 如牌型大小一样，则比较最大单张牌的牌点：K>Q>J>10>9>8>7>6>5>4>3>2>A。","height":157,"color":"#eedfdf"}},{"type":"TextArea","props":{"y":7,"x":408,"width":66,"text":"规则说明","scaleY":1.5,"scaleX":1.5,"height":26,"color":"#f3e9e9"}}]};}
 		]);
 		return RulePanelUI;
 	})(Dialog)
@@ -50775,6 +50813,20 @@ var Laya=window.Laya=(function(window,document){
 			_super.prototype.createChildren.call(this);
 			this.bankerapply.on("click",this,this.onClick);
 			this.deapply.on("click",this,this.onClick);
+			this.bankerapply.on("mouseover",this,this.onOver);
+			this.deapply.on("mouseover",this,this.onOver);
+			this.bankerapply.on("mouseout",this,this.onOut);
+			this.deapply.on("mouseout",this,this.onOut);
+			this.listHint.visible=false;
+			this.update_list(0);
+		}
+
+		__proto.onOver=function(e){
+			this.listHint.visible=true;
+		}
+
+		__proto.onOut=function(e){
+			this.listHint.visible=false;
 		}
 
 		__proto.onClick=function(e){
@@ -50792,9 +50844,36 @@ var Laya=window.Laya=(function(window,document){
 			this.Title.text=data[0];
 			this.BankerTimes.text=data[1];
 			this.Money.text=data[2];
+			var playerCnt=data[3];
 			this.Banker_ani.visible=true;
 			this.Banker_ani.alpha=0;
 			Tween.to(this.Banker_ani,{x:212,y:150,alpha:1,scaleX:1 ,scaleY:1 },1000,Ease.cubicOut,Handler.create(this,this.ani_mid));
+			this.update_list(playerCnt,data[4],data[6]);
+			this.listHint.title.text=data[5];
+		}
+
+		__proto.update_list=function(playerCnt,playerlist,self_po){
+			if (playerCnt==0){
+				this.listHint.NoPlayer.visible=true;
+				this.listHint.NextPoint.visible=false;
+				this.listHint.Page.y=126;
+				this.listHint.bg.height=168;
+				for (var i=0;i < 10;i++){
+					this.listHint["player_"+i].text="";
+				}
+				return;
+			}
+			this.listHint.NoPlayer.visible=false;
+			this.listHint.NextPoint.visible=true;
+			for (var i=0;i < playerCnt;i++){
+				this.listHint["player_"+i].text=(i+1)+" "+playerlist[i];
+				if (i==self_po){
+					this.listHint["player_"+i].color="#b6c325";
+				}
+			}
+			if (playerCnt <=2)return;
+			this.listHint.bg.height=168+(playerCnt-2)*28;
+			this.listHint.Page.y=126+(playerCnt-2)*28;
 		}
 
 		__proto.ani_mid=function(){
@@ -51459,6 +51538,25 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -51475,25 +51573,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
 
 
 	/**

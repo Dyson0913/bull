@@ -1,7 +1,7 @@
 {
     "x":0,
     "type":"Dialog",
-    "selectedBox":17,
+    "selectedBox":1,
     "selecteID":17,
     "props":{"width":833,"text":"规则说明","sceneColor":"#000000","height":612},
     "nodeParent":-1,
@@ -238,26 +238,6 @@
                     "__InPool":false
                 }],
             "compId":15,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"VScrollBar",
-            "props":{"y":40,"x":422,"width":17,"value":5,"touchScrollEnable":true,"skin":"res/gameScene/vscroll.png","height":506},
-            "nodeParent":1,
-            "label":"VScrollBar",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":522,"x":-65},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":17,
             "child":[
                 ]
         }],

@@ -14,4 +14,5 @@
    <item name="res/gameScene/下庄结算底板.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
    <item name="res/gameScene/下庄结算横条01.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
    <item name="res/gameScene/下庄结算横条02.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
+   <item name="res/gameScene/特殊tips底板.png" type="Image" compress="0" pack="0" quality="80" props="sizeGrid=44,22,51,20" picType="0"/>
 </res>
