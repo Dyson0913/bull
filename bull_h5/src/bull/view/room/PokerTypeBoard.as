@@ -44,7 +44,7 @@ package bull.view.room
 				var de:int = i * 1500;
 				
 				this["pokerType_" + i].visible = true;
-				Tween.to(this["pokerType_" + i], { x:this["pokerType_" + i].x+200}, 1000, Ease.cubicIn,Handler.create(this,onCompleteHandler,[i,info[1]]),de);
+				Tween.to(this["pokerType_" + i], { x:this["pokerType_" + i].x+200}, 500, Ease.quintInOut,Handler.create(this,onCompleteHandler,[i,info[1]]),de);
 			}
 			
 			
