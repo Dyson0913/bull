@@ -26,28 +26,33 @@ package bull.view.room
 		{
 			super.createChildren();						
 			blurFilter = new BlurFilter();
-			blurFilter.strength = 50;
-			this.pokerType_0
+			blurFilter.strength = 5;			
 		}
 		
 		public function set_data(data:Array):void
 		{
 			
+			
+			
 			for (var i:int = 0; i < 5; i++)
 			{
 				this["pokerType_" + i].filters = [blurFilter];
+				this["pokerType_" + i]["odds"].font = "SettleWin";
 				//TODO 牌型
 				var info:Array = data[i];
-				this["pokerType_" + i]["Type"].index = 1;
-				var de:int = i * 1.5;
+				//this["pokerType_" + i]["Type"].index = 1;
+				var de:int = i * 1500;
+				
 				this["pokerType_" + i].visible = true;
-				Tween.to(this["pokerType_" + i], { x:this["pokerType_" + i]+200}, 2000, Ease.elasticIn,Handler.create(this,onCompleteHandler,[i,info[1]]),de);
-					 
+				Tween.to(this["pokerType_" + i], { x:this["pokerType_" + i].x+200}, 1000, Ease.cubicIn,Handler.create(this,onCompleteHandler,[i,info[1]]),de);
 			}
+			
+			
 		}
 		
 		private function onCompleteHandler(i:int,odd:int):void 
 		{
+			this["pokerType_" + i].filters = [];
 			this["pokerType_" + i]["multi"].scaleX = 1.5;
 			this["pokerType_" + i]["multi"].scaleY = 1.5;
 			this["pokerType_" + i]["multi"].alpha = 0;
@@ -58,7 +63,7 @@ package bull.view.room
 			this["pokerType_" + i]["odds"].scaleY = 1.5;
 			this["pokerType_" + i]["odds"].alpha = 0;
 			this["pokerType_" + i]["odds"].text = odd;
-			Tween.to(this["pokerType_" + i]["odds"], {scaleX:1,scaleY:1,alpha:1}, 500, Ease.cubicOut);						
+			Tween.to(this["pokerType_" + i]["odds"], {scaleX:1,scaleY:1,alpha:1}, 500, Ease.cubicOut,null,2);
 				
 		}
 		
