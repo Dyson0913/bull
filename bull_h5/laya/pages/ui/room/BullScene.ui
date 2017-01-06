@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":13,
+    "selecteID":34,
     "props":{"width":1400,"sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -421,6 +421,27 @@
             "child":[
                 ],
             "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"UIView",
+            "source":"ui/room/BubbleEffect.ui",
+            "props":{"y":0,"x":0,"var":"WinLostPanel","runtime":"bull.view.room.WinLostEffect"},
+            "nodeParent":1,
+            "label":"UIView(WinLostPanel)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":404,"x":420},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":34,
+            "child":[
+                ]
         }],
     "animations":[
         {

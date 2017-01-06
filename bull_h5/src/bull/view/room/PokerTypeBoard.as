@@ -81,9 +81,8 @@ package bull.view.room
 		
 		private function test():void
 		{
-			//view.PokerSet.set_data([]);
-			//view.PokerSet.play();
-			//view.PokerSet.hide();
+			//view.PokerTypePanel.set_data([[1, 7], [2, 1], [2, 10], [0, 7], [5, 0]]);
+			//view.PokerTypePanel.hide();			
 		}		
 	}
 

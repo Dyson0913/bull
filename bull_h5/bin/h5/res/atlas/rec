@@ -11,6 +11,12 @@ assetsIn\ok.png:1480924594
 assetsIn\smallPanel.png:1480924594
 assetsIn\split.png:1480924594
 assetsIn\warn2.png:1480924594
+BitmapFont\bubbleLost.fnt:1483429940
+BitmapFont\bubbleLost.png:1483429940
+BitmapFont\bubbleWin.fnt:1483430096
+BitmapFont\bubbleWin.png:1483430096
+BitmapFont\limitFont.fnt:1483430724
+BitmapFont\limitFont.png:1483430724
 BitmapFont\settlelost.fnt:1483434963
 BitmapFont\settlelost.png:1483434963
 BitmapFont\settleWin.fnt:1483428349
@@ -62,12 +68,15 @@ res\alert\img_seb_bg.png:1482212098
 res\alert\optionBtn.png:1482139063
 res\alert\setup.png:1482139102
 res\gameScene\1420X800-主界面.jpg:1483324832
+res\gameScene\1420X800-界面10.jpg:1483066325
 res\gameScene\1420X800-界面2.jpg:1483066325
 res\gameScene\5小牛.png:1483265056
 res\gameScene\applyBanker.png:1483061721
 res\gameScene\BankerBoard.png:1482212097
 res\gameScene\bg.jpg:1482212097
 res\gameScene\Btn_bg.png:1483253357
+res\gameScene\bubbleLost.png:1483429940
+res\gameScene\bubbleWin.png:1483430096
 res\gameScene\CancelBet.png:1483006744
 res\gameScene\CarryIn.png:1483005878
 res\gameScene\CarryInBtn.png:1482739077
@@ -91,6 +100,7 @@ res\gameScene\closeBtn.png:1483252225
 res\gameScene\deBanker.png:1483061760
 res\gameScene\HeadIcon.jpg:1479464515
 res\gameScene\InfoBoard.png:1482212097
+res\gameScene\limitFont.png:1483430724
 res\gameScene\next.png:1482212097
 res\gameScene\NO.1.png:1482212097
 res\gameScene\NO.2.png:1482212097
@@ -117,6 +127,7 @@ res\gameScene\展开胜负记录.png:1482212097
 res\gameScene\庄家符号.png:1482212097
 res\gameScene\方片底条.png:1482212095
 res\gameScene\未展开胜负记录.png:1482212097
+res\gameScene\本桌限红.png:1483594539
 res\gameScene\桌内玩家列表底板.png:1482212099
 res\gameScene\梅花底条.png:1482212097
 res\gameScene\牌背.png:1483327530
@@ -143,6 +154,10 @@ res\gameScene\闲家下注区1.png:1482212097
 res\gameScene\闲家下注区2.png:1482212097
 res\gameScene\闲家下注区3.png:1482212097
 res\gameScene\闲家下注区4.png:1482212097
+res\gameScene\限红底板.png:1482212099
+res\gameScene\限红进度红色.png:1482212099
+res\gameScene\限红进度绿色.png:1482212099
+res\gameScene\限红闪红.png:1482212099
 res\gameScene\黑桃底条.png:1482212097
 res\hall\1.png:1482887728
 res\hall\2.png:1482887728

@@ -60,7 +60,7 @@ package bull.modules.room.mediator
 			trace("BullScenceMediator setViewComponent")
 			view.backLobby.on(Event.CLICK, this,onReturnClick);
 			
-			
+			//結算字型
 			var settlewinFont:BitmapFont = new BitmapFont();
 			var fnt:XmlDom = Light.loader.getRes("SettleWin.fnt");
 			var fntTxt:Texture = Light.loader.getRes("res/gameScene/settleWin.png");
@@ -73,7 +73,25 @@ package bull.modules.room.mediator
 			settlelostFont.parseFont(fnt,fntTxt);
 			Text.registerBitmapFont("SettleLost", settlelostFont);
 			
+			//冒泡字型
+			var BubbleWinFont:BitmapFont = new BitmapFont();
+			fnt = Light.loader.getRes("bubbleWin.fnt");
+			fntTxt = Light.loader.getRes("res/gameScene/bubbleWin.png");
+			BubbleWinFont.parseFont(fnt,fntTxt);
+			Text.registerBitmapFont("BubbleWin", BubbleWinFont);
 			
+			var BubbleLostFont:BitmapFont = new BitmapFont();
+			fnt = Light.loader.getRes("bubbleLost.fnt");
+			fntTxt = Light.loader.getRes("res/gameScene/bubbleLost.png");
+			BubbleLostFont.parseFont(fnt,fntTxt);
+			Text.registerBitmapFont("BubbleLost", BubbleLostFont);
+			
+			//限紅字型
+			var LimitFont:BitmapFont = new BitmapFont();
+			fnt = Light.loader.getRes("LimitFont.fnt");
+			fntTxt = Light.loader.getRes("res/gameScene/limitFont.png");
+			LimitFont.parseFont(fnt,fntTxt);
+			Text.registerBitmapFont("LimitFont", LimitFont);
 			
 			view.on(ScenceManagerEvent.UI_SHOW,this, onUIShow);
 			view.on(ScenceManagerEvent.UI_HIDE,this, onUIHide);
@@ -134,13 +152,13 @@ package bull.modules.room.mediator
 				case view.CarryInBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					view.PokerTypePanel.set_data([[1, 7], [2, 1], [2, 10], [0, 7], [5, 0]]);
+					view.WinLostPanel.set_data([500, 0, -100, 200]);					
 				break;
 				
 				case view.PlayerListBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					view.PokerTypePanel.hide();
+					view.WinLostPanel.hide();
 				break;
 				
 				case view.optionBtn:

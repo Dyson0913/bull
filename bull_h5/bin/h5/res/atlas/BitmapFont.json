@@ -1,9 +1,72 @@
 {
     "frames": {
-        "settlelost.png": {
+        "bubbleLost.png": {
             "frame": {
                 "x": 0,
                 "y": 0,
+                "w": 128,
+                "h": 128,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 128,
+                "h": 128
+            },
+            "sourceSize": {
+                "w": 128,
+                "h": 128
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "bubbleWin.png": {
+            "frame": {
+                "x": 0,
+                "y": 130,
+                "w": 128,
+                "h": 128,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 128,
+                "h": 128
+            },
+            "sourceSize": {
+                "w": 128,
+                "h": 128
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "limitFont.png": {
+            "frame": {
+                "x": 0,
+                "y": 260,
+                "w": 64,
+                "h": 64,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "settlelost.png": {
+            "frame": {
+                "x": 66,
+                "y": 260,
                 "w": 256,
                 "h": 256,
                 "idx": 0
@@ -23,8 +86,8 @@
         },
         "settleWin.png": {
             "frame": {
-                "x": 0,
-                "y": 258,
+                "x": 130,
+                "y": 0,
                 "w": 256,
                 "h": 256,
                 "idx": 0

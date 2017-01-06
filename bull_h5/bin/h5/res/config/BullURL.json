@@ -1,8 +1,8 @@
 {
     "version": "0.0.1",
     "tipLoading": { "url": "res/tipLoading/loading.jpg"},
-    "tipText": { "url": "res/config/TipText.json", "type":"json"},
-    "smallLoading": { "url": "res/atlas/smallLoading.json","type":"atlas"},    
+    "tipText": { "url": "res/config/TipText.json", "type":"json"},    
+    "smallLoading": { "url": "res/atlas/smallLoading.json","type":"atlas"},
     "comp": { "url": "res/atlas/comp.json","type":"atlas"},
     "msg_proto": { "url": "res/config/msg_cs.proto"},
     "conf_proto": { "url": "res/config/conf_game.proto"},
@@ -11,6 +11,9 @@
     "share": { "url": "res/atlas/share.json","type":"atlas"},
     "SettleWin.fnt": { "url": "BitmapFont/settleWin.fnt", "type":"xml"},
     "Settlelost.fnt": { "url": "BitmapFont/settlelost.fnt", "type":"xml"},
+    "bubbleWin.fnt": { "url": "BitmapFont/bubbleWin.fnt", "type":"xml"},
+    "bubbleLost.fnt": { "url": "BitmapFont/bubbleLost.fnt", "type":"xml"},
+    "LimitFont.fnt": { "url": "BitmapFont/limitFont.fnt", "type":"xml"},
     "GameSprite": { "url": "res/atlas/gameScene.json","type":"atlas"},    
     "error_code": { "url": "res/config/error_code.json", "type":"json"},
     "assetsIn": { "url": "res/atlas/assetsIn.json", "type":"atlas"},
@@ -30,7 +33,7 @@
             "assets":["hall","assetsIn","share"]
         },
         "room":{
-            "assets":["GameSprite","assetsIn","alert","SettleWin.fnt","Settlelost.fnt"]
+            "assets":["GameSprite","assetsIn","alert","SettleWin.fnt","Settlelost.fnt","bubbleWin.fnt","bubbleLost.fnt","LimitFont.fnt"]
         },
         "config":{
             "assets":["language","error_code","msg_proto","conf_proto"]

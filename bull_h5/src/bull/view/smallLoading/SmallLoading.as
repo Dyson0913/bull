@@ -10,17 +10,17 @@ package bull.view.smallLoading
 		{
 			super();
 			//anim.visible = false;
-			ani1.play();
+			//ani1.play();
 		}
 		
 		public function showme(root:Sprite):void{
-			root.addChild(this);
-			ani1.play();
+			//root.addChild(this);
+			//ani1.play();
 		}
 		
 		public function hideme():void{
 			if(this.parent) this.parent.removeChild(this);
-			ani1.stop();
+			//ani1.stop();
 		}
 	}
 }
