@@ -62,7 +62,7 @@ package bull.modules.common.mediator
 				case BullNotification.SCENCE_CHANGE:
 					var curScene:String = notification.getBody() as String;
 					trace("MusicSetMediator 切换到游戏场景:"+curScene);
-					if( curScene == CarNotification.Scene_Game || curScene == CarNotification.Scene_Hall )
+					if( curScene == BullNotification.Scene_Game || curScene == BullNotification.Scene_Hall )
 						onClose();
 					break;
 			}

@@ -102,9 +102,9 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":17,"x":101,"width":143,"var":"Lost_amount","text":"-¥1234.56","height":20,"font":"limitFont","align":"center"},
+            "props":{"y":17,"x":101,"width":143,"var":"amount","text":"-¥1234.56","height":20,"font":"limitFont","align":"center"},
             "nodeParent":1,
-            "label":"Label(Lost_amount)",
+            "label":"Label(amount)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,

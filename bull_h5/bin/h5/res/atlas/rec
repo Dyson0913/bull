@@ -21,6 +21,8 @@ BitmapFont\settlelost.fnt:1483434963
 BitmapFont\settlelost.png:1483434963
 BitmapFont\settleWin.fnt:1483428349
 BitmapFont\settleWin.png:1483428349
+BitmapFont\tableFont.fnt:1483687969
+BitmapFont\tableFont.png:1483687969
 comp\bg.png:1480414350
 comp\blank.png:1480414349
 comp\btn_close.png:1480414350
@@ -110,6 +112,7 @@ res\gameScene\PlayerListCloseBtn.png:1483251790
 res\gameScene\SameBetBtn.png:1483076496
 res\gameScene\settlelost.png:1483434963
 res\gameScene\settleWin.png:1483428349
+res\gameScene\tableFont.png:1483687969
 res\gameScene\vscroll$bar.png:1482212098
 res\gameScene\vscroll$down.png:1483438233
 res\gameScene\vscroll$up.png:1483438146
@@ -122,6 +125,7 @@ res\gameScene\人民币￥底板.png:1482212095
 res\gameScene\倒计时01.png:1483327345
 res\gameScene\倒计时02.png:1483327345
 res\gameScene\倒计时03.png:1483327345
+res\gameScene\前三名.png:1482212097
 res\gameScene\吉胜游戏平台.png:1482212097
 res\gameScene\展开胜负记录.png:1482212097
 res\gameScene\庄家符号.png:1482212097

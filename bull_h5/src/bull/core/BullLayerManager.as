@@ -6,8 +6,8 @@ package bull.core
 	public class BullLayerManager extends LayerManager
 	{
 		private static  var _singleton:Boolean=true;
-		private static  var _instance:CarLayerManager;
-		public function CarLayerManager() {
+		private static  var _instance:BullLayerManager;
+		public function BullLayerManager() {
 			if (_singleton) {
 				throw new Error("只能用getInstance()来获取实例");
 			}

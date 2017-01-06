@@ -24,10 +24,10 @@ package bull.modules.room.mediator
 	import light.car.modules.common.model.data.CarData;
 	import light.car.modules.common.model.data.MoneyType;
 	import bull.modules.common.model.data.RoomData;
-	import light.car.modules.common.model.data.UserInfoData;
+	import bull.modules.common.model.data.UserInfoData;
 	import light.car.modules.common.model.param.BetParam;
 	import bull.modules.perload.services.PreLoadService;
-	import light.car.modules.room.services.RoomSocketService;
+	import bull.modules.room.services.RoomSocketService;
 	import light.car.utils.AlertTextUtil;
 	import light.car.view.alert.AlertCancelPanel;
 	import bull.view.room.BullScene;
@@ -93,6 +93,13 @@ package bull.modules.room.mediator
 			LimitFont.parseFont(fnt,fntTxt);
 			Text.registerBitmapFont("LimitFont", LimitFont);
 			
+			//下注字型
+			var mybetFont:BitmapFont = new BitmapFont();
+			fnt = Light.loader.getRes("mybetFont.fnt");
+			fntTxt = Light.loader.getRes("res/gameScene/tableFont.png");
+			mybetFont.parseFont(fnt,fntTxt);
+			Text.registerBitmapFont("mybetFont", mybetFont);
+			
 			view.on(ScenceManagerEvent.UI_SHOW,this, onUIShow);
 			view.on(ScenceManagerEvent.UI_HIDE,this, onUIHide);
 			//view.on(CarSceneEvent.START_BET, this, onBetHandler);
@@ -105,10 +112,10 @@ package bull.modules.room.mediator
 			view.btn_display(false);			
 			
 			//TEST CMD			
-			if ( view["TestPanel"] != undefined)
-			{				
-				view.TestPanel.on(LightEvent.ITEM_CLICK, this, ontest);
-			}
+			//if ( view["TestPanel"] != undefined)
+			//{				
+				//view.TestPanel.on(LightEvent.ITEM_CLICK, this, ontest);
+			//}
 			
 			//notify
 			addNotifiction(BullNotification.STATE_CHANGE);
@@ -152,13 +159,13 @@ package bull.modules.room.mediator
 				case view.CarryInBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					view.WinLostPanel.set_data([500, 0, -100, 200]);					
+					view.BetZoneBoard.set_data([200]);					
 				break;
 				
 				case view.PlayerListBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					view.WinLostPanel.hide();
+					view.BetZoneBoard.hide();
 				break;
 				
 				case view.optionBtn:
@@ -261,23 +268,23 @@ package bull.modules.room.mediator
 		
 		private function onCarryInClick():void
 		{
-			sentNotification(CarNotification.GET_USER_BALANCE);
+			sentNotification(BullNotification.GET_USER_BALANCE);
 		}
 		
-		private function onCZClick(e:Event):void{
-			if(roomData.chongzhi) return;
-			sentNotification(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_REQ.toString());
-		}
+		//private function onCZClick(e:Event):void{
+			//if(roomData.chongzhi) return;
+			//sentNotification(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_REQ.toString());
+		//}
+		//
+		//private function onXTClick(e:Event):void{
+			//if(roomData.xutou) return;
+			//sentNotification(ENCSType.CS_TYPE_PLAYER_SAVED_BET_REQ.toString());
+		//}
 		
-		private function onXTClick(e:Event):void{
-			if(roomData.xutou) return;
-			sentNotification(ENCSType.CS_TYPE_PLAYER_SAVED_BET_REQ.toString());
-		}
 		
-		
-		private function onBetHandler(param:BetParam):void{
-			sentNotification(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),param);
-		}
+		//private function onBetHandler(param:BetParam):void{
+			//sentNotification(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),param);
+		//}
 		
 		private function onUIShow():void {
 			

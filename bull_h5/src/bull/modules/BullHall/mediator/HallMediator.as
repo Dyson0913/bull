@@ -15,8 +15,7 @@ package bull.modules.BullHall.mediator
 	import bull.modules.common.mediator.MusicSetMediator;
 	import bull.modules.common.mediator.RuleMediator;
 	import bull.modules.common.model.data.HallData;
-	import bull.modules.common.model.data.UserInfoData;
-	import bull.modules.common.model.data.vo.HallRoomVO;	
+	import bull.modules.common.model.data.UserInfoData;	
 	import bull.modules.BullHall.service.HallSocketService;
 	import bull.view.hall.Hall;		
 	
@@ -180,14 +179,14 @@ package bull.modules.BullHall.mediator
 			trace("onListItemClick",data.id);
 			currentId = data.id;
 //			if(!roomSocketService) roomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
-			sentNotification(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString());
+			//sentNotification(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString());
 		}
 		
 		public function enterRoom():void{
-			var vo:HallRoomVO = hallData.getHallRoomInfoById(currentId);
-			userInfoData.moneyType = vo.chipsType;
-			sentNotification(CarNotification.ENTER_ROOM, vo);
-			currentId = -1;
+			//var vo:HallRoomVO = hallData.getHallRoomInfoById(currentId);
+			//userInfoData.moneyType = vo.chipsType;
+			//sentNotification(CarNotification.ENTER_ROOM, vo);
+			//currentId = -1;
 		}
 		
 		private var timer:Timer;

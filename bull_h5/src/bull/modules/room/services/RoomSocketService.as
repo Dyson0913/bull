@@ -17,7 +17,7 @@ package bull.modules.room.services
 	import light.car.modules.common.model.data.ConstData;
 	import bull.modules.common.model.data.HallData;
 	
-	import light.car.view.alert.AlertPanel;
+	import bull.view.alert.AlertPanel;
 	
 	import msg.CS;
 	import msg.ENCSType;
@@ -100,7 +100,7 @@ package bull.modules.room.services
 		private function alertClose():void
 		{
 			// TODO Auto Generated method stub
-			sentNotification(CarNotification.ExitRoomEvent);
+			sentNotification(BullNotification.ExitRoomEvent);
 		}
 		
 		private function onMessageReveived(e:SocketConnectEvent):void{

@@ -3,8 +3,7 @@ package bull.modules.common.model.data
 	import com.iflash.events.EventDispatcher;
 	import com.IProtobuf.Long;
 	import com.lightUI.events.LightEvent;
-	
-	import bull.modules.common.model.data.vo.HallRoomVO;	
+		
 	
 	[Event(name="change", type="com.lightUI.events.LightEvent")]
 	public class HallData extends EventDispatcher
@@ -22,15 +21,7 @@ package bull.modules.common.model.data
 		public var Token:Long;
 		public var Cash_Type:int;
 		
-		public var ViewIn:String = "Lobby";
-		
-		
-		public function getHallRoomInfoById(tableId:int):HallRoomVO{
-			for each(var roomVo:HallRoomVO in _roomList){
-				if(roomVo.id == tableId) return roomVo;
-			}
-			return null;
-		}
+		public var ViewIn:String = "Lobby";	
 		
 		public function HallData()
 		{

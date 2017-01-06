@@ -1,5 +1,6 @@
 package bull.modules.common.model.data
 {
+	import com.IProtobuf.Long;
 	import laya.events.EventDispatcher;
 	
 	public class Data extends EventDispatcher
@@ -14,7 +15,7 @@ package bull.modules.common.model.data
 		//public var carConfigData:CarConfigData;
 		
 		public var uid:Number;
-		public var token:String;
+		public var token:Long;
 		
 		public var truthLogin:Boolean;
 		public var hallHeartBeat:Boolean;

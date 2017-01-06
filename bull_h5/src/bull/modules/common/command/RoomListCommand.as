@@ -11,8 +11,7 @@ package bull.modules.common.command
 	import bull.view.alert.AlertPanel;
 	
 	import bull.modules.common.model.BullProtoModel;
-	import bull.modules.common.model.data.Data;
-	import bull.modules.common.model.data.vo.HallRoomVO;
+	import bull.modules.common.model.data.Data;	
 	import bull.modules.BullHall.service.HallSocketService;
 	
 	import msg.CS;

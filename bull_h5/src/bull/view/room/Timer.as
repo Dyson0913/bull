@@ -39,7 +39,7 @@ package bull.view.room
 			this.visible = true;
 			_time = data[0];
 			LeftTime.text = _time.toString();			
-			Laya.timer.loop(1000, this, timerHandler);			
+			Laya.timer.loop(1000, this, timerHandler);
 			
 		}
 		

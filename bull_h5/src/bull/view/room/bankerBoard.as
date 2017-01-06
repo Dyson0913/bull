@@ -35,7 +35,7 @@ package bull.view.room
 			deapply.on(Event.MOUSE_OUT, this, onOut);
 			
 			listHint.visible = false;
-			update_list(0);
+			update_list(0,[],-1);
 		}
 		
 		private function onOver(e:Event):void

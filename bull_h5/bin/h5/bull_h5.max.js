@@ -951,6 +951,7 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.Scene_Game="Scene_Game";
 		BullNotification.RoomSocketClose="RoomSocketClose";
 		BullNotification.ExitRoomEvent="ExitRoomEvent";
+		BullNotification.Leave_Game="car.Leave_Game";
 		BullNotification.TestOrder="TestOrder";
 		return BullNotification;
 	})()
@@ -1152,63 +1153,6 @@ var Laya=window.Laya=(function(window,document){
 
 		ConfigData.NAME="ConfigData";
 		return ConfigData;
-	})()
-
-
-	//class bull.modules.common.model.data.vo.HallRoomVO
-	var HallRoomVO=(function(){
-		function HallRoomVO(id,number){
-			this.id=0;
-			this.name=null;
-			this.curPlayer=0;
-			this.maxPlayer=0;
-			this.chipsType=0;
-			this.betMin=0;
-			this.betMax=0;
-			this.tableState=0;
-			this.rank=0;
-			this.tableType=0;
-			this.ip=null;
-			this.port=0;
-			(id===void 0)&& (id=0);
-			(number===void 0)&& (number=0);
-			this.id=id;
-			this.curPlayer=number;
-		}
-
-		__class(HallRoomVO,'bull.modules.common.model.data.vo.HallRoomVO');
-		var __proto=HallRoomVO.prototype;
-		__proto.parse=function(roominfo){
-			var config=roominfo.config;
-			this.id=roominfo.table_id;
-			this.name=roominfo.table_name;
-			this.chipsType=roominfo.chips_type;
-			this.curPlayer=roominfo.cur_player;
-			this.maxPlayer=roominfo.max_player;
-			this.betMin=roominfo.min_bet.toNumber();
-			this.betMax=roominfo.max_bet.toNumber();
-			this.tableType=roominfo.table_type;
-			this.tableState=roominfo.table_state;
-			for (var i=0;i < roominfo.server_addr.length;i++){
-				var netAddress=roominfo.server_addr[i];
-				if(netAddress.platform==conf.ENPlatformType.PLATFORM_TYPE_MOBILE){
-					this.ip=netAddress.ip;
-					this.port=netAddress.port;
-				}
-			}
-		}
-
-		//TODO:这里需要配置
-		__getset(0,__proto,'state',function(){
-			if(this.curPlayer < 50)return 1;
-			else if(this.curPlayer >=50 && this.curPlayer <100)return 2;
-			else return 3;
-		});
-
-		HallRoomVO.FREE=1;
-		HallRoomVO.BUSY=2;
-		HallRoomVO.FULL=3;
-		return HallRoomVO;
 	})()
 
 
@@ -20948,16 +20892,12 @@ var Laya=window.Laya=(function(window,document){
 		function BullLayerManager(){
 			BullLayerManager.__super.call(this);
 			this.loading=new LayerMask();
-		}
-
-		__class(BullLayerManager,'bull.core.BullLayerManager',_super);
-		var __proto=BullLayerManager.prototype;
-		__proto.CarLayerManager=function(){
 			if (BullLayerManager._singleton){
 				throw new Error("只能用getInstance()来获取实例");
 			}
 		}
 
+		__class(BullLayerManager,'bull.core.BullLayerManager',_super);
 		BullLayerManager.getInstance=function(){
 			if (!BullLayerManager._instance){
 				BullLayerManager._singleton=false;
@@ -28843,7 +28783,7 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand(ENCSType.CS_TYPE_LOGIN_RSP.toString(),LoginHallCommand);
 			this.registerCommand(BullNotification.HALL_HEART_BEAT.toString(),HallHeartBeatCommand);
 			this.registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),HallHeartBeatCommand);
-			this.registerCommand(BullNotification.Leave_Game,LoginHallCommand);
+			this.registerCommand("car.Leave_Game",LoginHallCommand);
 			this.registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString(),RoomListCommand);
 			this.registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_RSP.toString(),RoomListCommand);
 			this.registerCommand(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString(),TryJoinRoomCommand);
@@ -28863,7 +28803,6 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(),HistoryCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(),UserNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(),UserNotifyCommand);
-			this.registerCommand(ENCSType.CS_TYPE_BET_NOTIFY.toString(),/*no*/this.BetNotifyommand);
 			this.registerCommand(ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString(),DealCardNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString(),BankerNotifyCommand);
@@ -29031,50 +28970,16 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.userBalanceCallback=function(param){
-			console.log("----userBalanceCallback",+param)
 			var hallData=this.getSingleton("hallData");
 			this.sentNotification("Close_BGM");
 			this.sentNotification("enterRoom");
 			return;
-			if(hallData.roomId > 0){
-				var carData=this.getSingleton(light.car.modules.common.model.data.CarData.NAME);
-				var roomData=this.getSingleton(light.car.modules.common.model.data.RoomData.NAME);
-				var roomVO=hallData.getHallRoomInfoById(hallData.roomId);
-				if(!roomVO)return;
-				var carryInParam=new light.car.modules.common.model.param.CarryInParam(param);
-				var userInfo=this.getSingleton(light.car.modules.common.model.data.UserInfoData.NAME);
-				roomData.chipsType=roomVO.chipsType;
-				carryInParam.name=roomVO.name;
-				carryInParam.betMin=light.car.utils.MoneyUtils.getCashChange(roomVO.chipsType,roomVO.betMin);
-				carryInParam.isFirst=this._firstEnter;
-				carryInParam.carrayType=roomVO.chipsType==1 ? 1 :roomData.nm ? 2:0;
-				if(carData.states==light.car.modules.common.model.data.ConstData.HALL_STATE){
-					if(this.checkInByBalanceEnough(carryInParam)){
-						this.sentNotification(/*no*/this.CarNotification.ENTER_ROOM,roomVO);
-						}else{
-						Alert.show("抱歉，你的余额低于最低带入金。","",light.car.view.alert.AlertCancelPanel,null,Handler.create(this,this.gotoRecharge));
-					}
-					}else{
-					if(!this.checkInByBalanceEnough(carryInParam)){
-						Alert.show("抱歉，你的余额低于最低带入金。","",light.car.view.alert.AlertCancelPanel,null,Handler.create(this,this.gotoRecharge));
-						}else{
-						this.sentNotification(/*no*/this.CarNotification.SHOW_CARRY_IN_PANEL,carryInParam);
-					}
-				}
-			}
 		}
 
+		//}
 		__proto.gotoRecharge=function(data,flg){
 			if(flg=="ok_btn"){
 			}else{}
-		}
-
-		//关闭提示
-		__proto.checkInByBalanceEnough=function(param){
-			if((param.carrayType==1 && param.coin < param.betMin)|| (param.carrayType==2 && (param.cash+param.nm)< param.betMin)|| (param.carrayType==0 && param.cash < param.betMin)){
-				return false;
-			}
-			return true;
 		}
 
 		return UserBalanceCommand;
@@ -29201,16 +29106,10 @@ var Laya=window.Laya=(function(window,document){
 		__proto.onListItemClick=function(data){
 			console.log("onListItemClick",data.id);
 			this.currentId=data.id;
-			this.sentNotification(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString());
 		}
 
-		__proto.enterRoom=function(){
-			var vo=this.hallData.getHallRoomInfoById(this.currentId);
-			this.userInfoData.moneyType=vo.chipsType;
-			this.sentNotification(/*no*/this.CarNotification.ENTER_ROOM,vo);
-			this.currentId=-1;
-		}
-
+		//sentNotification(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString());
+		__proto.enterRoom=function(){}
 		__proto.sendHeartBeat=function(){
 			this.startHeartCount();
 			this.sendMsg();
@@ -29256,47 +29155,6 @@ var Laya=window.Laya=(function(window,document){
 		HallMediator.NAME="hallMediator";
 		return HallMediator;
 	})(Mediator)
-
-
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			if(param.uid){
-				bullData.uid=param.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if(param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
 
 
 	/**
@@ -29404,6 +29262,46 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
+
+
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			if(param.uid){
+				bullData.uid=param.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -29546,15 +29444,13 @@ var Laya=window.Laya=(function(window,document){
 				case ENCSType.CS_TYPE_LOGIN_RSP.toString():
 					this.hallLoginRspHandler(noti.getBody());
 					break ;
-				case BullNotification.Leave_Game:
+				case "car.Leave_Game":
 					this.returnHallReq();
-					break ;
-				case ENCSType.CS_TYPE_RETURN_HALL_RSP.toString():
-					this.returnHallRsp(noti.getBody());
 					break ;
 				}
 		}
 
+		//break;
 		__proto.hallLoginReqHandler=function(){
 			var bullData=this.getSingleton("Data");
 			bullData.truthLogin=true;
@@ -29563,7 +29459,7 @@ var Laya=window.Laya=(function(window,document){
 			out.msg_type=8;
 			out.login_req=proto.msg_proto.getLoginReq();
 			out.login_req.uid=Long.fromNumber(bullData.uid);
-			out.login_req.verify_sig=bullData.token;
+			out.login_req.verify_sig=String(bullData.token);
 			var socket=this.getModel("hallSocketService");
 			socket.sentMsg(out);
 		}
@@ -29583,28 +29479,10 @@ var Laya=window.Laya=(function(window,document){
 			var bullData=this.getSingleton("Data");
 			bullData.hallData.ViewIn="Lobby";
 			return;
-			var proto=this.getModel(/*no*/this.CarProtoModel.NAME);
-			var out=proto.msg_proto.getCS();
-			out.msg_type=ENCSType.CS_TYPE_RETURN_HALL_REQ;
-			var req=proto.msg_proto.getReturnHallReq();
-			out.return_hall_req=req;
-			var socket=this.getModel("hallSocketService");
-			socket.sentMsg(out);
 		}
 
-		__proto.returnHallRsp=function(cs){
-			var rsp=cs.return_hall_rsp;
-			switch(rsp.result){
-				case 0:
-					console.log("returnHallRsp rsp:",rsp);
-					this.sentNotification(ENCSType.CS_TYPE_GET_TABLE_LIST_REQ.toString());
-					break ;
-				default :
-					console.log("returnHallRsp ........... errorCode:"+rsp.result);
-					break ;
-				}
-		}
-
+		//socket.sentMsg(out);
+		__proto.returnHallRsp=function(cs){}
 		return LoginHallCommand;
 	})(Command)
 
@@ -29635,7 +29513,7 @@ var Laya=window.Laya=(function(window,document){
 			out.msg_type=8;
 			out.login_req=proto.msg_proto.getLoginReq();
 			out.login_req.uid=Long.fromNumber(bullData.uid);
-			out.login_req.verify_sig=bullData.token;
+			out.login_req.verify_sig=String(bullData.token);
 			var socket=this.getModel("roomSocketService");
 			socket.sentMsg(out);
 		}
@@ -29862,10 +29740,7 @@ var Laya=window.Laya=(function(window,document){
 			}
 		}
 
-		__proto.alertPanelShow=function(param){
-			this.getAlertPanel().show(true);
-		}
-
+		//}
 		__proto.onClose=function(e){
 			this.getAlertPanel().close();
 		}
@@ -29878,7 +29753,9 @@ var Laya=window.Laya=(function(window,document){
 	//class bull.modules.common.mediator.AssetInMediator extends com.lightMVC.parrerns.Mediator
 	var AssetInMediator=(function(_super){
 		function AssetInMediator(mediatorName,viewComponent){
+			this.roomSocketService=null;
 			this.first=false;
+			this.perLoadService=null;
 			this.timerId=0;
 			this.timer=new Timer2();
 			(mediatorName===void 0)&& (mediatorName="");
@@ -29915,16 +29792,9 @@ var Laya=window.Laya=(function(window,document){
 			}
 		}
 
-		__proto.carryInPanelShow=function(param){
-			this.first=param.isFirst;
-			if(this.first){
-				this.timerId=this.timer.setTimeout(this,this.countCarryInTime,30000,null);
-			}
-			this.getAssetsPanel().assetsIn(param.betMin,param.betMax,param.carrayType,param.betMin,param.cash,param.coin,param.nm,0.01);
-		}
-
+		//}
 		__proto.countCarryInTime=function(){
-			Alert.show("带入超时","",light.car.view.alert.AlertPanel,null,Handler.create(this,this.onCancelCarryIn),null,3000);
+			Alert.show("带入超时","",AlertPanel,null,Handler.create(this,this.onCancelCarryIn),null,3000);
 		}
 
 		__proto.onTimeOver=function(data,flg){
@@ -29933,8 +29803,8 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.onCancelCarryIn=function(e){
 			if(this.first){
-				/*no*/this.roomSocketService.close();
-				/*no*/this.perLoadService.loadHall();
+				this.roomSocketService.close();
+				this.perLoadService.loadHall();
 			}
 			this.timer.clearTimeout(this.timerId);
 			this.getAssetsPanel().close();
@@ -30047,15 +29917,6 @@ var Laya=window.Laya=(function(window,document){
 
 		__class(HallData,'bull.modules.common.model.data.HallData',_super);
 		var __proto=HallData.prototype;
-		__proto.getHallRoomInfoById=function(tableId){
-			var roomVo;
-			for(var $each_roomVo in this._roomList){
-				roomVo=this._roomList[$each_roomVo];
-				if(roomVo.id==tableId)return roomVo;
-			}
-			return null;
-		}
-
 		__getset(0,__proto,'roomList',function(){
 			return this._roomList;
 			},function(value){
@@ -30071,359 +29932,6 @@ var Laya=window.Laya=(function(window,document){
 
 		HallData.NAME="hallData";
 		return HallData;
-	})(EventDispatcher)
-
-
-	//class bull.modules.common.model.data.RoomData extends com.iflash.events.EventDispatcher
-	var RoomData=(function(_super){
-		function RoomData(){
-			this.id=0;
-			this.name="";
-			this.State=0;
-			this.RoundID=0;
-			this.LeftTime=0;
-			this.history_Win_info=null;
-			this.history_lost_info=null;
-			this.history_result_info=null;
-			this.player_num=0;
-			this.playerList=null;
-			this.card_info=null;
-			this.settle_banker_id=null;
-			this.settle_win_money=null;
-			this.settle_hand_money=null;
-			this.settle_User_info=null;
-			this.banker_num=0;
-			this.bankerlist=null;
-			this.newBaner_info=null;
-			this.Banker_calcu_info=null;
-			this._carLocation=0;
-			this._lotteruResult=0;
-			this._status=0;
-			this._otherUserBets=[0,0,0,0,0,0,0,0];
-			this._selfBets=[0,0,0,0,0,0,0,0];
-			this.cash=false;
-			this.coin=false;
-			this.nm=false;
-			this.betTime=0;
-			this.confirmTime=0;
-			this.countTime=0;
-			this._playerBalance=null;
-			this._playerSavedBet=[];
-			this._hitHistoryAry=[];
-			this._hitStatisticsAry=[0,0,0,0,0,0,0,0];
-			this._roundInfo=null;
-			this._roundResult=null;
-			this._chipsType=0;
-			this.dataSelectClips=null;
-			this.login=false;
-			this.xutou=false;
-			this.chongzhi=false;
-			RoomData.__super.call(this);
-			this.chipTool=new BetSplit();
-		}
-
-		__class(RoomData,'bull.modules.common.model.data.RoomData',_super);
-		var __proto=RoomData.prototype;
-		__proto.transformChipVoList=function(ary,moneyType){
-			var chips=[];
-			var chipVO;
-			for(var i=0;i<ary.length;i++){
-				var bet=ary[i].amount;
-				if(moneyType==/*no*/this.MoneyType.CASH)bet=bet / 100;
-				var chip=this.chipTool.getChip(bet);
-				if(!chip){
-					var temp=this.chipTool.splitBet(bet);
-					for (var j=0;j < temp.chips.length;j++){
-						chip=temp.chips[j];
-						chipVO=new light.car.modules.common.model.data.vo.ChipVO(true,ary[i].item_id,chip.value);
-						chips.push(chipVO);
-					}
-					}else{
-					chipVO=new light.car.modules.common.model.data.vo.ChipVO(true,ary[i].item_id,bet);
-					chips.push(chipVO);
-				}
-			}
-			return chips;
-		}
-
-		/**
-		*自己撤销下注
-		*
-		*/
-		__proto.cancelBetSelf=function(userInfo){
-			for (var i=0;i < this._selfBets.length;i++){
-				userInfo.balance+=Number(this._selfBets[i]);
-				this._selfBets[i]=0;
-			}
-			this.event("cancelBetSelf");
-		}
-
-		/**
-		*看自己是否已经下注
-		*@return
-		*
-		*/
-		__proto.isSelfBet=function(){
-			for (var i=0;i < this._selfBets.length;i++){
-				if(this._selfBets[i] > 0)return true;
-			}
-			return false;
-		}
-
-		__proto.getBets=function(){
-			var re=[];
-			for (var i=0;i < 8;i++){
-				re.push(this._otherUserBets[i]+this._selfBets[i]);
-			}
-			return re;
-		}
-
-		__proto.getChipByID=function(id){
-			if(id >=this.chips.length)return-1;
-			return this.chips[id];
-		}
-
-		__proto.clear=function(){
-			this._selfBets=[0,0,0,0,0,0,0,0,0];
-			this._otherUserBets=[0,0,0,0,0,0,0,0,0];
-			this.xutou=false;
-		}
-
-		__proto.startBet=function(roundID){
-			this.clear();
-			/*no*/this.status=/*no*/this.RoomStatusType.START_BET;
-			this.dispatchEvent(new Event(/*no*/this.START_BET));
-		}
-
-		__proto.endBet=function(){
-			/*no*/this.status=/*no*/this.RoomStatusType.END_BET;
-			this.dispatchEvent(new Event(/*no*/this.END_BET));
-		}
-
-		__proto.addBetSelf=function(id,amount){
-			var selfBet=Number(this._selfBets[id]);
-			selfBet+=Number(amount);
-			this._selfBets[id]=selfBet;
-		}
-
-		__proto.addBetsSelf=function(bets){
-			var bet;
-			for (var i=0;i < bets.length;i++){
-				bet=bets[i];
-				this.addBetSelf(bet.type,bet.value);
-			}
-			this.event("addBetSelf",[bets]);
-		}
-
-		__proto.getBetSelf=function(id){
-			return this._selfBets[id];
-		}
-
-		__proto.removeBetSelf=function(id,amount){
-			this._selfBets[id]-=amount;
-		}
-
-		__proto.deldelAllSelfBet=function(){
-			var sun=0;
-			var l=this._selfBets.length;
-			for (var i=0;i < l;i++){
-				if(this._selfBets[i] > 0){
-					sun+=this._selfBets[i];
-					this.removeBetSelf(i,this._selfBets[i]);
-				}
-			}
-			return sun;
-		}
-
-		__proto.upDataBets=function(values){
-			var betInfo;
-			for (var i=0;i < values.length;i++){
-				betInfo=values[i];
-				var bet=betInfo.amount.toNumber();
-				bet=this.chipsType==/*no*/this.MoneyType.CASH ? bet / 100 :bet;
-				var otherBets=bet-this.getBetSelf(betInfo.item_id);
-				if(otherBets >=0){
-					if(otherBets > this._otherUserBets[betInfo.item_id]){
-						console.log("增加筹码",otherBets-this._otherUserBets[betInfo.item_id]);
-						var chip=new light.car.modules.common.model.data.vo.ChipVO(false,betInfo.item_id,otherBets-this._otherUserBets[betInfo.item_id]);
-						this.event("addBet",chip);
-						}else if(otherBets < this._otherUserBets[betInfo.item_id]){
-						console.log("减少筹码",this._otherUserBets[betInfo.item_id]-otherBets);
-						var remove_chip=new light.car.modules.common.model.data.vo.ChipVO(false,betInfo.item_id,this._otherUserBets[betInfo.item_id]-otherBets);
-						this.event("removeBet",remove_chip);
-					}
-					this._otherUserBets[betInfo.item_id]=otherBets;
-				}
-			}
-		}
-
-		__proto.toString=function(){
-			return "{name:"+this.id+",status:"+/*no*/this.status+",leftTime:"+/*no*/this.leftTime+"}";
-		}
-
-		/**
-		*初始化选择筹码配置
-		*/
-		__proto.initClipConfig=function(){
-			var objData=Light.loader.getRes("clipConfig");
-			if(objData==null)
-				return;
-			this.dataSelectClips=[];
-			var objItem;
-			var $each_objItem;
-			for($each_objItem in objData){
-				objItem=objData[$each_objItem];
-				var dataSelectClip=new light.car.modules.common.model.data.vo.ClipConfigVo();
-				dataSelectClip.type=objItem.type;
-				dataSelectClip.selectClips=String(objItem.value).split("、");
-				dataSelectClip.clipConfigs=String(objItem.config).split("、");
-				this.dataSelectClips.push(dataSelectClip);
-			}
-		}
-
-		/**
-		*根据筹码类型，获取当前选择筹码面板的筹码
-		*@param clipType
-		*@return
-		*/
-		__proto.getClipBets=function(clipType){
-			if(this.dataSelectClips==null || this.dataSelectClips.length==0)
-				return null;
-			for (var j=0;j < this.dataSelectClips.length;j++){
-				var dataSelectClip=this.dataSelectClips[j];
-				if(dataSelectClip.type==clipType)
-					return dataSelectClip;
-			}
-			return null;
-		}
-
-		__proto.addOtherUserBet=function(type,value){
-			this._otherUserBets[type]+=value;
-		}
-
-		__proto.getOtherUserBet=function(type){
-			return this._otherUserBets[type];
-		}
-
-		__proto.minusOtherUserBet=function(type,value){
-			this._otherUserBets[type]-=value;
-		}
-
-		__getset(0,__proto,'playerBalance',function(){
-			return this._playerBalance;
-			},function(value){
-			this._playerBalance=value;
-			this.dispatchEvent(new Event(/*no*/this.USER_BALANCE_CHANGE));
-		});
-
-		__getset(0,__proto,'chipsType',function(){
-			return this._chipsType;
-			},function(value){
-			this._chipsType=value;
-		});
-
-		__getset(0,__proto,'roundInfo',function(){
-			return this._roundInfo;
-			},function(value){
-			if(!value)return;
-			/*no*/this.roundid=String(value.round_id);
-			/*no*/this.status=value.round_state;
-			/*no*/this.leftTime=Math.round((value.state_remain_time).toNumber()/ 1000);
-			var ary=[];
-			for(var i=0;i<value.player_bets.length;i++){
-				var amount=this.chipsType==/*no*/this.MoneyType.CASH ? value.player_bets[i].amount /100:value.player_bets[i].amount;
-				var chipVo=new light.car.modules.common.model.data.vo.ChipVO(true,value.player_bets[i].item_id,amount);
-				ary.push(chipVo);
-			}
-			this.addBetsSelf(ary);
-			this.upDataBets(value.total_bets);
-			this._roundInfo=value;
-		});
-
-		__getset(0,__proto,'hitStatisticsAry',function(){
-			return this._hitStatisticsAry;
-			},function(value){
-			if(value==null || value.length==0)
-				this._hitStatisticsAry=[0,0,0,0,0,0,0,0];
-			else{
-				for(var i=0;i<value.length;i++){
-					this._hitStatisticsAry[value[i].id]=value[i].num;
-				}
-			}
-		});
-
-		__getset(0,__proto,'hitHistoryAry',function(){
-			return this._hitHistoryAry;
-			},function(value){
-			this._hitHistoryAry=value;
-		});
-
-		// }
-		__getset(0,__proto,'carLocation',function(){
-			return this._carLocation;
-			},function(value){
-			this._carLocation=value;
-		});
-
-		__getset(0,__proto,'roundResult',function(){
-			return this._roundResult;
-			},function(result){
-			this.carLocation=result.location_id;
-			this._roundResult=result;
-			/*no*/this.status=/*no*/this.RoomStatusType.LOTTERY_DRAW;
-			this.dispatchEvent(new Event(/*no*/this.LOTTERY_DRAW));
-		});
-
-		__getset(0,__proto,'playerSavedBet',function(){
-			return this._playerSavedBet;
-			},function(value){
-			this._playerSavedBet=value;
-			this.dispatchEvent(new Event(/*no*/this.LASTTIME_BET_RECORD));
-		});
-
-		__getset(0,__proto,'lotteruResult',function(){
-			return this._lotteruResult;
-			},function(value){
-			this._lotteruResult=value;
-		});
-
-		__getset(0,__proto,'chips',null,function(value){
-			var temp=JSON.parse(value);
-			var config=[];
-			for (var i=0;i < temp.length;i++){
-				config.push(new BetInfoVO(temp[i][0],temp[i][1]));
-			}
-			if(config.length==0)throw new Error("筹码配置信息错误");
-			this.chipTool.betConfig=config;
-		});
-
-		__getset(0,__proto,'tableInfo',null,function(value){
-			/*no*/this.state=value.table_state;
-			this.carLocation=value.cur_location_id;
-			this.hitHistoryAry=value.item_id;
-			this.hitStatisticsAry=value.item_hit_sts;
-			this.roundInfo=value.cur_round;
-			this.betTime=value.bet_time / 1000;
-			this.confirmTime=value.confirm_time / 1000;
-			this.countTime=value.cashing_time / 1000;
-			this.playerBalance=value.player_balance;
-			this.playerSavedBet=value.player_saved_bet;
-			this.dispatchEvent(new LightEvent(/*no*/this.UPDATA));
-		});
-
-		RoomData.NAME="roomData";
-		RoomData.START=1;
-		RoomData.BANKER=2;
-		RoomData.BET=3;
-		RoomData.BET_CHECK=4;
-		RoomData.DEAL=5;
-		RoomData.END=6;
-		RoomData.ADD_BET="addBet";
-		RoomData.REMOVE_BET="removeBet";
-		RoomData.ADD_BET_SELF="addBetSelf";
-		RoomData.REMOVE_BET_SELF="removeBetSelf";
-		RoomData.CANCEL_BET_SELF="cancelBetSelf";
-		return RoomData;
 	})(EventDispatcher)
 
 
@@ -30468,7 +29976,7 @@ var Laya=window.Laya=(function(window,document){
 				case "scenceChange":;
 					var curScene=notification.getBody();
 					console.log("MusicSetMediator 切换到游戏场景:"+curScene);
-					if(curScene==/*no*/this.CarNotification.Scene_Game || curScene==/*no*/this.CarNotification.Scene_Hall)
+					if(curScene=="Scene_Game" || curScene=="Scene_Hall")
 						this.onClose();
 					break ;
 				}
@@ -30493,6 +30001,63 @@ var Laya=window.Laya=(function(window,document){
 		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
 		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
 		return RuleMediator;
+	})(Mediator)
+
+
+	//class bull.modules.common.model.data.RoomData extends com.iflash.events.EventDispatcher
+	var RoomData=(function(_super){
+		function RoomData(){
+			this.id=0;
+			this.name="";
+			this.State=0;
+			this.RoundID=null;
+			this.LeftTime=0;
+			this.history_Win_info=null;
+			this.history_lost_info=null;
+			this.history_result_info=null;
+			this.player_num=0;
+			this.playerList=null;
+			this.card_info=null;
+			this.settle_banker_id=null;
+			this.settle_win_money=null;
+			this.settle_hand_money=null;
+			this.settle_User_info=null;
+			this.banker_num=0;
+			this.bankerlist=null;
+			this.newBaner_info=null;
+			this.Banker_calcu_info=null;
+			RoomData.__super.call(this);
+		}
+
+		__class(RoomData,'bull.modules.common.model.data.RoomData',_super);
+		RoomData.NAME="roomData";
+		RoomData.START=1;
+		RoomData.BANKER=2;
+		RoomData.BET=3;
+		RoomData.BET_CHECK=4;
+		RoomData.DEAL=5;
+		RoomData.END=6;
+		return RoomData;
+	})(EventDispatcher)
+
+
+	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
+	var SmallLoadingMediator=(function(_super){
+		function SmallLoadingMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
+		}
+
+		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
+		var __proto=SmallLoadingMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.loadingMask.lodingMask=viewComponent;
+		}
+
+		SmallLoadingMediator.NAME="smallLoadingMediator";
+		return SmallLoadingMediator;
 	})(Mediator)
 
 
@@ -30552,26 +30117,6 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
-	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
-	var SmallLoadingMediator=(function(_super){
-		function SmallLoadingMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
-		}
-
-		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
-		var __proto=SmallLoadingMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.loadingMask.lodingMask=viewComponent;
-		}
-
-		SmallLoadingMediator.NAME="smallLoadingMediator";
-		return SmallLoadingMediator;
-	})(Mediator)
-
-
 	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
 	var BullProtoModel=(function(_super){
 		function BullProtoModel(modelName,data){
@@ -30598,50 +30143,6 @@ var Laya=window.Laya=(function(window,document){
 		BullProtoModel.NAME="bullProtoModel";
 		return BullProtoModel;
 	})(Model)
-
-
-	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
-	var BankerNotifyCommand=(function(_super){
-		function BankerNotifyCommand(){
-			BankerNotifyCommand.__super.call(this);
-		}
-
-		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
-		var __proto=BankerNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
-				this.bankerlist(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
-				this.newbaner(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
-				this.banker_calcu(notification.getBody());
-			}
-		}
-
-		__proto.bankerlist=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
-			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.newbaner=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.newBaner_info=cs.banker_notify;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.banker_calcu=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
-			this.sentNotification("Bankercalcu");
-		}
-
-		return BankerNotifyCommand;
-	})(Command)
 
 
 	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
@@ -30691,6 +30192,50 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
+	var BankerNotifyCommand=(function(_super){
+		function BankerNotifyCommand(){
+			BankerNotifyCommand.__super.call(this);
+		}
+
+		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
+		var __proto=BankerNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
+				this.bankerlist(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
+				this.newbaner(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
+				this.banker_calcu(notification.getBody());
+			}
+		}
+
+		__proto.bankerlist=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
+			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.newbaner=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.newBaner_info=cs.banker_notify;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.banker_calcu=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
+			this.sentNotification("Bankercalcu");
+		}
+
+		return BankerNotifyCommand;
+	})(Command)
+
+
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
 	var WebService=(function(_super){
 		function WebService(modelName,data){
@@ -30727,38 +30272,6 @@ var Laya=window.Laya=(function(window,document){
 		//appModel.assess_token=param.access_token;
 		__proto.getUserBalanceCallBack=function(param){
 			var userMoneyNum=0;
-			if(/*no*/this.appModel.hallAppModel.room_type==2){
-				userMoneyNum+=Number(param.cash);
-			}
-			else if(/*no*/this.appModel.hallAppModel.room_type==3){
-				userMoneyNum+=Number(param.nm);
-			}
-			else if(/*no*/this.appModel.hallAppModel.room_type==1){
-				userMoneyNum+=Number(param.coin);
-			};
-			var roomOb=/*no*/this.appModel.hallAppModel.roomLists[/*no*/this.appModel.hallAppModel.join_group];
-			var roomParam=/*no*/this.appModel.hallAppModel.roomParam;
-			roomParam.roomID=roomOb["roomId"];
-			roomParam.roomType=roomOb["roomType"];
-			roomParam.lobby_token=/*no*/this.appModel.hallAppModel.Lobby_token;
-			roomParam.roomlimit=roomOb["roomLimit"];
-			roomParam.bankerlimit=roomOb["bankerLimit"];
-			roomParam.ip=/*no*/this.appModel.hallAppModel.join_IP;
-			roomParam.port=String(/*no*/this.appModel.hallAppModel.join_Port);
-			roomParam.moneyCoin=Number(param.coin);
-			roomParam.moneyCash=Number(param.cash);
-			roomParam.moneyNm=Number(param.nm);
-			roomParam.minBet=roomOb["minBet"];
-			roomParam.maxBet=roomOb["maxBet"];
-			roomParam.clipType=/*no*/this.appModel.hallAppModel.room_type;
-			var name,name2,minBetStr,maxBetStr;
-			if(/*no*/this.appModel.hallAppModel.room_type==1){
-			}
-			else{
-			}
-			name=roomOb["roomName"];
-			roomParam.roomName=roomOb["roomName"];
-			roomParam.roomName2=roomOb["roomName"];
 		}
 
 		WebService.resolveBrowserParam=function(){
@@ -31171,6 +30684,11 @@ var Laya=window.Laya=(function(window,document){
 			fntTxt=Light.loader.getRes("res/gameScene/limitFont.png");
 			LimitFont.parseFont(fnt,fntTxt);
 			Text.registerBitmapFont("LimitFont",LimitFont);
+			var mybetFont=new BitmapFont();
+			fnt=Light.loader.getRes("mybetFont.fnt");
+			fntTxt=Light.loader.getRes("res/gameScene/tableFont.png");
+			mybetFont.parseFont(fnt,fntTxt);
+			Text.registerBitmapFont("mybetFont",mybetFont);
 			this.view.on("uiShow",this,this.onUIShow);
 			this.view.on("uiHide",this,this.onUIHide);
 			this.view.optionBtn.on("click",this,this.onClick);
@@ -31179,9 +30697,6 @@ var Laya=window.Laya=(function(window,document){
 			this.view.CarryInBtn.on("click",this,this.onClick);
 			this.view.PlayerListBtn.on("click",this,this.onClick);
 			this.view.btn_display(false);
-			if (this.view["TestPanel"] !=undefined){
-				this.view.TestPanel.on("item_click",this,this.ontest);
-			}
 			this.addNotifiction("STATE_CHANGE");
 			this.addNotifiction("HistoryNotify");
 			this.addNotifiction("RoomSocketClose");
@@ -31212,11 +30727,11 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case this.view.CarryInBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
-					this.view.WinLostPanel.set_data([500,0,-100,200]);
+					this.view.BetZoneBoard.set_data([200]);
 					break ;
 				case this.view.PlayerListBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
-					this.view.WinLostPanel.hide();
+					this.view.BetZoneBoard.hide();
 					break ;
 				case this.view.optionBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
@@ -31306,23 +30821,10 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onCarryInClick=function(){
-			this.sentNotification(/*no*/this.CarNotification.GET_USER_BALANCE);
+			this.sentNotification("getUserBalance");
 		}
 
-		__proto.onCZClick=function(e){
-			if(this.roomData.chongzhi)return;
-			this.sentNotification(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_REQ.toString());
-		}
-
-		__proto.onXTClick=function(e){
-			if(this.roomData.xutou)return;
-			this.sentNotification(ENCSType.CS_TYPE_PLAYER_SAVED_BET_REQ.toString());
-		}
-
-		__proto.onBetHandler=function(param){
-			this.sentNotification(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),param);
-		}
-
+		//}
 		__proto.onUIShow=function(){
 			this.view.showme();
 		}
@@ -31344,7 +30846,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.exitRoom=function(){
 			this.perLoadService.loadHall();
-			this.sentNotification(BullNotification.Leave_Game);
+			this.sentNotification("car.Leave_Game");
 			this.dispose();
 		}
 
@@ -31424,7 +30926,7 @@ var Laya=window.Laya=(function(window,document){
 
 		// showAlert();/////试图提示用户正在重连中
 		__proto.alertClose=function(){
-			this.sentNotification(/*no*/this.CarNotification.ExitRoomEvent);
+			this.sentNotification("ExitRoomEvent");
 		}
 
 		__proto.onMessageReveived=function(e){
@@ -31445,7 +30947,7 @@ var Laya=window.Laya=(function(window,document){
 			console.log("countRect",this.num,(new Date()).getTime())
 			if(this.num>2){
 				this.clearTimer();
-				Alert.show("网络异常，请检查网络!","",light.car.view.alert.AlertPanel,null,Handler.create(this,this.alertClose));
+				Alert.show("网络异常，请检查网络!","",AlertPanel,null,Handler.create(this,this.alertClose));
 				return;
 			}
 			this.startTimer();
@@ -34521,17 +34023,15 @@ var Laya=window.Laya=(function(window,document){
 
 	//class bull.core.BullURLManager extends com.lightUI.manager.loader.URLManager
 	var BullURLManager=(function(_super){
-		function BullURLManager(){BullURLManager.__super.call(this);;
-		};
-
-		__class(BullURLManager,'bull.core.BullURLManager',_super);
-		var __proto=BullURLManager.prototype;
-		__proto.CarURLManager=function(){
+		function BullURLManager(){
+			BullURLManager.__super.call(this);
 			if (BullURLManager._singleton){
 				throw new Error("只能用getInstance()来获取实例");
 			}
 		}
 
+		__class(BullURLManager,'bull.core.BullURLManager',_super);
+		var __proto=BullURLManager.prototype;
 		__getset(0,__proto,'configURL',function(){
 			return "res/config/BullURL.json";
 		},_super.prototype._$set_configURL);
@@ -47749,107 +47249,6 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
-	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
-	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
-	*
-	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.HSlider;
-		*import laya.ui.VSlider;
-		*import laya.utils.Handler;
-		*public class VSlider_Example
-		*{
-			*private var vSlider:VSlider;
-			*public function VSlider_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
-				*}
-			*private function onLoadComplete():void
-			*{
-				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-				*vSlider.min=0;//设置 vSlider 最低位置值。
-				*vSlider.max=10;//设置 vSlider 最高位置值。
-				*vSlider.value=2;//设置 vSlider 当前位置值。
-				*vSlider.tick=1;//设置 vSlider 刻度值。
-				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
-				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-				*}
-			*private function onChange(value:Number):void
-			*{
-				*trace("滑块的位置： value="+value);
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*var vSlider;
-	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
-	*function onLoadComplete(){
-		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-		*vSlider.min=0;//设置 vSlider 最低位置值。
-		*vSlider.max=10;//设置 vSlider 最高位置值。
-		*vSlider.value=2;//设置 vSlider 当前位置值。
-		*vSlider.tick=1;//设置 vSlider 刻度值。
-		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
-		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-		*}
-	*function onChange(value){
-		*console.log("滑块的位置： value="+value);
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*import HSlider=laya.ui.HSlider;
-	*import VSlider=laya.ui.VSlider;
-	*import Handler=laya.utils.Handler;
-	*class VSlider_Example {
-		*private vSlider:VSlider;
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
-			*}
-		*private onLoadComplete():void {
-			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-			*this.vSlider.min=0;//设置 vSlider 最低位置值。
-			*this.vSlider.max=10;//设置 vSlider 最高位置值。
-			*this.vSlider.value=2;//设置 vSlider 当前位置值。
-			*this.vSlider.tick=1;//设置 vSlider 刻度值。
-			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
-			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
-			*}
-		*private onChange(value:number):void {
-			*console.log("滑块的位置： value="+value);
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.Slider
-	*/
-	//class laya.ui.VSlider extends laya.ui.Slider
-	var VSlider=(function(_super){
-		function VSlider(){VSlider.__super.call(this);;
-		};
-
-		__class(VSlider,'laya.ui.VSlider',_super);
-		return VSlider;
-	})(Slider)
-
-
-	/**
 	*<code>TextInput</code> 类用于创建显示对象以显示和输入文本。
 	*
 	*@example 以下示例代码，创建了一个 <code>TextInput</code> 实例。
@@ -48162,6 +47561,107 @@ var Laya=window.Laya=(function(window,document){
 
 		return TextInput;
 	})(Label)
+
+
+	/**
+	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
+	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
+	*
+	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.HSlider;
+		*import laya.ui.VSlider;
+		*import laya.utils.Handler;
+		*public class VSlider_Example
+		*{
+			*private var vSlider:VSlider;
+			*public function VSlider_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
+				*}
+			*private function onLoadComplete():void
+			*{
+				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+				*vSlider.min=0;//设置 vSlider 最低位置值。
+				*vSlider.max=10;//设置 vSlider 最高位置值。
+				*vSlider.value=2;//设置 vSlider 当前位置值。
+				*vSlider.tick=1;//设置 vSlider 刻度值。
+				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
+				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+				*}
+			*private function onChange(value:Number):void
+			*{
+				*trace("滑块的位置： value="+value);
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*var vSlider;
+	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
+	*function onLoadComplete(){
+		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+		*vSlider.min=0;//设置 vSlider 最低位置值。
+		*vSlider.max=10;//设置 vSlider 最高位置值。
+		*vSlider.value=2;//设置 vSlider 当前位置值。
+		*vSlider.tick=1;//设置 vSlider 刻度值。
+		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
+		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+		*}
+	*function onChange(value){
+		*console.log("滑块的位置： value="+value);
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*import HSlider=laya.ui.HSlider;
+	*import VSlider=laya.ui.VSlider;
+	*import Handler=laya.utils.Handler;
+	*class VSlider_Example {
+		*private vSlider:VSlider;
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
+			*}
+		*private onLoadComplete():void {
+			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+			*this.vSlider.min=0;//设置 vSlider 最低位置值。
+			*this.vSlider.max=10;//设置 vSlider 最高位置值。
+			*this.vSlider.value=2;//设置 vSlider 当前位置值。
+			*this.vSlider.tick=1;//设置 vSlider 刻度值。
+			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
+			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
+			*}
+		*private onChange(value:number):void {
+			*console.log("滑块的位置： value="+value);
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.Slider
+	*/
+	//class laya.ui.VSlider extends laya.ui.Slider
+	var VSlider=(function(_super){
+		function VSlider(){VSlider.__super.call(this);;
+		};
+
+		__class(VSlider,'laya.ui.VSlider',_super);
+		return VSlider;
+	})(Slider)
 
 
 	/**
@@ -49301,6 +48801,7 @@ var Laya=window.Laya=(function(window,document){
 			this.self_amount_1=null;
 			this.self_amount_2=null;
 			this.self_amount_3=null;
+			this.BetLimit=null;
 			BetZoneUI.__super.call(this);
 		}
 
@@ -49309,12 +48810,13 @@ var Laya=window.Laya=(function(window,document){
 		__proto.createChildren=function(){
 			View.regComponent("ui.ui.room.Bet_TotalUI",Bet_TotalUI);
 			View.regComponent("ui.ui.room.Bet_selfUI",Bet_selfUI);
+			View.regComponent("ui.ui.room.BetLImitUI",BetLImitUI);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BetZoneUI.uiView);
 		}
 
 		__static(BetZoneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"}},{"type":"Image","props":{"y":2,"x":252,"var":"zone_1","skin":"res/gameScene/闲家下注区3.png","name":"zone_1"}},{"type":"Image","props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"}},{"type":"Image","props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"}},{"type":"Bet_Total","props":{"y":4,"x":23,"var":"total_amount_0","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":264,"var":"total_amount_1","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":507,"var":"total_amount_2","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":750,"var":"total_amount_3","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"var":"self_amount_0","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"var":"self_amount_1","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"var":"self_amount_2","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"var":"self_amount_3","runtime":"ui.ui.room.Bet_selfUI"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"}},{"type":"Image","props":{"y":2,"x":252,"var":"zone_1","skin":"res/gameScene/闲家下注区3.png","name":"zone_1"}},{"type":"Image","props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"}},{"type":"Image","props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"}},{"type":"Bet_Total","props":{"y":4,"x":23,"var":"total_amount_0","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":264,"var":"total_amount_1","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":507,"var":"total_amount_2","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":750,"var":"total_amount_3","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"var":"self_amount_0","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"var":"self_amount_1","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"var":"self_amount_2","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"var":"self_amount_3","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"BetLImit","props":{"y":-117,"x":379,"visible":false,"var":"BetLimit","runtime":"ui.ui.room.BetLImitUI"}}]};}
 		]);
 		return BetZoneUI;
 	})(View)
@@ -49848,6 +49350,29 @@ var Laya=window.Laya=(function(window,document){
 	})(View)
 
 
+	//class ui.ui.room.BetLImitUI extends laya.ui.View
+	var BetLImitUI=(function(_super){
+		function BetLImitUI(){
+			this.Hint=null;
+			this.BetBar=null;
+			this.amount=null;
+			BetLImitUI.__super.call(this);
+		}
+
+		__class(BetLImitUI,'ui.ui.room.BetLImitUI',_super);
+		var __proto=BetLImitUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(BetLImitUI.uiView);
+		}
+
+		__static(BetLImitUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":263,"height":55},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/限红底板.png"}},{"type":"Image","props":{"y":13,"x":100,"var":"Hint","skin":"res/gameScene/限红闪红.png"}},{"type":"Image","props":{"y":17,"x":12,"skin":"res/gameScene/本桌限红.png"}},{"type":"Animation","props":{"y":14,"x":101,"var":"BetBar","source":"res/gameScene/限红进度绿色.png,res/gameScene/限红进度红色.png"}},{"type":"Label","props":{"y":17,"x":101,"width":143,"var":"amount","text":"-¥1234.56","height":20,"font":"limitFont","align":"center"}}]};}
+		]);
+		return BetLImitUI;
+	})(View)
+
+
 	//class ui.ui.room.Bet_selfUI extends laya.ui.View
 	var Bet_selfUI=(function(_super){
 		function Bet_selfUI(){
@@ -49863,7 +49388,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(Bet_selfUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":130,"height":40},"child":[{"type":"Image","props":{"y":3,"x":3,"skin":"res/gameScene/人民币￥底板.png"}},{"type":"Label","props":{"y":8,"x":7,"width":59,"var":"amount","text":"100000","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":130,"height":40},"child":[{"type":"Image","props":{"y":3,"x":3,"skin":"res/gameScene/人民币￥底板.png"}},{"type":"Label","props":{"y":6,"x":3,"width":125,"var":"amount","text":"¥1234.56","height":30,"font":"tableFont","color":"#ece7e7","align":"center"}}]};}
 		]);
 		return Bet_selfUI;
 	})(View)
@@ -51223,6 +50748,7 @@ var Laya=window.Laya=(function(window,document){
 			return "¥"+nu+".00";
 		}
 
+		__proto.clear=function(){}
 		return Hall;
 	})(hallUI)
 
@@ -51244,7 +50770,7 @@ var Laya=window.Laya=(function(window,document){
 			this.bankerapply.on("mouseout",this,this.onOut);
 			this.deapply.on("mouseout",this,this.onOut);
 			this.listHint.visible=false;
-			this.update_list(0);
+			this.update_list(0,[],-1);
 		}
 
 		__proto.onOver=function(e){
@@ -51321,6 +50847,7 @@ var Laya=window.Laya=(function(window,document){
 	//class bull.view.room.BetZone extends ui.ui.room.BetZoneUI
 	var BetZone=(function(_super){
 		function BetZone(){
+			this.zone_flash_times=0;
 			BetZone.__super.call(this);
 		}
 
@@ -51343,6 +50870,7 @@ var Laya=window.Laya=(function(window,document){
 			this["total_amount_"+idx]["amount"].text=1;
 			this["total_amount_"+idx]["title"].visible=true;
 			this["total_amount_"+idx]["light"].visible=true;
+			this["self_amount_"+idx]["amount"].font="mybetFont";
 			this["self_amount_"+idx].visible=true;
 			this["self_amount_"+idx]["amount"].text=10000;
 		}
@@ -51350,10 +50878,31 @@ var Laya=window.Laya=(function(window,document){
 		//event(LightEvent.ITEM_CLICK,parseInt(s));
 		__proto.set_data=function(data){
 			this.visible=true;
+			this.zone_flash_times=0;
 			for (var i=0;i < 4;i++){
 				this["total_amount_"+i].visible=false;
+				this["zone_"+i].visible=false;
 				this["self_amount_"+i].visible=false;
+			};
+			var Isbanker=true;
+			if (Isbanker){
+				this.BetLimit.visible=true;
+				this.BetLimit.amount.font="LimitFont";
+				this.BetLimit.amount.text=data[0];
 			}
+			Laya.timer.loop(500,this,this.timerHandler);
+		}
+
+		__proto.timerHandler=function(){
+			this.zone_flash_times++;
+			if (this.zone_flash_times==5)Laya.timer.clear(this,this.timerHandler);
+			for (var i=0;i < 4;i++){
+				this["zone_"+i].visible=!this["zone_"+i].visible;
+			}
+		}
+
+		__proto.hide=function(){
+			this.BetLimit.visible=false;
 		}
 
 		__proto.test=function(){}
@@ -51655,8 +51204,8 @@ var Laya=window.Laya=(function(window,document){
 			}
 		}
 
-		__proto.ani_ok=function(idx_i,idx_i){
-			if (idx_i==4 && /*no*/this.idx_j==4){
+		__proto.ani_ok=function(idx_i,idx_j){
+			if (idx_i==4 && idx_j==4){
 			}
 		}
 
@@ -52069,6 +51618,25 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -52085,25 +51653,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
 
 
 	/**
@@ -52208,26 +51757,6 @@ var Laya=window.Laya=(function(window,document){
 		__proto.createChildren=function(){}
 		return NodeTool;
 	})(NodeToolUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
-	var NodeTreeSetting=(function(_super){
-		function NodeTreeSetting(){
-			NodeTreeSetting.__super.call(this);
-			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
-			this.createView(NodeTreeSettingUI.uiView);
-		}
-
-		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
-		var __proto=NodeTreeSetting.prototype;
-		//inits();
-		__proto.createChildren=function(){}
-		return NodeTreeSetting;
-	})(NodeTreeSettingUI)
 
 
 	/**
@@ -52471,6 +52000,26 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return NodeTree;
 	})(NodeTreeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
+	var NodeTreeSetting=(function(_super){
+		function NodeTreeSetting(){
+			NodeTreeSetting.__super.call(this);
+			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
+			this.createView(NodeTreeSettingUI.uiView);
+		}
+
+		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
+		var __proto=NodeTreeSetting.prototype;
+		//inits();
+		__proto.createChildren=function(){}
+		return NodeTreeSetting;
+	})(NodeTreeSettingUI)
 
 
 	/**
@@ -53105,51 +52654,3 @@ var Laya=window.Laya=(function(window,document){
 	new Main();
 
 })(window,document,Laya);
-
-
-/*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/BullConfigure.as (119):warning:BetNotifyommand This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (74):warning:CarNotification.ENTER_ROOM This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/command/UserBalanceCommand.as (84):warning:CarNotification.SHOW_CARRY_IN_PANEL This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/BullHall/mediator/HallMediator.as (180):warning:CarNotification.ENTER_ROOM This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/LoginHallCommand.as (83):warning:CarProtoModel.NAME This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (84):warning:roomSocketService.close This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (85):warning:perLoadService.loadHall This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (183):warning:MoneyType.CASH This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (252):warning:status This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (252):warning:RoomStatusType.START_BET This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (253):warning:START_BET This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:status This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (258):warning:RoomStatusType.END_BET This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (259):warning:END_BET This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (319):warning:MoneyType.CASH This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (338):warning:status This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (338):warning:leftTime This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (175):warning:USER_BALANCE_CHANGE This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (114):warning:roundid This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (115):warning:status This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (116):warning:leftTime This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (120):warning:MoneyType.CASH This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (267):warning:status This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (267):warning:RoomStatusType.LOTTERY_DRAW This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (268):warning:LOTTERY_DRAW This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (164):warning:LASTTIME_BET_RECORD This variable is not defined.
-27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (379):warning:state This variable is not defined.
-28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/RoomData.as (391):warning:UPDATA This variable is not defined.
-29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Game This variable is not defined.
-30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/RuleMediator.as (62):warning:CarNotification.Scene_Hall This variable is not defined.
-31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (103):warning:appModel.hallAppModel.room_type This variable is not defined.
-32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (106):warning:appModel.hallAppModel.room_type This variable is not defined.
-33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (109):warning:appModel.hallAppModel.room_type This variable is not defined.
-34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.roomLists This variable is not defined.
-35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (113):warning:appModel.hallAppModel.join_group This variable is not defined.
-36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (115):warning:appModel.hallAppModel.roomParam This variable is not defined.
-37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (118):warning:appModel.hallAppModel.Lobby_token This variable is not defined.
-38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (121):warning:appModel.hallAppModel.join_IP This variable is not defined.
-39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
-40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
-41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (255):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
-43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
-44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/poker.as (104):warning:idx_j This variable is not defined.
-*/

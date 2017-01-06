@@ -38,9 +38,9 @@ package bull.modules.common.command
 				case BullNotification.Leave_Game:
 					returnHallReq();
 					break;
-				case ENCSType.CS_TYPE_RETURN_HALL_RSP.toString():
-					returnHallRsp(noti.getBody() as CS);
-					break;
+				//case ENCSType.CS_TYPE_RETURN_HALL_RSP.toString():
+					//returnHallRsp(noti.getBody() as CS);
+					//break;
 			}
 		}
 		
@@ -54,7 +54,7 @@ package bull.modules.common.command
 			out.msg_type = ENCSType.CS_TYPE_LOGIN_REQ;
 			out.login_req = proto.msg_proto.getLoginReq();
 			out.login_req.uid = Long.fromNumber(bullData.uid);
-			out.login_req.verify_sig = bullData.token;
+			out.login_req.verify_sig = String(bullData.token);
 			
 			var socket:HallSocketService = getModel(HallSocketService.NAME) as HallSocketService;
 			socket.sentMsg(out);
@@ -84,30 +84,30 @@ package bull.modules.common.command
 			bullData.hallData.ViewIn = "Lobby";
 			return;
 			
-			var proto:CarProtoModel = getModel(CarProtoModel.NAME) as CarProtoModel;
-			var out:CS = proto.msg_proto.getCS();
-			out.msg_type = ENCSType.CS_TYPE_RETURN_HALL_REQ;
-			var req:ReturnHallReq = proto.msg_proto.getReturnHallReq();
-			out.return_hall_req = req;
-			var socket:HallSocketService = getModel(HallSocketService.NAME) as HallSocketService;
-			socket.sentMsg(out);
+			//var proto:CarProtoModel = getModel(CarProtoModel.NAME) as CarProtoModel;
+			//var out:CS = proto.msg_proto.getCS();
+			//out.msg_type = ENCSType.CS_TYPE_RETURN_HALL_REQ;
+			//var req:ReturnHallReq = proto.msg_proto.getReturnHallReq();
+			//out.return_hall_req = req;
+			//var socket:HallSocketService = getModel(HallSocketService.NAME) as HallSocketService;
+			//socket.sentMsg(out);
 		}
 		
 		private function returnHallRsp(cs:CS):void
 		{
-			var rsp:ReturnHallRsp = cs.return_hall_rsp;
-			switch(rsp.result)
-			{
-				case 0:
-					trace("returnHallRsp rsp:",rsp);
-					sentNotification(ENCSType.CS_TYPE_GET_TABLE_LIST_REQ.toString());
+			//var rsp:ReturnHallRsp = cs.return_hall_rsp;
+			//switch(rsp.result)
+			//{
+				//case 0:
+					//trace("returnHallRsp rsp:",rsp);
+					//sentNotification(ENCSType.CS_TYPE_GET_TABLE_LIST_REQ.toString());
 //					sentNotification(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString());
-					break;
-				default:
-					trace("returnHallRsp ........... errorCode:" + rsp.result);
-					
-					break;
-			}
+					//break;
+				//default:
+					//trace("returnHallRsp ........... errorCode:" + rsp.result);
+					//
+					//break;
+			//}
 		}
 		
 	}

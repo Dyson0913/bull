@@ -14,6 +14,7 @@
     "bubbleWin.fnt": { "url": "BitmapFont/bubbleWin.fnt", "type":"xml"},
     "bubbleLost.fnt": { "url": "BitmapFont/bubbleLost.fnt", "type":"xml"},
     "LimitFont.fnt": { "url": "BitmapFont/limitFont.fnt", "type":"xml"},
+    "mybetFont.fnt": { "url": "BitmapFont/tableFont.fnt", "type":"xml"},
     "GameSprite": { "url": "res/atlas/gameScene.json","type":"atlas"},    
     "error_code": { "url": "res/config/error_code.json", "type":"json"},
     "assetsIn": { "url": "res/atlas/assetsIn.json", "type":"atlas"},
@@ -33,7 +34,7 @@
             "assets":["hall","assetsIn","share"]
         },
         "room":{
-            "assets":["GameSprite","assetsIn","alert","SettleWin.fnt","Settlelost.fnt","bubbleWin.fnt","bubbleLost.fnt","LimitFont.fnt"]
+            "assets":["GameSprite","assetsIn","alert","SettleWin.fnt","Settlelost.fnt","bubbleWin.fnt","bubbleLost.fnt","LimitFont.fnt","mybetFont.fnt"]
         },
         "config":{
             "assets":["language","error_code","msg_proto","conf_proto"]

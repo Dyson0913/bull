@@ -42,7 +42,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":8,"x":7,"width":59,"var":"amount","text":"100000","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"},
+            "props":{"y":6,"x":3,"width":125,"var":"amount","text":"¥1234.56","height":30,"font":"tableFont","color":"#ece7e7","align":"center"},
             "nodeParent":1,
             "label":"Label(amount)",
             "isDirectory":false,

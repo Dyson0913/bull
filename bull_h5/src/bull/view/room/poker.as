@@ -102,7 +102,7 @@ package bull.view.room
 			}
 		}
 		
-		private function ani_ok(idx_i:int, idx_i:int ):void 
+		private function ani_ok(idx_i:int, idx_j:int ):void 
 		{
 			if ( idx_i == 4 && idx_j == 4)
 			{

@@ -5,8 +5,8 @@ package bull.core
 	public class BullURLManager extends URLManager
 	{
 		private static  var _singleton:Boolean=true;
-		private static  var _instance:CarURLManager;
-		public function CarURLManager() {
+		private static  var _instance:BullURLManager;
+		public function BullURLManager() {
 			if (_singleton) {
 				throw new Error("只能用getInstance()来获取实例");
 			}

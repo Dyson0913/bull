@@ -138,6 +138,10 @@ package bull.view.hall
 			return "¥" +nu + ".00";
 		}
 		
+		public function clear():void
+		{
+			
+		}
 		
 		
 	}

@@ -114,43 +114,43 @@ package bull.modules.common.services
 			
 			var userMoneyNum:Number = 0;
 			
-			if(appModel.hallAppModel.room_type == conf.ENRoomType.ROOM_TYPE_CASH){
+			//if(appModel.hallAppModel.room_type == conf.ENRoomType.ROOM_TYPE_CASH){
 				//if( appModel.roomParam.isCanUseCash )
-					userMoneyNum += Number(param.cash);				
-			}
-			else if(appModel.hallAppModel.room_type == conf.ENRoomType.ROOM_TYPE_CASH_NM){
+					//userMoneyNum += Number(param.cash);				
+			//}
+			//else if(appModel.hallAppModel.room_type == conf.ENRoomType.ROOM_TYPE_CASH_NM){
 				//if ( appModel.roomParam.isCanUseNm )
-				userMoneyNum +=  Number(param.nm);
-			}
-			else if(appModel.hallAppModel.room_type == conf.ENRoomType.ROOM_TYPE_COIN){
+				//userMoneyNum +=  Number(param.nm);
+			//}
+			//else if(appModel.hallAppModel.room_type == conf.ENRoomType.ROOM_TYPE_COIN){
 				//if ( appModel.roomParam.isCanUseCoin )
-					userMoneyNum += Number(param.coin);
-			}
+					//userMoneyNum += Number(param.coin);
+			//}
 						
-			var roomOb:Object = appModel.hallAppModel.roomLists[appModel.hallAppModel.join_group];
+			//var roomOb:Object = appModel.hallAppModel.roomLists[appModel.hallAppModel.join_group];
 			
 			//不擋錢
 			//if( userMoneyNum >=roomOb.toNumber() || Common.curTableId != -1 )
 			//{
-				var roomParam:RoomParam = appModel.hallAppModel.roomParam;
-				roomParam.roomID = roomOb["roomId"];
-				roomParam.roomType = roomOb["roomType"];
-				roomParam.lobby_token = appModel.hallAppModel.Lobby_token;
-				roomParam.roomlimit = roomOb["roomLimit"];
-				roomParam.bankerlimit = roomOb["bankerLimit"];
-				roomParam.ip = appModel.hallAppModel.join_IP;
-				roomParam.port = String(appModel.hallAppModel.join_Port);
+				//var roomParam:RoomParam = appModel.hallAppModel.roomParam;
+				//roomParam.roomID = roomOb["roomId"];
+				//roomParam.roomType = roomOb["roomType"];
+				//roomParam.lobby_token = appModel.hallAppModel.Lobby_token;
+				//roomParam.roomlimit = roomOb["roomLimit"];
+				//roomParam.bankerlimit = roomOb["bankerLimit"];
+				//roomParam.ip = appModel.hallAppModel.join_IP;
+				//roomParam.port = String(appModel.hallAppModel.join_Port);
 				//roomParam.uin = appModel.userInfo.avatarID;
-				
-				roomParam.moneyCoin = Number(param.coin);
-				roomParam.moneyCash = Number(param.cash);
-				roomParam.moneyNm = Number(param.nm);
-				
-				roomParam.minBet = roomOb["minBet"];
-				roomParam.maxBet =roomOb["maxBet"];
-				
+				//
+				//roomParam.moneyCoin = Number(param.coin);
+				//roomParam.moneyCash = Number(param.cash);
+				//roomParam.moneyNm = Number(param.nm);
+				//
+				//roomParam.minBet = roomOb["minBet"];
+				//roomParam.maxBet =roomOb["maxBet"];
+				//
 				//TODO 還需要?
-				roomParam.clipType = appModel.hallAppModel.room_type;
+				//roomParam.clipType = appModel.hallAppModel.room_type;
 				
 				//TODO cookie有點問題 
 				//先改用LightAssetManager.getInstance().sound ,LightAssetManager.getInstance().music 
@@ -158,9 +158,9 @@ package bull.modules.common.services
 //				roomParam.music = LightAssetManager.getInstance().music;//cookie.getMusic();
 //				roomParam.sound = LightAssetManager.getInstance().sound ;//cookie.getSound();
 				
-				var name:String,name2:String,minBetStr:String,maxBetStr:String;
-				if( appModel.hallAppModel.room_type == ENMoneyType.MONEY_TYPE_CASH )
-				{
+				//var name:String,name2:String,minBetStr:String,maxBetStr:String;
+				//if( appModel.hallAppModel.room_type == ENMoneyType.MONEY_TYPE_CASH )
+				//{
 //					name = "G币场 ";
 //					name2 = name;
 //					minBetStr = MoneyUtils.standardNumber(csTable.minBet.toNumber(), ENMoneyType.MONEY_TYPE_COIN);
@@ -169,9 +169,9 @@ package bull.modules.common.services
 //					name2 += (minBetStr+"～" + maxBetStr+" G币");  
 					
 					
-				}
-				else
-				{
+				//}
+				//else
+				//{
 //					name = "现金场 ";
 //					name2 = name;
 //					var temp:Number = MoneyUtils.monay(csTable.minBet.toNumber()); 
@@ -180,11 +180,11 @@ package bull.modules.common.services
 //					maxBetStr = MoneyUtils.standardNumber(temp2, ENMoneyType.MONEY_TYPE_CASH);
 //					name += (" " + csTable.tableName + " 下注范围：¥"+minBetStr+"～" + "¥"+maxBetStr);
 //					name2 += ("¥"+minBetStr+"～" + "¥"+maxBetStr);
-				}
-				name = roomOb["roomName"];
-				roomParam.roomName = roomOb["roomName"];// name2;
-				roomParam.roomName2 = roomOb["roomName"]; //csTable.tableName;
-				
+				//}
+				//name = roomOb["roomName"];
+				//roomParam.roomName = roomOb["roomName"];// name2;
+				//roomParam.roomName2 = roomOb["roomName"]; //csTable.tableName;
+				//
 //				var roomParam:RoomParam = appModel.roomParam;				
 //				startOneGame(name, String(roomParam.roomID), roomParam); //将参数传递给游戏窗口
 

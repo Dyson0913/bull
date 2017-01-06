@@ -140,7 +140,7 @@ package bull
 			registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(), HistoryCommand);
 			registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
 			registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
-			registerCommand(ENCSType.CS_TYPE_BET_NOTIFY.toString(), BetNotifyommand);
+			//registerCommand(ENCSType.CS_TYPE_BET_NOTIFY.toString(), BetNotifyommand);
 			registerCommand(ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString(),DealCardNotifyCommand);
 			registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyCommand);
 			

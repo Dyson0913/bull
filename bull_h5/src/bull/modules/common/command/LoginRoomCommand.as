@@ -48,7 +48,7 @@ package bull.modules.common.command
 			out.msg_type = ENCSType.CS_TYPE_LOGIN_REQ;
 			out.login_req = proto.msg_proto.getLoginReq();
 			out.login_req.uid = Long.fromNumber(bullData.uid);
-			out.login_req.verify_sig = bullData.token;
+			out.login_req.verify_sig = String(bullData.token);
 			
 			var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
 			socket.sentMsg(out);

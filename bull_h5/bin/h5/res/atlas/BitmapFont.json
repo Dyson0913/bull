@@ -104,6 +104,27 @@
             },
             "rotated": false,
             "trimed": false
+        },
+        "tableFont.png": {
+            "frame": {
+                "x": 324,
+                "y": 258,
+                "w": 128,
+                "h": 128,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 128,
+                "h": 128
+            },
+            "sourceSize": {
+                "w": 128,
+                "h": 128
+            },
+            "rotated": false,
+            "trimed": false
         }
     },
     "meta": {

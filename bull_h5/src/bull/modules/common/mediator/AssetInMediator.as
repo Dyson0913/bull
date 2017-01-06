@@ -15,9 +15,9 @@ package bull.modules.common.mediator
 	
 	import bull.events.BullNotification;
 	import light.car.modules.common.model.param.CarryInParam;
-	import light.car.modules.perload.services.PreLoadService;
-	import light.car.modules.room.services.RoomSocketService;
-	import light.car.view.alert.AlertPanel;
+	import bull.modules.perload.services.PreLoadService;
+	import bull.modules.room.services.RoomSocketService;
+	import bull.view.alert.AlertPanel;
 	
 	import msg.ENCSType;
 	
@@ -26,9 +26,9 @@ package bull.modules.common.mediator
 	{
 		public static const NAME:String = "assetInMediator";
 		
-		//private var roomSocketService:RoomSocketService;
+		private var roomSocketService:RoomSocketService;
 		private var first:Boolean;
-		//public var perLoadService:PreLoadService;
+		public var perLoadService:PreLoadService;
 		private var timer:Timer = new Timer();
 		public function AssetInMediator(mediatorName:String="", viewComponent:Object=null)
 		{
@@ -69,15 +69,15 @@ package bull.modules.common.mediator
 			}
 		}
 		private var timerId:int;
-		private function carryInPanelShow(param:CarryInParam):void{
-			first = param.isFirst;
-			if(first){
-				timerId = timer.setTimeout(this, countCarryInTime, 30000, null);
-			}
+		//private function carryInPanelShow(param:CarryInParam):void{
+			//first = param.isFirst;
+			//if(first){
+				//timerId = timer.setTimeout(this, countCarryInTime, 30000, null);
+			//}
 			//现金带入需要把步长设成0.01	
-			getAssetsPanel().assetsIn(param.betMin, param.betMax, param.carrayType, param.betMin, param.cash, param.coin, param.nm, 0.01);
-				
-		}
+			//getAssetsPanel().assetsIn(param.betMin, param.betMax, param.carrayType, param.betMin, param.cash, param.coin, param.nm, 0.01);
+				//
+		//}
 		
 		private function countCarryInTime():void{
 			Alert.show("带入超时","",AlertPanel,null,Handler.create(this,onCancelCarryIn),null, 3000);
