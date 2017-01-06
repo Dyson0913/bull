@@ -60,45 +60,25 @@ package bull.modules.room.mediator
 			trace("BullScenceMediator setViewComponent")
 			view.backLobby.on(Event.CLICK, this,onReturnClick);
 			
-			//結算字型
-			var settlewinFont:BitmapFont = new BitmapFont();
-			var fnt:XmlDom = Light.loader.getRes("SettleWin.fnt");
-			var fntTxt:Texture = Light.loader.getRes("res/gameScene/settleWin.png");
-			settlewinFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("SettleWin", settlewinFont);
 			
-			var settlelostFont:BitmapFont = new BitmapFont();
-			fnt = Light.loader.getRes("Settlelost.fnt");
-			fntTxt = Light.loader.getRes("res/gameScene/settlelost.png");
-			settlelostFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("SettleLost", settlelostFont);
+			trace("------------------------------------------------" +fontFileName );
+			
+			//結算字型
+			regFont("SettleWin.fnt", "res/gameScene/settleWin.png");
+			regFont("Settlelost.fnt", "res/gameScene/settlelost.png");
 			
 			//冒泡字型
-			var BubbleWinFont:BitmapFont = new BitmapFont();
-			fnt = Light.loader.getRes("bubbleWin.fnt");
-			fntTxt = Light.loader.getRes("res/gameScene/bubbleWin.png");
-			BubbleWinFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("BubbleWin", BubbleWinFont);
-			
-			var BubbleLostFont:BitmapFont = new BitmapFont();
-			fnt = Light.loader.getRes("bubbleLost.fnt");
-			fntTxt = Light.loader.getRes("res/gameScene/bubbleLost.png");
-			BubbleLostFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("BubbleLost", BubbleLostFont);
+			regFont("bubbleWin.fnt", "res/gameScene/bubbleWin.png");			
+			regFont("bubbleLost.fnt", "res/gameScene/bubbleWin.png");
 			
 			//限紅字型
-			var LimitFont:BitmapFont = new BitmapFont();
-			fnt = Light.loader.getRes("LimitFont.fnt");
-			fntTxt = Light.loader.getRes("res/gameScene/limitFont.png");
-			LimitFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("LimitFont", LimitFont);
-			
+			regFont("LimitFont.fnt", "res/gameScene/limitFont.png");
+						
 			//下注字型
-			var mybetFont:BitmapFont = new BitmapFont();
-			fnt = Light.loader.getRes("mybetFont.fnt");
-			fntTxt = Light.loader.getRes("res/gameScene/tableFont.png");
-			mybetFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("mybetFont", mybetFont);
+			regFont("mybetFont.fnt", "res/gameScene/tableFont.png");
+			
+			//rank vip字型
+			regFont("vipfont.fnt", "res/gameScene/vipfont.png");
 			
 			view.on(ScenceManagerEvent.UI_SHOW,this, onUIShow);
 			view.on(ScenceManagerEvent.UI_HIDE,this, onUIHide);
@@ -224,6 +204,21 @@ package bull.modules.room.mediator
 			view.HistoryBoard.update_info(roomData.history_Win_info, roomData.history_lost_info, roomData.history_result_info);			
 		}
 		
+		
+		private function regFont(fontFileName:String,path:String):void
+		{			
+			
+			//結算字型
+			var newFont:BitmapFont = new BitmapFont();
+			var fnt:XmlDom = Light.loader.getRes(fontFileName);
+			var fntTxt:Texture = Light.loader.getRes(path);
+			newFont.parseFont(fnt, fntTxt);
+			
+			var pat:RegExp = /.fnt/;
+			fontFileName = fontFileName.replace(pat,"");
+			
+			Text.registerBitmapFont(fontFileName, newFont);			
+		}
 		
 		private function getPlayerInfoCallback(param:Object):void
 		{

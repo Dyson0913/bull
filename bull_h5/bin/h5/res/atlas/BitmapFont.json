@@ -125,6 +125,27 @@
             },
             "rotated": false,
             "trimed": false
+        },
+        "vipfont.png": {
+            "frame": {
+                "x": 0,
+                "y": 326,
+                "w": 64,
+                "h": 64,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 64,
+                "h": 64
+            },
+            "sourceSize": {
+                "w": 64,
+                "h": 64
+            },
+            "rotated": false,
+            "trimed": false
         }
     },
     "meta": {

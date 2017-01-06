@@ -67,14 +67,14 @@ package bull.view.room
 				this["Win_" + i].y = 233;
 				this["Win_" + i].scaleY = 0.5;
 				this["Win_" + i].scaleX = 0.5;
-				this["Win_" + i].font = "BubbleWin";
+				this["Win_" + i].font = "bubbleWin";
 				this["Win_" + i].text = "";
 				
 				this["Lost_" + i].visible = false;
 				this["Lost_" + i].y = 233;
 				this["Lost_" + i].scaleY = 0.5;
 				this["Lost_" + i].scaleX = 0.5;
-				this["Lost_" + i].font = "BubbleLost";
+				this["Lost_" + i].font = "bubbleLost";
 				this["Lost_" + i].text = "";
 			}
 		}
