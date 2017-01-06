@@ -29157,46 +29157,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			if(param.uid){
-				bullData.uid=param.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
-
-
 	/**
 	*这里处理大厅的socket连接
 	*@author light-k
@@ -29302,6 +29262,46 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
+
+
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			if(param.uid){
+				bullData.uid=param.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -30041,6 +30041,26 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
+	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
+	var SmallLoadingMediator=(function(_super){
+		function SmallLoadingMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
+		}
+
+		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
+		var __proto=SmallLoadingMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.loadingMask.lodingMask=viewComponent;
+		}
+
+		SmallLoadingMediator.NAME="smallLoadingMediator";
+		return SmallLoadingMediator;
+	})(Mediator)
+
+
 	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
 	var UserInfoData=(function(_super){
 		function UserInfoData(){
@@ -30095,26 +30115,6 @@ var Laya=window.Laya=(function(window,document){
 		UserInfoData.NAME="userInfoData";
 		return UserInfoData;
 	})(EventDispatcher)
-
-
-	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
-	var SmallLoadingMediator=(function(_super){
-		function SmallLoadingMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
-		}
-
-		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
-		var __proto=SmallLoadingMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.loadingMask.lodingMask=viewComponent;
-		}
-
-		SmallLoadingMediator.NAME="smallLoadingMediator";
-		return SmallLoadingMediator;
-	})(Mediator)
 
 
 	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
@@ -30659,45 +30659,14 @@ var Laya=window.Laya=(function(window,document){
 			_super.prototype.setViewComponent.call(this,viewComponent);
 			console.log("BullScenceMediator setViewComponent")
 			this.view.backLobby.on("click",this,this.onReturnClick);
-			var fontFileName="SettleWin.fnt";
-			var pat=/.fnt/;
-			fontFileName=fontFileName.replace(pat,"");
-			console.log("------------------------------------------------"+fontFileName);
-			var settlewinFont=new BitmapFont();
-			var fnt=Light.loader.getRes("SettleWin.fnt");
-			var fntTxt=Light.loader.getRes("res/gameScene/settleWin.png");
-			settlewinFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("SettleWin",settlewinFont);
-			var settlelostFont=new BitmapFont();
-			fnt=Light.loader.getRes("Settlelost.fnt");
-			fntTxt=Light.loader.getRes("res/gameScene/settlelost.png");
-			settlelostFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("SettleLost",settlelostFont);
-			var BubbleWinFont=new BitmapFont();
-			fnt=Light.loader.getRes("bubbleWin.fnt");
-			fntTxt=Light.loader.getRes("res/gameScene/bubbleWin.png");
-			BubbleWinFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("BubbleWin",BubbleWinFont);
-			var BubbleLostFont=new BitmapFont();
-			fnt=Light.loader.getRes("bubbleLost.fnt");
-			fntTxt=Light.loader.getRes("res/gameScene/bubbleLost.png");
-			BubbleLostFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("BubbleLost",BubbleLostFont);
-			var LimitFont=new BitmapFont();
-			fnt=Light.loader.getRes("LimitFont.fnt");
-			fntTxt=Light.loader.getRes("res/gameScene/limitFont.png");
-			LimitFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("LimitFont",LimitFont);
-			var mybetFont=new BitmapFont();
-			fnt=Light.loader.getRes("mybetFont.fnt");
-			fntTxt=Light.loader.getRes("res/gameScene/tableFont.png");
-			mybetFont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("mybetFont",mybetFont);
-			var vipfont=new BitmapFont();
-			fnt=Light.loader.getRes("vipfont.fnt");
-			fntTxt=Light.loader.getRes("res/gameScene/vipfont.png");
-			vipfont.parseFont(fnt,fntTxt);
-			Text.registerBitmapFont("mybetFont",vipfont);
+			this.regFont("SettleWin.fnt","res/gameScene/settleWin.png");
+			this.regFont("Settlelost.fnt","res/gameScene/settlelost.png");
+			this.regFont("bubbleWin.fnt","res/gameScene/bubbleWin.png");
+			this.regFont("bubbleLost.fnt","res/gameScene/bubbleWin.png");
+			this.regFont("LimitFont.fnt","res/gameScene/limitFont.png");
+			this.regFont("mybetFont.fnt","res/gameScene/tableFont.png");
+			this.regFont("vipfont.fnt","res/gameScene/vipfont.png");
+			this.regFont("smallvip.fnt","res/gameScene/smallvip.png");
 			this.view.on("uiShow",this,this.onUIShow);
 			this.view.on("uiHide",this,this.onUIHide);
 			this.view.optionBtn.on("click",this,this.onClick);
@@ -30791,8 +30760,16 @@ var Laya=window.Laya=(function(window,document){
 			this.view.HistoryBoard.update_info(this.roomData.history_Win_info,this.roomData.history_lost_info,this.roomData.history_result_info);
 		}
 
-		__proto.regestFont=function(fontFileName,path){}
-		//Text.registerBitmapFont("SettleLost",settlelostFont);
+		__proto.regFont=function(fontFileName,path){
+			var newFont=new BitmapFont();
+			var fnt=Light.loader.getRes(fontFileName);
+			var fntTxt=Light.loader.getRes(path);
+			newFont.parseFont(fnt,fntTxt);
+			var pat=/.fnt/;
+			fontFileName=fontFileName.replace(pat,"");
+			Text.registerBitmapFont(fontFileName,newFont);
+		}
+
 		__proto.getPlayerInfoCallback=function(param){
 			console.log("getPlayerInfoCallback!!!!!!!!!!!!!!!!!!");
 			console.log(param);
@@ -32549,6 +32526,23 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
+
+
 	/**
 	*场景管理器
 	*@author light-k
@@ -32749,23 +32743,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
-
-
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -48813,6 +48790,18 @@ var Laya=window.Laya=(function(window,document){
 			this.self_amount_2=null;
 			this.self_amount_3=null;
 			this.BetLimit=null;
+			this.Rankp_0=null;
+			this.Rankp_1=null;
+			this.Rankp_2=null;
+			this.Rankp_3=null;
+			this.Tips_0=null;
+			this.Name_0=null;
+			this.Tips_1=null;
+			this.Name_1=null;
+			this.Tips_2=null;
+			this.Name_2=null;
+			this.Tips_3=null;
+			this.Name_3=null;
 			BetZoneUI.__super.call(this);
 		}
 
@@ -48822,12 +48811,13 @@ var Laya=window.Laya=(function(window,document){
 			View.regComponent("ui.ui.room.Bet_TotalUI",Bet_TotalUI);
 			View.regComponent("ui.ui.room.Bet_selfUI",Bet_selfUI);
 			View.regComponent("ui.ui.room.BetLImitUI",BetLImitUI);
+			View.regComponent("ui.ui.room.RankPanelUI",RankPanelUI);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BetZoneUI.uiView);
 		}
 
 		__static(BetZoneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"}},{"type":"Image","props":{"y":2,"x":252,"var":"zone_1","skin":"res/gameScene/闲家下注区3.png","name":"zone_1"}},{"type":"Image","props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"}},{"type":"Image","props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"}},{"type":"Bet_Total","props":{"y":4,"x":23,"var":"total_amount_0","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":264,"var":"total_amount_1","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":507,"var":"total_amount_2","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":750,"var":"total_amount_3","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"var":"self_amount_0","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"var":"self_amount_1","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"var":"self_amount_2","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"var":"self_amount_3","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"BetLImit","props":{"y":-117,"x":379,"visible":false,"var":"BetLimit","runtime":"ui.ui.room.BetLImitUI"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"}},{"type":"Image","props":{"y":2,"x":252,"var":"zone_1","skin":"res/gameScene/闲家下注区3.png","name":"zone_1"}},{"type":"Image","props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"}},{"type":"Image","props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"}},{"type":"Bet_Total","props":{"y":4,"x":23,"var":"total_amount_0","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":264,"var":"total_amount_1","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":507,"var":"total_amount_2","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":750,"var":"total_amount_3","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"var":"self_amount_0","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"var":"self_amount_1","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"var":"self_amount_2","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"var":"self_amount_3","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"BetLImit","props":{"y":-117,"x":379,"visible":false,"var":"BetLimit","runtime":"ui.ui.room.BetLImitUI"}},{"type":"RankPanel","props":{"y":18,"x":161,"visible":false,"var":"Rankp_0","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":416,"visible":false,"var":"Rankp_1","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":659,"visible":false,"var":"Rankp_2","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":18,"x":904,"visible":false,"var":"Rankp_3","runtime":"ui.ui.room.RankPanelUI"}},{"type":"Image","props":{"y":55,"x":163,"var":"Tips_0","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":86,"var":"Name_0","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":58,"x":415,"var":"Tips_1","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_1","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":59,"x":662,"var":"Tips_2","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_2","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":59,"x":624,"var":"Tips_3","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_3","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"}}]}]};}
 		]);
 		return BetZoneUI;
 	})(View)
@@ -49449,6 +49439,55 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":250,"visible":true,"height":100},"child":[{"type":"Animation","props":{"var":"Type","source":"res/gameScene/5小牛.png,res/gameScene/牛九.png"}},{"type":"Image","props":{"y":36,"x":137,"var":"multi","skin":"res/gameScene/乘号.png"}},{"type":"Label","props":{"y":25,"x":174,"width":79,"var":"odds","text":"10","height":60,"font":"settleWin","align":"center"}}]};}
 		]);
 		return PokerEffectUI;
+	})(View)
+
+
+	//class ui.ui.room.RankInfoUI extends laya.ui.View
+	var RankInfoUI=(function(_super){
+		function RankInfoUI(){
+			this.Light=null;
+			this.Vip=null;
+			this.Level=null;
+			this.Name=null;
+			this.Money=null;
+			RankInfoUI.__super.call(this);
+		}
+
+		__class(RankInfoUI,'ui.ui.room.RankInfoUI',_super);
+		var __proto=RankInfoUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(RankInfoUI.uiView);
+		}
+
+		__static(RankInfoUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":450,"height":50},"child":[{"type":"Image","props":{"y":2,"x":285,"var":"Light","skin":"res/share/Light.png"}},{"type":"Animation","props":{"y":13,"x":14,"source":"res/gameScene/数字No1.png,res/gameScene/数字No2.png,res/gameScene/数字No3.png"}},{"type":"Image","props":{"y":14,"x":43,"var":"Vip","skin":"res/gameScene/VIP底板.png"},"child":[{"type":"Image","props":{"y":1,"x":3,"skin":"res/gameScene/VIP.png"}},{"type":"Label","props":{"y":2,"x":30,"width":36,"var":"Level","text":"10","height":19,"font":"vipfont","align":"center"}}]},{"type":"Label","props":{"y":10,"x":116,"width":93,"var":"Name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"center"}},{"type":"Label","props":{"y":12,"x":324,"width":84,"var":"Money","text":"+999999999","scaleY":1.5,"scaleX":1.5,"height":19,"color":"#c2d722","align":"center"}}]};}
+		]);
+		return RankInfoUI;
+	})(View)
+
+
+	//class ui.ui.room.RankPanelUI extends laya.ui.View
+	var RankPanelUI=(function(_super){
+		function RankPanelUI(){
+			this.rank_info_0=null;
+			this.rank_info_1=null;
+			this.rank_info_2=null;
+			RankPanelUI.__super.call(this);
+		}
+
+		__class(RankPanelUI,'ui.ui.room.RankPanelUI',_super);
+		var __proto=RankPanelUI.prototype;
+		__proto.createChildren=function(){
+			View.regComponent("ui.ui.room.RankInfoUI",RankInfoUI);
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(RankPanelUI.uiView);
+		}
+
+		__static(RankPanelUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":460,"height":160},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/前三名.png"}},{"type":"RankInfo","props":{"y":7,"x":5,"var":"rank_info_0","runtime":"ui.ui.room.RankInfoUI"}},{"type":"RankInfo","props":{"y":57,"x":6,"var":"rank_info_1","runtime":"ui.ui.room.RankInfoUI"}},{"type":"RankInfo","props":{"y":104,"x":6,"var":"rank_info_2","runtime":"ui.ui.room.RankInfoUI"}}]};}
+		]);
+		return RankPanelUI;
 	})(View)
 
 
@@ -51404,13 +51443,13 @@ var Laya=window.Laya=(function(window,document){
 				this["Win_"+i].y=233;
 				this["Win_"+i].scaleY=0.5;
 				this["Win_"+i].scaleX=0.5;
-				this["Win_"+i].font="BubbleWin";
+				this["Win_"+i].font="bubbleWin";
 				this["Win_"+i].text="";
 				this["Lost_"+i].visible=false;
 				this["Lost_"+i].y=233;
 				this["Lost_"+i].scaleY=0.5;
 				this["Lost_"+i].scaleX=0.5;
-				this["Lost_"+i].font="BubbleLost";
+				this["Lost_"+i].font="bubbleLost";
 				this["Lost_"+i].text="";
 			}
 		}
