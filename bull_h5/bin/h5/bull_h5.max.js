@@ -31201,6 +31201,7 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case this.view.PlayerListBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
+					this.view.PokerTypePanel.hide();
 					break ;
 				case this.view.optionBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
@@ -51644,6 +51645,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.set_data=function(data){
+			this.hide();
 			for (var i=0;i < 5;i++){
 				this["pokerType_"+i].filters=[this.blurFilter];
 				this["pokerType_"+i]["odds"].font="SettleWin";
@@ -51667,28 +51669,11 @@ var Laya=window.Laya=(function(window,document){
 			Tween.to(this["pokerType_"+i]["odds"],{scaleX:1,scaleY:1,alpha:1},500,Ease.cubicOut,null,2);
 		}
 
-		__proto.set_poker_image=function(idx_i,idx_j){
-			this["poker_"+idx_i+"_"+idx_j].index=1;
-			if (idx_i==4 && idx_j==4){
-				for(var i=0;i< 5;i++){
-					for (var j=0;j < 5;j++){
-						Tween.to(this["poker_"+i+"_"+j],{x:this["poker_"+i+"_"+j].x+(j*27)},500,Ease.cubicOut,Handler.create(this,this.ani_ok,[i,j]));
-					}
-				}
-			}
-		}
-
-		__proto.ani_ok=function(idx_i,idx_i){
-			if (idx_i==4 && /*no*/this.idx_j==4){
-			}
-		}
-
-		//TODO　報牌型
 		__proto.hide=function(){
+			var init_po=[81,368,651,904,467];
 			for(var i=0;i< 5;i++){
-				for (var j=0;j < 5;j++){
-					Tween.to(this["poker_"+i+"_"+j],{x:649,y:-156},500,Ease.cubicOut);
-				}
+				this["pokerType_"+i].visible=false;
+				this["pokerType_"+i].x=init_po[i];
 			}
 		}
 
@@ -53067,8 +53052,7 @@ var Laya=window.Laya=(function(window,document){
 39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (122):warning:appModel.hallAppModel.join_Port This variable is not defined.
 40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (131):warning:appModel.hallAppModel.room_type This variable is not defined.
 41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/services/WebService.as (135):warning:appModel.hallAppModel.room_type This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (239):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
+42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (240):warning:CarNotification.GET_USER_BALANCE This variable is not defined.
 43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/services/RoomSocketService.as (95):warning:CarNotification.ExitRoomEvent This variable is not defined.
 44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/poker.as (104):warning:idx_j This variable is not defined.
-45 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (86):warning:idx_j This variable is not defined.
 */

@@ -31,8 +31,7 @@ package bull.view.room
 		
 		public function set_data(data:Array):void
 		{
-			
-			
+			this.hide();
 			
 			for (var i:int = 0; i < 5; i++)
 			{
@@ -67,41 +66,15 @@ package bull.view.room
 				
 		}
 		
-		private function set_poker_image(idx_i:int, idx_j:int ):void 
-		{
-			//var idx:int = _pokerdata[idx_i][idx_j];
-			
-			//TODO wait poker
-			this["poker_" + idx_i + "_" + idx_j].index = 1;
-			
-			if ( idx_i == 4 && idx_j == 4)
-			{
-				for(var i:int =0;i< 5;i++)
-				{
-					for (var j = 0; j < 5; j++)
-					{
-						Tween.to(this["poker_" + i + "_" + j], { x:this["poker_" + i + "_" + j].x  + (j*27)}, 500, Ease.cubicOut,Handler.create(this,ani_ok,[i,j]));						
-					}
-				}
-			}
-		}
 		
-		private function ani_ok(idx_i:int, idx_i:int ):void 
-		{
-			if ( idx_i == 4 && idx_j == 4)
-			{
-				//TODO　報牌型
-			}
-		}
 		
 		public function hide():void
 		{			
+			var init_po:Array = [81, 368, 651, 904, 467];
 			for(var i:int =0;i< 5;i++)
 			{
-				for (var j = 0; j < 5; j++)
-				{
-					Tween.to(this["poker_" + i + "_" + j], { x:649,y:-156}, 500, Ease.cubicOut);						
-				}
+				this["pokerType_" + i].visible = false;
+				this["pokerType_" + i].x = init_po[i];
 			}
 		}
 		

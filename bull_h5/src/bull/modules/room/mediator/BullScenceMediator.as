@@ -140,6 +140,7 @@ package bull.modules.room.mediator
 				case view.PlayerListBtn:
 					view.btn_display(!view.btnBg.visible);
 					
+					view.PokerTypePanel.hide();
 				break;
 				
 				case view.optionBtn:
