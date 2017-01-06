@@ -16,6 +16,7 @@
     "LimitFont.fnt": { "url": "BitmapFont/limitFont.fnt", "type":"xml"},
     "mybetFont.fnt": { "url": "BitmapFont/tableFont.fnt", "type":"xml"},
     "vipfont.fnt": { "url": "BitmapFont/vipfont.fnt", "type":"xml"},
+    "smallvip.fnt": { "url": "BitmapFont/smallvip.fnt", "type":"xml"},
     "GameSprite": { "url": "res/atlas/gameScene.json","type":"atlas"},    
     "error_code": { "url": "res/config/error_code.json", "type":"json"},
     "assetsIn": { "url": "res/atlas/assetsIn.json", "type":"atlas"},

@@ -105,10 +105,31 @@
             "rotated": false,
             "trimed": false
         },
-        "tableFont.png": {
+        "smallvip.png": {
             "frame": {
                 "x": 324,
                 "y": 258,
+                "w": 128,
+                "h": 16,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 128,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 128,
+                "h": 16
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "tableFont.png": {
+            "frame": {
+                "x": 388,
+                "y": 0,
                 "w": 128,
                 "h": 128,
                 "idx": 0

@@ -21,6 +21,8 @@ BitmapFont\settlelost.fnt:1483434963
 BitmapFont\settlelost.png:1483434963
 BitmapFont\settleWin.fnt:1483428349
 BitmapFont\settleWin.png:1483428349
+BitmapFont\smallvip.fnt:1483696730
+BitmapFont\smallvip.png:1483696730
 BitmapFont\tableFont.fnt:1483687969
 BitmapFont\tableFont.png:1483687969
 BitmapFont\vipfont.fnt:1483428990
@@ -114,6 +116,7 @@ res\gameScene\PlayerListCloseBtn.png:1483251790
 res\gameScene\SameBetBtn.png:1483076496
 res\gameScene\settlelost.png:1483434963
 res\gameScene\settleWin.png:1483428349
+res\gameScene\smallvip.png:1483696730
 res\gameScene\tableFont.png:1483687969
 res\gameScene\tipsÐ¡µ×°å.png:1482212097
 res\gameScene\VIP.png:1482212097

@@ -58,10 +58,7 @@ package bull.modules.room.mediator
 		override public function setViewComponent(viewComponent:Object):void{
 			super.setViewComponent(viewComponent);
 			trace("BullScenceMediator setViewComponent")
-			view.backLobby.on(Event.CLICK, this,onReturnClick);
-			
-			
-			trace("------------------------------------------------" +fontFileName );
+			view.backLobby.on(Event.CLICK, this,onReturnClick);			
 			
 			//結算字型
 			regFont("SettleWin.fnt", "res/gameScene/settleWin.png");
@@ -79,6 +76,7 @@ package bull.modules.room.mediator
 			
 			//rank vip字型
 			regFont("vipfont.fnt", "res/gameScene/vipfont.png");
+			regFont("smallvip.fnt", "res/gameScene/smallvip.png");
 			
 			view.on(ScenceManagerEvent.UI_SHOW,this, onUIShow);
 			view.on(ScenceManagerEvent.UI_HIDE,this, onUIHide);
