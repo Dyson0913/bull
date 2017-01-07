@@ -1,4 +1,4 @@
-package bull.view.room 
+package bull.view.room
 {
 	import com.lightUI.events.LightEvent;
 	
@@ -10,22 +10,24 @@ package bull.view.room
 	import laya.media.SoundManager;
 	import bull.core.SoundPath;
 	
-	import ui.ui.room.TimerUI;
+	import ui.ui.room.BetTimePanelUI;
 	
-	public class Timer extends TimerUI
-	{
+	
+	/**
+	 * 下注时间倒计时
+	 */	
+	public class BetTimePanel extends BetTimePanelUI
+	{		
 		private var _time:int;
-		public function Timer() 
+		public function BetTimePanel()
 		{
 			super();
-			
 		}
 		
 		override protected function createChildren():void
 		{
-			super.createChildren();						
-			
-		}		
+			super.createChildren();
+		}
 		
 		public function hide():void
 		{			
@@ -64,7 +66,6 @@ package bull.view.room
 		{
 			//view.TimerPanel.set_data([10]);			
 			//view.TimerPanel.hide();
-		}		
+		}
 	}
-
 }

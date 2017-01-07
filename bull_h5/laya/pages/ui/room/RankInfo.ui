@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":1,
+    "selecteID":4,
     "props":{"width":450,"sceneColor":"#161414","height":50},
     "nodeParent":-1,
     "label":"View",
@@ -123,7 +123,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":10,"x":116,"width":93,"var":"Name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"center"},
+            "props":{"y":10,"x":116,"width":162,"var":"Name","text":"天涯歌女爱与仇","height":28,"fontSize":22,"color":"#f8f0ef","align":"center"},
             "nodeParent":1,
             "label":"Label(Name)",
             "isDirectory":false,
@@ -143,7 +143,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":12,"x":324,"width":84,"var":"Money","text":"+999999999","scaleY":1.5,"scaleX":1.5,"height":19,"color":"#c2d722","align":"center"},
+            "props":{"y":12,"x":324,"width":84,"var":"Money","text":"+999999999","height":19,"fontSize":22,"color":"#c2d722","align":"center"},
             "nodeParent":1,
             "label":"Label(Money)",
             "isDirectory":false,

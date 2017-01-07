@@ -62,7 +62,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":1,"x":4,"width":41,"var":"index_txt","text":"第1局","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
+            "props":{"y":1,"x":4,"width":54,"var":"index_txt","text":"第1局","mouseEnabled":false,"height":27,"fontSize":20,"color":"#f6ebea","bold":false},
             "nodeParent":1,
             "label":"Label(index_txt)",
             "isDirectory":false,
@@ -82,7 +82,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":1,"x":99,"width":29,"var":"bankerType_txt","text":"牛一","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
+            "props":{"y":1,"x":99,"width":44,"var":"bankerType_txt","text":"牛一","mouseEnabled":false,"height":27,"fontSize":22,"color":"#f6ebea","bold":false},
             "nodeParent":1,
             "label":"Label(bankerType_txt)",
             "isDirectory":false,
@@ -102,7 +102,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":0,"x":204,"width":29,"var":"player0_txt","text":"牛一","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
+            "props":{"y":0,"x":204,"width":50,"var":"player0_txt","text":"牛一","mouseEnabled":false,"height":29,"fontSize":22,"color":"#f6ebea","bold":false},
             "nodeParent":1,
             "label":"Label(player0_txt)",
             "isDirectory":false,
@@ -122,7 +122,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":-2,"x":513,"width":74,"var":"amount_txt","text":"9999999","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false,"align":"center"},
+            "props":{"y":1,"x":515,"width":104,"var":"amount_txt","text":"9999999","mouseEnabled":false,"height":31,"fontSize":22,"color":"#f6ebea","bold":false,"align":"center"},
             "nodeParent":1,
             "label":"Label(amount_txt)",
             "isDirectory":false,
@@ -142,7 +142,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":-2,"x":645,"width":87,"var":"rundID_txt","text":"5868acad101fa","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
+            "props":{"y":-2,"x":645,"width":158,"var":"rundID_txt","text":"5868acad101fa","mouseEnabled":false,"height":31,"fontSize":22,"color":"#f6ebea","bold":false},
             "nodeParent":1,
             "label":"Label(rundID_txt)",
             "isDirectory":false,
@@ -162,7 +162,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":1,"x":289,"width":29,"var":"player1_txt","text":"牛一","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
+            "props":{"y":1,"x":289,"width":47,"var":"player1_txt","text":"牛一","mouseEnabled":false,"height":23,"fontSize":22,"color":"#f6ebea","bold":false},
             "nodeParent":1,
             "label":"Label(player1_txt)",
             "isDirectory":false,
@@ -182,7 +182,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":1,"x":375,"width":29,"var":"player2_txt","text":"牛一","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
+            "props":{"y":1,"x":375,"width":52,"var":"player2_txt","text":"牛一","mouseEnabled":false,"height":24,"fontSize":22,"color":"#f6ebea","bold":false},
             "nodeParent":1,
             "label":"Label(player2_txt)",
             "isDirectory":false,
@@ -202,7 +202,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":1,"x":459,"width":29,"var":"player3_txt","text":"牛一","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
+            "props":{"y":1,"x":459,"width":50,"var":"player3_txt","text":"牛一","mouseEnabled":false,"height":26,"fontSize":22,"color":"#f6ebea","bold":false},
             "nodeParent":1,
             "label":"Label(player3_txt)",
             "isDirectory":false,

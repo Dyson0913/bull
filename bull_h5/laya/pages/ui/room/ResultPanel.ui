@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":47,
+    "selecteID":21,
     "props":{"width":679,"sceneColor":"#000000","height":416},
     "nodeParent":-1,
     "label":"View",
@@ -82,7 +82,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":366,"x":308,"width":43,"text":"确  定","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true},
+            "props":{"y":366,"x":308,"width":43,"text":"确  定","mouseEnabled":false,"height":16,"fontSize":25,"color":"#f6ebea","bold":true},
             "nodeParent":1,
             "label":"Label",
             "isDirectory":false,
@@ -102,7 +102,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
+            "props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","mouseEnabled":false,"height":16,"fontSize":23,"color":"#f6ebea","bold":false},
             "nodeParent":1,
             "label":"Label",
             "isDirectory":false,
@@ -122,7 +122,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":365,"x":489,"width":11,"text":"S","scaleY":2.3,"scaleX":2.3,"mouseEnabled":false,"height":14,"color":"#e53829","bold":true},
+            "props":{"y":364,"x":498,"width":30,"text":"S","mouseEnabled":false,"height":27,"fontSize":30,"color":"#e53829","bold":true},
             "nodeParent":1,
             "label":"Label",
             "isDirectory":false,
@@ -142,7 +142,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":362,"x":470,"width":10,"var":"rest_time","text":"8","scaleY":2.5,"scaleX":2.5,"mouseEnabled":false,"height":16,"color":"#e53829","bold":true},
+            "props":{"y":361,"x":476,"width":25,"var":"rest_time","text":"8","mouseEnabled":false,"height":33,"fontSize":35,"color":"#e53829","bold":true},
             "nodeParent":1,
             "label":"Label(rest_time)",
             "isDirectory":false,
@@ -162,7 +162,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":324,"x":37,"width":83,"var":"banker_Money","text":"+9999999","scaleY":1.5,"scaleX":1.5,"mouseEnabled":false,"height":16,"color":"#9fb23c","bold":false,"align":"center"},
+            "props":{"y":324,"x":37,"width":114,"var":"banker_Money","text":"+9999999","mouseEnabled":false,"height":20,"fontSize":20,"color":"#9fb23c","bold":false,"align":"center"},
             "nodeParent":1,
             "label":"Label(banker_Money)",
             "isDirectory":false,
@@ -202,7 +202,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":86,"x":106,"width":93,"var":"self_name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"},
+            "props":{"y":86,"x":106,"width":165,"var":"self_name","text":"天涯歌女爱与仇","height":25,"fontSize":22,"color":"#f8f0ef"},
             "nodeParent":1,
             "label":"Label(self_name)",
             "isDirectory":false,
@@ -222,7 +222,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":119,"x":126,"width":93,"var":"self_money","text":"6666666","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#f8f0ef","align":"left"},
+            "props":{"y":119,"x":126,"width":101,"var":"self_money","text":"6666666","height":23,"fontSize":22,"color":"#f8f0ef","align":"left"},
             "nodeParent":1,
             "label":"Label(self_money)",
             "isDirectory":false,
@@ -324,7 +324,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":249,"x":270,"width":175,"var":"Text_NoOne_bet","text":"本局无人赢钱","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#f8f0ef","align":"center"},
+            "props":{"y":261,"x":337,"width":175,"var":"Text_NoOne_bet","text":"本局无人赢钱","height":16,"fontSize":22,"color":"#f8f0ef","align":"center"},
             "nodeParent":1,
             "label":"Label(Text_NoOne_bet)",
             "isDirectory":false,
@@ -404,7 +404,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":203,"x":355,"width":93,"var":"name_0","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"},
+            "props":{"y":203,"x":355,"width":93,"var":"name_0","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"},
             "nodeParent":1,
             "label":"Label(name_0)",
             "isDirectory":false,
@@ -504,7 +504,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":260,"x":355,"width":93,"var":"name_1","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"},
+            "props":{"y":260,"x":355,"width":93,"var":"name_1","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"},
             "nodeParent":1,
             "label":"Label(name_1)",
             "isDirectory":false,
@@ -604,7 +604,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":312,"x":355,"width":93,"var":"name_2","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"},
+            "props":{"y":312,"x":355,"width":93,"var":"name_2","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"},
             "nodeParent":1,
             "label":"Label(name_2)",
             "isDirectory":false,

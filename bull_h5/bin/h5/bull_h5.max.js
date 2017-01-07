@@ -362,7 +362,7 @@ var Laya=window.Laya=(function(window,document){
 			Browser.__init__();
 			Context.__init__();
 			Graphics.__init__();
-			Laya.timer=new Timer1();
+			Laya.timer=new Timer();
 			Laya.loader=new LoaderManager();
 			for (var i=0,n=plugins.length;i < n;i++){
 				if (plugins[i].enable)plugins[i].enable();
@@ -15236,7 +15236,7 @@ var Laya=window.Laya=(function(window,document){
 	*<code>Timer</code> 是时钟管理类。它是一个单例，可以通过 Laya.timer 访问。
 	*/
 	//class laya.utils.Timer
-	var Timer1=(function(){
+	var Timer=(function(){
 		var TimerHandler;
 		function Timer(){
 			this._delta=0;
@@ -15253,7 +15253,7 @@ var Laya=window.Laya=(function(window,document){
 			Laya.timer && Laya.timer.frameLoop(1,this,this._update);
 		}
 
-		__class(Timer,'laya.utils.Timer',null,'Timer1');
+		__class(Timer,'laya.utils.Timer');
 		var __proto=Timer.prototype;
 		/**
 		*@private
@@ -20356,7 +20356,7 @@ var Laya=window.Laya=(function(window,document){
 
 		Light.root=null
 		__static(Light,
-		['loader',function(){return this.loader=new LLoaderManager();},'scence',function(){return this.scence=new ScenceManager();},'layer',function(){return this.layer=new LayerManager();},'error',function(){return this.error=new ErrorManager();},'language',function(){return this.language=new LanguageManager();},'timer',function(){return this.timer=new Timer2();}
+		['loader',function(){return this.loader=new LLoaderManager();},'scence',function(){return this.scence=new ScenceManager();},'layer',function(){return this.layer=new LayerManager();},'error',function(){return this.error=new ErrorManager();},'language',function(){return this.language=new LanguageManager();},'timer',function(){return this.timer=new Timer1();}
 		]);
 		return Light;
 	})()
@@ -20845,7 +20845,7 @@ var Laya=window.Laya=(function(window,document){
 	*
 	*/
 	//class com.lightUI.manager.timer.Timer
-	var Timer2=(function(){
+	var Timer1=(function(){
 		function Timer(frameRate){
 			this._frameStep=1;
 			this._frameRate=NaN;
@@ -20859,7 +20859,7 @@ var Laya=window.Laya=(function(window,document){
 			this.frameRate=frameRate;
 		}
 
-		__class(Timer,'com.lightUI.manager.timer.Timer',null,'Timer2');
+		__class(Timer,'com.lightUI.manager.timer.Timer',null,'Timer1');
 		var __proto=Timer.prototype;
 		/**
 		*注册每帧被调用的函数
@@ -26195,6 +26195,53 @@ var Laya=window.Laya=(function(window,document){
 	})(Filter)
 
 
+	//class laya.webgl.shader.d2.ShaderDefines2D extends laya.webgl.shader.ShaderDefines
+	var ShaderDefines2D=(function(_super){
+		function ShaderDefines2D(){
+			ShaderDefines2D.__super.call(this,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name,ShaderDefines2D.__int2nameMap);
+		}
+
+		__class(ShaderDefines2D,'laya.webgl.shader.d2.ShaderDefines2D',_super);
+		ShaderDefines2D.__init__=function(){
+			ShaderDefines2D.reg("TEXTURE2D",0x01);
+			ShaderDefines2D.reg("COLOR2D",0x02);
+			ShaderDefines2D.reg("PRIMITIVE",0x04);
+			ShaderDefines2D.reg("GLOW_FILTER",0x08);
+			ShaderDefines2D.reg("BLUR_FILTER",0x10);
+			ShaderDefines2D.reg("COLOR_FILTER",0x20);
+			ShaderDefines2D.reg("COLOR_ADD",0x40);
+			ShaderDefines2D.reg("WORLDMAT",0x80);
+		}
+
+		ShaderDefines2D.reg=function(name,value){
+			ShaderDefines._reg(name,value,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name);
+		}
+
+		ShaderDefines2D.toText=function(value,int2name,int2nameMap){
+			return ShaderDefines._toText(value,int2name,int2nameMap);
+		}
+
+		ShaderDefines2D.toInt=function(names){
+			return ShaderDefines._toInt(names,ShaderDefines2D.__name2int);
+		}
+
+		ShaderDefines2D.TEXTURE2D=0x01;
+		ShaderDefines2D.COLOR2D=0x02;
+		ShaderDefines2D.PRIMITIVE=0x04;
+		ShaderDefines2D.FILTERGLOW=0x08;
+		ShaderDefines2D.FILTERBLUR=0x10;
+		ShaderDefines2D.FILTERCOLOR=0x20;
+		ShaderDefines2D.COLORADD=0x40;
+		ShaderDefines2D.WORLDMAT=0x80;
+		ShaderDefines2D.FILLTEXTURE=0x100;
+		ShaderDefines2D.SKINMESH=0x200;
+		ShaderDefines2D.__name2int={};
+		ShaderDefines2D.__int2name=[];
+		ShaderDefines2D.__int2nameMap=[];
+		return ShaderDefines2D;
+	})(ShaderDefines)
+
+
 	/**
 	*发光滤镜(也可以当成阴影滤使用）
 	*/
@@ -26271,53 +26318,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return GlowFilter;
 	})(Filter)
-
-
-	//class laya.webgl.shader.d2.ShaderDefines2D extends laya.webgl.shader.ShaderDefines
-	var ShaderDefines2D=(function(_super){
-		function ShaderDefines2D(){
-			ShaderDefines2D.__super.call(this,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name,ShaderDefines2D.__int2nameMap);
-		}
-
-		__class(ShaderDefines2D,'laya.webgl.shader.d2.ShaderDefines2D',_super);
-		ShaderDefines2D.__init__=function(){
-			ShaderDefines2D.reg("TEXTURE2D",0x01);
-			ShaderDefines2D.reg("COLOR2D",0x02);
-			ShaderDefines2D.reg("PRIMITIVE",0x04);
-			ShaderDefines2D.reg("GLOW_FILTER",0x08);
-			ShaderDefines2D.reg("BLUR_FILTER",0x10);
-			ShaderDefines2D.reg("COLOR_FILTER",0x20);
-			ShaderDefines2D.reg("COLOR_ADD",0x40);
-			ShaderDefines2D.reg("WORLDMAT",0x80);
-		}
-
-		ShaderDefines2D.reg=function(name,value){
-			ShaderDefines._reg(name,value,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name);
-		}
-
-		ShaderDefines2D.toText=function(value,int2name,int2nameMap){
-			return ShaderDefines._toText(value,int2name,int2nameMap);
-		}
-
-		ShaderDefines2D.toInt=function(names){
-			return ShaderDefines._toInt(names,ShaderDefines2D.__name2int);
-		}
-
-		ShaderDefines2D.TEXTURE2D=0x01;
-		ShaderDefines2D.COLOR2D=0x02;
-		ShaderDefines2D.PRIMITIVE=0x04;
-		ShaderDefines2D.FILTERGLOW=0x08;
-		ShaderDefines2D.FILTERBLUR=0x10;
-		ShaderDefines2D.FILTERCOLOR=0x20;
-		ShaderDefines2D.COLORADD=0x40;
-		ShaderDefines2D.WORLDMAT=0x80;
-		ShaderDefines2D.FILLTEXTURE=0x100;
-		ShaderDefines2D.SKINMESH=0x200;
-		ShaderDefines2D.__name2int={};
-		ShaderDefines2D.__int2name=[];
-		ShaderDefines2D.__int2nameMap=[];
-		return ShaderDefines2D;
-	})(ShaderDefines)
 
 
 	/**
@@ -29837,7 +29837,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.startHeartCount=function(){
 			if(!this.timer){
-				this.timer=new Timer1();
+				this.timer=new Timer();
 				this.timer.loop(5000,this,this.sendMsg);
 			}
 		}
@@ -29957,7 +29957,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.startTimer=function(){
 			if(!this.timer){
-				this.timer=new Timer1();
+				this.timer=new Timer();
 				this.timer.loop(5000,this,this.reconnect);
 			}
 		}
@@ -30467,7 +30467,7 @@ var Laya=window.Laya=(function(window,document){
 			this.first=false;
 			this.perLoadService=null;
 			this.timerId=0;
-			this.timer=new Timer2();
+			this.timer=new Timer1();
 			(mediatorName===void 0)&& (mediatorName="");
 			AssetInMediator.__super.call(this,mediatorName,viewComponent);
 		}
@@ -30612,6 +30612,39 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
+
+
 	/**
 	*规则面板
 	*/
@@ -30679,39 +30712,6 @@ var Laya=window.Laya=(function(window,document){
 		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
 		return RuleMediator;
 	})(Mediator)
-
-
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
 
 
 	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
@@ -30946,6 +30946,35 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.room.command.DealCardNotifyCommand extends com.lightMVC.parrerns.Command
+	var DealCardNotifyCommand=(function(_super){
+		function DealCardNotifyCommand(){
+			DealCardNotifyCommand.__super.call(this);
+		}
+
+		__class(DealCardNotifyCommand,'bull.modules.room.command.DealCardNotifyCommand',_super);
+		var __proto=DealCardNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString()){
+				this.deal(notification.getBody());
+			}
+		}
+
+		__proto.deal=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.card_info.push(cs.deal_card_notify.banker);
+			bullData.roomData.card_info.push(cs.deal_card_notify._1);
+			bullData.roomData.card_info.push(cs.deal_card_notify._2);
+			bullData.roomData.card_info.push(cs.deal_card_notify._3);
+			bullData.roomData.card_info.push(cs.deal_card_notify._4);
+			this.sentNotification("cardnotify");
+		}
+
+		return DealCardNotifyCommand;
+	})(Command)
+
+
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
 	var WebService=(function(_super){
 		function WebService(modelName,data){
@@ -31010,35 +31039,6 @@ var Laya=window.Laya=(function(window,document){
 		WebService.NAME="WebService";
 		return WebService;
 	})(Model)
-
-
-	//class bull.modules.room.command.DealCardNotifyCommand extends com.lightMVC.parrerns.Command
-	var DealCardNotifyCommand=(function(_super){
-		function DealCardNotifyCommand(){
-			DealCardNotifyCommand.__super.call(this);
-		}
-
-		__class(DealCardNotifyCommand,'bull.modules.room.command.DealCardNotifyCommand',_super);
-		var __proto=DealCardNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString()){
-				this.deal(notification.getBody());
-			}
-		}
-
-		__proto.deal=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.card_info.push(cs.deal_card_notify.banker);
-			bullData.roomData.card_info.push(cs.deal_card_notify._1);
-			bullData.roomData.card_info.push(cs.deal_card_notify._2);
-			bullData.roomData.card_info.push(cs.deal_card_notify._3);
-			bullData.roomData.card_info.push(cs.deal_card_notify._4);
-			this.sentNotification("cardnotify");
-		}
-
-		return DealCardNotifyCommand;
-	})(Command)
 
 
 	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
@@ -31554,7 +31554,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.startHeartCount=function(){
 			if(!this.timer){
-				this.timer=new Timer1();
+				this.timer=new Timer();
 				this.timer.loop(5000,this,this.sendMsg);
 			}
 		}
@@ -31709,7 +31709,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.startTimer=function(){
 			if(!this.timer){
-				this.timer=new Timer1();
+				this.timer=new Timer();
 				this.timer.loop(5000,this,this.countRect);
 			}
 		}
@@ -48000,107 +48000,6 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
-	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
-	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
-	*
-	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.HSlider;
-		*import laya.ui.VSlider;
-		*import laya.utils.Handler;
-		*public class VSlider_Example
-		*{
-			*private var vSlider:VSlider;
-			*public function VSlider_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
-				*}
-			*private function onLoadComplete():void
-			*{
-				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-				*vSlider.min=0;//设置 vSlider 最低位置值。
-				*vSlider.max=10;//设置 vSlider 最高位置值。
-				*vSlider.value=2;//设置 vSlider 当前位置值。
-				*vSlider.tick=1;//设置 vSlider 刻度值。
-				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
-				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-				*}
-			*private function onChange(value:Number):void
-			*{
-				*trace("滑块的位置： value="+value);
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*var vSlider;
-	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
-	*function onLoadComplete(){
-		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-		*vSlider.min=0;//设置 vSlider 最低位置值。
-		*vSlider.max=10;//设置 vSlider 最高位置值。
-		*vSlider.value=2;//设置 vSlider 当前位置值。
-		*vSlider.tick=1;//设置 vSlider 刻度值。
-		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
-		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-		*}
-	*function onChange(value){
-		*console.log("滑块的位置： value="+value);
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*import HSlider=laya.ui.HSlider;
-	*import VSlider=laya.ui.VSlider;
-	*import Handler=laya.utils.Handler;
-	*class VSlider_Example {
-		*private vSlider:VSlider;
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
-			*}
-		*private onLoadComplete():void {
-			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-			*this.vSlider.min=0;//设置 vSlider 最低位置值。
-			*this.vSlider.max=10;//设置 vSlider 最高位置值。
-			*this.vSlider.value=2;//设置 vSlider 当前位置值。
-			*this.vSlider.tick=1;//设置 vSlider 刻度值。
-			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
-			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
-			*}
-		*private onChange(value:number):void {
-			*console.log("滑块的位置： value="+value);
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.Slider
-	*/
-	//class laya.ui.VSlider extends laya.ui.Slider
-	var VSlider=(function(_super){
-		function VSlider(){VSlider.__super.call(this);;
-		};
-
-		__class(VSlider,'laya.ui.VSlider',_super);
-		return VSlider;
-	})(Slider)
-
-
-	/**
 	*<code>TextInput</code> 类用于创建显示对象以显示和输入文本。
 	*
 	*@example 以下示例代码，创建了一个 <code>TextInput</code> 实例。
@@ -48413,6 +48312,107 @@ var Laya=window.Laya=(function(window,document){
 
 		return TextInput;
 	})(Label)
+
+
+	/**
+	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
+	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
+	*
+	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.HSlider;
+		*import laya.ui.VSlider;
+		*import laya.utils.Handler;
+		*public class VSlider_Example
+		*{
+			*private var vSlider:VSlider;
+			*public function VSlider_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
+				*}
+			*private function onLoadComplete():void
+			*{
+				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+				*vSlider.min=0;//设置 vSlider 最低位置值。
+				*vSlider.max=10;//设置 vSlider 最高位置值。
+				*vSlider.value=2;//设置 vSlider 当前位置值。
+				*vSlider.tick=1;//设置 vSlider 刻度值。
+				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
+				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+				*}
+			*private function onChange(value:Number):void
+			*{
+				*trace("滑块的位置： value="+value);
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*var vSlider;
+	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
+	*function onLoadComplete(){
+		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+		*vSlider.min=0;//设置 vSlider 最低位置值。
+		*vSlider.max=10;//设置 vSlider 最高位置值。
+		*vSlider.value=2;//设置 vSlider 当前位置值。
+		*vSlider.tick=1;//设置 vSlider 刻度值。
+		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
+		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+		*}
+	*function onChange(value){
+		*console.log("滑块的位置： value="+value);
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*import HSlider=laya.ui.HSlider;
+	*import VSlider=laya.ui.VSlider;
+	*import Handler=laya.utils.Handler;
+	*class VSlider_Example {
+		*private vSlider:VSlider;
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
+			*}
+		*private onLoadComplete():void {
+			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+			*this.vSlider.min=0;//设置 vSlider 最低位置值。
+			*this.vSlider.max=10;//设置 vSlider 最高位置值。
+			*this.vSlider.value=2;//设置 vSlider 当前位置值。
+			*this.vSlider.tick=1;//设置 vSlider 刻度值。
+			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
+			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
+			*}
+		*private onChange(value:number):void {
+			*console.log("滑块的位置： value="+value);
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.Slider
+	*/
+	//class laya.ui.VSlider extends laya.ui.Slider
+	var VSlider=(function(_super){
+		function VSlider(){VSlider.__super.call(this);;
+		};
+
+		__class(VSlider,'laya.ui.VSlider',_super);
+		return VSlider;
+	})(Slider)
 
 
 	/**
@@ -49501,7 +49501,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(hallUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Box","props":{"y":-1.9999999999999762,"x":0,"var":"Enter"},"child":[{"type":"Image","props":{"y":5.000000000000009,"x":564,"skin":"res/hall/logo.png"},"child":[{"type":"Box","props":{"y":-2.999999999999992,"x":-564},"child":[{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"width":65,"var":"helpBtn","skin":"res/alert/helpBtn.png","height":68}}]}]},{"type":"Button","props":{"y":1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Image","props":{"y":176,"x":159,"var":"init_box","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":175.99999999999997,"x":772,"var":"high_box","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":736,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":738,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":136,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"},"child":[{"type":"Sprite","props":{"y":2,"x":73,"width":565,"renderType":"mask","height":25},"child":[{"type":"Rect","props":{"y":-1,"x":4,"width":533,"lineWidth":1,"height":31,"fillColor":"#ff0000"}}]},{"type":"Label","props":{"y":5,"x":614,"var":"mqrqueue","text":"跑馬燈","scaleY":2,"scaleX":2,"color":"#eee7e7"}}]},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":736,"x":328,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":738,"x":956,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":425,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":424,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Label","props":{"y":433,"x":204,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":816,"width":54,"text":"房间限红:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":461,"x":190,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":462,"x":796,"width":54,"text":"投注额:","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":309,"width":78,"var":"LowRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":271,"width":78,"var":"LowRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":431,"x":922,"width":78,"var":"HighRoomLimit","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":876,"width":78,"var":"HighRoomBet","text":"2000","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f9f0ef","bold":false}},{"type":"Animation","props":{"y":188,"x":166,"width":0,"var":"stateAni_1","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":187,"x":779,"width":0,"var":"stateAni_2","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":173,"x":163,"width":0,"var":"light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":176,"width":0,"var":"light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":191,"width":0,"var":"light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":206,"width":0,"var":"light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":224,"width":0,"var":"light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":240,"width":0,"var":"light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":256,"width":0,"var":"light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":271,"width":0,"var":"light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":287,"width":0,"var":"light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":302,"width":0,"var":"light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":318,"width":0,"var":"light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":333,"width":0,"var":"light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":350,"width":0,"var":"light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":367,"width":0,"var":"light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":383,"width":0,"var":"light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":399,"width":0,"var":"light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":414,"width":0,"var":"light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":429,"width":0,"var":"light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":446,"width":0,"var":"light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":462,"width":0,"var":"light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":477,"width":0,"var":"light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":494,"width":0,"var":"light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":511,"width":0,"var":"light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":527,"width":0,"var":"light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":543,"width":0,"var":"light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":558,"width":0,"var":"light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":573,"width":0,"var":"light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":591,"width":0,"var":"light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":606,"width":0,"var":"light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":623,"width":0,"var":"light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":640,"width":0,"var":"light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":184,"x":648,"width":0,"var":"light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":199,"x":651,"width":0,"var":"light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":214,"x":651,"width":0,"var":"light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":229,"x":651,"width":0,"var":"light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":651,"width":0,"var":"light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":651,"width":0,"var":"light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":651,"width":0,"var":"light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":294,"x":651,"width":0,"var":"light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":312,"x":651,"width":0,"var":"light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":328,"x":651,"width":0,"var":"light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":345,"x":651,"width":0,"var":"light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":361,"x":651,"width":0,"var":"light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":651,"width":0,"var":"light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":396,"x":651,"width":0,"var":"light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":651,"width":0,"var":"light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":651,"width":0,"var":"light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":651,"width":0,"var":"light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":462,"x":651,"width":0,"var":"light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":479,"x":651,"width":0,"var":"light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":495,"x":651,"width":0,"var":"light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":651,"width":0,"var":"light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":528,"x":651,"width":0,"var":"light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":545,"x":651,"width":0,"var":"light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":560,"x":651,"width":0,"var":"light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":576,"x":651,"width":0,"var":"light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":594,"x":651,"width":0,"var":"light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":610,"x":651,"width":0,"var":"light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":627,"x":651,"width":0,"var":"light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":643,"x":651,"width":0,"var":"light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":660,"x":651,"width":0,"var":"light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":676,"x":651,"width":0,"var":"light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":693,"x":651,"width":0,"var":"light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":708,"x":651,"width":0,"var":"light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":716,"x":641,"width":0,"var":"light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":259,"width":0,"var":"light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":274,"width":0,"var":"light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":290,"width":0,"var":"light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":305,"width":0,"var":"light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":321,"width":0,"var":"light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":336,"width":0,"var":"light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":353,"width":0,"var":"light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":370,"width":0,"var":"light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":386,"width":0,"var":"light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":402,"width":0,"var":"light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":417,"width":0,"var":"light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":432,"width":0,"var":"light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":449,"width":0,"var":"light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":465,"width":0,"var":"light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":480,"width":0,"var":"light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":497,"width":0,"var":"light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":514,"width":0,"var":"light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":530,"width":0,"var":"light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":546,"width":0,"var":"light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":561,"width":0,"var":"light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":576,"width":0,"var":"light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":594,"width":0,"var":"light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":609,"width":0,"var":"light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":626,"width":0,"var":"light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":181,"width":0,"var":"light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":197,"width":0,"var":"light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":213,"width":0,"var":"light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":228,"width":0,"var":"light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":244,"width":0,"var":"light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":714,"x":165,"width":0,"var":"light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":701,"x":156,"width":0,"var":"light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":197,"x":155,"width":0,"var":"light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":211,"x":156,"width":0,"var":"light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":226,"x":156,"width":0,"var":"light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":244,"x":156,"width":0,"var":"light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":156,"width":0,"var":"light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":274,"x":156,"width":0,"var":"light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":290,"x":156,"width":0,"var":"light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":308,"x":156,"width":0,"var":"light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":325,"x":156,"width":0,"var":"light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":342,"x":156,"width":0,"var":"light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":358,"x":156,"width":0,"var":"light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":375,"x":156,"width":0,"var":"light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":394,"x":156,"width":0,"var":"light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":410,"x":156,"width":0,"var":"light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":427,"x":156,"width":0,"var":"light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":445,"x":156,"width":0,"var":"light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":460,"x":156,"width":0,"var":"light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":477,"x":156,"width":0,"var":"light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":493,"x":156,"width":0,"var":"light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":511,"x":156,"width":0,"var":"light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":525,"x":156,"width":0,"var":"light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":541,"x":156,"width":0,"var":"light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":558,"x":156,"width":0,"var":"light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":573,"x":156,"width":0,"var":"light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":590,"x":156,"width":0,"var":"light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":607,"x":156,"width":0,"var":"light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":622,"x":156,"width":0,"var":"light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":637,"x":156,"width":0,"var":"light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":653,"x":156,"width":0,"var":"light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":670,"x":156,"width":0,"var":"light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":686,"x":156,"width":0,"var":"light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":156,"width":0,"var":"light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":778,"width":0,"var":"_light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":791,"width":0,"var":"_light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":806,"width":0,"var":"_light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":821,"width":0,"var":"_light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":839,"width":0,"var":"_light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":855,"width":0,"var":"_light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":871,"width":0,"var":"_light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":886,"width":0,"var":"_light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":902,"width":0,"var":"_light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":917,"width":0,"var":"_light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":933,"width":0,"var":"_light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":948,"width":0,"var":"_light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":965,"width":0,"var":"_light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":982,"width":0,"var":"_light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":998,"width":0,"var":"_light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1014,"width":0,"var":"_light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1029,"width":0,"var":"_light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1044,"width":0,"var":"_light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1061,"width":0,"var":"_light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1077,"width":0,"var":"_light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1092,"width":0,"var":"_light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1109,"width":0,"var":"_light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1126,"width":0,"var":"_light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1142,"width":0,"var":"_light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1158,"width":0,"var":"_light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1173,"width":0,"var":"_light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1188,"width":0,"var":"_light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1206,"width":0,"var":"_light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1221,"width":0,"var":"_light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1238,"width":0,"var":"_light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":1255,"width":0,"var":"_light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":1263,"width":0,"var":"_light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":200,"x":1266,"width":0,"var":"_light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":215,"x":1266,"width":0,"var":"_light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":230,"x":1266,"width":0,"var":"_light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":246,"x":1266,"width":0,"var":"_light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":1266,"width":0,"var":"_light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":276,"x":1266,"width":0,"var":"_light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":295,"x":1266,"width":0,"var":"_light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":313,"x":1266,"width":0,"var":"_light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":329,"x":1266,"width":0,"var":"_light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":346,"x":1266,"width":0,"var":"_light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":362,"x":1266,"width":0,"var":"_light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":377,"x":1266,"width":0,"var":"_light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":397,"x":1266,"width":0,"var":"_light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":412,"x":1266,"width":0,"var":"_light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":429,"x":1266,"width":0,"var":"_light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":447,"x":1266,"width":0,"var":"_light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":463,"x":1266,"width":0,"var":"_light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":480,"x":1266,"width":0,"var":"_light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":496,"x":1266,"width":0,"var":"_light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":513,"x":1266,"width":0,"var":"_light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":529,"x":1266,"width":0,"var":"_light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":546,"x":1266,"width":0,"var":"_light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":561,"x":1266,"width":0,"var":"_light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":577,"x":1266,"width":0,"var":"_light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":595,"x":1266,"width":0,"var":"_light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":611,"x":1266,"width":0,"var":"_light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":628,"x":1266,"width":0,"var":"_light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":644,"x":1266,"width":0,"var":"_light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":661,"x":1266,"width":0,"var":"_light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":677,"x":1266,"width":0,"var":"_light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":694,"x":1266,"width":0,"var":"_light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":709,"x":1266,"width":0,"var":"_light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":717,"x":1256,"width":0,"var":"_light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":874,"width":0,"var":"_light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":889,"width":0,"var":"_light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":905,"width":0,"var":"_light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":920,"width":0,"var":"_light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":936,"width":0,"var":"_light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":951,"width":0,"var":"_light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":968,"width":0,"var":"_light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":985,"width":0,"var":"_light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1001,"width":0,"var":"_light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1017,"width":0,"var":"_light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1032,"width":0,"var":"_light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1047,"width":0,"var":"_light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1064,"width":0,"var":"_light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1080,"width":0,"var":"_light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1095,"width":0,"var":"_light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1112,"width":0,"var":"_light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1129,"width":0,"var":"_light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1145,"width":0,"var":"_light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1161,"width":0,"var":"_light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1176,"width":0,"var":"_light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1191,"width":0,"var":"_light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1209,"width":0,"var":"_light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1224,"width":0,"var":"_light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1241,"width":0,"var":"_light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":796,"width":0,"var":"_light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":812,"width":0,"var":"_light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":828,"width":0,"var":"_light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":843,"width":0,"var":"_light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":859,"width":0,"var":"_light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":715,"x":780,"width":0,"var":"_light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":702,"x":771,"width":0,"var":"_light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":198,"x":770,"width":0,"var":"_light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":212,"x":771,"width":0,"var":"_light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":227,"x":771,"width":0,"var":"_light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":771,"width":0,"var":"_light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":771,"width":0,"var":"_light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":771,"width":0,"var":"_light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":291,"x":771,"width":0,"var":"_light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":309,"x":771,"width":0,"var":"_light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":326,"x":771,"width":0,"var":"_light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":343,"x":771,"width":0,"var":"_light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":359,"x":771,"width":0,"var":"_light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":771,"width":0,"var":"_light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":395,"x":771,"width":0,"var":"_light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":771,"width":0,"var":"_light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":771,"width":0,"var":"_light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":771,"width":0,"var":"_light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":461,"x":771,"width":0,"var":"_light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":478,"x":771,"width":0,"var":"_light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":494,"x":771,"width":0,"var":"_light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":771,"width":0,"var":"_light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":526,"x":771,"width":0,"var":"_light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":542,"x":771,"width":0,"var":"_light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":559,"x":771,"width":0,"var":"_light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":574,"x":771,"width":0,"var":"_light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":591,"x":771,"width":0,"var":"_light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":608,"x":771,"width":0,"var":"_light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":623,"x":771,"width":0,"var":"_light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":638,"x":771,"width":0,"var":"_light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":654,"x":771,"width":0,"var":"_light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":671,"x":771,"width":0,"var":"_light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":687,"x":771,"width":0,"var":"_light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":186,"x":771,"width":0,"var":"_light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}}]}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Box","props":{"y":-1.9999999999999762,"x":0,"var":"Enter"},"child":[{"type":"Image","props":{"y":5.000000000000009,"x":564,"skin":"res/hall/logo.png"},"child":[{"type":"Box","props":{"y":-2.999999999999992,"x":-564},"child":[{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"width":65,"var":"helpBtn","skin":"res/alert/helpBtn.png","height":68}}]}]},{"type":"Button","props":{"y":1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Image","props":{"y":176,"x":159,"var":"init_box","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":175.99999999999997,"x":772,"var":"high_box","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":736,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":738,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":136,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"},"child":[{"type":"Sprite","props":{"y":2,"x":73,"width":565,"renderType":"mask","height":25},"child":[{"type":"Rect","props":{"y":-1,"x":4,"width":533,"lineWidth":1,"height":31,"fillColor":"#ff0000"}}]},{"type":"Label","props":{"y":3,"x":614,"var":"mqrqueue","text":"跑馬燈","fontSize":25,"color":"#eee7e7"}}]},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":736,"x":328,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":738,"x":956,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":425,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":424,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Label","props":{"y":433,"x":204,"width":54,"text":"房间限红:","height":15,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":816,"width":105,"text":"房间限红:","height":27,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":461,"x":190,"width":76,"text":"投注额:","height":30,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":462,"x":796,"width":71,"text":"投注额:","height":22,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":309,"width":78,"var":"LowRoomLimit","text":"2000","height":22,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":271,"width":78,"var":"LowRoomBet","text":"2000","height":15,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":431,"x":922,"width":78,"var":"HighRoomLimit","text":"2000","height":21,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":876,"width":78,"var":"HighRoomBet","text":"2000","height":20,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Animation","props":{"y":188,"x":166,"width":0,"var":"stateAni_1","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":187,"x":779,"width":0,"var":"stateAni_2","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":173,"x":163,"width":0,"var":"light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":176,"width":0,"var":"light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":191,"width":0,"var":"light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":206,"width":0,"var":"light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":224,"width":0,"var":"light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":240,"width":0,"var":"light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":256,"width":0,"var":"light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":271,"width":0,"var":"light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":287,"width":0,"var":"light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":302,"width":0,"var":"light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":318,"width":0,"var":"light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":333,"width":0,"var":"light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":350,"width":0,"var":"light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":367,"width":0,"var":"light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":383,"width":0,"var":"light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":399,"width":0,"var":"light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":414,"width":0,"var":"light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":429,"width":0,"var":"light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":446,"width":0,"var":"light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":462,"width":0,"var":"light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":477,"width":0,"var":"light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":494,"width":0,"var":"light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":511,"width":0,"var":"light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":527,"width":0,"var":"light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":543,"width":0,"var":"light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":558,"width":0,"var":"light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":573,"width":0,"var":"light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":591,"width":0,"var":"light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":606,"width":0,"var":"light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":623,"width":0,"var":"light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":640,"width":0,"var":"light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":184,"x":648,"width":0,"var":"light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":199,"x":651,"width":0,"var":"light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":214,"x":651,"width":0,"var":"light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":229,"x":651,"width":0,"var":"light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":651,"width":0,"var":"light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":651,"width":0,"var":"light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":651,"width":0,"var":"light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":294,"x":651,"width":0,"var":"light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":312,"x":651,"width":0,"var":"light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":328,"x":651,"width":0,"var":"light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":345,"x":651,"width":0,"var":"light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":361,"x":651,"width":0,"var":"light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":651,"width":0,"var":"light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":396,"x":651,"width":0,"var":"light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":651,"width":0,"var":"light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":651,"width":0,"var":"light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":651,"width":0,"var":"light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":462,"x":651,"width":0,"var":"light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":479,"x":651,"width":0,"var":"light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":495,"x":651,"width":0,"var":"light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":651,"width":0,"var":"light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":528,"x":651,"width":0,"var":"light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":545,"x":651,"width":0,"var":"light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":560,"x":651,"width":0,"var":"light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":576,"x":651,"width":0,"var":"light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":594,"x":651,"width":0,"var":"light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":610,"x":651,"width":0,"var":"light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":627,"x":651,"width":0,"var":"light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":643,"x":651,"width":0,"var":"light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":660,"x":651,"width":0,"var":"light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":676,"x":651,"width":0,"var":"light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":693,"x":651,"width":0,"var":"light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":708,"x":651,"width":0,"var":"light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":716,"x":641,"width":0,"var":"light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":259,"width":0,"var":"light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":274,"width":0,"var":"light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":290,"width":0,"var":"light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":305,"width":0,"var":"light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":321,"width":0,"var":"light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":336,"width":0,"var":"light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":353,"width":0,"var":"light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":370,"width":0,"var":"light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":386,"width":0,"var":"light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":402,"width":0,"var":"light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":417,"width":0,"var":"light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":432,"width":0,"var":"light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":449,"width":0,"var":"light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":465,"width":0,"var":"light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":480,"width":0,"var":"light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":497,"width":0,"var":"light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":514,"width":0,"var":"light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":530,"width":0,"var":"light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":546,"width":0,"var":"light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":561,"width":0,"var":"light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":576,"width":0,"var":"light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":594,"width":0,"var":"light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":609,"width":0,"var":"light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":626,"width":0,"var":"light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":181,"width":0,"var":"light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":197,"width":0,"var":"light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":213,"width":0,"var":"light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":228,"width":0,"var":"light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":244,"width":0,"var":"light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":714,"x":165,"width":0,"var":"light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":701,"x":156,"width":0,"var":"light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":197,"x":155,"width":0,"var":"light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":211,"x":156,"width":0,"var":"light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":226,"x":156,"width":0,"var":"light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":244,"x":156,"width":0,"var":"light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":156,"width":0,"var":"light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":274,"x":156,"width":0,"var":"light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":290,"x":156,"width":0,"var":"light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":308,"x":156,"width":0,"var":"light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":325,"x":156,"width":0,"var":"light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":342,"x":156,"width":0,"var":"light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":358,"x":156,"width":0,"var":"light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":375,"x":156,"width":0,"var":"light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":394,"x":156,"width":0,"var":"light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":410,"x":156,"width":0,"var":"light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":427,"x":156,"width":0,"var":"light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":445,"x":156,"width":0,"var":"light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":460,"x":156,"width":0,"var":"light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":477,"x":156,"width":0,"var":"light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":493,"x":156,"width":0,"var":"light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":511,"x":156,"width":0,"var":"light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":525,"x":156,"width":0,"var":"light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":541,"x":156,"width":0,"var":"light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":558,"x":156,"width":0,"var":"light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":573,"x":156,"width":0,"var":"light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":590,"x":156,"width":0,"var":"light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":607,"x":156,"width":0,"var":"light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":622,"x":156,"width":0,"var":"light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":637,"x":156,"width":0,"var":"light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":653,"x":156,"width":0,"var":"light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":670,"x":156,"width":0,"var":"light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":686,"x":156,"width":0,"var":"light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":156,"width":0,"var":"light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":778,"width":0,"var":"_light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":791,"width":0,"var":"_light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":806,"width":0,"var":"_light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":821,"width":0,"var":"_light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":839,"width":0,"var":"_light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":855,"width":0,"var":"_light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":871,"width":0,"var":"_light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":886,"width":0,"var":"_light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":902,"width":0,"var":"_light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":917,"width":0,"var":"_light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":933,"width":0,"var":"_light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":948,"width":0,"var":"_light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":965,"width":0,"var":"_light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":982,"width":0,"var":"_light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":998,"width":0,"var":"_light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1014,"width":0,"var":"_light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1029,"width":0,"var":"_light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1044,"width":0,"var":"_light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1061,"width":0,"var":"_light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1077,"width":0,"var":"_light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1092,"width":0,"var":"_light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1109,"width":0,"var":"_light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1126,"width":0,"var":"_light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1142,"width":0,"var":"_light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1158,"width":0,"var":"_light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1173,"width":0,"var":"_light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1188,"width":0,"var":"_light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1206,"width":0,"var":"_light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1221,"width":0,"var":"_light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1238,"width":0,"var":"_light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":1255,"width":0,"var":"_light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":1263,"width":0,"var":"_light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":200,"x":1266,"width":0,"var":"_light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":215,"x":1266,"width":0,"var":"_light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":230,"x":1266,"width":0,"var":"_light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":246,"x":1266,"width":0,"var":"_light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":1266,"width":0,"var":"_light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":276,"x":1266,"width":0,"var":"_light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":295,"x":1266,"width":0,"var":"_light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":313,"x":1266,"width":0,"var":"_light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":329,"x":1266,"width":0,"var":"_light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":346,"x":1266,"width":0,"var":"_light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":362,"x":1266,"width":0,"var":"_light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":377,"x":1266,"width":0,"var":"_light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":397,"x":1266,"width":0,"var":"_light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":412,"x":1266,"width":0,"var":"_light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":429,"x":1266,"width":0,"var":"_light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":447,"x":1266,"width":0,"var":"_light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":463,"x":1266,"width":0,"var":"_light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":480,"x":1266,"width":0,"var":"_light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":496,"x":1266,"width":0,"var":"_light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":513,"x":1266,"width":0,"var":"_light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":529,"x":1266,"width":0,"var":"_light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":546,"x":1266,"width":0,"var":"_light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":561,"x":1266,"width":0,"var":"_light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":577,"x":1266,"width":0,"var":"_light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":595,"x":1266,"width":0,"var":"_light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":611,"x":1266,"width":0,"var":"_light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":628,"x":1266,"width":0,"var":"_light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":644,"x":1266,"width":0,"var":"_light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":661,"x":1266,"width":0,"var":"_light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":677,"x":1266,"width":0,"var":"_light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":694,"x":1266,"width":0,"var":"_light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":709,"x":1266,"width":0,"var":"_light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":717,"x":1256,"width":0,"var":"_light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":874,"width":0,"var":"_light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":889,"width":0,"var":"_light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":905,"width":0,"var":"_light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":920,"width":0,"var":"_light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":936,"width":0,"var":"_light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":951,"width":0,"var":"_light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":968,"width":0,"var":"_light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":985,"width":0,"var":"_light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1001,"width":0,"var":"_light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1017,"width":0,"var":"_light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1032,"width":0,"var":"_light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1047,"width":0,"var":"_light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1064,"width":0,"var":"_light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1080,"width":0,"var":"_light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1095,"width":0,"var":"_light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1112,"width":0,"var":"_light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1129,"width":0,"var":"_light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1145,"width":0,"var":"_light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1161,"width":0,"var":"_light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1176,"width":0,"var":"_light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1191,"width":0,"var":"_light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1209,"width":0,"var":"_light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1224,"width":0,"var":"_light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1241,"width":0,"var":"_light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":796,"width":0,"var":"_light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":812,"width":0,"var":"_light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":828,"width":0,"var":"_light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":843,"width":0,"var":"_light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":859,"width":0,"var":"_light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":715,"x":780,"width":0,"var":"_light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":702,"x":771,"width":0,"var":"_light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":198,"x":770,"width":0,"var":"_light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":212,"x":771,"width":0,"var":"_light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":227,"x":771,"width":0,"var":"_light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":771,"width":0,"var":"_light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":771,"width":0,"var":"_light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":771,"width":0,"var":"_light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":291,"x":771,"width":0,"var":"_light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":309,"x":771,"width":0,"var":"_light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":326,"x":771,"width":0,"var":"_light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":343,"x":771,"width":0,"var":"_light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":359,"x":771,"width":0,"var":"_light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":771,"width":0,"var":"_light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":395,"x":771,"width":0,"var":"_light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":771,"width":0,"var":"_light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":771,"width":0,"var":"_light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":771,"width":0,"var":"_light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":461,"x":771,"width":0,"var":"_light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":478,"x":771,"width":0,"var":"_light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":494,"x":771,"width":0,"var":"_light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":771,"width":0,"var":"_light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":526,"x":771,"width":0,"var":"_light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":542,"x":771,"width":0,"var":"_light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":559,"x":771,"width":0,"var":"_light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":574,"x":771,"width":0,"var":"_light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":591,"x":771,"width":0,"var":"_light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":608,"x":771,"width":0,"var":"_light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":623,"x":771,"width":0,"var":"_light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":638,"x":771,"width":0,"var":"_light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":654,"x":771,"width":0,"var":"_light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":671,"x":771,"width":0,"var":"_light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":687,"x":771,"width":0,"var":"_light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":186,"x":771,"width":0,"var":"_light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}}]}]};}
 		]);
 		return hallUI;
 	})(View)
@@ -49533,7 +49533,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BankerPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"renderType":"mask","height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":50,"var":"txtname","text":"吉胜游戏平台","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":427,"width":56,"var":"BankerTimes","text":"1/15次","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Button","props":{"y":9,"x":527,"var":"btndeBanker","stateNum":"3","skin":"res/gameScene/deBanker.png"}},{"type":"Button","props":{"y":8,"x":527,"var":"btnBanker","stateNum":"3","skin":"res/gameScene/applyBanker.png"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Point","text":"999999","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"BankerNotify_ani","props":{"y":5,"x":563,"visible":false,"var":"mc_bankerAni","scaleY":0.3,"scaleX":0.3,"runtime":"ui.ui.room.BankerNotify_aniUI"}},{"type":"Image","props":{"y":11,"x":44,"width":60,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","height":60},"child":[{"type":"Sprite","props":{"y":-2,"x":-6,"renderType":"mask"},"child":[{"type":"Circle","props":{"y":33,"x":37,"radius":30,"lineWidth":1,"fillColor":"#ff0000"}}]}]},{"type":"BankerListHint","props":{"y":84,"x":473,"var":"mcHintBoard","runtime":"ui.ui.room.BankerListHintUI"}},{"type":"Label","props":{"y":38,"x":-96,"width":87,"var":"txt_RoundID","text":"5868acad101fa","scaleY":1,"scaleX":1,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":38,"x":-126,"width":33,"text":"局ID:","scaleY":1,"scaleX":1,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":34,"x":381,"width":36,"var":"textFix_text_0","text":"坐庄:","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#98d10c"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"renderType":"mask","height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":50,"var":"txtname","text":"吉胜游戏平台","height":18,"fontSize":20,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":427,"width":67,"var":"BankerTimes","text":"1/15次","height":24,"fontSize":20,"color":"#eee7e7"}},{"type":"Button","props":{"y":9,"x":527,"var":"btndeBanker","stateNum":"3","skin":"res/gameScene/deBanker.png"}},{"type":"Button","props":{"y":8,"x":527,"var":"btnBanker","stateNum":"3","skin":"res/gameScene/applyBanker.png"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Point","text":"999999","height":18,"fontSize":20,"color":"#eee7e7"}},{"type":"BankerNotify_ani","props":{"y":5,"x":563,"visible":false,"var":"mc_bankerAni","scaleY":0.3,"scaleX":0.3,"runtime":"ui.ui.room.BankerNotify_aniUI"}},{"type":"Image","props":{"y":11,"x":44,"width":60,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","height":60},"child":[{"type":"Sprite","props":{"y":-2,"x":-6,"renderType":"mask"},"child":[{"type":"Circle","props":{"y":33,"x":37,"radius":30,"lineWidth":1,"fillColor":"#ff0000"}}]}]},{"type":"BankerListHint","props":{"y":84,"x":473,"var":"mcHintBoard","runtime":"ui.ui.room.BankerListHintUI"}},{"type":"Label","props":{"y":38,"x":-96,"width":87,"var":"txt_RoundID","text":"5868acad101fa","mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":38,"x":-126,"width":33,"text":"局ID:","mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":34,"x":375,"width":48,"var":"textFix_text_0","text":"坐庄:","height":21,"fontSize":20,"color":"#98d10c"}}]};}
 		]);
 		return BankerPanelUI;
 	})(View)
@@ -49559,6 +49559,28 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":320,"runtime":"bull.view.room.BetBtnGroup","height":80},"child":[{"type":"Button","props":{"y":6,"x":163,"var":"betBtn_cancel","skin":"res/gameScene/CancelBet.png"}},{"type":"Button","props":{"y":6,"x":2,"var":"betBtn_same","skin":"res/gameScene/SameBetBtn.png"}}]};}
 		]);
 		return BetBtnGroupUI;
+	})(View)
+
+
+	//class ui.ui.room.BetTimePanelUI extends laya.ui.View
+	var BetTimePanelUI=(function(_super){
+		function BetTimePanelUI(){
+			this.mcbg=null;
+			this.bt_txt=null;
+			BetTimePanelUI.__super.call(this);
+		}
+
+		__class(BetTimePanelUI,'ui.ui.room.BetTimePanelUI',_super);
+		var __proto=BetTimePanelUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(BetTimePanelUI.uiView);
+		}
+
+		__static(BetTimePanelUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":123,"height":123},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/倒计时03.png"}},{"type":"Image","props":{"y":1,"x":4,"var":"mcbg","skin":"res/gameScene/倒计时02.png"}},{"type":"Image","props":{"y":10,"x":10,"skin":"res/gameScene/倒计时01.png"}},{"type":"Label","props":{"y":46,"x":38,"width":48,"var":"bt_txt","text":"10","height":24,"fontSize":22,"color":"#ece7e7","align":"center"}}]};}
+		]);
+		return BetTimePanelUI;
 	})(View)
 
 
@@ -49602,16 +49624,16 @@ var Laya=window.Laya=(function(window,document){
 			View.regComponent("bull.view.room.BankerPanel",BankerPanel);
 			View.regComponent("bull.view.room.PokerTypeBoard",PokerTypeBoard);
 			View.regComponent("bull.view.room.WinLostEffect",WinLostEffect);
-			View.regComponent("ui.ui.room.NetConnectViewUI",NetConnectViewUI);
+			View.regComponent("bull.view.room.NetConnectView",NetConnectView);
 			View.regComponent("bull.view.room.HeadView",HeadView);
 			View.regComponent("bull.view.room.SelectClipView",SelectClipView);
-			View.regComponent("bull.view.room.BetTimePanel",bull.view.room.BetTimePanel);
+			View.regComponent("bull.view.room.BetTimePanel",BetTimePanel);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BullSceneUI.uiView);
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.BankerPanel"}},{"type":"UserPanel","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"Timer","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"NetConnectView","props":{"y":0,"x":0,"var":"viewNetConnect","runtime":"ui.ui.room.NetConnectViewUI"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.BankerPanel"}},{"type":"UserPanel","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
@@ -49638,9 +49660,59 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(HeadViewUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":300,"height":100},"child":[{"type":"Image","props":{"y":-16,"x":-21,"skin":"res/gameScene/InfoBoard.png"}},{"type":"Button","props":{"y":33,"x":246,"var":"btnAdd","skin":"res/gameScene/CarryIn.png"}},{"type":"Label","props":{"y":8,"x":124,"width":102,"var":"txtName","text":"Name","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"}},{"type":"Label","props":{"y":40,"x":123,"width":83,"var":"txtMoney","text":"money","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"}},{"type":"Image","props":{"y":3,"x":1,"width":68,"var":"mcHead","skin":"res/gameScene/HeadIcon.jpg","height":67}},{"type":"Image","props":{"y":3,"x":11,"var":"mcVip","skin":"res/gameScene/miniVIP底板.png"},"child":[{"type":"Image","props":{"y":2.000000000000023,"x":1.999999999999993,"skin":"res/gameScene/miniV.png"}},{"type":"Label","props":{"y":2,"x":7,"width":32,"var":"bp_vip","text":"99","height":15,"font":"smallvip","align":"center"}}]},{"type":"Image","props":{"y":41,"x":86,"var":"mcMoneyIcon","skin":"res/gameScene/底板人民币.png"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":300,"height":100},"child":[{"type":"Image","props":{"y":-16,"x":-21,"skin":"res/gameScene/InfoBoard.png"}},{"type":"Button","props":{"y":33,"x":246,"var":"btnAdd","skin":"res/gameScene/CarryIn.png"}},{"type":"Label","props":{"y":6,"x":124,"width":149,"var":"txtName","text":"Name","height":28,"fontSize":20,"color":"#f8f0ef"}},{"type":"Label","props":{"y":39,"x":123,"width":119,"var":"txtMoney","text":"money","height":26,"fontSize":20,"color":"#f8f0ef"}},{"type":"Image","props":{"y":3,"x":1,"width":68,"var":"mcHead","skin":"res/gameScene/HeadIcon.jpg","height":67}},{"type":"Image","props":{"y":3,"x":11,"var":"mcVip","skin":"res/gameScene/miniVIP底板.png"},"child":[{"type":"Image","props":{"y":2.000000000000023,"x":1.999999999999993,"skin":"res/gameScene/miniV.png"}},{"type":"Label","props":{"y":2,"x":7,"width":32,"var":"bp_vip","text":"99","height":15,"font":"smallvip","align":"center"}}]},{"type":"Image","props":{"y":41,"x":86,"var":"mcMoneyIcon","skin":"res/gameScene/底板人民币.png"}}]};}
 		]);
 		return HeadViewUI;
+	})(View)
+
+
+	//class ui.ui.room.NetConnectViewUI extends laya.ui.View
+	var NetConnectViewUI=(function(_super){
+		function NetConnectViewUI(){
+			this.txtName=null;
+			NetConnectViewUI.__super.call(this);
+		}
+
+		__class(NetConnectViewUI,'ui.ui.room.NetConnectViewUI',_super);
+		var __proto=NetConnectViewUI.prototype;
+		__proto.createChildren=function(){
+			View.regComponent("bull.view.room.NetConnectView",NetConnectView);
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(NetConnectViewUI.uiView);
+		}
+
+		__static(NetConnectViewUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"runtime":"bull.view.room.NetConnectView","height":800},"child":[{"type":"Label","props":{"y":355,"x":584,"width":254,"var":"txtName","text":"天涯歌女爱与仇","height":76,"fontSize":30,"color":"#f8f0ef","align":"center"}}]};}
+		]);
+		return NetConnectViewUI;
+	})(View)
+
+
+	//class ui.ui.room.NetStatusPanelUI extends laya.ui.View
+	var NetStatusPanelUI=(function(_super){
+		function NetStatusPanelUI(){
+			this.Name=null;
+			this.tip_bg=null;
+			this.txt_Tip=null;
+			this.mcStatus=null;
+			this.State_0=null;
+			this.State_1=null;
+			this.State_2=null;
+			this.State_3=null;
+			NetStatusPanelUI.__super.call(this);
+		}
+
+		__class(NetStatusPanelUI,'ui.ui.room.NetStatusPanelUI',_super);
+		var __proto=NetStatusPanelUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(NetStatusPanelUI.uiView);
+		}
+
+		__static(NetStatusPanelUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":200,"height":100},"child":[{"type":"Label","props":{"y":0,"x":0,"width":50,"text":"网路:","height":22,"fontSize":20,"color":"#f8f0ef"}},{"type":"Label","props":{"y":0,"x":54,"width":32,"var":"Name","text":"流暢","height":15,"fontSize":20,"color":"#49c11b"}},{"type":"Box","props":{"y":29,"x":5,"var":"tip_bg"},"child":[{"type":"Image","props":{"y":0,"x":-5,"width":256,"skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22","height":78}},{"type":"Label","props":{"y":18,"x":11,"width":226,"var":"txt_Tip","text":"网路:","height":31,"fontSize":20,"color":"#f8f0ef","align":"center"}}]},{"type":"Box","props":{"y":2,"x":112,"var":"mcStatus"},"child":[{"type":"Sprite","props":{"var":"State_0"},"child":[{"type":"Image","props":{"y":0.9999999999999903,"x":32.99999999999992,"skin":"res/gameScene/网络状态条绿.png"}},{"type":"Image","props":{"y":0.9999999999999903,"x":21.99999999999995,"skin":"res/gameScene/网络状态条绿.png"}},{"type":"Image","props":{"y":0.9999999999999903,"x":10.999999999999975,"skin":"res/gameScene/网络状态条绿.png"}},{"type":"Image","props":{"y":0.9999999999999903,"x":0.9999999999999903,"skin":"res/gameScene/网络状态条绿.png"}}]},{"type":"Sprite","props":{"y":1,"x":1,"visible":false,"var":"State_1"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/网络状态条黄.png"}},{"type":"Image","props":{"y":0,"x":11,"skin":"res/gameScene/网络状态条黄.png"}},{"type":"Image","props":{"y":0,"x":22,"skin":"res/gameScene/网络状态条黄.png"}}]},{"type":"Sprite","props":{"y":1,"x":1,"visible":false,"var":"State_2"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/网络状态条橙.png"}},{"type":"Image","props":{"y":0,"x":11,"skin":"res/gameScene/网络状态条橙.png"}}]},{"type":"Sprite","props":{"y":2,"x":2,"visible":false,"var":"State_3"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/网络状态条红.png"}}]}]}]};}
+		]);
+		return NetStatusPanelUI;
 	})(View)
 
 
@@ -49731,20 +49803,20 @@ var Laya=window.Laya=(function(window,document){
 			this.club_lost=null;
 			this.diamond_win=null;
 			this.diamond_lost=null;
-			this._network_state=null;
+			this.viewNetState=null;
 			RecordPanelUI.__super.call(this);
 		}
 
 		__class(RecordPanelUI,'ui.ui.room.RecordPanelUI',_super);
 		var __proto=RecordPanelUI.prototype;
 		__proto.createChildren=function(){
-			View.regComponent("bull.view.room.NetStatusPanel",bull.view.room.NetStatusPanel);
+			View.regComponent("bull.view.room.NetStatusPanel",NetStatusPanel);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(RecordPanelUI.uiView);
 		}
 
 		__static(RecordPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":169,"name":"Record","height":421},"child":[{"type":"Image","props":{"y":0,"x":0,"var":"Hidding_Recode","skin":"res/gameScene/未展开胜负记录.png"}},{"type":"Box","props":{"y":0,"x":0,"var":"Showing_Recode"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/展开胜负记录.png"}},{"type":"Animation","props":{"y":126,"x":24,"var":"spade_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":150,"x":24,"var":"spade_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":174,"x":24,"width":0,"var":"spade_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":198,"x":24,"width":0,"var":"spade_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":221,"x":25,"var":"spade_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":245,"x":25,"var":"spade_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":269,"x":25,"width":0,"var":"spade_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":293,"x":25,"width":0,"var":"spade_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":315,"x":25,"var":"spade_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":339,"x":25,"var":"spade_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":363,"x":25,"width":0,"var":"spade_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":387,"x":25,"width":0,"var":"spade_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":61,"var":"heart_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":61,"var":"heart_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":61,"width":0,"var":"heart_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":61,"width":0,"var":"heart_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":62,"var":"heart_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":62,"var":"heart_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":62,"width":0,"var":"heart_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":62,"width":0,"var":"heart_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":62,"var":"heart_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":62,"var":"heart_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":62,"width":0,"var":"heart_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":62,"width":0,"var":"heart_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":97,"var":"club_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":97,"var":"club_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":97,"width":0,"var":"club_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":97,"width":0,"var":"club_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":98,"var":"club_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":98,"var":"club_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":98,"width":0,"var":"club_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":98,"width":0,"var":"club_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":98,"var":"club_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":98,"var":"club_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":98,"width":0,"var":"club_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":98,"width":0,"var":"club_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":133,"var":"diamond_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":133,"var":"diamond_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":133,"width":0,"var":"diamond_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":133,"width":0,"var":"diamond_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":134,"var":"diamond_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":134,"var":"diamond_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":134,"width":0,"var":"diamond_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":134,"width":0,"var":"diamond_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":134,"var":"diamond_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":134,"var":"diamond_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":134,"width":0,"var":"diamond_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":134,"width":0,"var":"diamond_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Label","props":{"y":78,"x":14,"var":"spade_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":14,"var":"spade_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":51,"var":"heart_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":51,"var":"heart_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":87,"var":"club_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":87,"var":"club_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":123,"var":"diamond_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":123,"var":"diamond_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}}]},{"type":"NetStatusPanel","props":{"y":420,"x":8,"var":"_network_state","runtime":"bull.view.room.NetStatusPanel"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":250,"name":"Record","height":500},"child":[{"type":"Image","props":{"y":0,"x":0,"var":"Hidding_Recode","skin":"res/gameScene/未展开胜负记录.png"}},{"type":"Box","props":{"y":0,"x":0,"var":"Showing_Recode"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/展开胜负记录.png"}},{"type":"Animation","props":{"y":126,"x":24,"var":"spade_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":150,"x":24,"var":"spade_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":174,"x":24,"width":0,"var":"spade_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":198,"x":24,"width":0,"var":"spade_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":221,"x":25,"var":"spade_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":245,"x":25,"var":"spade_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":269,"x":25,"width":0,"var":"spade_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":293,"x":25,"width":0,"var":"spade_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":315,"x":25,"var":"spade_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":339,"x":25,"var":"spade_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":363,"x":25,"width":0,"var":"spade_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":387,"x":25,"width":0,"var":"spade_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":61,"var":"heart_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":61,"var":"heart_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":61,"width":0,"var":"heart_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":61,"width":0,"var":"heart_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":62,"var":"heart_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":62,"var":"heart_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":62,"width":0,"var":"heart_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":62,"width":0,"var":"heart_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":62,"var":"heart_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":62,"var":"heart_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":62,"width":0,"var":"heart_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":62,"width":0,"var":"heart_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":97,"var":"club_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":97,"var":"club_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":97,"width":0,"var":"club_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":97,"width":0,"var":"club_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":98,"var":"club_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":98,"var":"club_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":98,"width":0,"var":"club_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":98,"width":0,"var":"club_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":98,"var":"club_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":98,"var":"club_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":98,"width":0,"var":"club_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":98,"width":0,"var":"club_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":133,"var":"diamond_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":133,"var":"diamond_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":133,"width":0,"var":"diamond_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":133,"width":0,"var":"diamond_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":134,"var":"diamond_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":134,"var":"diamond_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":134,"width":0,"var":"diamond_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":134,"width":0,"var":"diamond_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":134,"var":"diamond_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":134,"var":"diamond_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":134,"width":0,"var":"diamond_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":134,"width":0,"var":"diamond_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Label","props":{"y":78,"x":14,"var":"spade_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":14,"var":"spade_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":51,"var":"heart_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":51,"var":"heart_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":87,"var":"club_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":87,"var":"club_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":123,"var":"diamond_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":123,"var":"diamond_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}}]},{"type":"NetStatusPanel","props":{"y":424,"x":6,"var":"viewNetState","runtime":"bull.view.room.NetStatusPanel"}}]};}
 		]);
 		return RecordPanelUI;
 	})(View)
@@ -49791,7 +49863,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(ResultPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":679,"height":416},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/结算中心底板.png"}},{"type":"Button","props":{"y":-1,"x":640,"var":"btnClose","skin":"res/gameScene/closeBtn.png","name":"btnClose"}},{"type":"Button","props":{"y":357,"x":265,"var":"btnok","skin":"res/gameScene/Btn_bg.png","name":"btnok"}},{"type":"Label","props":{"y":366,"x":308,"width":43,"text":"确  定","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":365,"x":489,"width":11,"text":"S","scaleY":2.3,"scaleX":2.3,"mouseEnabled":false,"height":14,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":362,"x":470,"width":10,"var":"rest_time","text":"8","scaleY":2.5,"scaleX":2.5,"mouseEnabled":false,"height":16,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":324,"x":37,"width":83,"var":"banker_Money","text":"+9999999","scaleY":1.5,"scaleX":1.5,"mouseEnabled":false,"height":16,"color":"#9fb23c","bold":false,"align":"center"}},{"type":"Image","props":{"y":294,"x":41,"var":"platform_name","skin":"res/gameScene/吉胜游戏平台.png"}},{"type":"Label","props":{"y":86,"x":106,"width":93,"var":"self_name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":119,"x":126,"width":93,"var":"self_money","text":"6666666","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#f8f0ef","align":"left"}},{"type":"Label","props":{"y":87,"x":270,"width":389,"var":"win_bitmap","text":"+¥1234.56","height":60,"font":"settleWin","align":"center"}},{"type":"Label","props":{"y":37,"x":274,"width":389,"var":"lost_bitmap","text":"-¥1234.56","height":60,"font":"settlelost","align":"center"}},{"type":"Image","props":{"y":81,"x":24,"width":68,"var":"mcHead","skin":"res/gameScene/HeadIcon.jpg","height":67}},{"type":"Image","props":{"y":60,"x":6,"var":"isBanker","skin":"res/gameScene/庄家符号.png"}},{"type":"Label","props":{"y":249,"x":270,"width":175,"var":"Text_NoOne_bet","text":"本局无人赢钱","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#f8f0ef","align":"center"}},{"type":"Animation","props":{"y":187,"x":201,"var":"Num_0","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":194,"x":248,"var":"light_0","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":196,"x":303,"var":"headPic_0","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":203,"x":355,"width":93,"var":"name_0","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":204,"x":518,"width":80,"var":"Money_0","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}},{"type":"Animation","props":{"y":244,"x":201,"var":"Num_1","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":251,"x":248,"var":"light_1","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":253,"x":303,"var":"headPic_1","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":260,"x":355,"width":93,"var":"name_1","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":261,"x":518,"width":80,"var":"Money_1","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}},{"type":"Animation","props":{"y":296,"x":201,"var":"Num_2","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":303,"x":248,"var":"light_2","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":305,"x":303,"var":"headPic_2","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":312,"x":355,"width":93,"var":"name_2","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":313,"x":518,"width":80,"var":"Money_2","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":679,"height":416},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/结算中心底板.png"}},{"type":"Button","props":{"y":-1,"x":640,"var":"btnClose","skin":"res/gameScene/closeBtn.png","name":"btnClose"}},{"type":"Button","props":{"y":357,"x":265,"var":"btnok","skin":"res/gameScene/Btn_bg.png","name":"btnok"}},{"type":"Label","props":{"y":366,"x":308,"width":43,"text":"确  定","mouseEnabled":false,"height":16,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","mouseEnabled":false,"height":16,"fontSize":23,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":364,"x":498,"width":30,"text":"S","mouseEnabled":false,"height":27,"fontSize":30,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":361,"x":476,"width":25,"var":"rest_time","text":"8","mouseEnabled":false,"height":33,"fontSize":35,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":324,"x":37,"width":114,"var":"banker_Money","text":"+9999999","mouseEnabled":false,"height":20,"fontSize":20,"color":"#9fb23c","bold":false,"align":"center"}},{"type":"Image","props":{"y":294,"x":41,"var":"platform_name","skin":"res/gameScene/吉胜游戏平台.png"}},{"type":"Label","props":{"y":86,"x":106,"width":165,"var":"self_name","text":"天涯歌女爱与仇","height":25,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":119,"x":126,"width":101,"var":"self_money","text":"6666666","height":23,"fontSize":22,"color":"#f8f0ef","align":"left"}},{"type":"Label","props":{"y":87,"x":270,"width":389,"var":"win_bitmap","text":"+¥1234.56","height":60,"font":"settleWin","align":"center"}},{"type":"Label","props":{"y":37,"x":274,"width":389,"var":"lost_bitmap","text":"-¥1234.56","height":60,"font":"settlelost","align":"center"}},{"type":"Image","props":{"y":81,"x":24,"width":68,"var":"mcHead","skin":"res/gameScene/HeadIcon.jpg","height":67}},{"type":"Image","props":{"y":60,"x":6,"var":"isBanker","skin":"res/gameScene/庄家符号.png"}},{"type":"Label","props":{"y":261,"x":337,"width":175,"var":"Text_NoOne_bet","text":"本局无人赢钱","height":16,"fontSize":22,"color":"#f8f0ef","align":"center"}},{"type":"Animation","props":{"y":187,"x":201,"var":"Num_0","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":194,"x":248,"var":"light_0","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":196,"x":303,"var":"headPic_0","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":203,"x":355,"width":93,"var":"name_0","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":204,"x":518,"width":80,"var":"Money_0","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}},{"type":"Animation","props":{"y":244,"x":201,"var":"Num_1","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":251,"x":248,"var":"light_1","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":253,"x":303,"var":"headPic_1","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":260,"x":355,"width":93,"var":"name_1","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":261,"x":518,"width":80,"var":"Money_1","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}},{"type":"Animation","props":{"y":296,"x":201,"var":"Num_2","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":303,"x":248,"var":"light_2","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":305,"x":303,"var":"headPic_2","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":312,"x":355,"width":93,"var":"name_2","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":313,"x":518,"width":80,"var":"Money_2","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}}]};}
 		]);
 		return ResultPanelUI;
 	})(View)
@@ -49979,7 +50051,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BankerListHintUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":310,"height":400},"child":[{"type":"Image","props":{"y":0,"x":0,"width":310,"var":"bg","skin":"res/gameScene/特殊tips底板.png","height":392,"sizeGrid":"44,22,51,20"}},{"type":"Label","props":{"y":8,"x":83,"width":80,"text":"等待坐庄队列","scaleY":2,"scaleX":2,"height":15,"color":"#b6c325","bold":true}},{"type":"Label","props":{"y":40,"x":116,"width":57,"var":"BankerLimit","text":"9999","scaleY":1.7,"scaleX":1.7,"height":15,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":41,"x":202,"width":58,"text":" 可申请]","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":41,"x":21,"width":58,"var":"title","text":"[现金达到","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Image","props":{"y":69,"x":15,"var":"NextPoint","skin":"res/gameScene/next.png"}},{"type":"Label","props":{"y":80,"x":43,"width":141,"var":"NoPlayer","text":"暂时没有等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"center"}},{"type":"Label","props":{"y":347,"x":108,"width":58,"var":"Page","text":"1/10","scaleY":1.8,"scaleX":1.8,"height":15,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":68,"x":90,"width":127,"var":"player_0","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":93,"x":90,"width":127,"var":"player_1","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":122,"x":89,"width":127,"var":"player_2","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":150,"x":89,"width":127,"var":"player_3","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":179,"x":90,"width":127,"var":"player_4","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":206,"x":90,"width":127,"var":"player_5","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":232,"x":90,"width":127,"var":"player_6","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":260,"x":90,"width":127,"var":"player_7","text":"1 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":289,"x":90,"width":127,"var":"player_8","text":"9 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":317,"x":79,"width":128,"var":"player_9","text":"10 等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"left"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":310,"height":400},"child":[{"type":"Image","props":{"y":0,"x":0,"width":310,"var":"bg","skin":"res/gameScene/特殊tips底板.png","height":392,"sizeGrid":"44,22,51,20"}},{"type":"Label","props":{"y":8,"x":91,"width":140,"text":"等待坐庄队列","height":23,"fontSize":20,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":40,"x":116,"width":57,"var":"BankerLimit","text":"9999","scaleY":1.7,"scaleX":1.7,"height":15,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":41,"x":202,"width":94,"text":" 可申请]","height":28,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":41,"x":21,"width":85,"var":"title","text":"[现金达到","height":25,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Image","props":{"y":69,"x":15,"var":"NextPoint","skin":"res/gameScene/next.png"}},{"type":"Label","props":{"y":80,"x":43,"width":141,"var":"NoPlayer","text":"暂时没有等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"center"}},{"type":"Label","props":{"y":350,"x":116,"width":97,"var":"Page","text":"1/10","height":30,"fontSize":20,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":66,"x":87,"width":210,"var":"player_0","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":95,"x":88,"width":210,"var":"player_1","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":123,"x":87,"width":210,"var":"player_2","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":152,"x":87,"width":210,"var":"player_3","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":180,"x":87,"width":210,"var":"player_4","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":209,"x":87,"width":210,"var":"player_5","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":237,"x":88,"width":210,"var":"player_6","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":266,"x":88,"width":210,"var":"player_7","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":294,"x":88,"width":210,"var":"player_8","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":323,"x":88,"width":210,"var":"player_9","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}}]};}
 		]);
 		return BankerListHintUI;
 	})(View)
@@ -50000,7 +50072,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BankerNotify_aniUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":318,"height":260},"child":[{"type":"Image","props":{"y":71,"x":82,"skin":"res/gameScene/轮庄提示大头像.png"}},{"type":"Image","props":{"y":231,"x":88,"skin":"res/gameScene/轮庄大头像名字底板.png"}},{"type":"Image","props":{"y":5,"x":0,"skin":"res/gameScene/轮庄提示彩带.png"}},{"type":"Label","props":{"y":233,"x":91,"width":94,"var":"Name","scaleY":1.5,"scaleX":1.5,"height":16,"color":"#f6eeee","align":"center"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":318,"height":260},"child":[{"type":"Image","props":{"y":71,"x":82,"skin":"res/gameScene/轮庄提示大头像.png"}},{"type":"Image","props":{"y":231,"x":88,"skin":"res/gameScene/轮庄大头像名字底板.png"}},{"type":"Image","props":{"y":5,"x":0,"skin":"res/gameScene/轮庄提示彩带.png"}},{"type":"Label","props":{"y":233,"x":91,"width":146,"var":"Name","height":21,"fontSize":18,"color":"#f6eeee","align":"center"}}]};}
 		]);
 		return BankerNotify_aniUI;
 	})(View)
@@ -50081,28 +50153,6 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":169,"name":"Record","height":421},"child":[{"type":"Image","props":{"y":0,"x":0,"var":"Hidding_Recode","skin":"res/gameScene/未展开胜负记录.png"}},{"type":"Box","props":{"y":0,"x":0,"var":"Showing_Recode"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/展开胜负记录.png"}},{"type":"Animation","props":{"y":126,"x":24,"var":"spade_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":150,"x":24,"var":"spade_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":174,"x":24,"width":0,"var":"spade_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":198,"x":24,"width":0,"var":"spade_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":221,"x":25,"var":"spade_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":245,"x":25,"var":"spade_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":269,"x":25,"width":0,"var":"spade_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":293,"x":25,"width":0,"var":"spade_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":315,"x":25,"var":"spade_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":339,"x":25,"var":"spade_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":363,"x":25,"width":0,"var":"spade_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":387,"x":25,"width":0,"var":"spade_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":61,"var":"heart_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":61,"var":"heart_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":61,"width":0,"var":"heart_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":61,"width":0,"var":"heart_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":62,"var":"heart_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":62,"var":"heart_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":62,"width":0,"var":"heart_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":62,"width":0,"var":"heart_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":62,"var":"heart_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":62,"var":"heart_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":62,"width":0,"var":"heart_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":62,"width":0,"var":"heart_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":97,"var":"club_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":97,"var":"club_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":97,"width":0,"var":"club_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":97,"width":0,"var":"club_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":98,"var":"club_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":98,"var":"club_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":98,"width":0,"var":"club_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":98,"width":0,"var":"club_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":98,"var":"club_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":98,"var":"club_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":98,"width":0,"var":"club_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":98,"width":0,"var":"club_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":133,"var":"diamond_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":133,"var":"diamond_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":133,"width":0,"var":"diamond_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":133,"width":0,"var":"diamond_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":134,"var":"diamond_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":134,"var":"diamond_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":134,"width":0,"var":"diamond_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":134,"width":0,"var":"diamond_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":134,"var":"diamond_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":134,"var":"diamond_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":134,"width":0,"var":"diamond_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":134,"width":0,"var":"diamond_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Label","props":{"y":78,"x":14,"var":"spade_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":14,"var":"spade_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":51,"var":"heart_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":51,"var":"heart_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":87,"var":"club_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":87,"var":"club_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":123,"var":"diamond_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":123,"var":"diamond_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}}]}]};}
 		]);
 		return HistoryRecordUI;
-	})(View)
-
-
-	//class ui.ui.room.NetConnectViewUI extends laya.ui.View
-	var NetConnectViewUI=(function(_super){
-		function NetConnectViewUI(){
-			this.txtName=null;
-			NetConnectViewUI.__super.call(this);
-		}
-
-		__class(NetConnectViewUI,'ui.ui.room.NetConnectViewUI',_super);
-		var __proto=NetConnectViewUI.prototype;
-		__proto.createChildren=function(){
-			View.regComponent("bull.view.room.NetConnectView",bull.view.room.NetConnectView);
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(NetConnectViewUI.uiView);
-		}
-
-		__static(NetConnectViewUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"runtime":"bull.view.room.NetConnectView","height":800},"child":[{"type":"Label","props":{"y":360,"x":494,"width":224,"var":"txtName","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":76,"color":"#f8f0ef","align":"center"}}]};}
-		]);
-		return NetConnectViewUI;
 	})(View)
 
 
@@ -51706,6 +51756,51 @@ var Laya=window.Laya=(function(window,document){
 	})(BetBtnGroupUI)
 
 
+	/**
+	*下注时间倒计时
+	*/
+	//class bull.view.room.BetTimePanel extends ui.ui.room.BetTimePanelUI
+	var BetTimePanel=(function(_super){
+		function BetTimePanel(){
+			this._time=0;
+			BetTimePanel.__super.call(this);
+		}
+
+		__class(BetTimePanel,'bull.view.room.BetTimePanel',_super);
+		var __proto=BetTimePanel.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+		}
+
+		__proto.hide=function(){
+			this.visible=false;
+			this._time=0;
+			Laya.timer.clear(this,this.timerHandler);
+		}
+
+		__proto.set_data=function(data){
+			this.visible=true;
+			this._time=data[0];
+			/*no*/this.LeftTime.text=this._time.toString();
+			Laya.timer.loop(1000,this,this.timerHandler);
+		}
+
+		__proto.timerHandler=function(){
+			this._time-=1;
+			/*no*/this.LeftTime.text=this._time.toString();
+			if (this._time==0){
+				Laya.timer.clear(this,this.timerHandler);
+			}
+			if(this._time <=3){
+				SoundManager.playSound(SoundPath.CountTick);
+			}
+		}
+
+		__proto.test=function(){}
+		return BetTimePanel;
+	})(BetTimePanelUI)
+
+
 	//class bull.view.room.BullScene extends ui.ui.room.BullSceneUI
 	var BullScene=(function(_super){
 		function BullScene(){
@@ -51827,6 +51922,151 @@ var Laya=window.Laya=(function(window,document){
 
 		return HeadView;
 	})(HeadViewUI)
+
+
+	/**
+	*网络端口，提示断线重连
+	*备注：继承的 LUIComponent的View只有在加到舞台后才会调用creatChild()，
+	*因此在show的时候先调用创建实例组件，并判断只允许调用creatChild一次
+	*/
+	//class bull.view.room.NetConnectView extends ui.ui.room.NetConnectViewUI
+	var NetConnectView=(function(_super){
+		function NetConnectView(skinclazz){
+			this._init_text=null;
+			this._checkCount=0;
+			NetConnectView.__super.call(this);
+			this.x=1400/2;
+			this.y=800/2;
+		}
+
+		__class(NetConnectView,'bull.view.room.NetConnectView',_super);
+		var __proto=NetConnectView.prototype;
+		//(Common.GameHeight-this.height )>> 1;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			this._init_text=this.txtName.text;
+		}
+
+		__proto.show=function(){
+			Light.timer.setInterval(this,this.dotdotdot,1000,null);
+			Light.layer.loadingMask.lock("lostConnect");
+			this.checkCount=100;
+			this.txtName.text=this._init_text;
+		}
+
+		__proto.dotdotdot=function(){
+			this.checkCount--;
+			if(this.checkCount % 3==0)this.txtName.text=this._init_text;
+			this.txtName.text+=".";
+		}
+
+		__proto.hide=function(){
+			Light.layer.loadingMask.unLock("lostConnect");
+		}
+
+		//TweenLite.to(this,_checkCount,{checkCount:0,ease:Linear.easeNone,delay:1});
+		__getset(0,__proto,'checkCount',function(){
+			return this._checkCount;
+			},function(value){
+			if(value !=this._checkCount){
+				this._checkCount=value;
+				if(this.checkCount % 3==0)this.txtName.text=this._init_text;
+				this.txtName.text+=".";
+			}
+		});
+
+		return NetConnectView;
+	})(NetConnectViewUI)
+
+
+	//class bull.view.room.NetStatusPanel extends ui.ui.room.NetStatusPanelUI
+	var NetStatusPanel=(function(_super){
+		function NetStatusPanel(){
+			this.mcStatus=null;
+			this._ms=0;
+			this._status=0;
+			this._statuTxts=null;
+			this._timer_idx=0;
+			NetStatusPanel.__super.call(this);
+		}
+
+		__class(NetStatusPanel,'bull.view.room.NetStatusPanel',_super);
+		var __proto=NetStatusPanel.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			this.tip_bg.visible=false;
+			this._statuTxts=["极佳","流畅","普通","不佳"];
+			this.mcStatus.on("mouseover",this,this.onRollOver);
+			this.mcStatus.on("mouseout",this,this.onRollOut);
+		}
+
+		__proto.onRollOver=function(e){
+			this.showTxt();
+			this.tip_bg.visible=true;
+		}
+
+		__proto.showTxt=function(){
+			if(this._status < this._statuTxts.length){
+				this.tip_bg["txt_Tip"].text="当前延迟"+this._ms.toFixed(2)+"ms，网络状况"+this._statuTxts[this._status];
+			}
+			else{
+				this.tip_bg["txt_Tip"].text="你的网路状态不佳,可能因为延造成投注损失建议检查网路後再进行游戏";
+			}
+		}
+
+		__proto.onRollOut=function(e){
+			this.tip_bg.visible=false;
+		}
+
+		__proto.updateMs=function(ms){
+			this._ms=ms;
+			if (this._ms < 101){
+				this._status=1;
+				this.mcStatus["State_0"].visible=true;
+				this.mcStatus["State_1"].visible=false;
+				this.mcStatus["State_2"].visible=false;
+				this.mcStatus["State_3"].visible=false;
+			}
+			else if (this._ms < 401){
+				this._status=2;
+				this.mcStatus["State_0"].visible=false;
+				this.mcStatus["State_1"].visible=true;
+				this.mcStatus["State_2"].visible=false;
+				this.mcStatus["State_3"].visible=false;
+			}
+			else if (this._ms < 701){
+				this._status=3;
+				this.mcStatus["State_0"].visible=false;
+				this.mcStatus["State_1"].visible=false;
+				this.mcStatus["State_2"].visible=true;
+				this.mcStatus["State_3"].visible=false;
+			}
+			else{
+				this._status=4;
+				this.mcStatus["State_0"].visible=false;
+				this.mcStatus["State_1"].visible=false;
+				this.mcStatus["State_2"].visible=false;
+				this.mcStatus["State_3"].visible=true;
+			}
+			if(this._status==4){
+				this._timer_idx=Light.timer.setInterval(this,this.tip_apear,1000,null);
+			}
+		}
+
+		__proto.tip_apear=function(){
+			this.tip_bg.visible=true;
+			this.showTxt();
+			Light.timer.clearInterval(this._timer_idx);
+			this._timer_idx=Light.timer.setInterval(this,this.tip_disaper,1000,null);
+		}
+
+		__proto.tip_disaper=function(){
+			this.tip_bg.visible=false;
+			Light.timer.clearInterval(this._timer_idx);
+		}
+
+		return NetStatusPanel;
+	})(NetStatusPanelUI)
 
 
 	//class bull.view.room.PokerTypeBoard extends ui.ui.room.PokerTypeUI
@@ -52471,25 +52711,6 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -52506,6 +52727,25 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
 
 
 	/**
@@ -53503,7 +53743,7 @@ var Laya=window.Laya=(function(window,document){
 	})(SmallPanelUI)
 
 
-	Laya.__init([EventDispatcher1,Dialog,LocalStorage,Timer1,Browser,Proxy,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,LoaderManager,WebGLFilter,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile]);
+	Laya.__init([EventDispatcher1,Dialog,LocalStorage,Timer,Browser,Proxy,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,LoaderManager,WebGLFilter,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile]);
 	new Main();
 
 })(window,document,Laya);
@@ -53568,26 +53808,28 @@ var Laya=window.Laya=(function(window,document){
 56 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.width This variable is not defined.
 57 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.height This variable is not defined.
 58 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (286):warning:_picforAni This variable is not defined.
-59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (77):warning:NewNewGameEvent.Banker_Settle_pop This variable is not defined.
-60 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (109):warning:mcbankerHead This variable is not defined.
-61 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (117):warning:_bankerpic This variable is not defined.
-62 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (122):warning:_bankerpic This variable is not defined.
-63 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:BitmapData This variable is not defined.
-64 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:_bankerpic.width This variable is not defined.
-65 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:_bankerpic.height This variable is not defined.
-66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (127):warning:_bankerpic This variable is not defined.
-67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (128):warning:Bitmap This variable is not defined.
-68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (130):warning:mcbankerHead This variable is not defined.
-69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (137):warning:_pic This variable is not defined.
-70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (139):warning:BitmapData This variable is not defined.
-71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (141):warning:Bitmap This variable is not defined.
-72 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (144):warning:_pic This variable is not defined.
-73 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (149):warning:ByteArray This variable is not defined.
-74 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (235):warning:info_0.headPic.loadImage This variable is not defined.
-75 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (240):warning:info_1.headPic.loadImage This variable is not defined.
-76 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (245):warning:info_2.headPic.loadImage This variable is not defined.
-77 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:dispatchEvent This variable is not defined.
-78 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:NewNewGameEvent This variable is not defined.
-79 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:NewNewGameEvent.RUN_ResultOver This variable is not defined.
-80 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
+59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
+60 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
+61 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (77):warning:NewNewGameEvent.Banker_Settle_pop This variable is not defined.
+62 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (109):warning:mcbankerHead This variable is not defined.
+63 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (117):warning:_bankerpic This variable is not defined.
+64 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (122):warning:_bankerpic This variable is not defined.
+65 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:BitmapData This variable is not defined.
+66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:_bankerpic.width This variable is not defined.
+67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:_bankerpic.height This variable is not defined.
+68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (127):warning:_bankerpic This variable is not defined.
+69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (128):warning:Bitmap This variable is not defined.
+70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (130):warning:mcbankerHead This variable is not defined.
+71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (137):warning:_pic This variable is not defined.
+72 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (139):warning:BitmapData This variable is not defined.
+73 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (141):warning:Bitmap This variable is not defined.
+74 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (144):warning:_pic This variable is not defined.
+75 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (149):warning:ByteArray This variable is not defined.
+76 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (235):warning:info_0.headPic.loadImage This variable is not defined.
+77 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (240):warning:info_1.headPic.loadImage This variable is not defined.
+78 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (245):warning:info_2.headPic.loadImage This variable is not defined.
+79 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:dispatchEvent This variable is not defined.
+80 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:NewNewGameEvent This variable is not defined.
+81 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:NewNewGameEvent.RUN_ResultOver This variable is not defined.
+82 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
 */

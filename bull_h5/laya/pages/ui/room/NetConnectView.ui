@@ -22,7 +22,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":360,"x":494,"width":224,"var":"txtName","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":76,"color":"#f8f0ef","align":"center"},
+            "props":{"y":355,"x":584,"width":254,"var":"txtName","text":"天涯歌女爱与仇","height":76,"fontSize":30,"color":"#f8f0ef","align":"center"},
             "nodeParent":1,
             "label":"Label(txtName)",
             "isDirectory":false,

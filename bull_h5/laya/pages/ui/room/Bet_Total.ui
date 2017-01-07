@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":4,
+    "selecteID":3,
     "props":{"width":200,"sceneColor":"#000000","height":40},
     "nodeParent":-1,
     "label":"View",
@@ -42,7 +42,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":10,"x":11,"width":31,"var":"title","text":"总计:","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7"},
+            "props":{"y":6,"x":10,"width":66,"var":"title","text":"总计:","height":28,"fontSize":25,"color":"#ece7e7"},
             "nodeParent":1,
             "label":"Label(title)",
             "isDirectory":false,
@@ -63,7 +63,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":11,"x":67,"width":59,"var":"amount","text":"1","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"},
+            "props":{"y":6,"x":67,"width":122,"var":"amount","text":"1","height":31,"fontSize":25,"color":"#ece7e7","align":"center"},
             "nodeParent":1,
             "label":"Label(amount)",
             "isDirectory":false,

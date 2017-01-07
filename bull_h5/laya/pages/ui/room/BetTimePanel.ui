@@ -42,9 +42,9 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":1,"x":4,"skin":"res/gameScene/倒计时02.png"},
+            "props":{"y":1,"x":4,"var":"mcbg","skin":"res/gameScene/倒计时02.png"},
             "nodeParent":1,
-            "label":"Image",
+            "label":"Image(mcbg)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -57,7 +57,8 @@
                 }],
             "compId":4,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
@@ -77,12 +78,13 @@
                 }],
             "compId":5,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Label",
-            "props":{"y":47,"x":43,"width":20,"var":"bt_txt","text":"10","scaleY":2,"scaleX":2,"height":15,"color":"#ece7e7","align":"center"},
+            "props":{"y":46,"x":38,"width":48,"var":"bt_txt","text":"10","height":24,"fontSize":22,"color":"#ece7e7","align":"center"},
             "nodeParent":1,
             "label":"Label(bt_txt)",
             "isDirectory":false,
