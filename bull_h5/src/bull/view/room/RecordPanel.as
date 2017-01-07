@@ -4,12 +4,12 @@ package bull.view.room
 	
 	import laya.events.Event;
 	
-	import ui.ui.room.HistoryRecordUI
+	import ui.ui.room.RecordPanelUI
 	
-	public class HistoryRecord extends HistoryRecordUI
+	public class RecordPanel extends RecordPanelUI
 	{
 		
-		public function HistoryRecord() 
+		public function RecordPanel() 
 		{
 			super();
 			

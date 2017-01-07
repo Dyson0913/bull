@@ -22,7 +22,7 @@ package bull.modules.BullHall.mediator
 	import msg.ENCSType;
 	
 	
-	public class HallMediator extends Mediator implements IMediator
+	public class HallMediator extends com.lightMVC.parrerns.Mediator implements IMediator
 	{
 		public static const NAME:String = "hallMediator";
 		
@@ -37,7 +37,7 @@ package bull.modules.BullHall.mediator
 		}
 		
 		override public function getInjector():Array
-		{
+		{			
 			return [HallSocketService.NAME,HallData.NAME,UserInfoData.NAME];
 		}
 		
@@ -48,6 +48,7 @@ package bull.modules.BullHall.mediator
 		
 		override public function setViewComponent(viewComponent:Object):void
 		{			
+			
 			super.setViewComponent(viewComponent);
 			
 			//資料更新通知	
@@ -131,7 +132,8 @@ package bull.modules.BullHall.mediator
 		 */		
 		private function onClick(e:Event):void
 		{
-			trace("onClick:"+e.target);
+			trace("onClick:" + e.target);			
+			
 			switch(e.target)
 			{
 				case view.helpBtn:

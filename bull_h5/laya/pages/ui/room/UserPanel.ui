@@ -42,9 +42,9 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":-3,"x":250,"var":"Close","skin":"res/gameScene/PlayerListCloseBtn.png"},
+            "props":{"y":-3,"x":250,"var":"clostBtn","skin":"res/gameScene/PlayerListCloseBtn.png"},
             "nodeParent":1,
-            "label":"Button(Close)",
+            "label":"Button(clostBtn)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -62,9 +62,9 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":646,"x":129,"text":"1/10","scaleY":1.5,"scaleX":1.5,"color":"#eee3e2"},
+            "props":{"y":646,"x":129,"var":"total_txt","text":"1/10","scaleY":1.5,"scaleX":1.5,"color":"#eee3e2"},
             "nodeParent":1,
-            "label":"Label",
+            "label":"Label(total_txt)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -78,6 +78,88 @@
             "compId":4,
             "child":[
                 ]
+        },
+        {
+            "x":15,
+            "type":"List",
+            "props":{"y":34,"x":14,"width":266,"height":610},
+            "nodeParent":1,
+            "label":"List",
+            "isOpen":true,
+            "isDirectory":true,
+            "isAniNode":true,
+            "hasChild":true,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"width":100,"height":100},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":5,
+            "child":[
+                {
+                    "x":30,
+                    "type":"Box",
+                    "props":{"y":-9,"x":1,"name":"render"},
+                    "nodeParent":5,
+                    "label":"Box(render)",
+                    "isOpen":true,
+                    "isDirectory":true,
+                    "isAniNode":false,
+                    "hasChild":true,
+                    "frames":[
+                        {
+                            "type":1,
+                            "props":{},
+                            "frame":0,
+                            "__InPool":false
+                        }],
+                    "compId":8,
+                    "child":[
+                        {
+                            "x":45,
+                            "type":"UIView",
+                            "source":"ui/room/UserListInfo.ui",
+                            "props":{"y":2,"x":0},
+                            "nodeParent":8,
+                            "label":"UIView",
+                            "isDirectory":false,
+                            "isAniNode":false,
+                            "hasChild":false,
+                            "frames":[
+                                {
+                                    "type":1,
+                                    "props":{},
+                                    "frame":0,
+                                    "__InPool":false
+                                }],
+                            "compId":9,
+                            "child":[
+                                ]
+                        }]
+                },
+                {
+                    "x":30,
+                    "type":"VScrollBar",
+                    "props":{"y":0,"x":248,"skin":"comp/vscroll.png","name":"scrollBar"},
+                    "nodeParent":5,
+                    "label":"VScrollBar(scrollBar)",
+                    "isOpen":false,
+                    "isDirectory":false,
+                    "isAniNode":false,
+                    "hasChild":false,
+                    "frames":[
+                        {
+                            "type":1,
+                            "props":{"y":301,"x":-30,"skin":"comp/vscroll.png"},
+                            "frame":0,
+                            "__InPool":false
+                        }],
+                    "compId":7,
+                    "child":[
+                        ]
+                }]
         }],
     "animations":[
         {

@@ -49,6 +49,7 @@ package bull
 	import bull.modules.common.model.data.HallData;
 	import bull.modules.common.model.data.RoomData;
 	import bull.modules.common.model.data.UserInfoData;
+	import bull.modules.common.model.data.AppMedel;
 	import bull.modules.common.services.WebService;
 	import bull.modules.BullHall.command.UserBalanceCommand;
 	import bull.modules.BullHall.mediator.HallMediator;
@@ -172,7 +173,8 @@ package bull
 			asSingleton(HallData.NAME,HallData);
 			asSingleton(RoomData.NAME,RoomData);
 			asSingleton(UserInfoData.NAME,UserInfoData);
-			asSingleton(ConfigData.NAME,ConfigData);
+			asSingleton(ConfigData.NAME, ConfigData);
+			asSingleton(AppMedel.NAME,AppMedel);
 		}
 		
 		private function initMediator():void{

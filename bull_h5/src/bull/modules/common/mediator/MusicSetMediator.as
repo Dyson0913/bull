@@ -49,8 +49,8 @@ package bull.modules.common.mediator
 			addNotifiction(SHOW_MUSIC_SET_PANEL);
 			addNotifiction(HIDE_MUSIC_SET_PANEL);
 			addNotifiction(BullNotification.SCENCE_CHANGE);
-			view.chkMusic.on(Event.CHANGE, this, onChange);
-			view.chkVoice.on(Event.CHANGE, this, onChange);
+			view.musicButton.on(Event.CHANGE, this, onChange);
+			view.soundButton.on(Event.CHANGE, this, onChange);
 		}
 		
 		override public function handler(notification:INotification):void

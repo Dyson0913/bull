@@ -5,11 +5,13 @@ package bull.view.room
 	import laya.filters.ColorFilter;
 	
 	import laya.events.Event;
+	import laya.utils.Tween;
+	import laya.utils.Ease;
 	
-	import ui.ui.room.BetChipUI
+	import ui.ui.room.SelectClipViewUI
 	
 	
-	public class CoinSelect extends BetChipUI
+	public class SelectClipView extends SelectClipViewUI
 	{
 		private var  _coinValue:Array = [];
 		
@@ -19,7 +21,7 @@ package bull.view.room
 				
 		private var grayscaleFilter:ColorFilter;
 		
-		public function CoinSelect() 
+		public function SelectClipView() 
 		{
 			super();
 			
@@ -31,7 +33,7 @@ package bull.view.room
 			
 			for (var i:int = 0; i < 6; i++)
 			{
-				this["Coin_" + i].on(Event.CLICK, this, onClick);
+				this["mcSelect_" + i].on(Event.CLICK, this, onClick);
 			}			
 			
 			var grayscaleMat = [0.3086, 0.6094, 0.0820, 0, 0, 0.3086, 0.6094, 0.0820, 0, 0, 0.3086, 0.6094, 0.0820, 0, 0, 0, 0, 0, 1, 0];
@@ -42,7 +44,7 @@ package bull.view.room
 		private function onClick(e:Event):void
 		{					
 			var s:String = e.target.name;
-			s = s.substr(5, 1);			
+			s = s.substr(9, 1);			
 			
 			var idx:int = parseInt(s);
 			
@@ -50,12 +52,13 @@ package bull.view.room
 			if (idx == _pre_idx) return;
 			
 			//新的往上
-			this["Coin_" + idx].y = 7;
+			this["mcSelect_" + idx].y = 7;
 			Coin_light.x = ligth_po[idx];
-			Selcet_Arrow.x = arror_po[idx];			
+			
+			Tween.to(mcArrow, { x:arror_po[idx] }, 500, Ease.cubicOut);
 			
 			//舊的往下
-			this["Coin_" + _pre_idx].y = 24;
+			this["mcSelect_" + _pre_idx].y = 24;
 			
 			_pre_idx = idx;
 			 
@@ -71,7 +74,7 @@ package bull.view.room
 			var coinlist:Array = _coinValue[0];
 			for (var i:int = 0; i < coinlist.length ; i++)
 			{				
-				this["Coin_"+i].source = Light.loader.getRes("res/gameScene/chip_" + coinlist[i] + ".png");
+				this["mcSelect_"+i].source = Light.loader.getRes("res/gameScene/chip_" + coinlist[i] + ".png");
 			}
 			
 		}
@@ -83,7 +86,7 @@ package bull.view.room
 		
 		private function test():void
 		{
-			//view.BetChip.set_data([100,500,1000,5000,10000,"max"]);			
+			//view.BetChip.set_data([100,500,1000,5000,10000,"max"]);
 			//view.BetChip.set_gray();			
 		}			
 		

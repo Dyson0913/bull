@@ -947,6 +947,7 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.ROUND_COMMIT_RSP="roundCommitRsp";
 		BullNotification.ROUND_SETTLEMENT_RSP="roundSettlementRsp";
 		BullNotification.Change_Scene="car.Change_Scene";
+		BullNotification.CASH_TAKEIN_RESPONES="CASH_TAKEIN_RESPONES";
 		BullNotification.Scene_Hall="Scene_Hall";
 		BullNotification.Scene_Game="Scene_Game";
 		BullNotification.RoomSocketClose="RoomSocketClose";
@@ -1129,6 +1130,141 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
+	//class bull.modules.common.model.data.AppMedel
+	var AppMedel=(function(){
+		function AppMedel(){
+			this.app_id="";
+			this.user_id="";
+			this._nick_name_64="";
+			this._nick_name="";
+			this.uin=0;
+			this.access_token=null;
+			this.timestamp=null;
+			this.extra=null;
+			this.userHeadIcon="";
+			this.takeinTimeOut=0;
+			this.soundbg=null;
+			this.soundbg_channel=null;
+			this.Server_version=null;
+			this.gameState=0;
+			this.RoundID=null;
+			this.TotalMoney=NaN;
+			this.Bet_money=0;
+			this.chipVo=null;
+			this.myBetClip=NaN;
+			this.IsBetMax=false;
+			this.IsRepeat=false;
+			this.Is_Inside_take=false;
+			this.where_is_lamp=0;
+			this.Current_chipValue=null;
+			this.roomParam=null;
+			this.dataStartStatus=null;
+			this.dataResult=null;
+			this.sameBetinfo=null;
+			this.popWin=false;
+			this.pop_windows=null;
+			this.pop_Banker_continue_windows=null;
+			this.banker_default_ok=0;
+			this.Totalplayer_in_table=0;
+			this.TablePlayerlist=null;
+			this.TabPlayerList=null;
+			this.apply_type=0;
+			this.applybanker_success=false;
+			this.applydebanker_success=false;
+			this.WaitBankList=null;
+			this.Banker_uid=null;
+			this.banker_settle_show=false;
+			this.dataRecord=null;
+			this.pokerdata=null;
+			this.Winlost_zone=null;
+			this.first_threePlayer=null;
+			this.self_settle_win=null;
+			this.Settle_Time=0;
+			this.Banker_settle=null;
+			this.Banker_Total_settle=null;
+			this.half_in_update=false;
+			this.half_in_bet=NaN;
+			this.dataLastCarStopPosition=0;
+			this.dataCurTime=0;
+			this.viewTakeMoney=null;
+			this.alertOpenedDic=null;
+			this.xmlClipConfig=null;
+			this.BetRecode=false;
+			this.dataStartStatus=new StartStatusVo();
+			this.dataResult=new ShowResultVo();
+			this.dataRecord=new RecordVo();
+			this.dataLastCarStopPosition=0;
+			this.dataCurTime=0;
+			this.pokerdata=[];
+			this.TablePlayerlist=[];
+			this.first_threePlayer=[];
+			this.TabPlayerList=[];
+			this.WaitBankList=[];
+			this.Banker_settle=[];
+			this.Winlost_zone=[];
+			this.Current_chipValue=[];
+			this.sameBetinfo=[];
+			this.TotalMoney=0;
+			this.Banker_uid="0";
+			this.banker_settle_show=false;
+			this.BetRecode=false;
+			this.Is_Inside_take=false;
+			this.myBetClip=0;
+			this.applybanker_success=false;
+			this.applydebanker_success=false;
+			this.popWin=false;
+			this.half_in_update=false;
+			this.alertOpenedDic=new Dictionary(true);
+		}
+
+		__class(AppMedel,'bull.modules.common.model.data.AppMedel');
+		var __proto=AppMedel.prototype;
+		__proto.restart=function(){}
+		//nick_name=Base64.decode(value);
+		__proto.getClipBets=function(clipType){
+			if(this.xmlClipConfig==null)
+				return null;
+			var items=this.xmlClipConfig.Item;
+			var result=[];
+			var item;
+			for(var $each_item in items){
+				item=items[$each_item];
+				if(clipType==int(item.type)){
+					result=String(item.value).split("、");
+					break ;
+				}
+			}
+			if(result.length==0)
+				return null;
+			for (var i=0;i < result.length;i++){
+				result[i]=Number(result[i]);
+			}
+			return result;
+		}
+
+		__getset(0,__proto,'nick_name',function(){
+			return this._nick_name;
+			},function(value){
+			this._nick_name=value;
+		});
+
+		__getset(0,__proto,'nick_name_64',function(){
+			return this._nick_name_64;
+			},function(value){
+			this._nick_name_64=value;
+		});
+
+		AppMedel.NAME="appMedel";
+		AppMedel.START=1;
+		AppMedel.BANKER=2;
+		AppMedel.BET=3;
+		AppMedel.BET_CHECK=4;
+		AppMedel.DEAL=5;
+		AppMedel.END=6;
+		return AppMedel;
+	})()
+
+
 	//class bull.modules.common.model.data.ConfigData
 	var ConfigData=(function(){
 		function ConfigData(){
@@ -1156,6 +1292,109 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
+	/**
+	*历史记录数据
+	*/
+	//class bull.modules.common.model.data.RecordVo
+	var RecordVo=(function(){
+		function RecordVo(){
+			this.Win=null;
+			this.Lost=null;
+			this.Spade_Recode=null;
+			this.Heart_Recode=null;
+			this.Club_Recode=null;
+			this.Diamond_Recode=null;
+			this.Win=[];
+			this.Lost=[];
+			this.Spade_Recode=[];
+			this.Heart_Recode=[];
+			this.Club_Recode=[];
+			this.Diamond_Recode=[];
+		}
+
+		__class(RecordVo,'bull.modules.common.model.data.RecordVo');
+		return RecordVo;
+	})()
+
+
+	//class bull.modules.common.model.data.ShowResultVo
+	var ShowResultVo=(function(){
+		function ShowResultVo(){
+			this._runIndex=0;
+			this._winIndex=0;
+			this._myMoney=NaN;
+			this._myWinClip=NaN;
+			this._list=null;
+		}
+
+		__class(ShowResultVo,'bull.modules.common.model.data.ShowResultVo');
+		var __proto=ShowResultVo.prototype;
+		__getset(0,__proto,'winIndex',function(){
+			return this._winIndex;
+			},function(value){
+			this._winIndex=value;
+		});
+
+		__getset(0,__proto,'runIndex',function(){
+			return this._runIndex;
+			},function(value){
+			this._runIndex=value;
+		});
+
+		__getset(0,__proto,'myWinClip',function(){
+			return this._myWinClip;
+			},function(value){
+			this._myWinClip=value;
+		});
+
+		__getset(0,__proto,'myMoney',function(){
+			return this._myMoney;
+			},function(value){
+			this._myMoney=value;
+		});
+
+		__getset(0,__proto,'list',function(){
+			return this._list;
+			},function(value){
+			this._list=value;
+		});
+
+		return ShowResultVo;
+	})()
+
+
+	/**
+	*玩家第一次进入游戏，保存玩家初始化数据
+	*/
+	//class bull.modules.common.model.data.StartStatusVo
+	var StartStatusVo=(function(){
+		function StartStatusVo(){
+			this._myBetClips=[0,0,0,0];
+			this._allBetClips=[0,0,0,0];
+		}
+
+		__class(StartStatusVo,'bull.modules.common.model.data.StartStatusVo');
+		var __proto=StartStatusVo.prototype;
+		__getset(0,__proto,'allBetClips',function(){
+			return this._allBetClips;
+			},function(value){
+			this._allBetClips=value;
+		});
+
+		/**
+		*@private
+		*/
+		/**断线重连记录我的下注 */
+		__getset(0,__proto,'myBetClips',function(){
+			return this._myBetClips;
+			},function(value){
+			this._myBetClips=value;
+		});
+
+		return StartStatusVo;
+	})()
+
+
 	//class bull.modules.common.model.param.WebParam
 	var WebParam=(function(){
 		function WebParam(){
@@ -1165,6 +1404,119 @@ var Laya=window.Laya=(function(window,document){
 
 		__class(WebParam,'bull.modules.common.model.param.WebParam');
 		return WebParam;
+	})()
+
+
+	//class bull.view.room.Common
+	var Common=(function(){
+		function Common(){};
+		__class(Common,'bull.view.room.Common');
+		Common.GameWidth=920;
+		Common.GameHeight=575;
+		Common.SwfName="BullSkin";
+		Common.BetMax=99999;
+		Common.LoadCarAnimTimeOutTimer=3000;
+		Common.TakeInTimeOut=10000;
+		Common.RunState_Bet=0;
+		Common.RunState_StopBet=1;
+		Common.RunState_ShowResult=2;
+		Common.curSelectBetClip=1;
+		Common.myClip=0;
+		Common.isCoin=true;
+		Common.isDownClip=true;
+		Common.isFirstCanel=true;
+		Common.curMyBetClip=0;
+		Common.isProcessBetReset=false;
+		Common.betPlayCount=0;
+		Common.runStatus=-1;
+		Common.dwBetTime=10;
+		Common.AlertSysMsg="alert_SysMsg";
+		__static(Common,
+		['clipAlls',function(){return this.clipAlls=[ 0.1,0.5,1,5,10,50,100,500,1000,5000,10000];},'clipSelectAlls',function(){return this.clipSelectAlls=[ 10,50,100,500,1000,-1];}
+		]);
+		return Common;
+	})()
+
+
+	//class bull.view.room.GameUtil
+	var GameUtil=(function(){
+		function GameUtil(){};
+		__class(GameUtil,'bull.view.room.GameUtil');
+		GameUtil.removeFromStage=function(dis){
+			if(dis.parent){
+				dis.parent.removeChild(dis);
+			}
+		}
+
+		GameUtil.clearDisplayChildren=function(dis){
+			if(dis){
+				while(dis.numChildren>0){
+					dis.removeChildAt(0);
+				}
+			}
+		}
+
+		GameUtil.formatMoney1=function(num){
+			if(Common.isCoin)
+				return num+"";
+			else
+			return num.toFixed(2);
+		}
+
+		GameUtil.formatMoney=function(num){
+			if(Common.isCoin)
+				return num.toString();
+			else
+			return "¥"+num.toFixed(2);
+		}
+
+		GameUtil.formatMoneyBet=function(num){
+			if(Common.isCoin)
+				return (num+"").replace(".","?");
+			else
+			return ("Y"+num.toFixed(2)).replace(".","?");
+		}
+
+		GameUtil.setUint64Money=function(num){
+			if(Common.isCoin)
+				return UInt641.parseUInt64(num+"");
+			else
+			return UInt641.parseUInt64(num*100+"");
+		}
+
+		GameUtil.getUint64Money=function(uin64){
+			if(Common.isCoin)
+				return uin64.toNumber();
+			else
+			return uin64.toNumber()/100;
+		}
+
+		GameUtil.getMoney=function(money){
+			if(Common.isCoin)
+				return (money.hasCoin ? money.coin.toNumber():0);
+			else
+			return (money.hasCash ? money.cash.toNumber()/100 :0)+(money.hasNm ? money.nm.toNumber()/100 :0);
+		}
+
+		GameUtil.getMoneyByType=function(num,isCoin){
+			if(isCoin)
+				return num;
+			else
+			return num/100;
+		}
+
+		GameUtil.gc=function(){
+			try{
+				/*no*/this.Loger.get().logPrint("强制垃圾回收前："+(/*no*/this.System.totalMemory / 1024 / 1024).toFixed(2)+"M");
+				new /*no*/this.LocalConnection().connect("foo");
+				new /*no*/this.LocalConnection().connect("foo");
+				/*no*/this.Loger.get().logPrint("强制垃圾回收后："+(/*no*/this.System.totalMemory / 1024 / 1024).toFixed(2)+"M");
+				}catch(error){
+				/*no*/this.Loger.get().logPrint("强制垃圾回收后："+(/*no*/this.System.totalMemory / 1024 / 1024).toFixed(2)+"M");
+			}
+		}
+
+		return GameUtil;
 	})()
 
 
@@ -14611,6 +14963,51 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
+	*<code>Log</code> 类用于在界面内显示日志记录信息。
+	*/
+	//class laya.utils.Log
+	var Log=(function(){
+		function Log(){};
+		__class(Log,'laya.utils.Log');
+		Log.enable=function(){
+			if (!Log._logdiv){
+				Log._logdiv=Browser.window.document.createElement('div');
+				Browser.window.document.body.appendChild(Log._logdiv);
+				Log._logdiv.style.cssText="pointer-events:none;border:white;overflow:hidden;z-index:1000000;background:rgba(100,100,100,0.6);color:white;position: absolute;left:0px;top:0px;width:50%;height:50%;";
+			}
+		}
+
+		Log.toggle=function(){
+			var style=Log._logdiv.style;
+			if (style.width=="1px"){
+				style.width=style.height="50%";
+				}else {
+				style.width=style.height="1px";
+			}
+		}
+
+		Log.print=function(value){
+			if (Log._logdiv){
+				if (Log._count >=Log.maxCount)Log.clear();
+				Log._count++;
+				Log._logdiv.innerText+=value+"\n";
+				Log._logdiv.scrollTop=Log._logdiv.scrollHeight;
+			}
+		}
+
+		Log.clear=function(){
+			Log._logdiv.innerText="";
+			Log._count=0;
+		}
+
+		Log._logdiv=null
+		Log._count=0;
+		Log.maxCount=20;
+		return Log;
+	})()
+
+
+	/**
 	*<code>Pool</code> 是对象池类，用于对象的存贮、重复使用。
 	*/
 	//class laya.utils.Pool
@@ -20769,6 +21166,76 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
+	//class com.netease.protobuf.Binary64
+	var Binary641=(function(){
+		function Binary64(param1,param2){
+			this.low=0;
+			this.internalHigh=0;
+			(param1===void 0)&& (param1=0);
+			(param2===void 0)&& (param2=0);
+			this.low=param1;
+			this.internalHigh=param2;
+			return;
+		}
+
+		__class(Binary64,'com.netease.protobuf.Binary64',null,'Binary641');
+		var __proto=Binary64.prototype;
+		// end function
+		__proto.div=function(param1){
+			var _loc_2=0;
+			_loc_2=this.internalHigh % param1;
+			var _loc_3=(this.low % param1+_loc_2 *6)% param1;
+			this.internalHigh=this.internalHigh / param1;
+			var _loc_4=(_loc_2 *4294967296+this.low)/ param1;
+			this.internalHigh=this.internalHigh+uint(_loc_4 / 4294967296);
+			this.low=_loc_4;
+			return _loc_3;
+		}
+
+		// end function
+		__proto.mul=function(param1){
+			var _loc_2=Number(this.low)*param1;
+			this.internalHigh=this.internalHigh *param1;
+			this.internalHigh=this.internalHigh+uint(_loc_2 / 4294967296);
+			this.low=this.low *param1;
+			return;
+		}
+
+		// end function
+		__proto.add=function(param1){
+			var _loc_2=Number(this.low)+param1;
+			this.internalHigh=this.internalHigh+uint(_loc_2 / 4294967296);
+			this.low=_loc_2;
+			return;
+		}
+
+		// end function
+		__proto.bitwiseNot=function(){
+			this.low=~this.low;
+			this.internalHigh=~this.internalHigh;
+			return;
+		}
+
+		__static(Binary64,
+		['CHAR_CODE_0',function(){return this.CHAR_CODE_0="0".charCodeAt();},'CHAR_CODE_9',function(){return this.CHAR_CODE_9="9".charCodeAt();},'CHAR_CODE_A',function(){return this.CHAR_CODE_A="a".charCodeAt();},'CHAR_CODE_Z',function(){return this.CHAR_CODE_Z="z".charCodeAt();}
+		]);
+		return Binary64;
+	})()
+
+
+	//class com.netease.protobuf.ArgumentError extends Error
+	var ArgumentError1=(function(_super){
+		function ArgumentError(message,id){
+			(message===void 0)&& (message="");
+			(id===void 0)&& (id=0);
+			ArgumentError.__super.call(this,message,id);
+		}
+
+		__class(ArgumentError,'com.netease.protobuf.ArgumentError',Error);
+		return ArgumentError;
+	})(Error)
+
+
 	//class com.lightMVC.parrerns.Configure extends com.lightMVC.core.Node
 	var Configure=(function(_super){
 		function Configure(){
@@ -21284,12 +21751,13 @@ var Laya=window.Laya=(function(window,document){
 			this.hallData=null;
 			this.roomData=null;
 			this.userInfoData=null;
+			this.appMedel=null;
 			this.uid=NaN;
 			this.token=null;
 			this.truthLogin=false;
 			this.hallHeartBeat=false;
 			this.roomHeartBeat=false;
-			this.injector=["hallData","roomData","userInfoData"];
+			this.injector=["hallData","roomData","userInfoData","appMedel"];
 			Data.__super.call(this);
 		}
 
@@ -25727,53 +26195,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Filter)
 
 
-	//class laya.webgl.shader.d2.ShaderDefines2D extends laya.webgl.shader.ShaderDefines
-	var ShaderDefines2D=(function(_super){
-		function ShaderDefines2D(){
-			ShaderDefines2D.__super.call(this,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name,ShaderDefines2D.__int2nameMap);
-		}
-
-		__class(ShaderDefines2D,'laya.webgl.shader.d2.ShaderDefines2D',_super);
-		ShaderDefines2D.__init__=function(){
-			ShaderDefines2D.reg("TEXTURE2D",0x01);
-			ShaderDefines2D.reg("COLOR2D",0x02);
-			ShaderDefines2D.reg("PRIMITIVE",0x04);
-			ShaderDefines2D.reg("GLOW_FILTER",0x08);
-			ShaderDefines2D.reg("BLUR_FILTER",0x10);
-			ShaderDefines2D.reg("COLOR_FILTER",0x20);
-			ShaderDefines2D.reg("COLOR_ADD",0x40);
-			ShaderDefines2D.reg("WORLDMAT",0x80);
-		}
-
-		ShaderDefines2D.reg=function(name,value){
-			ShaderDefines._reg(name,value,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name);
-		}
-
-		ShaderDefines2D.toText=function(value,int2name,int2nameMap){
-			return ShaderDefines._toText(value,int2name,int2nameMap);
-		}
-
-		ShaderDefines2D.toInt=function(names){
-			return ShaderDefines._toInt(names,ShaderDefines2D.__name2int);
-		}
-
-		ShaderDefines2D.TEXTURE2D=0x01;
-		ShaderDefines2D.COLOR2D=0x02;
-		ShaderDefines2D.PRIMITIVE=0x04;
-		ShaderDefines2D.FILTERGLOW=0x08;
-		ShaderDefines2D.FILTERBLUR=0x10;
-		ShaderDefines2D.FILTERCOLOR=0x20;
-		ShaderDefines2D.COLORADD=0x40;
-		ShaderDefines2D.WORLDMAT=0x80;
-		ShaderDefines2D.FILLTEXTURE=0x100;
-		ShaderDefines2D.SKINMESH=0x200;
-		ShaderDefines2D.__name2int={};
-		ShaderDefines2D.__int2name=[];
-		ShaderDefines2D.__int2nameMap=[];
-		return ShaderDefines2D;
-	})(ShaderDefines)
-
-
 	/**
 	*发光滤镜(也可以当成阴影滤使用）
 	*/
@@ -25850,6 +26271,53 @@ var Laya=window.Laya=(function(window,document){
 
 		return GlowFilter;
 	})(Filter)
+
+
+	//class laya.webgl.shader.d2.ShaderDefines2D extends laya.webgl.shader.ShaderDefines
+	var ShaderDefines2D=(function(_super){
+		function ShaderDefines2D(){
+			ShaderDefines2D.__super.call(this,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name,ShaderDefines2D.__int2nameMap);
+		}
+
+		__class(ShaderDefines2D,'laya.webgl.shader.d2.ShaderDefines2D',_super);
+		ShaderDefines2D.__init__=function(){
+			ShaderDefines2D.reg("TEXTURE2D",0x01);
+			ShaderDefines2D.reg("COLOR2D",0x02);
+			ShaderDefines2D.reg("PRIMITIVE",0x04);
+			ShaderDefines2D.reg("GLOW_FILTER",0x08);
+			ShaderDefines2D.reg("BLUR_FILTER",0x10);
+			ShaderDefines2D.reg("COLOR_FILTER",0x20);
+			ShaderDefines2D.reg("COLOR_ADD",0x40);
+			ShaderDefines2D.reg("WORLDMAT",0x80);
+		}
+
+		ShaderDefines2D.reg=function(name,value){
+			ShaderDefines._reg(name,value,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name);
+		}
+
+		ShaderDefines2D.toText=function(value,int2name,int2nameMap){
+			return ShaderDefines._toText(value,int2name,int2nameMap);
+		}
+
+		ShaderDefines2D.toInt=function(names){
+			return ShaderDefines._toInt(names,ShaderDefines2D.__name2int);
+		}
+
+		ShaderDefines2D.TEXTURE2D=0x01;
+		ShaderDefines2D.COLOR2D=0x02;
+		ShaderDefines2D.PRIMITIVE=0x04;
+		ShaderDefines2D.FILTERGLOW=0x08;
+		ShaderDefines2D.FILTERBLUR=0x10;
+		ShaderDefines2D.FILTERCOLOR=0x20;
+		ShaderDefines2D.COLORADD=0x40;
+		ShaderDefines2D.WORLDMAT=0x80;
+		ShaderDefines2D.FILLTEXTURE=0x100;
+		ShaderDefines2D.SKINMESH=0x200;
+		ShaderDefines2D.__name2int={};
+		ShaderDefines2D.__int2name=[];
+		ShaderDefines2D.__int2nameMap=[];
+		return ShaderDefines2D;
+	})(ShaderDefines)
 
 
 	/**
@@ -28761,6 +29229,247 @@ var Laya=window.Laya=(function(window,document){
 	})(Submit)
 
 
+	//class com.netease.protobuf.Int64 extends com.netease.protobuf.Binary64
+	var Int641=(function(_super){
+		function Int64(param1,param2){
+			(param1===void 0)&& (param1=0);
+			(param2===void 0)&& (param2=0);
+			Int64.__super.call(this,param1,param2);
+			return;
+		}
+
+		__class(Int64,'com.netease.protobuf.Int64',_super,'Int641');
+		var __proto=Int64.prototype;
+		// end function
+		__proto.toNumber=function(){
+			return this.high *4294967296+this.low;
+		}
+
+		// end function
+		__proto.toString=function(param1){
+			(param1===void 0)&& (param1=10);
+			var _loc_4=0;
+			if (param1 >=2){
+			}
+			if (param1 > 36){
+				throw new ArgumentError1();
+			}
+			switch(this.high){
+				case 0:{
+						return this.low.toString(param1);
+					}
+				case-1:{
+						if ((this.low & 2147483648)==0){
+							return (int(this.low | 2147483648)-2147483648).toString(param1);
+						}
+						return int(this.low).toString(param1);
+					}
+				default :{
+						break ;
+						break ;
+					}
+				}
+			if (this.low==0){
+			}
+			if (this.high==0){
+				return "0";
+			};
+			var _loc_2=[];
+			var _loc_3=new UInt641(this.low,this.high);
+			if (this.high < 0){
+				_loc_3.bitwiseNot();
+				_loc_3.add(1);
+			}
+			do{
+				_loc_4=_loc_3.div(param1);
+				if (_loc_4 < 10){
+					_loc_2.push(_loc_4+Binary641.CHAR_CODE_0);
+					continue ;
+				}
+				_loc_2.push(_loc_4-10+Binary641.CHAR_CODE_A);
+			}while (_loc_3.high !=0)
+			if (this.high < 0){
+				return "-"+_loc_3.low.toString(param1)+String.fromCharCode.apply(String,_loc_2.reverse());
+			}
+			return _loc_3.low.toString(param1)+String.fromCharCode.apply(String,_loc_2.reverse());
+		}
+
+		// end function
+		// end function
+		__getset(0,__proto,'high',function(){
+			return /*no*/this.internalHigh;
+			},function(param1){
+			/*no*/this.internalHigh=param1;
+			return;
+		});
+
+		Int64.fromNumber=function(param1){
+			return new Int64(param1,Math.floor(param1 / 4294967296));
+		}
+
+		Int64.parseInt64=function(param1,param2){
+			(param2===void 0)&& (param2=0);
+			var _loc_6=0;
+			var _loc_3=param1.search(/^\-""^\-/)==0;
+			var _loc_4=_loc_3 ? (1):(0);
+			if (param2==0){
+				if (param1.search(/^\-?0x""^\-?0x/)==0){
+					param2=16;
+					_loc_4=_loc_4+2;
+				}
+				else{
+					param2=10;
+				}
+			}
+			if (param2 >=2){
+			}
+			if (param2 > 36){
+				throw new ArgumentError1();
+			}
+			param1=param1.toLowerCase();
+			var _loc_5=new Int64;
+			while (_loc_4 < param1.length){
+				_loc_6=param1.charCodeAt(_loc_4);
+				if (_loc_6 >=Binary641.CHAR_CODE_0){
+				}
+				if (_loc_6 <=Binary641.CHAR_CODE_9){
+					_loc_6=_loc_6-Binary641.CHAR_CODE_0;
+				}
+				else{
+					if (_loc_6 >=Binary641.CHAR_CODE_A){
+					}
+					if (_loc_6 <=Binary641.CHAR_CODE_Z){
+						_loc_6=_loc_6-Binary641.CHAR_CODE_A;
+						_loc_6=_loc_6+10;
+					}
+					else{
+						throw new ArgumentError1();
+					}
+				}
+				if (_loc_6 >=param2){
+					throw new ArgumentError1();
+				}
+				_loc_5.mul(param2);
+				_loc_5.add(_loc_6);
+				_loc_4=_loc_4+1;
+			}
+			if (_loc_3){
+				_loc_5.bitwiseNot();
+				_loc_5.add(1);
+			}
+			return _loc_5;
+		}
+
+		return Int64;
+	})(Binary641)
+
+
+	//class com.netease.protobuf.UInt64 extends com.netease.protobuf.Binary64
+	var UInt641=(function(_super){
+		function UInt64(param1,param2){
+			(param1===void 0)&& (param1=0);
+			(param2===void 0)&& (param2=0);
+			UInt64.__super.call(this,param1,param2);
+			return;
+		}
+
+		__class(UInt64,'com.netease.protobuf.UInt64',_super,'UInt641');
+		var __proto=UInt64.prototype;
+		// end function
+		__proto.toNumber=function(){
+			return this.high *4294967296+this.low;
+		}
+
+		// end function
+		__proto.toString=function(param1){
+			(param1===void 0)&& (param1=10);
+			var _loc_4=0;
+			if (param1 >=2){
+			}
+			if (param1 > 36){
+				throw new ArgumentError1();
+			}
+			if (this.high==0){
+				return this.low.toString(param1);
+			};
+			var _loc_2=[];
+			var _loc_3=new UInt64(this.low,this.high);
+			do{
+				_loc_4=_loc_3.div(param1);
+				if (_loc_4 < 10){
+					_loc_2.push(_loc_4+Binary641.CHAR_CODE_0);
+					continue ;
+				}
+				_loc_2.push(_loc_4-10+Binary641.CHAR_CODE_A);
+			}while (_loc_3.high !=0)
+			return _loc_3.low.toString(param1)+String.fromCharCode.apply(String,_loc_2.reverse());
+		}
+
+		// end function
+		// end function
+		__getset(0,__proto,'high',function(){
+			return /*no*/this.internalHigh;
+			},function(param1){
+			/*no*/this.internalHigh=param1;
+			return;
+		});
+
+		UInt64.fromNumber=function(param1){
+			return new UInt64(param1,Math.floor(param1 / 4294967296));
+		}
+
+		UInt64.parseUInt64=function(param1,param2){
+			(param2===void 0)&& (param2=0);
+			var _loc_5=0;
+			var _loc_3=0;
+			if (param2==0){
+				if (param1.search(/^0x""^0x/)==0){
+					param2=16;
+					_loc_3=2;
+				}
+				else{
+					param2=10;
+				}
+			}
+			if (param2 >=2){
+			}
+			if (param2 > 36){
+				throw new ArgumentError1();
+			}
+			param1=param1.toLowerCase();
+			var _loc_4=new UInt64;
+			while (_loc_3 < param1.length){
+				_loc_5=param1.charCodeAt(_loc_3);
+				if (_loc_5 >=Binary641.CHAR_CODE_0){
+				}
+				if (_loc_5 <=Binary641.CHAR_CODE_9){
+					_loc_5=_loc_5-Binary641.CHAR_CODE_0;
+				}
+				else{
+					if (_loc_5 >=Binary641.CHAR_CODE_A){
+					}
+					if (_loc_5 <=Binary641.CHAR_CODE_Z){
+						_loc_5=_loc_5-Binary641.CHAR_CODE_A;
+						_loc_5=_loc_5+10;
+					}
+					else{
+						throw new ArgumentError1();
+					}
+				}
+				if (_loc_5 >=param2){
+					throw new ArgumentError1();
+				}
+				_loc_4.mul(param2);
+				_loc_4.add(_loc_5);
+				_loc_3=_loc_3+1;
+			}
+			return _loc_4;
+		}
+
+		return UInt64;
+	})(Binary641)
+
+
 	//class bull.BullConfigure extends com.lightMVC.parrerns.Configure
 	var BullConfigure=(function(_super){
 		function BullConfigure(){
@@ -28822,6 +29531,7 @@ var Laya=window.Laya=(function(window,document){
 			this.asSingleton("roomData",RoomData);
 			this.asSingleton("userInfoData",UserInfoData);
 			this.asSingleton("ConfigData",ConfigData);
+			this.asSingleton("appMedel",AppMedel);
 		}
 
 		__proto.initMediator=function(){
@@ -29849,8 +30559,8 @@ var Laya=window.Laya=(function(window,document){
 			this.addNotifiction("car.SHOW_MUSIC_SET_PANEL");
 			this.addNotifiction("car.HIDE_MUSIC_SET_PANEL");
 			this.addNotifiction("scenceChange");
-			this.view.chkMusic.on("change",this,this.onChange);
-			this.view.chkVoice.on("change",this,this.onChange);
+			this.view.musicButton.on("change",this,this.onChange);
+			this.view.soundButton.on("change",this,this.onChange);
 		}
 
 		__proto.handler=function(notification){
@@ -29900,39 +30610,6 @@ var Laya=window.Laya=(function(window,document){
 		MusicSetMediator.HIDE_MUSIC_SET_PANEL="car.HIDE_MUSIC_SET_PANEL";
 		return MusicSetMediator;
 	})(Mediator)
-
-
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
 
 
 	/**
@@ -30004,6 +30681,59 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
+
+
+	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
+	var SmallLoadingMediator=(function(_super){
+		function SmallLoadingMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
+		}
+
+		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
+		var __proto=SmallLoadingMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.loadingMask.lodingMask=viewComponent;
+		}
+
+		SmallLoadingMediator.NAME="smallLoadingMediator";
+		return SmallLoadingMediator;
+	})(Mediator)
+
+
 	//class bull.modules.common.model.data.RoomData extends com.iflash.events.EventDispatcher
 	var RoomData=(function(_super){
 		function RoomData(){
@@ -30041,24 +30771,32 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
-	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
-	var SmallLoadingMediator=(function(_super){
-		function SmallLoadingMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
+	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
+	var BullProtoModel=(function(_super){
+		function BullProtoModel(modelName,data){
+			this.msg_proto=null;
+			this.conf_proto=null;
+			this._callBack=null;
+			BullProtoModel.__super.call(this,modelName,data);
+			this.msg_proto=new msg_cs();
+			this.conf_proto=new conf_game();
 		}
 
-		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
-		var __proto=SmallLoadingMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.loadingMask.lodingMask=viewComponent;
+		__class(BullProtoModel,'bull.modules.common.model.BullProtoModel',_super);
+		var __proto=BullProtoModel.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
+		__proto.loadProtoFile=function(callBack){
+			console.log("msg_proto",this.msg_proto,this.conf_proto,this)
+			this._callBack=callBack;
+			this.msg_proto.loadProtoFile(Light.loader.URLM.getURL("msg_proto"));
+			this.conf_proto.loadProtoFile(Light.loader.URLM.getURL("conf_proto"));
+			this._callBack.run();
+			this.sentNotification("protoCreat");
 		}
 
-		SmallLoadingMediator.NAME="smallLoadingMediator";
-		return SmallLoadingMediator;
-	})(Mediator)
+		BullProtoModel.NAME="bullProtoModel";
+		return BullProtoModel;
+	})(Model)
 
 
 	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
@@ -30117,32 +30855,48 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
-	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
-	var BullProtoModel=(function(_super){
-		function BullProtoModel(modelName,data){
-			this.msg_proto=null;
-			this.conf_proto=null;
-			this._callBack=null;
-			BullProtoModel.__super.call(this,modelName,data);
-			this.msg_proto=new msg_cs();
-			this.conf_proto=new conf_game();
+	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
+	var BankerNotifyCommand=(function(_super){
+		function BankerNotifyCommand(){
+			BankerNotifyCommand.__super.call(this);
 		}
 
-		__class(BullProtoModel,'bull.modules.common.model.BullProtoModel',_super);
-		var __proto=BullProtoModel.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
-		__proto.loadProtoFile=function(callBack){
-			console.log("msg_proto",this.msg_proto,this.conf_proto,this)
-			this._callBack=callBack;
-			this.msg_proto.loadProtoFile(Light.loader.URLM.getURL("msg_proto"));
-			this.conf_proto.loadProtoFile(Light.loader.URLM.getURL("conf_proto"));
-			this._callBack.run();
-			this.sentNotification("protoCreat");
+		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
+		var __proto=BankerNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
+				this.bankerlist(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
+				this.newbaner(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
+				this.banker_calcu(notification.getBody());
+			}
 		}
 
-		BullProtoModel.NAME="bullProtoModel";
-		return BullProtoModel;
-	})(Model)
+		__proto.bankerlist=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
+			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.newbaner=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.newBaner_info=cs.banker_notify;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.banker_calcu=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
+			this.sentNotification("Bankercalcu");
+		}
+
+		return BankerNotifyCommand;
+	})(Command)
 
 
 	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
@@ -30190,50 +30944,6 @@ var Laya=window.Laya=(function(window,document){
 		TipsLoadMediator.NAME="tipsLoadMediator";
 		return TipsLoadMediator;
 	})(Mediator)
-
-
-	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
-	var BankerNotifyCommand=(function(_super){
-		function BankerNotifyCommand(){
-			BankerNotifyCommand.__super.call(this);
-		}
-
-		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
-		var __proto=BankerNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
-				this.bankerlist(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
-				this.newbaner(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
-				this.banker_calcu(notification.getBody());
-			}
-		}
-
-		__proto.bankerlist=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
-			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.newbaner=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.newBaner_info=cs.banker_notify;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.banker_calcu=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.Banker_calcu_info=cs.banker_calc_notify;
-			this.sentNotification("Bankercalcu");
-		}
-
-		return BankerNotifyCommand;
-	})(Command)
 
 
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
@@ -30352,41 +31062,6 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		return EnterRoomCommand;
-	})(Command)
-
-
-	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
-	var HistoryCommand=(function(_super){
-		function HistoryCommand(){
-			HistoryCommand.__super.call(this);
-		}
-
-		__class(HistoryCommand,'bull.modules.room.command.HistoryCommand',_super);
-		var __proto=HistoryCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
-				this.State(notification.getBody());
-			}
-		}
-
-		__proto.State=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.history_Win_info.length=0;
-			bullData.roomData.history_lost_info.length=0;
-			bullData.roomData.history_result_info.length=0;
-			for (var i=0;i < 4;i++){
-				bullData.roomData.history_Win_info=[cs.histroy_notify.win_info._1,cs.histroy_notify.win_info._2,cs.histroy_notify.win_info._3,cs.histroy_notify.win_info._4];
-				bullData.roomData.history_lost_info=[cs.histroy_notify.lose_info._1,cs.histroy_notify.lose_info._2,cs.histroy_notify.lose_info._3,cs.histroy_notify.lose_info._4];
-			};
-			var n=cs.histroy_notify.result_info.length;
-			for (var i=0;i < n;i++){
-				bullData.roomData.history_result_info.push([cs.histroy_notify.result_info._1,cs.histroy_notify.result_info._2,cs.histroy_notify.result_info._3,cs.histroy_notify.result_info._4]);
-			}
-			this.sentNotification("HistoryNotify");
-		}
-
-		return HistoryCommand;
 	})(Command)
 
 
@@ -30544,6 +31219,41 @@ var Laya=window.Laya=(function(window,document){
 	})(Model)
 
 
+	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
+	var HistoryCommand=(function(_super){
+		function HistoryCommand(){
+			HistoryCommand.__super.call(this);
+		}
+
+		__class(HistoryCommand,'bull.modules.room.command.HistoryCommand',_super);
+		var __proto=HistoryCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
+				this.State(notification.getBody());
+			}
+		}
+
+		__proto.State=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.history_Win_info.length=0;
+			bullData.roomData.history_lost_info.length=0;
+			bullData.roomData.history_result_info.length=0;
+			for (var i=0;i < 4;i++){
+				bullData.roomData.history_Win_info=[cs.histroy_notify.win_info._1,cs.histroy_notify.win_info._2,cs.histroy_notify.win_info._3,cs.histroy_notify.win_info._4];
+				bullData.roomData.history_lost_info=[cs.histroy_notify.lose_info._1,cs.histroy_notify.lose_info._2,cs.histroy_notify.lose_info._3,cs.histroy_notify.lose_info._4];
+			};
+			var n=cs.histroy_notify.result_info.length;
+			for (var i=0;i < n;i++){
+				bullData.roomData.history_result_info.push([cs.histroy_notify.result_info._1,cs.histroy_notify.result_info._2,cs.histroy_notify.result_info._3,cs.histroy_notify.result_info._4]);
+			}
+			this.sentNotification("HistoryNotify");
+		}
+
+		return HistoryCommand;
+	})(Command)
+
+
 	//class bull.modules.room.command.SettleNotifyCommand extends com.lightMVC.parrerns.Command
 	var SettleNotifyCommand=(function(_super){
 		function SettleNotifyCommand(){
@@ -30642,8 +31352,10 @@ var Laya=window.Laya=(function(window,document){
 			this.roomSocketService=null;
 			this.roomData=null;
 			this.userInfoData=null;
+			this.appMedel=null;
 			this.num=0;
 			this.timer=null;
+			this._isSys=true;
 			(mediatorName===void 0)&& (mediatorName="");
 			BullScenceMediator.__super.call(this,"BullScenceMediator",viewComponent);
 		}
@@ -30652,7 +31364,7 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=BullScenceMediator.prototype;
 		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
 		__proto.getInjector=function(){
-			return ["roomData","roomSocketService","perLoadService","userInfoData"];
+			return ["roomData","roomSocketService","perLoadService","userInfoData","appMedel"];
 		}
 
 		__proto.setViewComponent=function(viewComponent){
@@ -30677,10 +31389,32 @@ var Laya=window.Laya=(function(window,document){
 			this.view.btn_display(false);
 			this.addNotifiction("STATE_CHANGE");
 			this.addNotifiction("HistoryNotify");
+			this.addNotifiction("settlenotify");
+			this.addNotifiction("CASH_TAKEIN_RESPONES");
 			this.addNotifiction("RoomSocketClose");
 			this.addNotifiction("ExitRoomEvent");
 		}
 
+		//廣播訊息
+		__proto.cashViewHandler=function(){
+			this.view.viewHead.setMoney(this.appMedel.TotalMoney);
+			this.view.viewHead.setMoneyT(Common.isCoin?2:1);
+		}
+
+		__proto.onSettleUpdateHandler=function(){
+			if(this.appMedel.Settle_Time <2){
+				/*no*/this.evt.dispatchEvent(new /*no*/this.NewNewGameEvent(/*no*/this.NewNewGameEvent.RUN_ResultOver));
+			}
+			else{
+				var isbaner=this.appMedel.Banker_uid===this.appMedel.user_id;
+				if(this._isSys)/*no*/this._bankerName="吉胜游戏平台";
+				this.view.viewResult.initView(this.appMedel.nick_name_64,this.appMedel.TotalMoney,this.appMedel.Settle_Time,this.appMedel.self_settle_win,this.appMedel.first_threePlayer,isbaner,/*no*/this._bankerName);
+				this.view.viewResult.show();
+				this.sentNotification("CASH_TAKEIN_RESPONES");
+			}
+		}
+
+		//}
 		__proto.onInitialize=function(){
 			console.log("===========================init");
 		}
@@ -30694,6 +31428,28 @@ var Laya=window.Laya=(function(window,document){
 		*/
 		__proto.onClick=function(e){
 			console.log("onClick:"+e.target);
+			this.appMedel.Banker_uid="10";
+			this.appMedel.user_id="1";
+			this.appMedel.Settle_Time=2;
+			this.appMedel.nick_name_64="Dyson";
+			this.appMedel.TotalMoney=10;
+			this.appMedel.self_settle_win=Long.fromNumber(10000);
+			this.appMedel.first_threePlayer=[{"rank":0,"ligt":true,"name":"dyson1","money":999},{"rank":1,"ligt":true,"name":"dyson2","money":999},{"rank":2,"ligt":true,"name":"dyson3","money":999}];
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=37;
+			out.calculate_notify=proto.msg_proto.getSCalculateNotify();
+			out.calculate_notify.banker_id=123121323;
+			var user=new SUserInfo();
+			user.uid=1000;
+			user.money=new SBullMoney();
+			user.money.gb=100
+			user.is_lamp=false;
+			user.win_money=88888;
+			user.bet_money=88888;
+			out.calculate_notify.user_info_s.push(user);
+			this.sentNotification(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),out);
+			return
 			switch(e.target){
 				case this.view.helpBtn:
 					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
@@ -30705,7 +31461,7 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case this.view.CarryInBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
-					this.view.BetZoneBoard.set_data([200]);
+					this.view.ViewWinLostEffect.set_data([200]);
 					break ;
 				case this.view.PlayerListBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
@@ -30724,6 +31480,12 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case "HistoryNotify":
 					this.history_update();
+					break ;
+				case "settlenotify":
+					this.onSettleUpdateHandler();
+					break ;
+				case "CASH_TAKEIN_RESPONES":
+					this.cashViewHandler();
 					break ;
 				case "RoomSocketClose":
 					this.dispose();
@@ -30814,6 +31576,7 @@ var Laya=window.Laya=(function(window,document){
 
 		//}
 		__proto.onUIShow=function(){
+			this.view.viewSelectClip.set_data([100,500,1000,5000,10000,"max"]);
 			this.view.showme();
 		}
 
@@ -32526,23 +33289,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
-
-
 	/**
 	*场景管理器
 	*@author light-k
@@ -32743,6 +33489,23 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
+
+
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -48744,82 +49507,58 @@ var Laya=window.Laya=(function(window,document){
 	})(View)
 
 
-	//class ui.ui.room.BankerBoardUI extends laya.ui.View
-	var BankerBoardUI=(function(_super){
-		function BankerBoardUI(){
-			this.Title=null;
+	//class ui.ui.room.BankerPanelUI extends laya.ui.View
+	var BankerPanelUI=(function(_super){
+		function BankerPanelUI(){
+			this.txtname=null;
 			this.BankerTimes=null;
-			this.deapply=null;
-			this.bankerapply=null;
-			this.Money=null;
-			this.Banker_ani=null;
+			this.btndeBanker=null;
+			this.btnBanker=null;
+			this.Point=null;
+			this.mc_bankerAni=null;
 			this.Head=null;
-			this.listHint=null;
-			BankerBoardUI.__super.call(this);
+			this.mcHintBoard=null;
+			this.txt_RoundID=null;
+			this.textFix_text_0=null;
+			BankerPanelUI.__super.call(this);
 		}
 
-		__class(BankerBoardUI,'ui.ui.room.BankerBoardUI',_super);
-		var __proto=BankerBoardUI.prototype;
+		__class(BankerPanelUI,'ui.ui.room.BankerPanelUI',_super);
+		var __proto=BankerPanelUI.prototype;
 		__proto.createChildren=function(){
 			View.regComponent("ui.ui.room.BankerNotify_aniUI",BankerNotify_aniUI);
 			View.regComponent("ui.ui.room.BankerListHintUI",BankerListHintUI);
 			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(BankerBoardUI.uiView);
+			this.createView(BankerPanelUI.uiView);
 		}
 
-		__static(BankerBoardUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"renderType":"mask","height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":50,"var":"Title","text":"吉胜游戏平台","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":427,"width":56,"var":"BankerTimes","text":"1/15次","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Button","props":{"y":9,"x":527,"var":"deapply","stateNum":"3","skin":"res/gameScene/deBanker.png"}},{"type":"Button","props":{"y":8,"x":527,"var":"bankerapply","stateNum":"3","skin":"res/gameScene/applyBanker.png"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Money","text":"999999","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"BankerNotify_ani","props":{"y":5,"x":563,"visible":false,"var":"Banker_ani","scaleY":0.3,"scaleX":0.3,"runtime":"ui.ui.room.BankerNotify_aniUI"}},{"type":"Image","props":{"y":11,"x":44,"width":60,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","height":60},"child":[{"type":"Sprite","props":{"y":-2,"x":-6,"renderType":"mask"},"child":[{"type":"Circle","props":{"y":33,"x":37,"radius":30,"lineWidth":1,"fillColor":"#ff0000"}}]}]},{"type":"BankerListHint","props":{"y":84,"x":473,"var":"listHint","runtime":"ui.ui.room.BankerListHintUI"}}]};}
+		__static(BankerPanelUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"renderType":"mask","height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":50,"var":"txtname","text":"吉胜游戏平台","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":427,"width":56,"var":"BankerTimes","text":"1/15次","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"Button","props":{"y":9,"x":527,"var":"btndeBanker","stateNum":"3","skin":"res/gameScene/deBanker.png"}},{"type":"Button","props":{"y":8,"x":527,"var":"btnBanker","stateNum":"3","skin":"res/gameScene/applyBanker.png"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Point","text":"999999","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eee7e7"}},{"type":"BankerNotify_ani","props":{"y":5,"x":563,"visible":false,"var":"mc_bankerAni","scaleY":0.3,"scaleX":0.3,"runtime":"ui.ui.room.BankerNotify_aniUI"}},{"type":"Image","props":{"y":11,"x":44,"width":60,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","height":60},"child":[{"type":"Sprite","props":{"y":-2,"x":-6,"renderType":"mask"},"child":[{"type":"Circle","props":{"y":33,"x":37,"radius":30,"lineWidth":1,"fillColor":"#ff0000"}}]}]},{"type":"BankerListHint","props":{"y":84,"x":473,"var":"mcHintBoard","runtime":"ui.ui.room.BankerListHintUI"}},{"type":"Label","props":{"y":38,"x":-96,"width":87,"var":"txt_RoundID","text":"5868acad101fa","scaleY":1,"scaleX":1,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":38,"x":-126,"width":33,"text":"局ID:","scaleY":1,"scaleX":1,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":34,"x":381,"width":36,"var":"textFix_text_0","text":"坐庄:","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#98d10c"}}]};}
 		]);
-		return BankerBoardUI;
+		return BankerPanelUI;
 	})(View)
 
 
-	//class ui.ui.room.BetZoneUI extends laya.ui.View
-	var BetZoneUI=(function(_super){
-		function BetZoneUI(){
-			this.zone_0=null;
-			this.zone_1=null;
-			this.zone_2=null;
-			this.zone_3=null;
-			this.total_amount_0=null;
-			this.total_amount_1=null;
-			this.total_amount_2=null;
-			this.total_amount_3=null;
-			this.self_amount_0=null;
-			this.self_amount_1=null;
-			this.self_amount_2=null;
-			this.self_amount_3=null;
-			this.BetLimit=null;
-			this.Rankp_0=null;
-			this.Rankp_1=null;
-			this.Rankp_2=null;
-			this.Rankp_3=null;
-			this.Tips_0=null;
-			this.Name_0=null;
-			this.Tips_1=null;
-			this.Name_1=null;
-			this.Tips_2=null;
-			this.Name_2=null;
-			this.Tips_3=null;
-			this.Name_3=null;
-			BetZoneUI.__super.call(this);
+	//class ui.ui.room.BetBtnGroupUI extends laya.ui.View
+	var BetBtnGroupUI=(function(_super){
+		function BetBtnGroupUI(){
+			this.betBtn_cancel=null;
+			this.betBtn_same=null;
+			BetBtnGroupUI.__super.call(this);
 		}
 
-		__class(BetZoneUI,'ui.ui.room.BetZoneUI',_super);
-		var __proto=BetZoneUI.prototype;
+		__class(BetBtnGroupUI,'ui.ui.room.BetBtnGroupUI',_super);
+		var __proto=BetBtnGroupUI.prototype;
 		__proto.createChildren=function(){
-			View.regComponent("ui.ui.room.Bet_TotalUI",Bet_TotalUI);
-			View.regComponent("ui.ui.room.Bet_selfUI",Bet_selfUI);
-			View.regComponent("ui.ui.room.BetLImitUI",BetLImitUI);
-			View.regComponent("ui.ui.room.RankPanelUI",RankPanelUI);
+			View.regComponent("bull.view.room.BetBtnGroup",BetBtnGroup);
 			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(BetZoneUI.uiView);
+			this.createView(BetBtnGroupUI.uiView);
 		}
 
-		__static(BetZoneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"}},{"type":"Image","props":{"y":2,"x":252,"var":"zone_1","skin":"res/gameScene/闲家下注区3.png","name":"zone_1"}},{"type":"Image","props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"}},{"type":"Image","props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"}},{"type":"Bet_Total","props":{"y":4,"x":23,"var":"total_amount_0","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":264,"var":"total_amount_1","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":507,"var":"total_amount_2","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":750,"var":"total_amount_3","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"var":"self_amount_0","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"var":"self_amount_1","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"var":"self_amount_2","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"var":"self_amount_3","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"BetLImit","props":{"y":-117,"x":379,"visible":false,"var":"BetLimit","runtime":"ui.ui.room.BetLImitUI"}},{"type":"RankPanel","props":{"y":18,"x":161,"visible":false,"var":"Rankp_0","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":416,"visible":false,"var":"Rankp_1","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":659,"visible":false,"var":"Rankp_2","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":18,"x":904,"visible":false,"var":"Rankp_3","runtime":"ui.ui.room.RankPanelUI"}},{"type":"Image","props":{"y":55,"x":163,"var":"Tips_0","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":86,"var":"Name_0","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":58,"x":415,"var":"Tips_1","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_1","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":59,"x":662,"var":"Tips_2","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_2","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":59,"x":624,"var":"Tips_3","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_3","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"}}]}]};}
+		__static(BetBtnGroupUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":320,"runtime":"bull.view.room.BetBtnGroup","height":80},"child":[{"type":"Button","props":{"y":6,"x":163,"var":"betBtn_cancel","skin":"res/gameScene/CancelBet.png"}},{"type":"Button","props":{"y":6,"x":2,"var":"betBtn_same","skin":"res/gameScene/SameBetBtn.png"}}]};}
 		]);
-		return BetZoneUI;
+		return BetBtnGroupUI;
 	})(View)
 
 
@@ -48833,78 +49572,107 @@ var Laya=window.Laya=(function(window,document){
 			this.helpBtn=null;
 			this.PlayerListBtn=null;
 			this.CarryInBtn=null;
-			this.HistoryBoard=null;
-			this.InfoPanel=null;
-			this.bankerPanel=null;
-			this.UserBoard=null;
-			this.SettleBoard=null;
-			this.BankerSettleBoard=null;
-			this.BetZoneBoard=null;
-			this.PokerSet=null;
-			this.TimerPanel=null;
-			this.BetChip=null;
+			this.viewRecord=null;
+			this.viewBankerPanel=null;
+			this.ViewPlayerList=null;
+			this.viewResult=null;
+			this.bankerResultPanel=null;
+			this.viewArea=null;
+			this.viewPoker=null;
+			this.viewBetTime=null;
 			this.PokerTypePanel=null;
-			this.WinLostPanel=null;
+			this.ViewWinLostEffect=null;
+			this.viewNetConnect=null;
+			this.viewHead=null;
+			this.viewSelectClip=null;
+			this.ViewBetGroup=null;
 			BullSceneUI.__super.call(this);
 		}
 
 		__class(BullSceneUI,'ui.ui.room.BullSceneUI',_super);
 		var __proto=BullSceneUI.prototype;
 		__proto.createChildren=function(){
-			View.regComponent("bull.view.room.HistoryRecord",HistoryRecord);
-			View.regComponent("bull.view.room.WinLostEffect",WinLostEffect);
-			View.regComponent("bull.view.room.bankerBoard",bankerBoard);
-			View.regComponent("ui.ui.room.UserPanelUI",UserPanelUI);
-			View.regComponent("bull.view.room.Settle",Settle);
-			View.regComponent("ui.ui.room.BankerSettleUI",BankerSettleUI);
-			View.regComponent("bull.view.room.InfoBoard",InfoBoard);
-			View.regComponent("bull.view.room.poker",poker);
-			View.regComponent("bull.view.room.Timer",Timer);
-			View.regComponent("bull.view.room.CoinSelect",CoinSelect);
+			View.regComponent("bull.view.room.RecordPanel",RecordPanel);
+			View.regComponent("bull.view.room.BetBtnGroup",BetBtnGroup);
+			View.regComponent("bull.view.room.PlayerListPanel",bull.view.room.PlayerListPanel);
+			View.regComponent("bull.view.room.ResultPanel",ResultPanel);
+			View.regComponent("bull.view.room.XiaZhuangPanel",bull.view.room.XiaZhuangPanel);
+			View.regComponent("bull.view.room.BetAreaView",bull.view.room.BetAreaView);
+			View.regComponent("bull.view.room.Poker",bull.view.room.Poker);
+			View.regComponent("bull.view.room.BankerPanel",BankerPanel);
 			View.regComponent("bull.view.room.PokerTypeBoard",PokerTypeBoard);
-			View.regComponent("bull.view.room.BetZone",BetZone);
+			View.regComponent("bull.view.room.WinLostEffect",WinLostEffect);
+			View.regComponent("ui.ui.room.NetConnectViewUI",NetConnectViewUI);
+			View.regComponent("bull.view.room.HeadView",HeadView);
+			View.regComponent("bull.view.room.SelectClipView",SelectClipView);
+			View.regComponent("bull.view.room.BetTimePanel",bull.view.room.BetTimePanel);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BullSceneUI.uiView);
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"HistoryRecord","props":{"y":87,"x":-173,"var":"HistoryBoard","runtime":"bull.view.room.HistoryRecord"}},{"type":"InfoBoard","props":{"y":800,"x":92,"var":"InfoPanel","runtime":"bull.view.room.InfoBoard"}},{"type":"BankerBoard","props":{"y":-81,"x":347,"var":"bankerPanel","runtime":"bull.view.room.bankerBoard"}},{"type":"UserPanel","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"UserBoard","runtime":"ui.ui.room.UserPanelUI"}},{"type":"Settle","props":{"y":170,"x":357,"visible":false,"var":"SettleBoard","runtime":"bull.view.room.Settle"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"BankerSettleBoard","runtime":"ui.ui.room.BankerSettleUI"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"BetZoneBoard","runtime":"bull.view.room.BetZone"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"PokerSet","runtime":"bull.view.room.poker"}},{"type":"Timer","props":{"y":474,"x":645,"visible":false,"var":"TimerPanel","runtime":"bull.view.room.Timer"}},{"type":"BetChip","props":{"y":802.9999999999999,"x":426.00000000000006,"var":"BetChip","runtime":"bull.view.room.CoinSelect"}},{"type":"PokerType","props":{"y":0,"x":0,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"BubbleEffect","props":{"y":0,"x":0,"var":"WinLostPanel","runtime":"bull.view.room.WinLostEffect"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.BankerPanel"}},{"type":"UserPanel","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"Timer","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"NetConnectView","props":{"y":0,"x":0,"var":"viewNetConnect","runtime":"ui.ui.room.NetConnectViewUI"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
 
 
-	//class ui.ui.room.BetChipUI extends laya.ui.View
-	var BetChipUI=(function(_super){
-		function BetChipUI(){
-			this.Coin_light=null;
-			this.Selcet_Arrow=null;
-			this.Coin_0=null;
-			this.Coin_1=null;
-			this.Coin_2=null;
-			this.Coin_3=null;
-			this.Coin_4=null;
-			this.Coin_5=null;
-			BetChipUI.__super.call(this);
+	//class ui.ui.room.HeadViewUI extends laya.ui.View
+	var HeadViewUI=(function(_super){
+		function HeadViewUI(){
+			this.btnAdd=null;
+			this.txtName=null;
+			this.txtMoney=null;
+			this.mcHead=null;
+			this.mcVip=null;
+			this.bp_vip=null;
+			this.mcMoneyIcon=null;
+			HeadViewUI.__super.call(this);
 		}
 
-		__class(BetChipUI,'ui.ui.room.BetChipUI',_super);
-		var __proto=BetChipUI.prototype;
+		__class(HeadViewUI,'ui.ui.room.HeadViewUI',_super);
+		var __proto=HeadViewUI.prototype;
 		__proto.createChildren=function(){
 			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(BetChipUI.uiView);
+			this.createView(HeadViewUI.uiView);
 		}
 
-		__static(BetChipUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":540,"height":110},"child":[{"type":"Image","props":{"y":-6,"x":1,"var":"Coin_light","skin":"res/gameScene/筹码光.png"}},{"type":"Image","props":{"y":79,"x":35,"width":26,"var":"Selcet_Arrow","skin":"res/gameScene/筹码指向.png","height":24}},{"type":"Image","props":{"y":7,"x":10,"var":"Coin_0","skin":"res/gameScene/chip_1.png","name":"Coin_0"}},{"type":"Image","props":{"y":24,"x":98,"var":"Coin_1","skin":"res/gameScene/chip_1.png","name":"Coin_1"}},{"type":"Image","props":{"y":24,"x":188,"var":"Coin_2","skin":"res/gameScene/chip_1.png","name":"Coin_2"}},{"type":"Image","props":{"y":24,"x":277,"var":"Coin_3","skin":"res/gameScene/chip_1.png","name":"Coin_3"}},{"type":"Image","props":{"y":24,"x":367,"var":"Coin_4","skin":"res/gameScene/chip_1.png","name":"Coin_4"}},{"type":"Image","props":{"y":24,"x":458,"var":"Coin_5","skin":"res/gameScene/chip_1.png","name":"Coin_5"}}]};}
+		__static(HeadViewUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":300,"height":100},"child":[{"type":"Image","props":{"y":-16,"x":-21,"skin":"res/gameScene/InfoBoard.png"}},{"type":"Button","props":{"y":33,"x":246,"var":"btnAdd","skin":"res/gameScene/CarryIn.png"}},{"type":"Label","props":{"y":8,"x":124,"width":102,"var":"txtName","text":"Name","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"}},{"type":"Label","props":{"y":40,"x":123,"width":83,"var":"txtMoney","text":"money","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"}},{"type":"Image","props":{"y":3,"x":1,"width":68,"var":"mcHead","skin":"res/gameScene/HeadIcon.jpg","height":67}},{"type":"Image","props":{"y":3,"x":11,"var":"mcVip","skin":"res/gameScene/miniVIP底板.png"},"child":[{"type":"Image","props":{"y":2.000000000000023,"x":1.999999999999993,"skin":"res/gameScene/miniV.png"}},{"type":"Label","props":{"y":2,"x":7,"width":32,"var":"bp_vip","text":"99","height":15,"font":"smallvip","align":"center"}}]},{"type":"Image","props":{"y":41,"x":86,"var":"mcMoneyIcon","skin":"res/gameScene/底板人民币.png"}}]};}
 		]);
-		return BetChipUI;
+		return HeadViewUI;
 	})(View)
 
 
-	//class ui.ui.room.HistoryRecordUI extends laya.ui.View
-	var HistoryRecordUI=(function(_super){
-		function HistoryRecordUI(){
+	//class ui.ui.room.PokerTypeUI extends laya.ui.View
+	var PokerTypeUI=(function(_super){
+		function PokerTypeUI(){
+			this.pokerType_0=null;
+			this.pokerType_1=null;
+			this.pokerType_2=null;
+			this.pokerType_3=null;
+			this.pokerType_4=null;
+			PokerTypeUI.__super.call(this);
+		}
+
+		__class(PokerTypeUI,'ui.ui.room.PokerTypeUI',_super);
+		var __proto=PokerTypeUI.prototype;
+		__proto.createChildren=function(){
+			View.regComponent("ui.ui.room.PokerEffectUI",PokerEffectUI);
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(PokerTypeUI.uiView);
+		}
+
+		__static(PokerTypeUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"PokerEffect","props":{"y":501,"x":81,"visible":false,"var":"pokerType_0","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":504,"x":368,"visible":false,"var":"pokerType_1","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":506,"x":651,"visible":false,"var":"pokerType_2","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":505,"x":904,"visible":false,"var":"pokerType_3","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":126,"x":467,"visible":false,"var":"pokerType_4","runtime":"ui.ui.room.PokerEffectUI"}}]};}
+		]);
+		return PokerTypeUI;
+	})(View)
+
+
+	//class ui.ui.room.RecordPanelUI extends laya.ui.View
+	var RecordPanelUI=(function(_super){
+		function RecordPanelUI(){
 			this.Hidding_Recode=null;
 			this.Showing_Recode=null;
 			this.spade_0=null;
@@ -48963,171 +49731,97 @@ var Laya=window.Laya=(function(window,document){
 			this.club_lost=null;
 			this.diamond_win=null;
 			this.diamond_lost=null;
-			HistoryRecordUI.__super.call(this);
+			this._network_state=null;
+			RecordPanelUI.__super.call(this);
 		}
 
-		__class(HistoryRecordUI,'ui.ui.room.HistoryRecordUI',_super);
-		var __proto=HistoryRecordUI.prototype;
+		__class(RecordPanelUI,'ui.ui.room.RecordPanelUI',_super);
+		var __proto=RecordPanelUI.prototype;
 		__proto.createChildren=function(){
+			View.regComponent("bull.view.room.NetStatusPanel",bull.view.room.NetStatusPanel);
 			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(HistoryRecordUI.uiView);
+			this.createView(RecordPanelUI.uiView);
 		}
 
-		__static(HistoryRecordUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":169,"name":"Record","height":421},"child":[{"type":"Image","props":{"y":0,"x":0,"var":"Hidding_Recode","skin":"res/gameScene/未展开胜负记录.png"}},{"type":"Box","props":{"y":0,"x":0,"var":"Showing_Recode"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/展开胜负记录.png"}},{"type":"Animation","props":{"y":126,"x":24,"var":"spade_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":150,"x":24,"var":"spade_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":174,"x":24,"width":0,"var":"spade_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":198,"x":24,"width":0,"var":"spade_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":221,"x":25,"var":"spade_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":245,"x":25,"var":"spade_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":269,"x":25,"width":0,"var":"spade_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":293,"x":25,"width":0,"var":"spade_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":315,"x":25,"var":"spade_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":339,"x":25,"var":"spade_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":363,"x":25,"width":0,"var":"spade_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":387,"x":25,"width":0,"var":"spade_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":61,"var":"heart_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":61,"var":"heart_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":61,"width":0,"var":"heart_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":61,"width":0,"var":"heart_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":62,"var":"heart_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":62,"var":"heart_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":62,"width":0,"var":"heart_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":62,"width":0,"var":"heart_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":62,"var":"heart_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":62,"var":"heart_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":62,"width":0,"var":"heart_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":62,"width":0,"var":"heart_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":97,"var":"club_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":97,"var":"club_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":97,"width":0,"var":"club_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":97,"width":0,"var":"club_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":98,"var":"club_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":98,"var":"club_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":98,"width":0,"var":"club_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":98,"width":0,"var":"club_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":98,"var":"club_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":98,"var":"club_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":98,"width":0,"var":"club_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":98,"width":0,"var":"club_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":133,"var":"diamond_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":133,"var":"diamond_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":133,"width":0,"var":"diamond_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":133,"width":0,"var":"diamond_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":134,"var":"diamond_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":134,"var":"diamond_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":134,"width":0,"var":"diamond_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":134,"width":0,"var":"diamond_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":134,"var":"diamond_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":134,"var":"diamond_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":134,"width":0,"var":"diamond_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":134,"width":0,"var":"diamond_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Label","props":{"y":78,"x":14,"var":"spade_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":14,"var":"spade_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":51,"var":"heart_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":51,"var":"heart_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":87,"var":"club_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":87,"var":"club_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":123,"var":"diamond_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":123,"var":"diamond_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}}]}]};}
+		__static(RecordPanelUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":169,"name":"Record","height":421},"child":[{"type":"Image","props":{"y":0,"x":0,"var":"Hidding_Recode","skin":"res/gameScene/未展开胜负记录.png"}},{"type":"Box","props":{"y":0,"x":0,"var":"Showing_Recode"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/展开胜负记录.png"}},{"type":"Animation","props":{"y":126,"x":24,"var":"spade_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":150,"x":24,"var":"spade_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":174,"x":24,"width":0,"var":"spade_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":198,"x":24,"width":0,"var":"spade_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":221,"x":25,"var":"spade_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":245,"x":25,"var":"spade_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":269,"x":25,"width":0,"var":"spade_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":293,"x":25,"width":0,"var":"spade_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":315,"x":25,"var":"spade_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":339,"x":25,"var":"spade_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":363,"x":25,"width":0,"var":"spade_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":387,"x":25,"width":0,"var":"spade_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":61,"var":"heart_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":61,"var":"heart_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":61,"width":0,"var":"heart_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":61,"width":0,"var":"heart_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":62,"var":"heart_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":62,"var":"heart_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":62,"width":0,"var":"heart_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":62,"width":0,"var":"heart_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":62,"var":"heart_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":62,"var":"heart_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":62,"width":0,"var":"heart_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":62,"width":0,"var":"heart_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":97,"var":"club_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":97,"var":"club_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":97,"width":0,"var":"club_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":97,"width":0,"var":"club_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":98,"var":"club_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":98,"var":"club_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":98,"width":0,"var":"club_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":98,"width":0,"var":"club_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":98,"var":"club_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":98,"var":"club_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":98,"width":0,"var":"club_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":98,"width":0,"var":"club_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":133,"var":"diamond_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":133,"var":"diamond_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":133,"width":0,"var":"diamond_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":133,"width":0,"var":"diamond_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":134,"var":"diamond_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":134,"var":"diamond_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":134,"width":0,"var":"diamond_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":134,"width":0,"var":"diamond_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":134,"var":"diamond_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":134,"var":"diamond_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":134,"width":0,"var":"diamond_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":134,"width":0,"var":"diamond_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Label","props":{"y":78,"x":14,"var":"spade_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":14,"var":"spade_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":51,"var":"heart_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":51,"var":"heart_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":87,"var":"club_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":87,"var":"club_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":123,"var":"diamond_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":123,"var":"diamond_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}}]},{"type":"NetStatusPanel","props":{"y":420,"x":8,"var":"_network_state","runtime":"bull.view.room.NetStatusPanel"}}]};}
 		]);
-		return HistoryRecordUI;
+		return RecordPanelUI;
 	})(View)
 
 
-	//class ui.ui.room.InfoBoardUI extends laya.ui.View
-	var InfoBoardUI=(function(_super){
-		function InfoBoardUI(){
-			this.CarryIn=null;
-			this.Name=null;
-			this.Money=null;
-			this.Btn_CancelBet=null;
-			this.Btn_SameBet=null;
-			InfoBoardUI.__super.call(this);
-		}
-
-		__class(InfoBoardUI,'ui.ui.room.InfoBoardUI',_super);
-		var __proto=InfoBoardUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(InfoBoardUI.uiView);
-		}
-
-		__static(InfoBoardUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1238,"height":104},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/InfoBoard.png"}},{"type":"Button","props":{"y":48,"x":267,"var":"CarryIn","skin":"res/gameScene/CarryIn.png"}},{"type":"Label","props":{"y":23,"x":145,"width":102,"var":"Name","text":"Name","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"}},{"type":"Label","props":{"y":55,"x":144,"width":83,"var":"Money","text":"money","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"}},{"type":"Button","props":{"y":9,"x":1056,"var":"Btn_CancelBet","skin":"res/gameScene/CancelBet.png","name":"Btn_CancelBet"}},{"type":"Button","props":{"y":9,"x":894,"var":"Btn_SameBet","skin":"res/gameScene/SameBetBtn.png","name":"Btn_SameBet"}}]};}
-		]);
-		return InfoBoardUI;
-	})(View)
-
-
-	//class ui.ui.room.PokerUI extends laya.ui.View
-	var PokerUI=(function(_super){
-		function PokerUI(){
-			this.poker_0_0=null;
-			this.poker_0_1=null;
-			this.poker_0_2=null;
-			this.poker_0_3=null;
-			this.poker_0_4=null;
-			this.poker_1_0=null;
-			this.poker_1_1=null;
-			this.poker_1_2=null;
-			this.poker_1_3=null;
-			this.poker_1_4=null;
-			this.poker_2_0=null;
-			this.poker_2_1=null;
-			this.poker_2_2=null;
-			this.poker_2_3=null;
-			this.poker_2_4=null;
-			this.poker_3_0=null;
-			this.poker_3_1=null;
-			this.poker_3_2=null;
-			this.poker_3_3=null;
-			this.poker_3_4=null;
-			this.poker_4_0=null;
-			this.poker_4_1=null;
-			this.poker_4_2=null;
-			this.poker_4_3=null;
-			this.poker_4_4=null;
-			PokerUI.__super.call(this);
-		}
-
-		__class(PokerUI,'ui.ui.room.PokerUI',_super);
-		var __proto=PokerUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(PokerUI.uiView);
-		}
-
-		__static(PokerUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"height":800},"child":[{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}}]};}
-		]);
-		return PokerUI;
-	})(View)
-
-
-	//class ui.ui.room.PokerTypeUI extends laya.ui.View
-	var PokerTypeUI=(function(_super){
-		function PokerTypeUI(){
-			this.pokerType_0=null;
-			this.pokerType_1=null;
-			this.pokerType_2=null;
-			this.pokerType_3=null;
-			this.pokerType_4=null;
-			PokerTypeUI.__super.call(this);
-		}
-
-		__class(PokerTypeUI,'ui.ui.room.PokerTypeUI',_super);
-		var __proto=PokerTypeUI.prototype;
-		__proto.createChildren=function(){
-			View.regComponent("ui.ui.room.PokerEffectUI",PokerEffectUI);
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(PokerTypeUI.uiView);
-		}
-
-		__static(PokerTypeUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"PokerEffect","props":{"y":501,"x":81,"visible":false,"var":"pokerType_0","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":504,"x":368,"visible":false,"var":"pokerType_1","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":506,"x":651,"visible":false,"var":"pokerType_2","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":505,"x":904,"visible":false,"var":"pokerType_3","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":126,"x":467,"visible":false,"var":"pokerType_4","runtime":"ui.ui.room.PokerEffectUI"}}]};}
-		]);
-		return PokerTypeUI;
-	})(View)
-
-
-	//class ui.ui.room.SettleUI extends laya.ui.View
-	var SettleUI=(function(_super){
-		function SettleUI(){
-			this.Btn_close=null;
-			this.info_0=null;
-			this.info_1=null;
-			this.info_2=null;
-			this.Btn_ok=null;
+	//class ui.ui.room.ResultPanelUI extends laya.ui.View
+	var ResultPanelUI=(function(_super){
+		function ResultPanelUI(){
+			this.btnClose=null;
+			this.btnok=null;
+			this.rest_time=null;
 			this.banker_Money=null;
-			this.BankerName=null;
-			this.Name=null;
-			this.Curren_Money=null;
-			this.Win_amount=null;
-			this.Lost_amount=null;
-			this.Head=null;
-			this.Isbanker=null;
-			SettleUI.__super.call(this);
+			this.platform_name=null;
+			this.self_name=null;
+			this.self_money=null;
+			this.win_bitmap=null;
+			this.lost_bitmap=null;
+			this.mcHead=null;
+			this.isBanker=null;
+			this.Text_NoOne_bet=null;
+			this.Num_0=null;
+			this.light_0=null;
+			this.headPic_0=null;
+			this.name_0=null;
+			this.Money_0=null;
+			this.Num_1=null;
+			this.light_1=null;
+			this.headPic_1=null;
+			this.name_1=null;
+			this.Money_1=null;
+			this.Num_2=null;
+			this.light_2=null;
+			this.headPic_2=null;
+			this.name_2=null;
+			this.Money_2=null;
+			ResultPanelUI.__super.call(this);
 		}
 
-		__class(SettleUI,'ui.ui.room.SettleUI',_super);
-		var __proto=SettleUI.prototype;
+		__class(ResultPanelUI,'ui.ui.room.ResultPanelUI',_super);
+		var __proto=ResultPanelUI.prototype;
 		__proto.createChildren=function(){
-			View.regComponent("ui.ui.room.Settle_InfoUI",Settle_InfoUI);
 			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(SettleUI.uiView);
+			this.createView(ResultPanelUI.uiView);
 		}
 
-		__static(SettleUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":679,"height":416},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/结算中心底板.png"}},{"type":"Button","props":{"y":-1,"x":640,"var":"Btn_close","skin":"res/gameScene/closeBtn.png","name":"Btn_close"}},{"type":"Settle_Info","props":{"y":189,"x":196,"var":"info_0","runtime":"ui.ui.room.Settle_InfoUI"}},{"type":"Settle_Info","props":{"y":244,"x":196,"var":"info_1","runtime":"ui.ui.room.Settle_InfoUI"}},{"type":"Settle_Info","props":{"y":296,"x":195,"var":"info_2","runtime":"ui.ui.room.Settle_InfoUI"}},{"type":"Button","props":{"y":357,"x":265,"var":"Btn_ok","skin":"res/gameScene/Btn_bg.png","name":"Btn_ok"}},{"type":"Label","props":{"y":366,"x":308,"width":43,"text":"确  定","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":365,"x":489,"width":11,"text":"S","scaleY":2.3,"scaleX":2.3,"mouseEnabled":false,"height":14,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":362,"x":470,"width":10,"text":"8","scaleY":2.5,"scaleX":2.5,"mouseEnabled":false,"height":16,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":324,"x":37,"width":83,"var":"banker_Money","text":"+9999999","scaleY":1.5,"scaleX":1.5,"mouseEnabled":false,"height":16,"color":"#9fb23c","bold":false,"align":"center"}},{"type":"Image","props":{"y":294,"x":41,"var":"BankerName","skin":"res/gameScene/吉胜游戏平台.png"}},{"type":"Label","props":{"y":86,"x":106,"width":93,"var":"Name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":119,"x":126,"width":93,"var":"Curren_Money","text":"6666666","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#f8f0ef","align":"left"}},{"type":"Label","props":{"y":87,"x":270,"width":389,"var":"Win_amount","text":"+¥1234.56","height":60,"font":"settleWin","align":"center"}},{"type":"Label","props":{"y":37,"x":274,"width":389,"var":"Lost_amount","text":"-¥1234.56","height":60,"font":"settlelost","align":"center"}},{"type":"Image","props":{"y":81,"x":24,"width":68,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","height":67}},{"type":"Image","props":{"y":60,"x":6,"var":"Isbanker","skin":"res/gameScene/庄家符号.png"}}]};}
+		__static(ResultPanelUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":679,"height":416},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/结算中心底板.png"}},{"type":"Button","props":{"y":-1,"x":640,"var":"btnClose","skin":"res/gameScene/closeBtn.png","name":"btnClose"}},{"type":"Button","props":{"y":357,"x":265,"var":"btnok","skin":"res/gameScene/Btn_bg.png","name":"btnok"}},{"type":"Label","props":{"y":366,"x":308,"width":43,"text":"确  定","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":365,"x":489,"width":11,"text":"S","scaleY":2.3,"scaleX":2.3,"mouseEnabled":false,"height":14,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":362,"x":470,"width":10,"var":"rest_time","text":"8","scaleY":2.5,"scaleX":2.5,"mouseEnabled":false,"height":16,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":324,"x":37,"width":83,"var":"banker_Money","text":"+9999999","scaleY":1.5,"scaleX":1.5,"mouseEnabled":false,"height":16,"color":"#9fb23c","bold":false,"align":"center"}},{"type":"Image","props":{"y":294,"x":41,"var":"platform_name","skin":"res/gameScene/吉胜游戏平台.png"}},{"type":"Label","props":{"y":86,"x":106,"width":93,"var":"self_name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":119,"x":126,"width":93,"var":"self_money","text":"6666666","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#f8f0ef","align":"left"}},{"type":"Label","props":{"y":87,"x":270,"width":389,"var":"win_bitmap","text":"+¥1234.56","height":60,"font":"settleWin","align":"center"}},{"type":"Label","props":{"y":37,"x":274,"width":389,"var":"lost_bitmap","text":"-¥1234.56","height":60,"font":"settlelost","align":"center"}},{"type":"Image","props":{"y":81,"x":24,"width":68,"var":"mcHead","skin":"res/gameScene/HeadIcon.jpg","height":67}},{"type":"Image","props":{"y":60,"x":6,"var":"isBanker","skin":"res/gameScene/庄家符号.png"}},{"type":"Label","props":{"y":249,"x":270,"width":175,"var":"Text_NoOne_bet","text":"本局无人赢钱","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#f8f0ef","align":"center"}},{"type":"Animation","props":{"y":187,"x":201,"var":"Num_0","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":194,"x":248,"var":"light_0","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":196,"x":303,"var":"headPic_0","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":203,"x":355,"width":93,"var":"name_0","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":204,"x":518,"width":80,"var":"Money_0","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}},{"type":"Animation","props":{"y":244,"x":201,"var":"Num_1","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":251,"x":248,"var":"light_1","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":253,"x":303,"var":"headPic_1","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":260,"x":355,"width":93,"var":"name_1","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":261,"x":518,"width":80,"var":"Money_1","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}},{"type":"Animation","props":{"y":296,"x":201,"var":"Num_2","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":303,"x":248,"var":"light_2","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":305,"x":303,"var":"headPic_2","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":312,"x":355,"width":93,"var":"name_2","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":313,"x":518,"width":80,"var":"Money_2","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}}]};}
 		]);
-		return SettleUI;
+		return ResultPanelUI;
 	})(View)
 
 
-	//class ui.ui.room.TimerUI extends laya.ui.View
-	var TimerUI=(function(_super){
-		function TimerUI(){
-			this.LeftTime=null;
-			TimerUI.__super.call(this);
+	//class ui.ui.room.SelectClipViewUI extends laya.ui.View
+	var SelectClipViewUI=(function(_super){
+		function SelectClipViewUI(){
+			this.Coin_light=null;
+			this.mcArrow=null;
+			this.mcSelect_0=null;
+			this.mcSelect_1=null;
+			this.mcSelect_2=null;
+			this.mcSelect_3=null;
+			this.mcSelect_4=null;
+			this.mcSelect_5=null;
+			SelectClipViewUI.__super.call(this);
 		}
 
-		__class(TimerUI,'ui.ui.room.TimerUI',_super);
-		var __proto=TimerUI.prototype;
+		__class(SelectClipViewUI,'ui.ui.room.SelectClipViewUI',_super);
+		var __proto=SelectClipViewUI.prototype;
 		__proto.createChildren=function(){
 			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(TimerUI.uiView);
+			this.createView(SelectClipViewUI.uiView);
 		}
 
-		__static(TimerUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":123,"height":123},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/倒计时03.png"}},{"type":"Image","props":{"y":1,"x":4,"skin":"res/gameScene/倒计时02.png"}},{"type":"Image","props":{"y":10,"x":10,"skin":"res/gameScene/倒计时01.png"}},{"type":"Label","props":{"y":47,"x":43,"width":20,"var":"LeftTime","text":"10","scaleY":2,"scaleX":2,"height":15,"color":"#ece7e7","align":"center"}}]};}
+		__static(SelectClipViewUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":540,"height":110},"child":[{"type":"Image","props":{"y":-6,"x":1,"var":"Coin_light","skin":"res/gameScene/筹码光.png"}},{"type":"Image","props":{"y":79,"x":35,"width":26,"var":"mcArrow","skin":"res/gameScene/筹码指向.png","height":24}},{"type":"Image","props":{"y":7,"x":10,"var":"mcSelect_0","skin":"res/gameScene/chip_1.png","name":"mcSelect_0"}},{"type":"Image","props":{"y":24,"x":98,"var":"mcSelect_1","skin":"res/gameScene/chip_1.png","name":"mcSelect_1"}},{"type":"Image","props":{"y":24,"x":188,"var":"mcSelect_2","skin":"res/gameScene/chip_1.png","name":"mcSelect_2"}},{"type":"Image","props":{"y":24,"x":277,"var":"mcSelect_3","skin":"res/gameScene/chip_1.png","name":"mcSelect_3"}},{"type":"Image","props":{"y":24,"x":367,"var":"mcSelect_4","skin":"res/gameScene/chip_1.png","name":"mcSelect_4"}},{"type":"Image","props":{"y":24,"x":458,"var":"mcSelect_5","skin":"res/gameScene/chip_1.png","name":"mcSelect_5"}}]};}
 		]);
-		return TimerUI;
+		return SelectClipViewUI;
 	})(View)
 
 
@@ -49312,110 +50006,103 @@ var Laya=window.Laya=(function(window,document){
 	})(View)
 
 
-	//class ui.ui.room.BankerSettleUI extends laya.ui.View
-	var BankerSettleUI=(function(_super){
-		function BankerSettleUI(){BankerSettleUI.__super.call(this);;
-		};
-
-		__class(BankerSettleUI,'ui.ui.room.BankerSettleUI',_super);
-		var __proto=BankerSettleUI.prototype;
-		__proto.createChildren=function(){
-			View.regComponent("ui.ui.room.BankerSettle_infoUI",BankerSettle_infoUI);
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(BankerSettleUI.uiView);
+	//class ui.ui.room.HistoryRecordUI extends laya.ui.View
+	var HistoryRecordUI=(function(_super){
+		function HistoryRecordUI(){
+			this.Hidding_Recode=null;
+			this.Showing_Recode=null;
+			this.spade_0=null;
+			this.spade_1=null;
+			this.spade_2=null;
+			this.spade_3=null;
+			this.spade_4=null;
+			this.spade_5=null;
+			this.spade_6=null;
+			this.spade_7=null;
+			this.spade_8=null;
+			this.spade_9=null;
+			this.spade_10=null;
+			this.spade_11=null;
+			this.heart_0=null;
+			this.heart_1=null;
+			this.heart_2=null;
+			this.heart_3=null;
+			this.heart_4=null;
+			this.heart_5=null;
+			this.heart_6=null;
+			this.heart_7=null;
+			this.heart_8=null;
+			this.heart_9=null;
+			this.heart_10=null;
+			this.heart_11=null;
+			this.club_0=null;
+			this.club_1=null;
+			this.club_2=null;
+			this.club_3=null;
+			this.club_4=null;
+			this.club_5=null;
+			this.club_6=null;
+			this.club_7=null;
+			this.club_8=null;
+			this.club_9=null;
+			this.club_10=null;
+			this.club_11=null;
+			this.diamond_0=null;
+			this.diamond_1=null;
+			this.diamond_2=null;
+			this.diamond_3=null;
+			this.diamond_4=null;
+			this.diamond_5=null;
+			this.diamond_6=null;
+			this.diamond_7=null;
+			this.diamond_8=null;
+			this.diamond_9=null;
+			this.diamond_10=null;
+			this.diamond_11=null;
+			this.spade_win=null;
+			this.spade_lost=null;
+			this.heart_win=null;
+			this.heart_lost=null;
+			this.club_win=null;
+			this.club_lost=null;
+			this.diamond_win=null;
+			this.diamond_lost=null;
+			HistoryRecordUI.__super.call(this);
 		}
 
-		__static(BankerSettleUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":836,"height":453},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/下庄结算底板.png"}},{"type":"Button","props":{"y":396,"x":349,"skin":"res/gameScene/Btn_bg.png"}},{"type":"Label","props":{"y":405,"x":390,"width":43,"text":"确  定","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":4,"x":365,"width":58,"text":"下庄结算","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":363,"x":13,"width":30,"text":"结算","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#ecec1a","bold":false}},{"type":"Label","props":{"y":359,"x":545,"width":72,"text":"99999999","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#ecec1a","bold":false,"align":"center"}},{"type":"BankerSettle_info","props":{"y":90,"x":10,"runtime":"ui.ui.room.BankerSettle_infoUI"}},{"type":"Button","props":{"y":-1,"x":798,"skin":"res/gameScene/closeBtn.png"}}]};}
+		__class(HistoryRecordUI,'ui.ui.room.HistoryRecordUI',_super);
+		var __proto=HistoryRecordUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(HistoryRecordUI.uiView);
+		}
+
+		__static(HistoryRecordUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":169,"name":"Record","height":421},"child":[{"type":"Image","props":{"y":0,"x":0,"var":"Hidding_Recode","skin":"res/gameScene/未展开胜负记录.png"}},{"type":"Box","props":{"y":0,"x":0,"var":"Showing_Recode"},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/展开胜负记录.png"}},{"type":"Animation","props":{"y":126,"x":24,"var":"spade_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":150,"x":24,"var":"spade_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":174,"x":24,"width":0,"var":"spade_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":198,"x":24,"width":0,"var":"spade_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":221,"x":25,"var":"spade_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":245,"x":25,"var":"spade_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":269,"x":25,"width":0,"var":"spade_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":293,"x":25,"width":0,"var":"spade_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":315,"x":25,"var":"spade_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":339,"x":25,"var":"spade_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":363,"x":25,"width":0,"var":"spade_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":387,"x":25,"width":0,"var":"spade_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":61,"var":"heart_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":61,"var":"heart_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":61,"width":0,"var":"heart_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":61,"width":0,"var":"heart_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":62,"var":"heart_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":62,"var":"heart_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":62,"width":0,"var":"heart_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":62,"width":0,"var":"heart_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":62,"var":"heart_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":62,"var":"heart_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":62,"width":0,"var":"heart_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":62,"width":0,"var":"heart_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":97,"var":"club_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":97,"var":"club_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":97,"width":0,"var":"club_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":97,"width":0,"var":"club_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":98,"var":"club_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":98,"var":"club_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":98,"width":0,"var":"club_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":98,"width":0,"var":"club_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":98,"var":"club_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":98,"var":"club_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":98,"width":0,"var":"club_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":98,"width":0,"var":"club_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":127,"x":133,"var":"diamond_0","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":151,"x":133,"var":"diamond_1","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":175,"x":133,"width":0,"var":"diamond_2","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":199,"x":133,"width":0,"var":"diamond_3","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":222,"x":134,"var":"diamond_4","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":246,"x":134,"var":"diamond_5","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":270,"x":134,"width":0,"var":"diamond_6","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":294,"x":134,"width":0,"var":"diamond_7","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":316,"x":134,"var":"diamond_8","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":340,"x":134,"var":"diamond_9","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png"}},{"type":"Animation","props":{"y":364,"x":134,"width":0,"var":"diamond_10","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Animation","props":{"y":388,"x":134,"width":0,"var":"diamond_11","source":"res/gameScene/红叉.png,res/gameScene/绿勾.png","height":0}},{"type":"Label","props":{"y":78,"x":14,"var":"spade_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":14,"var":"spade_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":51,"var":"heart_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":51,"var":"heart_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":87,"var":"club_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":87,"var":"club_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}},{"type":"Label","props":{"y":78,"x":123,"var":"diamond_win","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#13c328","align":"center"}},{"type":"Label","props":{"y":101,"x":123,"var":"diamond_lost","text":"999","scaleY":1.5,"scaleX":1.5,"color":"#db1028","align":"center"}}]}]};}
 		]);
-		return BankerSettleUI;
+		return HistoryRecordUI;
 	})(View)
 
 
-	//class ui.ui.room.BankerSettle_infoUI extends laya.ui.View
-	var BankerSettle_infoUI=(function(_super){
-		function BankerSettle_infoUI(){BankerSettle_infoUI.__super.call(this);;
-		};
+	//class ui.ui.room.NetConnectViewUI extends laya.ui.View
+	var NetConnectViewUI=(function(_super){
+		function NetConnectViewUI(){
+			this.txtName=null;
+			NetConnectViewUI.__super.call(this);
+		}
 
-		__class(BankerSettle_infoUI,'ui.ui.room.BankerSettle_infoUI',_super);
-		var __proto=BankerSettle_infoUI.prototype;
+		__class(NetConnectViewUI,'ui.ui.room.NetConnectViewUI',_super);
+		var __proto=NetConnectViewUI.prototype;
 		__proto.createChildren=function(){
+			View.regComponent("bull.view.room.NetConnectView",bull.view.room.NetConnectView);
 			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(BankerSettle_infoUI.uiView);
+			this.createView(NetConnectViewUI.uiView);
 		}
 
-		__static(BankerSettle_infoUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":818,"height":27},"child":[{"type":"Animation","props":{"y":0,"x":0,"source":"res/gameScene/下庄结算横条01.png,res/gameScene/下庄结算横条02.png"}},{"type":"Label","props":{"y":1,"x":4,"width":41,"text":"第1局","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":1,"x":99,"width":29,"text":"牛一","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":0,"x":204,"width":29,"text":"牛一","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":-2,"x":513,"width":74,"text":"9999999","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false,"align":"center"}},{"type":"Label","props":{"y":-2,"x":645,"width":87,"text":"5868acad101fa","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":1,"x":289,"width":29,"text":"牛一","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":1,"x":375,"width":29,"text":"牛一","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":1,"x":459,"width":29,"text":"牛一","scaleY":1.8,"scaleX":1.8,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}}]};}
+		__static(NetConnectViewUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"runtime":"bull.view.room.NetConnectView","height":800},"child":[{"type":"Label","props":{"y":360,"x":494,"width":224,"var":"txtName","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":76,"color":"#f8f0ef","align":"center"}}]};}
 		]);
-		return BankerSettle_infoUI;
-	})(View)
-
-
-	//class ui.ui.room.BetLImitUI extends laya.ui.View
-	var BetLImitUI=(function(_super){
-		function BetLImitUI(){
-			this.Hint=null;
-			this.BetBar=null;
-			this.amount=null;
-			BetLImitUI.__super.call(this);
-		}
-
-		__class(BetLImitUI,'ui.ui.room.BetLImitUI',_super);
-		var __proto=BetLImitUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(BetLImitUI.uiView);
-		}
-
-		__static(BetLImitUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":263,"height":55},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/限红底板.png"}},{"type":"Image","props":{"y":13,"x":100,"var":"Hint","skin":"res/gameScene/限红闪红.png"}},{"type":"Image","props":{"y":17,"x":12,"skin":"res/gameScene/本桌限红.png"}},{"type":"Animation","props":{"y":14,"x":101,"var":"BetBar","source":"res/gameScene/限红进度绿色.png,res/gameScene/限红进度红色.png"}},{"type":"Label","props":{"y":17,"x":101,"width":143,"var":"amount","text":"-¥1234.56","height":20,"font":"limitFont","align":"center"}}]};}
-		]);
-		return BetLImitUI;
-	})(View)
-
-
-	//class ui.ui.room.Bet_selfUI extends laya.ui.View
-	var Bet_selfUI=(function(_super){
-		function Bet_selfUI(){
-			this.amount=null;
-			Bet_selfUI.__super.call(this);
-		}
-
-		__class(Bet_selfUI,'ui.ui.room.Bet_selfUI',_super);
-		var __proto=Bet_selfUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(Bet_selfUI.uiView);
-		}
-
-		__static(Bet_selfUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":130,"height":40},"child":[{"type":"Image","props":{"y":3,"x":3,"skin":"res/gameScene/人民币￥底板.png"}},{"type":"Label","props":{"y":6,"x":3,"width":125,"var":"amount","text":"¥1234.56","height":30,"font":"tableFont","color":"#ece7e7","align":"center"}}]};}
-		]);
-		return Bet_selfUI;
-	})(View)
-
-
-	//class ui.ui.room.Bet_TotalUI extends laya.ui.View
-	var Bet_TotalUI=(function(_super){
-		function Bet_TotalUI(){
-			this.bg_ani=null;
-			this.title=null;
-			this.amount=null;
-			this.light=null;
-			Bet_TotalUI.__super.call(this);
-		}
-
-		__class(Bet_TotalUI,'ui.ui.room.Bet_TotalUI',_super);
-		var __proto=Bet_TotalUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(Bet_TotalUI.uiView);
-		}
-
-		__static(Bet_TotalUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":200,"height":40},"child":[{"type":"Animation","props":{"y":3,"x":2,"var":"bg_ani","source":"res/gameScene/黑桃底条.png,res/gameScene/红心底条.png,res/gameScene/梅花底条.png,res/gameScene/方片底条.png"}},{"type":"Label","props":{"y":10,"x":11,"width":31,"var":"title","text":"总计:","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7"}},{"type":"Label","props":{"y":11,"x":67,"width":59,"var":"amount","text":"1","scaleY":2,"scaleX":2,"height":18,"color":"#ece7e7","align":"center"}},{"type":"Image","props":{"y":-16,"x":-39,"var":"light","skin":"res/share/Light.png"}}]};}
-		]);
-		return Bet_TotalUI;
+		return NetConnectViewUI;
 	})(View)
 
 
@@ -49439,101 +50126,6 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":250,"visible":true,"height":100},"child":[{"type":"Animation","props":{"var":"Type","source":"res/gameScene/5小牛.png,res/gameScene/牛九.png"}},{"type":"Image","props":{"y":36,"x":137,"var":"multi","skin":"res/gameScene/乘号.png"}},{"type":"Label","props":{"y":25,"x":174,"width":79,"var":"odds","text":"10","height":60,"font":"settleWin","align":"center"}}]};}
 		]);
 		return PokerEffectUI;
-	})(View)
-
-
-	//class ui.ui.room.RankInfoUI extends laya.ui.View
-	var RankInfoUI=(function(_super){
-		function RankInfoUI(){
-			this.Light=null;
-			this.Vip=null;
-			this.Level=null;
-			this.Name=null;
-			this.Money=null;
-			RankInfoUI.__super.call(this);
-		}
-
-		__class(RankInfoUI,'ui.ui.room.RankInfoUI',_super);
-		var __proto=RankInfoUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(RankInfoUI.uiView);
-		}
-
-		__static(RankInfoUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":450,"height":50},"child":[{"type":"Image","props":{"y":2,"x":285,"var":"Light","skin":"res/share/Light.png"}},{"type":"Animation","props":{"y":13,"x":14,"source":"res/gameScene/数字No1.png,res/gameScene/数字No2.png,res/gameScene/数字No3.png"}},{"type":"Image","props":{"y":14,"x":43,"var":"Vip","skin":"res/gameScene/VIP底板.png"},"child":[{"type":"Image","props":{"y":1,"x":3,"skin":"res/gameScene/VIP.png"}},{"type":"Label","props":{"y":2,"x":30,"width":36,"var":"Level","text":"10","height":19,"font":"vipfont","align":"center"}}]},{"type":"Label","props":{"y":10,"x":116,"width":93,"var":"Name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"center"}},{"type":"Label","props":{"y":12,"x":324,"width":84,"var":"Money","text":"+999999999","scaleY":1.5,"scaleX":1.5,"height":19,"color":"#c2d722","align":"center"}}]};}
-		]);
-		return RankInfoUI;
-	})(View)
-
-
-	//class ui.ui.room.RankPanelUI extends laya.ui.View
-	var RankPanelUI=(function(_super){
-		function RankPanelUI(){
-			this.rank_info_0=null;
-			this.rank_info_1=null;
-			this.rank_info_2=null;
-			RankPanelUI.__super.call(this);
-		}
-
-		__class(RankPanelUI,'ui.ui.room.RankPanelUI',_super);
-		var __proto=RankPanelUI.prototype;
-		__proto.createChildren=function(){
-			View.regComponent("ui.ui.room.RankInfoUI",RankInfoUI);
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(RankPanelUI.uiView);
-		}
-
-		__static(RankPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":460,"height":160},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/前三名.png"}},{"type":"RankInfo","props":{"y":7,"x":5,"var":"rank_info_0","runtime":"ui.ui.room.RankInfoUI"}},{"type":"RankInfo","props":{"y":57,"x":6,"var":"rank_info_1","runtime":"ui.ui.room.RankInfoUI"}},{"type":"RankInfo","props":{"y":104,"x":6,"var":"rank_info_2","runtime":"ui.ui.room.RankInfoUI"}}]};}
-		]);
-		return RankPanelUI;
-	})(View)
-
-
-	//class ui.ui.room.Settle_InfoUI extends laya.ui.View
-	var Settle_InfoUI=(function(_super){
-		function Settle_InfoUI(){
-			this.Rank=null;
-			this.Light=null;
-			this.Head=null;
-			this.Name=null;
-			this.Money=null;
-			Settle_InfoUI.__super.call(this);
-		}
-
-		__class(Settle_InfoUI,'ui.ui.room.Settle_InfoUI',_super);
-		var __proto=Settle_InfoUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(Settle_InfoUI.uiView);
-		}
-
-		__static(Settle_InfoUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":470,"height":50},"child":[{"type":"Animation","props":{"y":-3,"x":6,"var":"Rank","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":4,"x":53,"var":"Light","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":6,"x":108,"var":"Head","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":13,"x":160,"width":93,"var":"Name","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef"}},{"type":"Label","props":{"y":14,"x":323,"width":80,"var":"Money","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}}]};}
-		]);
-		return Settle_InfoUI;
-	})(View)
-
-
-	//class ui.ui.room.UserPanelUI extends laya.ui.View
-	var UserPanelUI=(function(_super){
-		function UserPanelUI(){
-			this.Close=null;
-			UserPanelUI.__super.call(this);
-		}
-
-		__class(UserPanelUI,'ui.ui.room.UserPanelUI',_super);
-		var __proto=UserPanelUI.prototype;
-		__proto.createChildren=function(){
-			laya.ui.Component.prototype.createChildren.call(this);
-			this.createView(UserPanelUI.uiView);
-		}
-
-		__static(UserPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":288,"height":670},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/桌内玩家列表底板.png"}},{"type":"Button","props":{"y":-3,"x":250,"var":"Close","skin":"res/gameScene/PlayerListCloseBtn.png"}},{"type":"Label","props":{"y":646,"x":129,"text":"1/10","scaleY":1.5,"scaleX":1.5,"color":"#eee3e2"}}]};}
-		]);
-		return UserPanelUI;
 	})(View)
 
 
@@ -50674,10 +51266,10 @@ var Laya=window.Laya=(function(window,document){
 	//class ui.ui.alert.SetPanelUI extends laya.ui.Dialog
 	var SetPanelUI=(function(_super){
 		function SetPanelUI(){
-			this.versionTxt=null;
-			this.chkMusic=null;
+			this.txtName=null;
+			this.musicButton=null;
 			this.btnClose=null;
-			this.chkVoice=null;
+			this.soundButton=null;
 			SetPanelUI.__super.call(this);
 		}
 
@@ -50689,7 +51281,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(SetPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":384,"height":267},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_seb_bg.png"}},{"type":"Label","props":{"y":92,"x":28,"width":108,"var":"versionTxt","text":"0.0.1","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"}},{"type":"CheckBox","props":{"y":205,"x":46,"var":"chkMusic","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Button","props":{"y":0,"x":343,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"}},{"type":"CheckBox","props":{"y":205,"x":222,"var":"chkVoice","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Label","props":{"y":9,"x":181,"width":36,"text":"设置","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#eed6d6"}},{"type":"Label","props":{"y":50,"x":24,"width":108,"text":"版本号","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"}},{"type":"Label","props":{"y":206,"x":82,"width":80,"text":"开启音乐","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":207,"x":256,"width":57,"text":"开启音效","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":384,"height":267},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_seb_bg.png"}},{"type":"Label","props":{"y":92,"x":28,"width":108,"var":"txtName","text":"0.0.1","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"}},{"type":"CheckBox","props":{"y":205,"x":46,"var":"musicButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Button","props":{"y":0,"x":343,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"}},{"type":"CheckBox","props":{"y":205,"x":222,"var":"soundButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Label","props":{"y":9,"x":181,"width":36,"text":"设置","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#eed6d6"}},{"type":"Label","props":{"y":50,"x":24,"width":108,"text":"版本号","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"}},{"type":"Label","props":{"y":206,"x":82,"width":80,"text":"开启音乐","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":207,"x":256,"width":57,"text":"开启音效","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}}]};}
 		]);
 		return SetPanelUI;
 	})(Dialog)
@@ -50803,161 +51395,315 @@ var Laya=window.Laya=(function(window,document){
 	})(hallUI)
 
 
-	//class bull.view.room.bankerBoard extends ui.ui.room.BankerBoardUI
-	var bankerBoard=(function(_super){
-		function bankerBoard(){
-			bankerBoard.__super.call(this);
+	/**
+	*庄家面版
+	*/
+	//class bull.view.room.BankerPanel extends ui.ui.room.BankerPanelUI
+	var BankerPanel=(function(_super){
+		function BankerPanel(){
+			this.mcHintBoard=null;
+			this.applybanker=false;
+			this.apply_debanker=false;
+			this._callback=null;
+			this._list=null;
+			this._myName=null;
+			this._head_url=null;
+			this._loader=null;
+			this._bankerlimit=NaN;
+			this._isGMoney=false;
+			BankerPanel.__super.call(this);
 		}
 
-		__class(bankerBoard,'bull.view.room.bankerBoard',_super);
-		var __proto=bankerBoard.prototype;
+		__class(BankerPanel,'bull.view.room.BankerPanel',_super);
+		var __proto=BankerPanel.prototype;
 		__proto.createChildren=function(){
 			_super.prototype.createChildren.call(this);
-			this.bankerapply.on("click",this,this.onClick);
-			this.deapply.on("click",this,this.onClick);
-			this.bankerapply.on("mouseover",this,this.onOver);
-			this.deapply.on("mouseover",this,this.onOver);
-			this.bankerapply.on("mouseout",this,this.onOut);
-			this.deapply.on("mouseout",this,this.onOut);
-			this.listHint.visible=false;
-			this.update_list(0,[],-1);
+			this.txtname.text="";
+			this.Point.text="";
+			this.BankerTimes.text="";
+			this.mcHintBoard.visible=false;
+			this.textFix_text_0.visible=false;/*no*/this.s
+			this._list=[];
+			this.applybanker=false;
+			this.apply_debanker=false;
 		}
 
-		__proto.onOver=function(e){
-			this.listHint.visible=true;
+		//open_apply();
+		__proto.setRoundID=function(id){
+			this.txt_RoundID.text=id;
 		}
 
-		__proto.onOut=function(e){
-			this.listHint.visible=false;
+		__proto.set_G_identy=function(value){
+			this._isGMoney=value;
 		}
 
-		__proto.onClick=function(e){
-			e.target
-			if (e.target==this.bankerapply){
-				console.log("bankerapply");
-			}
-			else if (e.target==this.deapply){
-				console.log("deapply");
-			}
+		__proto.set_room_limit=function(limit){
+			this._bankerlimit=limit;
 		}
 
-		//event(LightEvent.ITEM_CLICK,parseInt(s));
-		__proto.set_data=function(data){
-			this.Title.text=data[0];
-			this.BankerTimes.text=data[1];
-			this.Money.text=data[2];
-			var playerCnt=data[3];
-			this.Banker_ani.visible=true;
-			this.Banker_ani.alpha=0;
-			Tween.to(this.Banker_ani,{x:212,y:150,alpha:1,scaleX:1 ,scaleY:1 },1000,Ease.cubicOut,Handler.create(this,this.ani_mid));
-			this.update_list(playerCnt,data[4],data[6]);
-			this.listHint.title.text=data[5];
+		__proto.open_apply=function(){
+			this.btnBanker.visible=true;
+			this.btndeBanker.visible=true;
+			this.btnBanker.enabled=true;
+			this.btnBanker.removeEventListener(/*no*/this.MouseEvent.MOUSE_OVER,this.onOver,false);
+			this.btnBanker.removeEventListener(/*no*/this.MouseEvent.MOUSE_OUT,this.onOut,false);
+			this.btnBanker.addEventListener(/*no*/this.MouseEvent.CLICK,this.onClick,false);
+			this.btnBanker.addEventListener(/*no*/this.MouseEvent.MOUSE_OVER,this.onOver,false);
+			this.btnBanker.addEventListener(/*no*/this.MouseEvent.MOUSE_OUT,this.onOut,false);
+			this.btndeBanker.removeEventListener(/*no*/this.MouseEvent.MOUSE_OVER,this.onOver,false);
+			this.btndeBanker.removeEventListener(/*no*/this.MouseEvent.MOUSE_OUT,this.onOut,false);
+			this.btndeBanker.addEventListener(/*no*/this.MouseEvent.CLICK,this.ondebanker,false);
+			this.btndeBanker.addEventListener(/*no*/this.MouseEvent.MOUSE_OVER,this.onOver,false);
+			this.btndeBanker.addEventListener(/*no*/this.MouseEvent.MOUSE_OUT,this.onOut,false);
+			this.mc_bankerAni.visible=false;
 		}
 
-		__proto.update_list=function(playerCnt,playerlist,self_po){
-			if (playerCnt==0){
-				this.listHint.NoPlayer.visible=true;
-				this.listHint.NextPoint.visible=false;
-				this.listHint.Page.y=126;
-				this.listHint.bg.height=168;
-				for (var i=0;i < 10;i++){
-					this.listHint["player_"+i].text="";
+		__proto.set_list=function(data,myName){
+			this._list=data;
+			this._myName=myName;
+		}
+
+		__proto.i_am_not_banker=function(){
+			this.btnBanker.enabled=false;
+			this.btnBanker.removeEventListener(/*no*/this.MouseEvent.CLICK,this.onClick,false);
+			this.btndeBanker.removeEventListener(/*no*/this.MouseEvent.CLICK,this.ondebanker,false);
+			this.mcHintBoard.visible=false;
+		}
+
+		__proto.onOver=function(event){
+			this.mcHintBoard.visible=true;
+			var n=this._list.length;
+			this.mcHintBoard.gotoAndStop(n+1);
+			for(var i=0;i< n;i++){
+				var one=this._list[i];
+				this.mcHintBoard["bank_list_"+i].text=(i+1).toString()+" "+one["name"];
+				this.mcHintBoard["Page_text"].text=i+"/10";
+				if(this._myName==one["name"]){
+					this.mcHintBoard["bank_list_"+i].textColor=0xF0d96B;
 				}
+				else{
+					this.mcHintBoard["bank_list_"+i].textColor=0x666666;
+				}
+			}
+			this.mcHintBoard["txtBankerLimit"].text=BullGame.utils.GameUtil.formatMoney(this._bankerlimit);
+			if(this._isGMoney)this.mcHintBoard["txt_title"].text="[G币达到";
+			else this.mcHintBoard["txt_title"].text="[现金达到";
+		}
+
+		__proto.onOut=function(event){
+			this.mcHintBoard.visible=false;
+		}
+
+		__proto.onClick=function(event){
+			this.applybanker=true;
+			/*no*/this.dispatchEvent(new /*no*/this.OperateEvent(/*no*/this.NewNewGameEvent.apply_banker,[1]));
+		}
+
+		__proto.ondebanker=function(event){
+			this.apply_debanker=true;
+			/*no*/this.dispatchEvent(new /*no*/this.OperateEvent(/*no*/this.NewNewGameEvent.apply_banker,[2]));
+		}
+
+		__proto.destory=function(){
+			this.btnBanker.removeEventListener(/*no*/this.MouseEvent.CLICK,this.onClick);
+			this.btnBanker.removeEventListener(/*no*/this.MouseEvent.MOUSE_OVER,this.onOver);
+			this.btnBanker.removeEventListener(/*no*/this.MouseEvent.MOUSE_OUT,this.onOut);
+			this.btndeBanker.removeEventListener(/*no*/this.MouseEvent.CLICK,this.ondebanker);
+			this.btndeBanker.removeEventListener(/*no*/this.MouseEvent.MOUSE_OVER,this.onOver);
+			this.btndeBanker.removeEventListener(/*no*/this.MouseEvent.MOUSE_OUT,this.onOut);
+		}
+
+		__proto.switch_to_debanker=function(){
+			this.applybanker=false;
+			this.btnBanker.visible=false;
+		}
+
+		__proto.switch_to_banker=function(){
+			this.apply_debanker=false;
+			this.btnBanker.visible=true;
+		}
+
+		//確認是否
+		__proto.check_is_banker=function(){
+			if(this.btnBanker.visible==false){
+				this.btnBanker.visible=true;
+			}
+		}
+
+		__proto.bankerChange=function(bankerName,money,bankTime,IsSys,playAni,head_url){
+			this.txtname.text=bankerName;
+			this.Point.text=BullGame.utils.GameUtil.formatMoney(money);
+			this.BankerTimes.text=bankTime;
+			this._head_url=head_url;
+			if(IsSys){
+				this.textFix_text_0.visible=false;
+				/*no*/this.textFix_text_1.visible=false;
+				this.Point.text="";
+			}
+			else{
+				this.textFix_text_0.visible=true;
+				/*no*/this.textFix_text_1.visible=true;
+			}
+			if(!playAni)return;
+			if(this._head_url !="avata"){
+				this._loader.load(new /*no*/this.URLRequest(this._head_url));
+			}
+			else{
+				this.mc_bankerAni.gotoAndStop(2);
+				if(/*no*/this.　_picforAni !=null){
+					var mc=this.mc_bankerAni["NewBankerHead"].getChildByName("HeadContainer");
+					while(mc.numChildren > 0){
+						mc.removeChildAt(0);
+					}
+					/*no*/this._picforAni=null;
+					/*no*/this.headbmp=null;
+				}
+				this.play_ani();
+			}
+		}
+
+		//-----for test
+		__proto.test_read=function(){
+			this._loader.load(new /*no*/this.URLRequest("http://statics.kgame63.com/common/images/avatars/1.png"));
+		}
+
+		//-----for test
+		__proto.test_release=function(){
+			this.mc_bankerAni.gotoAndStop(2)
+			var mc=this.mc_bankerAni["NewBankerHead"].getChildByName("HeadContainer");
+			while(mc.numChildren > 0){
+				mc.removeChildAt(0);
+			}
+			/*no*/this._picforAni=null;
+			/*no*/this.headbmp=null;
+			this.play_ani();
+		}
+
+		__proto.play_ani=function(){
+			this.mc_bankerAni.visible=true;
+			this.mc_bankerAni["text"].text="";
+			this.mc_bankerAni.gotoAndStop(2);
+			if(/*no*/this._picforAni !=null)this.mc_bankerAni["NewBankerHead"]["HeadContainer"].addChild(/*no*/this._picforAni);
+			this.mc_bankerAni["NewBankerHead"]["HeadContainer"].height=85;
+			this.mc_bankerAni["NewBankerHead"]["HeadContainer"].width=100;
+			this.mc_bankerAni.gotoAndPlay(2);
+			this.mc_bankerAni.addEventListener(Event1.ENTER_FRAME,this.enterFrame);
+		}
+
+		__proto.enterFrame=function(event){
+			var mc=event.currentTarget;
+			if(mc.currentFrame==9){
+				this.mc_bankerAni["text"].text=this.txtname.text;
+				this.mc_bankerAni.gotoAndPlay(10);
+			}
+			else if(mc.currentFrame==33){
+				this.mc_bankerAni["text"].text="";
+			}
+			else if(mc.currentFrame==mc.totalFrames){
+				this.mc_bankerAni.removeEventListener(Event1.ENTER_FRAME,this.enterFrame);
+				this.mc_bankerAni.gotoAndStop(1);
+				if(/*no*/this._picforAni !=null){
+					/*no*/this._picforAni.width=/*no*/this._picforAni.height=42;
+					this.Head["HeadContainer"].addChild(/*no*/this._picforAni);
+				}
+				else{
+					var user_head=this.Head["HeadContainer"];
+					while(user_head.numChildren > 0){
+						user_head.removeChildAt(0);
+					}
+				}
+			}
+		}
+
+		return BankerPanel;
+	})(BankerPanelUI)
+
+
+	/**
+	*下注按鈕
+	*/
+	//class bull.view.room.BetBtnGroup extends ui.ui.room.BetBtnGroupUI
+	var BetBtnGroup=(function(_super){
+		function BetBtnGroup(){
+			this._samebet=false;
+			this._rebet=false;
+			this.grayscaleFilter=null;
+			BetBtnGroup.__super.call(this);
+		}
+
+		__class(BetBtnGroup,'bull.view.room.BetBtnGroup',_super);
+		var __proto=BetBtnGroup.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			this.disapear();
+			this.betBtn_cancel.on("click",this,this.onClick);
+			this.betBtn_same.on("click",this,this.onClick);
+			var grayscaleMat=[0.3086,0.6094,0.0820,0,0,0.3086,0.6094,0.0820,0,0,0.3086,0.6094,0.0820,0,0,0,0,0,1,0];
+			this.grayscaleFilter=new ColorFilter(grayscaleMat);
+		}
+
+		__proto.disapear=function(){
+			this._samebet=false;
+			this._rebet=false;
+		}
+
+		__proto.samebet_rep=function(){
+			if(this._samebet==true){
+				this._samebet=false;
+				this.withdraw_pop();
+			}
+		}
+
+		__proto.rebet_popup=function(){
+			if(this._rebet==true)return;
+			this.withdraw_pop();
+		}
+
+		__proto.withdraw_pop=function(){
+			this.betBtn_cancel.disabled=false;
+			this.betBtn_same.disabled=true;
+			this._rebet=true;
+		}
+
+		__proto.initView=function(betrecode){
+			this.visible=true;
+			if(betrecode==false){
+				this.init();
 				return;
 			}
-			this.listHint.NoPlayer.visible=false;
-			this.listHint.NextPoint.visible=true;
-			for (var i=0;i < playerCnt;i++){
-				this.listHint["player_"+i].text=(i+1)+" "+playerlist[i];
-				if (i==self_po){
-					this.listHint["player_"+i].color="#b6c325";
-				}
-			}
-			if (playerCnt <=2)return;
-			this.listHint.bg.height=168+(playerCnt-2)*28;
-			this.listHint.Page.y=126+(playerCnt-2)*28;
-		}
-
-		__proto.ani_mid=function(){
-			Tween.to(this.Banker_ani,{x:26,y:5,alpha:0,scaleX:0.3 ,scaleY:0.3 },1000,Ease.cubicOut,Handler.create(this,this.ani_ok));
-		}
-
-		__proto.ani_ok=function(){
-			this.Banker_ani.visible=false;
-			this.Banker_ani.x=563;
-			this.Banker_ani.y=5;
-			this.Banker_ani.alpha=0;
-		}
-
-		__proto.test=function(){}
-		return bankerBoard;
-	})(BankerBoardUI)
-
-
-	//class bull.view.room.BetZone extends ui.ui.room.BetZoneUI
-	var BetZone=(function(_super){
-		function BetZone(){
-			this.zone_flash_times=0;
-			BetZone.__super.call(this);
-		}
-
-		__class(BetZone,'bull.view.room.BetZone',_super);
-		var __proto=BetZone.prototype;
-		__proto.createChildren=function(){
-			_super.prototype.createChildren.call(this);
-			for (var i=0;i < 4;i++){
-				this["zone_"+i].on("click",this,this.onClick);
-				this["total_amount_"+i]["bg_ani"].index=i;
-			}
+			this.betBtn_same.disabled=false;
+			this.betBtn_cancel.disabled=true;
+			this._samebet=true;
 		}
 
 		__proto.onClick=function(e){
-			var s=e.target.name;
-			s=s.substr(5,1);
-			var idx=parseInt(s);
-			console.log("idx = "+idx);
-			this["total_amount_"+idx].visible=true;
-			this["total_amount_"+idx]["amount"].text=1;
-			this["total_amount_"+idx]["title"].visible=true;
-			this["total_amount_"+idx]["light"].visible=true;
-			this["self_amount_"+idx]["amount"].font="mybetFont";
-			this["self_amount_"+idx].visible=true;
-			this["self_amount_"+idx]["amount"].text=10000;
+			if (e.target==this.betBtn_cancel){
+				console.log("Btn_CancelBet");
+				this.init();
+			}
+			else if (e.target==this.betBtn_same){
+				console.log("Btn_SameBet");
+				this.btnSame_disapear();
+			}
 		}
 
 		//event(LightEvent.ITEM_CLICK,parseInt(s));
-		__proto.set_data=function(data){
-			this.visible=true;
-			this.zone_flash_times=0;
-			for (var i=0;i < 4;i++){
-				this["total_amount_"+i].visible=false;
-				this["zone_"+i].visible=false;
-				this["self_amount_"+i].visible=false;
-			};
-			var Isbanker=true;
-			if (Isbanker){
-				this.BetLimit.visible=true;
-				this.BetLimit.amount.font="LimitFont";
-				this.BetLimit.amount.text=data[0];
-			}
-			Laya.timer.loop(500,this,this.timerHandler);
+		__proto.btnSame_disapear=function(){
+			this.betBtn_same.disabled=true;
 		}
 
-		__proto.timerHandler=function(){
-			this.zone_flash_times++;
-			if (this.zone_flash_times==5)Laya.timer.clear(this,this.timerHandler);
-			for (var i=0;i < 4;i++){
-				this["zone_"+i].visible=!this["zone_"+i].visible;
-			}
+		__proto.btncancel_disapear=function(){
+			this.betBtn_same.disabled=true;
+			this.betBtn_cancel.disabled=true;
 		}
 
-		__proto.hide=function(){
-			this.BetLimit.visible=false;
+		__proto.init=function(){
+			this.betBtn_cancel.disabled=true;
+			this.betBtn_same.disabled=true;
 		}
 
-		__proto.test=function(){}
-		return BetZone;
-	})(BetZoneUI)
+		return BetBtnGroup;
+	})(BetBtnGroupUI)
 
 
 	//class bull.view.room.BullScene extends ui.ui.room.BullSceneUI
@@ -50976,21 +51722,23 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.showme=function(){
 			console.log("showme showme");
-			Tween.to(this.HistoryBoard,{x:this.HistoryBoard.x+173 },1000,Ease.backIn);
-			Tween.to(this.InfoPanel,{y:this.InfoPanel.y-96 },1000,Ease.backIn);
-			Tween.to(this.bankerPanel,{y:this.bankerPanel.y+76 },1000,Ease.backIn);
-			Tween.to(this.BetChip,{y:this.BetChip.y-138 },1000,Ease.backIn);
+			Tween.to(this.viewRecord,{x:this.viewRecord.x+173 },1000,Ease.backIn);
+			Tween.to(this.viewHead,{y:this.viewHead.y-96 },1000,Ease.backIn);
+			Tween.to(this.ViewBetGroup,{y:this.ViewBetGroup.y-96 },1000,Ease.backIn);
+			Tween.to(this.viewSelectClip,{y:this.viewSelectClip.y-138 },1000,Ease.backIn);
+			Tween.to(this.viewBankerPanel,{y:this.viewBankerPanel.y+76 },1000,Ease.backIn);
 		}
 
 		__proto.hideme=function(){
 			console.log("hideme")
 			this.btn_display(false);
-			this.HistoryBoard.x=-173;
-			this.InfoPanel.y=800;
-			this.bankerPanel.y=-81;
-			this.BetChip.y=803;
+			this.viewRecord.x=-173;
+			this.viewHead.y=816;
+			this.viewBankerPanel.y=-81;
+			this.ViewBetGroup.y=805;
 		}
 
+		//BetChip.y=803;
 		__proto.btn_display=function(show){
 			this.btnBg.visible=this.setupBtn.visible=this.helpBtn.visible=this.CarryInBtn.visible=this.PlayerListBtn.visible=show;
 		}
@@ -51025,252 +51773,60 @@ var Laya=window.Laya=(function(window,document){
 	})(BullSceneUI)
 
 
-	//class bull.view.room.CoinSelect extends ui.ui.room.BetChipUI
-	var CoinSelect=(function(_super){
-		function CoinSelect(){
-			this._coinValue=[];
-			this.ligth_po=[1,89,179,268,358,448];
-			this.arror_po=[35,123,213,302,392,483];
-			this._pre_idx=0;
-			this.grayscaleFilter=null;
-			CoinSelect.__super.call(this);
+	//class bull.view.room.HeadView extends ui.ui.room.HeadViewUI
+	var HeadView=(function(_super){
+		function HeadView(){
+			this._CarryInClickHandler=null;
+			HeadView.__super.call(this);
 		}
 
-		__class(CoinSelect,'bull.view.room.CoinSelect',_super);
-		var __proto=CoinSelect.prototype;
+		__class(HeadView,'bull.view.room.HeadView',_super);
+		var __proto=HeadView.prototype;
 		__proto.createChildren=function(){
 			_super.prototype.createChildren.call(this);
-			for (var i=0;i < 6;i++){
-				this["Coin_"+i].on("click",this,this.onClick);
-			};
-			var grayscaleMat=[0.3086,0.6094,0.0820,0,0,0.3086,0.6094,0.0820,0,0,0.3086,0.6094,0.0820,0,0,0,0,0,1,0];
-			this.grayscaleFilter=new ColorFilter(grayscaleMat);
+			this.txtName.text="";
+			this.txtMoney.text="";
+			this.mcMoneyIcon.visible=false;
+			this.mcVip.visible=false;
+			this.bp_vip.label="";
+			this.btnAdd.on("click",this,this.onClick);
 		}
 
-		__proto.onClick=function(e){
-			var s=e.target.name;
-			s=s.substr(5,1);
-			var idx=parseInt(s);
-			if (idx==this._pre_idx)return;
-			this["Coin_"+idx].y=7;
-			this.Coin_light.x=this.ligth_po[idx];
-			this.Selcet_Arrow.x=this.arror_po[idx];
-			this["Coin_"+this._pre_idx].y=24;
-			this._pre_idx=idx;
-		}
-
-		//event(LightEvent.ITEM_CLICK,parseInt(s));
-		__proto.set_data=function(data){
-			this._coinValue.length=0;
-			this._coinValue.push(data);
-			var coinlist=this._coinValue[0];
-			for (var i=0;i < coinlist.length;i++){
-				this["Coin_"+i].source=Light.loader.getRes("res/gameScene/chip_"+coinlist[i]+".png");
+		__proto.onClick=function(event){
+			if(this._CarryInClickHandler){
+				this._CarryInClickHandler.method.apply(this._CarryInClickHandler.args);
 			}
 		}
 
-		__proto.set_gray=function(){
-			this.Coin_5.filters=[this.grayscaleFilter];
+		__proto.setName=function(str){
+			this.txtName.text=str;
 		}
 
-		__proto.test=function(){}
-		return CoinSelect;
-	})(BetChipUI)
-
-
-	//class bull.view.room.HistoryRecord extends ui.ui.room.HistoryRecordUI
-	var HistoryRecord=(function(_super){
-		function HistoryRecord(){
-			HistoryRecord.__super.call(this);
+		__proto.setMoney=function(num){
+			this.txtMoney.text=GameUtil.formatMoney1(num);
 		}
 
-		__class(HistoryRecord,'bull.view.room.HistoryRecord',_super);
-		var __proto=HistoryRecord.prototype;
-		__proto.createChildren=function(){
-			_super.prototype.createChildren.call(this);
-			this.Showing_Recode.on("click",this,this.onShow);
-			this.Hidding_Recode.on("click",this,this.onHide);
+		__proto.setMoneyT=function(num){
+			this.mcMoneyIcon.visible=true;
 		}
 
-		__proto.onShow=function(e){
-			this.Showing_Recode.visible=false;
-			this.Hidding_Recode.visible=true;
-		}
-
-		__proto.onHide=function(e){
-			this.Showing_Recode.visible=true;
-			this.Hidding_Recode.visible=false;
-		}
-
-		__proto.update_info=function(win,lost,result){
-			if (win.length==0){
-				this.spade_win.text=this.heart_win.text=this.club_win.text=this.diamond_win.text="";
-			}
-			else{
-				this.spade_win.text=win[0];
-				this.heart_win.text=win[1];
-				this.club_win.text=win [2];
-				this.diamond_win.text=win[3];
-			}
-			if (lost.length==0){
-				this.spade_lost.text=this.heart_lost.text=this.club_lost.text=this.diamond_lost.text="";
-			}
-			else{
-				this.spade_lost.text=lost[0];
-				this.heart_lost.text=lost[1];
-				this.club_lost.text=lost [2];
-				this.diamond_lost.text=lost[3];
-			};
-			var n=result.length;
-			for (var i=0;i < n;i++){
-				this["spade_"+i].text=result[0];
-				this["heart_"+i].text=result[1];
-				this["club_"+i].text=result[2];
-				this["diamond_"+i].text=result[3];
+		__proto.setVip=function(vipLevel){
+			if(vipLevel >0){
+				this.mcVip.visible=true;
+				this.bp_vip.text=vipLevel.toString();
 			}
 		}
 
-		__proto.hide=function(){}
-		__proto.show=function(){}
-		return HistoryRecord;
-	})(HistoryRecordUI)
-
-
-	//class bull.view.room.InfoBoard extends ui.ui.room.InfoBoardUI
-	var InfoBoard=(function(_super){
-		function InfoBoard(){
-			InfoBoard.__super.call(this);
+		__proto.setHead=function(str){
+			this.mcHead.source=str;
 		}
 
-		__class(InfoBoard,'bull.view.room.InfoBoard',_super);
-		var __proto=InfoBoard.prototype;
-		__proto.createChildren=function(){
-			_super.prototype.createChildren.call(this);
-			this.Btn_CancelBet.on("click",this,this.onClick);
-			this.Btn_SameBet.on("click",this,this.onClick);
-			this.CarryIn.on("click",this,this.onClick);
+		__proto.addCarryClick=function(ClickHandler){
+			this._CarryInClickHandler=ClickHandler;
 		}
 
-		__proto.onClick=function(e){
-			e.target
-			if (e.target==this.Btn_CancelBet){
-				console.log("Btn_CancelBet");
-			}
-			else if (e.target==this.Btn_SameBet){
-				console.log("Btn_SameBet");
-			}
-			else if (e.target==this.CarryIn){
-				console.log("CarryIn");
-			}
-		}
-
-		//event(LightEvent.ITEM_CLICK,parseInt(s));
-		__proto.set_data=function(data){
-			this.Name.text=data[0];
-			this.Money.text=data[1];
-		}
-
-		__proto.set_gray=function(){
-			this.Btn_CancelBet.disabled=true;
-			this.Btn_SameBet.disabled=true;
-		}
-
-		__proto.set_orge=function(){
-			this.Btn_CancelBet.disabled=false;
-			this.Btn_SameBet.disabled=false;
-		}
-
-		__proto.test=function(){}
-		return InfoBoard;
-	})(InfoBoardUI)
-
-
-	//class bull.view.room.poker extends ui.ui.room.PokerUI
-	var poker=(function(_super){
-		function poker(){
-			this._pokerdata=[];
-			this._po=[ [[609,92,-2],[636,92,-2],[663,92,-1],[690,92,0],[718,92,1]],
-			[[221,445,-6],[251,445,-6],[281,445,-6],[310,445,-5],[340,445,-4]],
-			[[479,443,-3],[509,443,-3],[538,443,-2],[569,443,-2],[599,443,-1]],
-			[[733,445,0],[764,445,0],[793,445,0],[823,445,0],[854,445,0]],
-			[[987,445,1],[1018,445,3],[1047,445,3],[1078,445,3],[1109,445,3]]];
-			this._scale=[[0.43,0.42],[0.46,0.46],[0.46,0.46],[0.46,0.46],[0.46,0.46]];
-			poker.__super.call(this);
-		}
-
-		__class(poker,'bull.view.room.poker',_super);
-		var __proto=poker.prototype;
-		__proto.createChildren=function(){
-			_super.prototype.createChildren.call(this);
-		}
-
-		__proto.set_data=function(data){
-			this._pokerdata.length=0;
-			for (var i=0;i < 5;i++){
-				var list=this._po[i];
-				for (var j=0;j < 5;j++){
-					var p=list[j];
-					this["poker_"+i+"_"+j].index=0;
-					this["poker_"+i+"_"+j].x=1114;
-					this["poker_"+i+"_"+j].y=126;
-					this["poker_"+i+"_"+j].rotation=-65;
-					this["poker_"+i+"_"+j].scaleX=0.4;
-					this["poker_"+i+"_"+j].scaleY=0.4;
-					this["poker_"+i+"_"+j].skewX=p[2];
-				}
-			}
-		}
-
-		__proto.play=function(){
-			this.visible=true;
-			for (var i=0;i < 5;i++){
-				var list=this._po[i];
-				for (var j=0;j < 5;j++){
-					var p=list[j];
-					var sc=this._scale[i];
-					Tween.to(this["poker_"+i+"_"+j],{x:p[0] ,y:p[1],scaleX:sc[0],scaleY:sc[1],rotation :0 },1000,Ease.cubicOut,Handler.create(this,this.onCompleteHandler,[i,j]));
-				}
-			}
-		}
-
-		__proto.onCompleteHandler=function(idx_i,idx_j){
-			if (idx_i==4 && idx_j==4){
-				for(var i=0;i< 5;i++){
-					for (var j=0;j < 5;j++){
-						Tween.to(this["poker_"+i+"_"+j],{x:this["poker_"+i+"_"+j].x-(j*27)},500,Ease.cubicOut,Handler.create(this,this.set_poker_image,[i,j]));
-					}
-				}
-			}
-		}
-
-		__proto.set_poker_image=function(idx_i,idx_j){
-			this["poker_"+idx_i+"_"+idx_j].index=1;
-			if (idx_i==4 && idx_j==4){
-				for(var i=0;i< 5;i++){
-					for (var j=0;j < 5;j++){
-						Tween.to(this["poker_"+i+"_"+j],{x:this["poker_"+i+"_"+j].x+(j*27)},500,Ease.cubicOut,Handler.create(this,this.ani_ok,[i,j]));
-					}
-				}
-			}
-		}
-
-		__proto.ani_ok=function(idx_i,idx_j){
-			if (idx_i==4 && idx_j==4){
-			}
-		}
-
-		//TODO　報牌型
-		__proto.hide=function(){
-			for(var i=0;i< 5;i++){
-				for (var j=0;j < 5;j++){
-					Tween.to(this["poker_"+i+"_"+j],{x:649,y:-156},500,Ease.cubicOut);
-				}
-			}
-		}
-
-		__proto.test=function(){}
-		return poker;
-	})(PokerUI)
+		return HeadView;
+	})(HeadViewUI)
 
 
 	//class bull.view.room.PokerTypeBoard extends ui.ui.room.PokerTypeUI
@@ -51326,81 +51882,328 @@ var Laya=window.Laya=(function(window,document){
 	})(PokerTypeUI)
 
 
-	//class bull.view.room.Settle extends ui.ui.room.SettleUI
-	var Settle=(function(_super){
-		function Settle(){
-			Settle.__super.call(this);
+	//class bull.view.room.RecordPanel extends ui.ui.room.RecordPanelUI
+	var RecordPanel=(function(_super){
+		function RecordPanel(){
+			RecordPanel.__super.call(this);
 		}
 
-		__class(Settle,'bull.view.room.Settle',_super);
-		var __proto=Settle.prototype;
+		__class(RecordPanel,'bull.view.room.RecordPanel',_super);
+		var __proto=RecordPanel.prototype;
 		__proto.createChildren=function(){
 			_super.prototype.createChildren.call(this);
-			this.Btn_ok.on("click",this,this.onClick);
-			this.Btn_close.on("click",this,this.onClick);
+			this.Showing_Recode.on("click",this,this.onShow);
+			this.Hidding_Recode.on("click",this,this.onHide);
+		}
+
+		__proto.onShow=function(e){
+			this.Showing_Recode.visible=false;
+			this.Hidding_Recode.visible=true;
+		}
+
+		__proto.onHide=function(e){
+			this.Showing_Recode.visible=true;
+			this.Hidding_Recode.visible=false;
+		}
+
+		__proto.update_info=function(win,lost,result){
+			if (win.length==0){
+				this.spade_win.text=this.heart_win.text=this.club_win.text=this.diamond_win.text="";
+			}
+			else{
+				this.spade_win.text=win[0];
+				this.heart_win.text=win[1];
+				this.club_win.text=win [2];
+				this.diamond_win.text=win[3];
+			}
+			if (lost.length==0){
+				this.spade_lost.text=this.heart_lost.text=this.club_lost.text=this.diamond_lost.text="";
+			}
+			else{
+				this.spade_lost.text=lost[0];
+				this.heart_lost.text=lost[1];
+				this.club_lost.text=lost [2];
+				this.diamond_lost.text=lost[3];
+			};
+			var n=result.length;
+			for (var i=0;i < n;i++){
+				this["spade_"+i].text=result[0];
+				this["heart_"+i].text=result[1];
+				this["club_"+i].text=result[2];
+				this["diamond_"+i].text=result[3];
+			}
+		}
+
+		__proto.hide=function(){}
+		__proto.show=function(){}
+		return RecordPanel;
+	})(RecordPanelUI)
+
+
+	/**
+	*结算面板
+	*/
+	//class bull.view.room.ResultPanel extends ui.ui.room.ResultPanelUI
+	var ResultPanel=(function(_super){
+		function ResultPanel(){
+			this.mcRank=null;
+			this.mclight=null;
+			this.HeadPic=null;
+			this.txtNames=null;
+			this.txtMoneys=null;
+			this._rest_Time=0;
+			ResultPanel.__super.call(this);
+		}
+
+		__class(ResultPanel,'bull.view.room.ResultPanel',_super);
+		var __proto=ResultPanel.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			this.visible=false;
+			this.mcRank=[];
+			this.mclight=[];
+			this.txtNames=[];
+			this.txtMoneys=[];
+			this.HeadPic=[];
+			this.mcRank.push(this.Num_0);
+			this.mcRank.push(this.Num_1);
+			this.mcRank.push(this.Num_2);
+			this.mclight.push(this.light_0);
+			this.mclight.push(this.light_1);
+			this.mclight.push(this.light_2);
+			this.txtNames.push(this.name_0);
+			this.txtNames.push(this.name_1);
+			this.txtNames.push(this.name_2);
+			this.txtMoneys.push(this.Money_0);
+			this.txtMoneys.push(this.Money_1);
+			this.txtMoneys.push(this.Money_2);
+			this.HeadPic.push(this.headPic_0);
+			this.HeadPic.push(this.headPic_1);
+			this.HeadPic.push(this.headPic_2);
+			this.btnClose.on("click",this,this.onClick);
+			this.btnok.on("click",this,this.onClick);
+			this.Text_NoOne_bet.text="";
+		}
+
+		__proto.onClick=function(event){
+			this.visible=false;
+			this.event(/*no*/this.NewNewGameEvent.Banker_Settle_pop);
+		}
+
+		//dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Banker_Settle_pop));
+		__proto.reset=function(){
+			var item;
+			var txtitem;
+			for(var i=0;i< 3;i++){
+				item=this.mcRank[i];
+				item.gotoAndStop(2);
+				item=this.mclight[i]
+				item.visible=false;
+				txtitem=this.txtNames[i];
+				txtitem.text="";
+				txtitem=this.txtMoneys[i];
+				txtitem.text="";
+				item=this.HeadPic[i];
+				item.visible=false;
+			}
+			this.isBanker.visible=false;
+		}
+
+		__proto.setHead2=function(bankerpic){
+			if(bankerpic==null){
+				var user_head=/*no*/this.mcbankerHead["HeadContainer"];
+				while(user_head.numChildren > 0){
+					user_head.removeChildAt(0);
+				}
+			}
+			else{
+				if(/*no*/this._bankerpic==bankerpic){
+					return;
+				}
+				/*no*/this._bankerpic=bankerpic;
+				var b2=new /*no*/this.BitmapData(/*no*/this._bankerpic.width,/*no*/this._bankerpic.height);
+				b2.draw(/*no*/this._bankerpic);
+				var clip_mc=new /*no*/this.Bitmap(b2);
+				clip_mc.width=clip_mc.height=42;
+				/*no*/this.mcbankerHead["HeadContainer"].addChild(clip_mc);
+			}
+		}
+
+		__proto.setHead=function(pic){
+			if(/*no*/this._pic !=null)return;
+			var myBitmapData=new /*no*/this.BitmapData(pic.width,pic.height);
+			myBitmapData.draw(pic);
+			var clip2_mc=new /*no*/this.Bitmap(myBitmapData);
+			clip2_mc.width=clip2_mc.height=42;
+			this.mcHead["HeadContainer"].addChild(clip2_mc);
+			/*no*/this._pic=clip2_mc;
+		}
+
+		// mcHead.width=mcHead.height=50;
+		__proto.mycopy=function(value){
+			var buffer=new /*no*/this.ByteArray();
+			buffer.writeObject(value);
+			buffer.position=0;
+			var result=buffer.readObject();
+			return result;
+		}
+
+		__proto.initView=function(playerName,myMony,restTime,MyWin,data,Isbanker,bankername){
+			this.visible=true;
+			this.reset();
+			if(Isbanker){
+				this.isBanker.visible=true;
+			}
+			else this.isBanker.visible=false;
+			this.platform_name.text=bankername;
+			this.self_name.text=playerName;
+			this.self_money.text=GameUtil.formatMoney(myMony);
+			this._rest_Time=restTime;
+			this.rest_time.text=String(this._rest_Time+"S");
+			console.log("------MyWin--------"+MyWin.toNumber());
+			this.win_bitmap.font="SettleWin";
+			this.lost_bitmap.font="SettleLost";
+			if(MyWin.toNumber()>=0){
+				console.log("------MyWin str--------"+GameUtil.formatMoneyBet(MyWin.toNumber()));
+				this.win_bitmap.text="+"+GameUtil.formatMoneyBet(MyWin.toNumber());
+				this.lost_bitmap.text="";
+			}
+			else{
+				this.lost_bitmap.text=GameUtil.formatMoneyBet(MyWin.toNumber());
+				this.win_bitmap.text="";
+			};
+			var n=data.length;
+			if (n==0){
+				this.Text_NoOne_bet.text="";
+				return;
+			}
+			else{
+				this.Text_NoOne_bet.text="";
+			};
+			var item;
+			var txtitem;
+			for(var i=0;i< n;i++){
+				var _data=data[i];
+				item=this.mcRank[i];
+				item.gotoAndStop(_data["rank"]);
+				item=this.mclight[i];
+				var frame=_data["ligt"];
+				item.visible=true;
+				txtitem=this.txtNames[i];
+				txtitem.text=_data["name"];
+				txtitem=this.txtMoneys[i]
+				txtitem.text=GameUtil.formatMoney(_data["money"]);
+				item=this.HeadPic[i];
+				item.visible=true;
+				if(i==0)this.loadHead(_data["Head"]);
+				if(i==1)this.loadHead(_data["Head"]);
+				if(i==2)this.loadHead(_data["Head"]);
+			}
+		}
+
+		__proto.loadHead=function(str,callback,i){
+			if(i==0){
+				/*no*/this.info_0.headPic.loadImage(str);
+			}
+			if(i==1){
+				/*no*/this.info_1.headPic.loadImage(str);
+			}
+			if(i==2){
+				/*no*/this.info_2.headPic.loadImage(str);
+			}
+		}
+
+		__proto.show=function(){
+			this.scaleX=this.scaleY=.2;
+			Tween.to(this,{scaleX:1 ,scaleY:1 },300,Ease.cubicOut,Handler.create(this,this.onFinishTween));
+		}
+
+		//TweenLite.to(this,0.3,{scaleX:1,scaleY:1,ease:Back.easeOut,onComplete:onFinishTween});
+		__proto.onFinishTween=function(){}
+		__proto.timeOut=function(){
+			this.hide();
+			/*no*/this.dispatchEvent(new /*no*/this.NewNewGameEvent(/*no*/this.NewNewGameEvent.RUN_ResultOver));
+		}
+
+		__proto.hide=function(){
+			if(this.parent)
+				this.parent.removeChild(this);
+		}
+
+		__proto.setData=function(userName,myWinClip,list){
+			var txtName;
+			var txtMoney;
+			this.self_name.text=userName;
+			var i=0;
+			for (i=0;i < list.length;i++){
+			}
+		}
+
+		//TweenLite.to(this,rest_Time,{rest_Time:0,onComplete:timeOut,ease:Linear.easeNone});
+		__getset(0,__proto,'rest_Time',function(){
+			return this._rest_Time;
+			},function(value){
+			if(value !=this._rest_Time){
+				this._rest_Time=value;
+				this.rest_time.label=value.toString()+"S";
+			}
+		});
+
+		return ResultPanel;
+	})(ResultPanelUI)
+
+
+	//class bull.view.room.SelectClipView extends ui.ui.room.SelectClipViewUI
+	var SelectClipView=(function(_super){
+		function SelectClipView(){
+			this._coinValue=[];
+			this.ligth_po=[1,89,179,268,358,448];
+			this.arror_po=[35,123,213,302,392,483];
+			this._pre_idx=0;
+			this.grayscaleFilter=null;
+			SelectClipView.__super.call(this);
+		}
+
+		__class(SelectClipView,'bull.view.room.SelectClipView',_super);
+		var __proto=SelectClipView.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			for (var i=0;i < 6;i++){
+				this["mcSelect_"+i].on("click",this,this.onClick);
+			};
+			var grayscaleMat=[0.3086,0.6094,0.0820,0,0,0.3086,0.6094,0.0820,0,0,0.3086,0.6094,0.0820,0,0,0,0,0,1,0];
+			this.grayscaleFilter=new ColorFilter(grayscaleMat);
 		}
 
 		__proto.onClick=function(e){
-			this.visible=false;
+			var s=e.target.name;
+			s=s.substr(9,1);
+			var idx=parseInt(s);
+			if (idx==this._pre_idx)return;
+			this["mcSelect_"+idx].y=7;
+			this.Coin_light.x=this.ligth_po[idx];
+			Tween.to(this.mcArrow,{x:this.arror_po[idx] },500,Ease.cubicOut);
+			this["mcSelect_"+this._pre_idx].y=24;
+			this._pre_idx=idx;
 		}
 
 		//event(LightEvent.ITEM_CLICK,parseInt(s));
 		__proto.set_data=function(data){
-			this.visible=true;
-			this.Name.text=data[0];
-			this.Curren_Money.text=data[1];
-			this.Win_amount.font="SettleWin";
-			this.Lost_amount.font="SettleLost";
-			this.Lost_amount.text="-¥1234.567890";
-			this.Win_amount.text="+¥1234.567890";
-			this.Head.loadImage("http://statics.kgame63.com/common/images/avatars/1.png",0,0,68,67);
-		}
-
-		__proto.test=function(){}
-		return Settle;
-	})(SettleUI)
-
-
-	//class bull.view.room.Timer extends ui.ui.room.TimerUI
-	var Timer=(function(_super){
-		function Timer(){
-			this._time=0;
-			Timer.__super.call(this);
-		}
-
-		__class(Timer,'bull.view.room.Timer',_super);
-		var __proto=Timer.prototype;
-		__proto.createChildren=function(){
-			_super.prototype.createChildren.call(this);
-		}
-
-		__proto.hide=function(){
-			this.visible=false;
-			this._time=0;
-			Laya.timer.clear(this,this.timerHandler);
-		}
-
-		__proto.set_data=function(data){
-			this.visible=true;
-			this._time=data[0];
-			this.LeftTime.text=this._time.toString();
-			Laya.timer.loop(1000,this,this.timerHandler);
-		}
-
-		__proto.timerHandler=function(){
-			this._time-=1;
-			this.LeftTime.text=this._time.toString();
-			if (this._time==0){
-				Laya.timer.clear(this,this.timerHandler);
-			}
-			if(this._time <=3){
-				SoundManager.playSound(SoundPath.CountTick);
+			this._coinValue.length=0;
+			this._coinValue.push(data);
+			var coinlist=this._coinValue[0];
+			for (var i=0;i < coinlist.length;i++){
+				this["mcSelect_"+i].source=Light.loader.getRes("res/gameScene/chip_"+coinlist[i]+".png");
 			}
 		}
 
+		__proto.set_gray=function(){
+			/*no*/this.Coin_5.filters=[this.grayscaleFilter];
+		}
+
 		__proto.test=function(){}
-		return Timer;
-	})(TimerUI)
+		return SelectClipView;
+	})(SelectClipViewUI)
 
 
 	//class bull.view.room.WinLostEffect extends ui.ui.room.BubbleEffectUI
@@ -51668,6 +52471,25 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -51684,25 +52506,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
 
 
 	/**
@@ -51807,26 +52610,6 @@ var Laya=window.Laya=(function(window,document){
 		__proto.createChildren=function(){}
 		return NodeTool;
 	})(NodeToolUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
-	var NodeTreeSetting=(function(_super){
-		function NodeTreeSetting(){
-			NodeTreeSetting.__super.call(this);
-			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
-			this.createView(NodeTreeSettingUI.uiView);
-		}
-
-		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
-		var __proto=NodeTreeSetting.prototype;
-		//inits();
-		__proto.createChildren=function(){}
-		return NodeTreeSetting;
-	})(NodeTreeSettingUI)
 
 
 	/**
@@ -52070,6 +52853,26 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return NodeTree;
 	})(NodeTreeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
+	var NodeTreeSetting=(function(_super){
+		function NodeTreeSetting(){
+			NodeTreeSetting.__super.call(this);
+			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
+			this.createView(NodeTreeSettingUI.uiView);
+		}
+
+		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
+		var __proto=NodeTreeSetting.prototype;
+		//inits();
+		__proto.createChildren=function(){}
+		return NodeTreeSetting;
+	})(NodeTreeSettingUI)
 
 
 	/**
@@ -52704,3 +53507,87 @@ var Laya=window.Laya=(function(window,document){
 	new Main();
 
 })(window,document,Laya);
+
+
+/*
+1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:Loger.get This variable is not defined.
+2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:System.totalMemory This variable is not defined.
+3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (99):warning:LocalConnection This variable is not defined.
+4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (100):warning:LocalConnection This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:Loger.get This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:System.totalMemory This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:Loger.get This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:System.totalMemory This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (18):warning:internalHigh This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (125):warning:evt.dispatchEvent This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (125):warning:NewNewGameEvent This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (125):warning:NewNewGameEvent.RUN_ResultOver This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (131):warning:_bankerName This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (132):warning:_bankerName This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (43):warning:s This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (74):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (75):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (77):warning:MouseEvent.CLICK This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (78):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (79):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (81):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (82):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (84):warning:MouseEvent.CLICK This variable is not defined.
+27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (85):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (86):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (101):warning:MouseEvent.CLICK This variable is not defined.
+30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (102):warning:MouseEvent.CLICK This variable is not defined.
+31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:dispatchEvent This variable is not defined.
+32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:OperateEvent This variable is not defined.
+33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:NewNewGameEvent.apply_banker This variable is not defined.
+34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:dispatchEvent This variable is not defined.
+35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:OperateEvent This variable is not defined.
+36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:NewNewGameEvent.apply_banker This variable is not defined.
+37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (155):warning:MouseEvent.CLICK This variable is not defined.
+38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (156):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (157):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (159):warning:MouseEvent.CLICK This variable is not defined.
+41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (160):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (161):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (195):warning:textFix_text_1.visible This variable is not defined.
+44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (201):warning:textFix_text_1.visible This variable is not defined.
+45 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (208):warning:URLRequest This variable is not defined.
+46 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (213):warning:　_picforAni This variable is not defined.
+47 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (221):warning:_picforAni This variable is not defined.
+48 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (222):warning:headbmp This variable is not defined.
+49 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (233):warning:URLRequest This variable is not defined.
+50 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (245):warning:_picforAni This variable is not defined.
+51 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (246):warning:headbmp This variable is not defined.
+52 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (257):warning:_picforAni This variable is not defined.
+53 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (257):warning:_picforAni This variable is not defined.
+54 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (268):warning:MovieClip This variable is not defined.
+55 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (283):warning:_picforAni This variable is not defined.
+56 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.width This variable is not defined.
+57 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.height This variable is not defined.
+58 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (286):warning:_picforAni This variable is not defined.
+59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (77):warning:NewNewGameEvent.Banker_Settle_pop This variable is not defined.
+60 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (109):warning:mcbankerHead This variable is not defined.
+61 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (117):warning:_bankerpic This variable is not defined.
+62 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (122):warning:_bankerpic This variable is not defined.
+63 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:BitmapData This variable is not defined.
+64 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:_bankerpic.width This variable is not defined.
+65 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:_bankerpic.height This variable is not defined.
+66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (127):warning:_bankerpic This variable is not defined.
+67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (128):warning:Bitmap This variable is not defined.
+68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (130):warning:mcbankerHead This variable is not defined.
+69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (137):warning:_pic This variable is not defined.
+70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (139):warning:BitmapData This variable is not defined.
+71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (141):warning:Bitmap This variable is not defined.
+72 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (144):warning:_pic This variable is not defined.
+73 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (149):warning:ByteArray This variable is not defined.
+74 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (235):warning:info_0.headPic.loadImage This variable is not defined.
+75 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (240):warning:info_1.headPic.loadImage This variable is not defined.
+76 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (245):warning:info_2.headPic.loadImage This variable is not defined.
+77 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:dispatchEvent This variable is not defined.
+78 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:NewNewGameEvent This variable is not defined.
+79 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:NewNewGameEvent.RUN_ResultOver This variable is not defined.
+80 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
+*/

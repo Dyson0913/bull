@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":43,
+    "selecteID":46,
     "props":{"width":1000,"sceneColor":"#000000","height":200},
     "nodeParent":-1,
     "label":"View",
@@ -22,9 +22,9 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"},
+            "props":{"y":3,"x":2,"var":"mcItem0","skin":"res/gameScene/闲家下注区4.png","name":"mcItem0"},
             "nodeParent":1,
-            "label":"Image(zone_0)",
+            "label":"Image(mcItem0)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -62,9 +62,9 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"},
+            "props":{"y":3,"x":503,"var":"mcItem2","skin":"res/gameScene/闲家下注区2.png","name":"mcItem2"},
             "nodeParent":1,
-            "label":"Image(zone_2)",
+            "label":"Image(mcItem2)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -82,9 +82,9 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"},
+            "props":{"y":3,"x":747,"var":"mcItem3","skin":"res/gameScene/闲家下注区1.png","name":"mcItem3"},
             "nodeParent":1,
-            "label":"Image(zone_3)",
+            "label":"Image(mcItem3)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -379,49 +379,29 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":55,"x":163,"var":"Tips_0","skin":"res/gameScene/tips小底板.png"},
+            "props":{"y":232,"x":232,"var":"_arrows","skin":"res/gameScene/牛牛指向箭头.png"},
             "nodeParent":1,
-            "label":"Image(Tips_0)",
-            "isOpen":true,
-            "isDirectory":true,
+            "label":"Image(_arrows)",
+            "isDirectory":false,
             "isAniNode":true,
-            "hasChild":true,
+            "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":356,"x":327,"skin":"res/gameScene/tips小底板.png"},
+                    "props":{"y":343,"x":211,"skin":"res/gameScene/牛牛指向箭头.png"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":37,
+            "compId":45,
             "child":[
-                {
-                    "x":30,
-                    "type":"Label",
-                    "props":{"y":17,"x":19,"width":86,"var":"Name_0","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"},
-                    "nodeParent":37,
-                    "label":"Label(Name_0)",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{"text":"label"},
-                            "frame":0,
-                            "__InPool":false
-                        }],
-                    "compId":38,
-                    "child":[
-                        ]
-                }]
+                ]
         },
         {
             "x":15,
-            "type":"Image",
-            "props":{"y":58,"x":415,"var":"Tips_1","skin":"res/gameScene/tips小底板.png"},
+            "type":"Box",
+            "props":{"visible":false,"var":"_tips"},
             "nodeParent":1,
-            "label":"Image(Tips_1)",
+            "label":"Box(_tips)",
             "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
@@ -429,111 +409,167 @@
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":356,"x":327,"skin":"res/gameScene/tips小底板.png"},
+                    "props":{},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":39,
+            "compId":46,
             "child":[
                 {
                     "x":30,
-                    "type":"Label",
-                    "props":{"y":17,"x":19,"width":148,"var":"Name_1","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"},
-                    "nodeParent":39,
-                    "label":"Label(Name_1)",
-                    "isDirectory":false,
+                    "type":"Image",
+                    "props":{"y":59,"x":624,"var":"Tips_3","skin":"res/gameScene/tips小底板.png"},
+                    "nodeParent":46,
+                    "label":"Image(Tips_3)",
+                    "isOpen":false,
+                    "isDirectory":true,
                     "isAniNode":true,
-                    "hasChild":false,
+                    "hasChild":true,
                     "frames":[
                         {
                             "type":1,
-                            "props":{"text":"label"},
+                            "props":{"y":356,"x":327,"skin":"res/gameScene/tips小底板.png"},
                             "frame":0,
                             "__InPool":false
                         }],
-                    "compId":40,
+                    "compId":43,
                     "child":[
-                        ]
-                }]
-        },
-        {
-            "x":15,
-            "type":"Image",
-            "props":{"y":59,"x":662,"var":"Tips_2","skin":"res/gameScene/tips小底板.png"},
-            "nodeParent":1,
-            "label":"Image(Tips_2)",
-            "isOpen":true,
-            "isDirectory":true,
-            "isAniNode":true,
-            "hasChild":true,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":356,"x":327,"skin":"res/gameScene/tips小底板.png"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":41,
-            "child":[
+                        {
+                            "type":"Label",
+                            "props":{"y":17,"x":19,"width":148,"var":"Name_3","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"},
+                            "nodeParent":43,
+                            "label":"Label(Name_3)",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "frames":[
+                                {
+                                    "type":1,
+                                    "props":{"text":"label"},
+                                    "frame":0,
+                                    "__InPool":false
+                                }],
+                            "compId":44,
+                            "child":[
+                                ]
+                        }]
+                },
                 {
                     "x":30,
-                    "type":"Label",
-                    "props":{"y":17,"x":19,"width":148,"var":"Name_2","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"},
-                    "nodeParent":41,
-                    "label":"Label(Name_2)",
-                    "isDirectory":false,
+                    "type":"Image",
+                    "props":{"y":59,"x":662,"var":"Tips_2","skin":"res/gameScene/tips小底板.png"},
+                    "nodeParent":46,
+                    "label":"Image(Tips_2)",
+                    "isOpen":false,
+                    "isDirectory":true,
                     "isAniNode":true,
-                    "hasChild":false,
+                    "hasChild":true,
                     "frames":[
                         {
                             "type":1,
-                            "props":{"text":"label"},
+                            "props":{"y":356,"x":327,"skin":"res/gameScene/tips小底板.png"},
                             "frame":0,
                             "__InPool":false
                         }],
-                    "compId":42,
+                    "compId":41,
                     "child":[
-                        ]
-                }]
-        },
-        {
-            "x":15,
-            "type":"Image",
-            "props":{"y":59,"x":624,"var":"Tips_3","skin":"res/gameScene/tips小底板.png"},
-            "nodeParent":1,
-            "label":"Image(Tips_3)",
-            "isOpen":true,
-            "isDirectory":true,
-            "isAniNode":true,
-            "hasChild":true,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":356,"x":327,"skin":"res/gameScene/tips小底板.png"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":43,
-            "child":[
+                        {
+                            "type":"Label",
+                            "props":{"y":17,"x":19,"width":148,"var":"Name_2","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"},
+                            "nodeParent":41,
+                            "label":"Label(Name_2)",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "frames":[
+                                {
+                                    "type":1,
+                                    "props":{"text":"label"},
+                                    "frame":0,
+                                    "__InPool":false
+                                }],
+                            "compId":42,
+                            "child":[
+                                ]
+                        }]
+                },
                 {
                     "x":30,
-                    "type":"Label",
-                    "props":{"y":17,"x":19,"width":148,"var":"Name_3","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"},
-                    "nodeParent":43,
-                    "label":"Label(Name_3)",
-                    "isDirectory":false,
+                    "type":"Image",
+                    "props":{"y":58,"x":415,"var":"Tips_1","skin":"res/gameScene/tips小底板.png"},
+                    "nodeParent":46,
+                    "label":"Image(Tips_1)",
+                    "isOpen":false,
+                    "isDirectory":true,
                     "isAniNode":true,
-                    "hasChild":false,
+                    "hasChild":true,
                     "frames":[
                         {
                             "type":1,
-                            "props":{"text":"label"},
+                            "props":{"y":356,"x":327,"skin":"res/gameScene/tips小底板.png"},
                             "frame":0,
                             "__InPool":false
                         }],
-                    "compId":44,
+                    "compId":39,
                     "child":[
-                        ]
+                        {
+                            "type":"Label",
+                            "props":{"y":17,"x":19,"width":148,"var":"Name_1","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"},
+                            "nodeParent":39,
+                            "label":"Label(Name_1)",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "frames":[
+                                {
+                                    "type":1,
+                                    "props":{"text":"label"},
+                                    "frame":0,
+                                    "__InPool":false
+                                }],
+                            "compId":40,
+                            "child":[
+                                ]
+                        }]
+                },
+                {
+                    "x":30,
+                    "type":"Image",
+                    "props":{"y":55,"x":163,"var":"Tips_0","skin":"res/gameScene/tips小底板.png"},
+                    "nodeParent":46,
+                    "label":"Image(Tips_0)",
+                    "isOpen":false,
+                    "isDirectory":true,
+                    "isAniNode":true,
+                    "hasChild":true,
+                    "frames":[
+                        {
+                            "type":1,
+                            "props":{"y":356,"x":327,"skin":"res/gameScene/tips小底板.png"},
+                            "frame":0,
+                            "__InPool":false
+                        }],
+                    "compId":37,
+                    "child":[
+                        {
+                            "type":"Label",
+                            "props":{"y":17,"x":19,"width":86,"var":"Name_0","text":"天涯歌女爱与仇","scaleY":1.8,"scaleX":1.8,"height":21,"color":"#f8f0ef","align":"left"},
+                            "nodeParent":37,
+                            "label":"Label(Name_0)",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "frames":[
+                                {
+                                    "type":1,
+                                    "props":{"text":"label"},
+                                    "frame":0,
+                                    "__InPool":false
+                                }],
+                            "compId":38,
+                            "child":[
+                                ]
+                        }]
                 }]
         }],
     "animations":[

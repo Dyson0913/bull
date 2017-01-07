@@ -82,9 +82,9 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":47,"x":43,"width":20,"var":"LeftTime","text":"10","scaleY":2,"scaleX":2,"height":15,"color":"#ece7e7","align":"center"},
+            "props":{"y":47,"x":43,"width":20,"var":"bt_txt","text":"10","scaleY":2,"scaleX":2,"height":15,"color":"#ece7e7","align":"center"},
             "nodeParent":1,
-            "label":"Label(LeftTime)",
+            "label":"Label(bt_txt)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,

@@ -1144,6 +1144,27 @@
                         ]
                 }],
             "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"UIView",
+            "source":"ui/room/NetStatusPanel.ui",
+            "props":{"y":420,"x":8,"var":"_network_state","runtime":"bull.view.room.NetStatusPanel"},
+            "nodeParent":1,
+            "label":"UIView(_network_state)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":442,"x":66},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":66,
+            "child":[
+                ]
         }],
     "animations":[
         {

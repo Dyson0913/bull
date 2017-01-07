@@ -1,12 +1,21 @@
 package bull.modules.room.mediator
 {
+	import bull.modules.common.model.BullProtoModel;
+	import bull.modules.common.model.data.AppMedel;
+	import bull.modules.common.model.data.appmodel;
+	import com.IProtobuf.Long;
 	import com.lightMVC.interfaces.IMediator;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Mediator;
 	import com.lightUI.components.alert.Alert;
 	import com.lightUI.core.Light;	
 	import com.lightUI.events.ScenceManagerEvent;
+	import conf.SBullMoney;
+	import conf.SUserInfo;
+	import msg.CS;
+	import msg.SCalculateNotify;
 	
+	import bull.view.room.Common;
 	import com.lightUI.events.LightEvent;
 	
 	import laya.display.BitmapFont;
@@ -42,8 +51,10 @@ package bull.modules.room.mediator
 		public var roomSocketService:RoomSocketService;
 		public var roomData:RoomData;
 		public var userInfoData:UserInfoData;
+		public var appMedel:AppMedel;
 		private var num:int;
 		private var timer:Timer;
+		private var _isSys:Boolean = true;		
 		
 		public static const NAME:String = "BullScenceMediator";
 		public function BullScenceMediator(mediatorName:String="", viewComponent:Object=null)
@@ -51,11 +62,12 @@ package bull.modules.room.mediator
 			super(NAME, viewComponent);
 		}
 		
-		override public function getInjector():Array{
-			return ["roomData","roomSocketService","perLoadService","userInfoData"];
+		override public function getInjector():Array {			
+			return ["roomData","roomSocketService","perLoadService","userInfoData","appMedel"];
 		}
 		
-		override public function setViewComponent(viewComponent:Object):void{
+		override public function setViewComponent(viewComponent:Object):void {			
+			
 			super.setViewComponent(viewComponent);
 			trace("BullScenceMediator setViewComponent")
 			view.backLobby.on(Event.CLICK, this,onReturnClick);			
@@ -98,16 +110,67 @@ package bull.modules.room.mediator
 			//notify
 			addNotifiction(BullNotification.STATE_CHANGE);
 			addNotifiction(BullNotification.HISTORY_NOTIFY);
+			addNotifiction(BullNotification.SETTLE_NOTIFY);
 			
+			addNotifiction(BullNotification.CASH_TAKEIN_RESPONES);				
 			
 			addNotifiction(BullNotification.RoomSocketClose);
 			addNotifiction(BullNotification.ExitRoomEvent);
+			
+			
+			
+			
+			//廣播訊息			
+			
+		}
+		
+		private function cashViewHandler():void
+		{			
+			view.viewHead.setMoney(appMedel.TotalMoney); 
+			view.viewHead.setMoneyT(Common.isCoin?2:1);					
+		}
+		
+		private function onSettleUpdateHandler():void
+		{
+			
+			
+			//無人下注,跳過結算面版
+			if( appMedel.Settle_Time <2)
+			{
+				evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.RUN_ResultOver));				
+			}
+			else
+			{				
+			    //本局庄資訊
+				//game.viewResult.setHead2(game.viewBankerPanel.headbmp);				
+				//game.viewResult.setHead(game.viewHead.headbmp);
+				
+				var isbaner:Boolean = appMedel.Banker_uid === appMedel.user_id;
+				if( _isSys ) _bankerName = "吉胜游戏平台";
+				view.viewResult.initView(appMedel.nick_name_64,appMedel.TotalMoney,appMedel.Settle_Time,appMedel.self_settle_win,appMedel.first_threePlayer,isbaner,_bankerName);
+				view.viewResult.show();
+				
+				sentNotification(BullNotification.CASH_TAKEIN_RESPONES);				
+											
+				//if (appMedel.self_settle_win.toNumber() >0)
+				//{				
+					//LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().settle_win, 0, 1);		
+				//}
+				//else
+				//{
+					//LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().settle_lose, 0, 1);
+				//}
+				
+				
+				
+			}
 		}
 		
 		
 		override public function onInitialize():void 
 		{ 
 			trace("===========================init");
+			
 		}
 		
 		private function ontest(cmd:int):void 
@@ -120,9 +183,42 @@ package bull.modules.room.mediator
 		 */		
 		private function onClick(e:Event):void
 		{
-			trace("onClick:" + e.target);
+			trace("onClick:" + e.target);			
+			
+			//test
+			//構建回調封包
+			appMedel.Banker_uid = "10";
+			appMedel.user_id = "1";
+			appMedel.Settle_Time = 2;
+			appMedel.nick_name_64 = "Dyson";
+			appMedel.TotalMoney = 10;
+			appMedel.self_settle_win = Long.fromNumber(10000);
+			appMedel.first_threePlayer = [{"rank":0,"ligt":true,"name":"dyson1","money":999},{"rank":1,"ligt":true,"name":"dyson2","money":999},{"rank":2,"ligt":true,"name":"dyson3","money":999}];
+			
+			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
+			
+			var out:CS = proto.msg_proto.getCS();
+			out.msg_type = ENCSType.CS_TYPE_CALCULATE_NOTIFY;
+			out.calculate_notify = proto.msg_proto.getSCalculateNotify();
+			out.calculate_notify.banker_id = 123121323;			
+			
+			var user:SUserInfo = new SUserInfo();
+			user.uid = 1000;
+			user.money = new SBullMoney();
+			user.money.gb = 100
+			user.is_lamp = false;
+			user.win_money = 88888;
+			user.bet_money = 88888;
+			out.calculate_notify.user_info_s.push(user);
 			
 			
+			sentNotification(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),out);						
+			
+			
+			
+			
+			
+			return
 			switch(e.target)
 			{
 				case view.helpBtn:
@@ -137,7 +233,7 @@ package bull.modules.room.mediator
 				case view.CarryInBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					view.BetZoneBoard.set_data([200]);					
+					view.ViewWinLostEffect.set_data([200]);					
 				break;
 				
 				case view.PlayerListBtn:
@@ -162,6 +258,14 @@ package bull.modules.room.mediator
 				break;
 				case BullNotification.HISTORY_NOTIFY:
 					history_update();
+				break;
+				
+				case BullNotification.SETTLE_NOTIFY:
+					onSettleUpdateHandler();
+				break;
+				
+				case BullNotification.CASH_TAKEIN_RESPONES:
+					cashViewHandler();
 				break;
 				
 				case BullNotification.RoomSocketClose:
@@ -281,6 +385,7 @@ package bull.modules.room.mediator
 		
 		private function onUIShow():void {
 			
+			view.viewSelectClip.set_data([100,500,1000,5000,10000,"max"]);
 			
 			//先别影藏 等数据请求回来再显示
 			//view.roomData = roomData;

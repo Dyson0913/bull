@@ -30,12 +30,17 @@ package bull.view.room
 			trace("showme showme");
 			
 			
-			Tween.to(HistoryBoard, { x:HistoryBoard.x + 173 },1000,Ease.backIn);
-			Tween.to(InfoPanel, { y:InfoPanel.y - 96 }, 1000,Ease.backIn);
-			Tween.to(bankerPanel, { y:bankerPanel.y +76 }, 1000,Ease.backIn);
-			Tween.to(BetChip, { y:BetChip.y -138 }, 1000, Ease.backIn);
+			//向左滑入
+			Tween.to(viewRecord, { x:viewRecord.x + 173 }, 1000, Ease.backIn);
 			
+			//向上滑入
+			Tween.to(viewHead, { y:viewHead.y  -96 }, 1000, Ease.backIn);									
 			
+			Tween.to(ViewBetGroup, { y:ViewBetGroup.y -96 }, 1000, Ease.backIn);			
+			Tween.to(viewSelectClip, { y:viewSelectClip.y -138 }, 1000, Ease.backIn);
+			
+			//向下滑入
+			Tween.to(viewBankerPanel, { y:viewBankerPanel.y +76 }, 1000, Ease.backIn);			
 		
 		}
 		
@@ -45,10 +50,11 @@ package bull.view.room
 			//clear();
 			btn_display(false);
 			
-			HistoryBoard.x = -173;
-			InfoPanel.y = 800;
-			bankerPanel.y = -81;
-			BetChip.y = 803;
+			viewRecord.x = -173;
+			viewHead.y = 816;			
+			viewBankerPanel.y = -81;
+			ViewBetGroup.y = 805;
+			//BetChip.y = 803;
 		}
 		
 		public function btn_display(show:Boolean):void

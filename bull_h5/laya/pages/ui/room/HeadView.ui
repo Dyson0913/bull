@@ -2,8 +2,8 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":9,
-    "props":{"width":836,"sceneColor":"#000000","height":453},
+    "selecteID":10,
+    "props":{"width":300,"sceneColor":"#000000","height":100},
     "nodeParent":-1,
     "label":"View",
     "isOpen":true,
@@ -13,7 +13,7 @@
     "frames":[
         {
             "type":1,
-            "props":{"width":600,"sceneColor":"#000000","height":400},
+            "props":{"width":200,"sceneColor":"#000000","height":100},
             "frame":0,
             "__InPool":false
         }],
@@ -22,7 +22,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":0,"x":0,"skin":"res/gameScene/下庄结算底板.png"},
+            "props":{"y":-16,"x":-21,"skin":"res/gameScene/InfoBoard.png"},
             "nodeParent":1,
             "label":"Image",
             "isDirectory":false,
@@ -31,20 +31,20 @@
             "frames":[
                 {
                     "type":1,
-                    "props":{"y":274,"x":231,"skin":"res/gameScene/下庄结算底板.png"},
+                    "props":{"y":200,"x":-66,"skin":"res/gameScene/InfoBoard.png"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":2,
+            "compId":10,
             "child":[
                 ]
         },
         {
             "x":15,
             "type":"Button",
-            "props":{"y":396,"x":349,"skin":"res/gameScene/Btn_bg.png"},
+            "props":{"y":33,"x":246,"var":"btnAdd","skin":"res/gameScene/CarryIn.png"},
             "nodeParent":1,
-            "label":"Button",
+            "label":"Button(btnAdd)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -55,6 +55,26 @@
                     "frame":0,
                     "__InPool":false
                 }],
+            "compId":2,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":8,"x":124,"width":102,"var":"txtName","text":"Name","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"},
+            "nodeParent":1,
+            "label":"Label(txtName)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
             "compId":3,
             "child":[
                 ]
@@ -62,9 +82,9 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":405,"x":390,"width":43,"text":"确  定","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true},
+            "props":{"y":40,"x":123,"width":83,"var":"txtMoney","text":"money","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#f8f0ef"},
             "nodeParent":1,
-            "label":"Label",
+            "label":"Label(txtMoney)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -81,17 +101,17 @@
         },
         {
             "x":15,
-            "type":"Label",
-            "props":{"y":4,"x":365,"width":58,"text":"下庄结算","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#f6ebea","bold":true},
+            "type":"Image",
+            "props":{"y":3,"x":1,"width":68,"var":"mcHead","skin":"res/gameScene/HeadIcon.jpg","height":67},
             "nodeParent":1,
-            "label":"Label",
+            "label":"Image(mcHead)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "frames":[
                 {
                     "type":1,
-                    "props":{"text":"label"},
+                    "props":{"y":190,"x":49,"skin":"res/gameScene/HeadIcon.jpg"},
                     "frame":0,
                     "__InPool":false
                 }],
@@ -101,70 +121,10 @@
         },
         {
             "x":15,
-            "type":"Label",
-            "props":{"y":363,"x":13,"width":30,"text":"结算","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#ecec1a","bold":false},
+            "type":"Image",
+            "props":{"y":3,"x":11,"var":"mcVip","skin":"res/gameScene/miniVIP底板.png"},
             "nodeParent":1,
-            "label":"Label",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"text":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":6,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Label",
-            "props":{"y":359,"x":545,"width":72,"var":"total_txt","text":"99999999","scaleY":2,"scaleX":2,"mouseEnabled":false,"height":16,"color":"#ecec1a","bold":false,"align":"center"},
-            "nodeParent":1,
-            "label":"Label(total_txt)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"text":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":7,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Button",
-            "props":{"y":-1,"x":798,"var":"ok_btn","skin":"res/gameScene/closeBtn.png"},
-            "nodeParent":1,
-            "label":"Button(ok_btn)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"label":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":11,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"List",
-            "props":{"y":87,"x":9,"width":816,"var":"xiazhuang_list","height":265},
-            "nodeParent":1,
-            "label":"List(xiazhuang_list)",
+            "label":"Image(mcVip)",
             "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
@@ -172,54 +132,73 @@
             "frames":[
                 {
                     "type":1,
-                    "props":{"width":100,"height":100},
+                    "props":{"y":142,"x":178,"skin":"res/gameScene/miniVIP底板.png"},
                     "frame":0,
                     "__InPool":false
                 }],
-            "compId":12,
+            "compId":6,
             "child":[
                 {
                     "x":30,
-                    "type":"UIView",
-                    "source":"ui/room/BankerSettle_info.ui",
-                    "props":{"y":6,"x":1,"runtime":"bull.view.room.XZItemCell","name":"render"},
-                    "nodeParent":12,
-                    "label":"UIView(render)",
+                    "type":"Image",
+                    "props":{"y":2.000000000000023,"x":1.999999999999993,"skin":"res/gameScene/miniV.png"},
+                    "nodeParent":6,
+                    "label":"Image",
+                    "isOpen":true,
                     "isDirectory":false,
-                    "isAniNode":false,
+                    "isAniNode":true,
                     "hasChild":false,
                     "frames":[
                         {
                             "type":1,
-                            "props":{"y":143,"x":185},
+                            "props":{"y":78,"x":110,"skin":"res/gameScene/miniV.png"},
                             "frame":0,
                             "__InPool":false
                         }],
-                    "compId":9,
+                    "compId":7,
                     "child":[
                         ]
                 },
                 {
                     "x":30,
-                    "type":"VScrollBar",
-                    "props":{"y":2,"x":802,"width":17,"skin":"comp/vscroll.png","name":"scrollBar","height":266},
-                    "nodeParent":12,
-                    "label":"VScrollBar(scrollBar)",
-                    "isOpen":true,
+                    "type":"Label",
+                    "props":{"y":2,"x":7,"width":32,"var":"bp_vip","text":"99","height":15,"font":"smallvip","align":"center"},
+                    "nodeParent":6,
+                    "label":"Label(bp_vip)",
                     "isDirectory":false,
-                    "isAniNode":false,
+                    "isAniNode":true,
                     "hasChild":false,
                     "frames":[
                         {
                             "type":1,
-                            "props":{"skin":"comp/vscroll.png"},
+                            "props":{"text":"label"},
                             "frame":0,
                             "__InPool":false
                         }],
-                    "compId":14,
+                    "compId":8,
                     "child":[
                         ]
                 }]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":41,"x":86,"var":"mcMoneyIcon","skin":"res/gameScene/底板人民币.png"},
+            "nodeParent":1,
+            "label":"Image(mcMoneyIcon)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":60,"x":46,"skin":"res/gameScene/底板人民币.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":9,
+            "child":[
+                ]
         }],
     "animations":[
         {
