@@ -76,6 +76,7 @@ package bull.modules.common.model.data
 			history_Win_info = [];
 			history_lost_info = [];
 			history_result_info = [];
+			playerList = [];
 			
 			
 			Banker_calcu_info = new SBankerCalculateNotify();

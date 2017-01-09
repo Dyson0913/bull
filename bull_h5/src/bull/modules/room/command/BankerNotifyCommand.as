@@ -51,9 +51,7 @@ package bull.modules.room.command
 		}
 		
 		private function banker_calcu(cs:CS):void
-		{						
-			trace("cs =",cs);
-			
+		{
 			var bullData:Data = getSingleton(Data.NAME) as Data;			
 			bullData.roomData.Banker_calcu_info.banker_calc_info_s = cs.banker_calc_notify.banker_calc_info_s;
 			bullData.roomData.Banker_calcu_info.total_win_money =  cs.banker_calc_notify.total_win_money;

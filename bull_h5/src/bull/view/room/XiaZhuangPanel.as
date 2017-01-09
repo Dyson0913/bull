@@ -48,22 +48,8 @@ package bull.view.room
 		
 		private function test():void
 		{
-			var data:Array = [ { "uid":123, "money":1000, "is_light":true, "win_money":100, "name":"dyson01" }, 
-			               { "uid":456, "money":-2000, "is_light":true, "win_money":1000,"name":"dyson02" },
-						   { "uid":789, "money":2000, "is_light":false, "win_money":2000,"name":"dyson03" },
-						   { "uid":1000, "money":3000, "is_light":true, "win_money":3000, "name":"dyson04"},
-						   { "uid":1000, "money":100, "is_light":true, "win_money":4000,"name":"dyson05" },
-						   { "uid":1000, "money":100, "is_light":true, "win_money":4000,"name":"dyson06" },
-						   { "uid":1000, "money":100, "is_light":true, "win_money":4000,"name":"dyson07" },
-						   { "uid":1000, "money":100, "is_light":true, "win_money":4000,"name":"dyson08" },
-						   { "uid":1000, "money":100, "is_light":true, "win_money":4000,"name":"dyson09" },
-						   { "uid":1000, "money":100, "is_light":true, "win_money":4000,"name":"dyson10" },
-						   { "uid":1000, "money":100, "is_light":true, "win_money":4000,"name":"dyson11" },
-						   { "uid":1000, "money":100, "is_light":true, "win_money":4000,"name":"dyson12" },
-						   { "uid":1000, "money":100, "is_light":true, "win_money":4000,"name":"dyson13" }
-						   ];
-						   
-			view.bankerResultPanel.show(data);
+			
+			//view.bankerResultPanel.show(roomData.Banker_calcu_info.banker_calc_info_s,roomData.Banker_calcu_info.total_win_money);
 					
 		}
 		

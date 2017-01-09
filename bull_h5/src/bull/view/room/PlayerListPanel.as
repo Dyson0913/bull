@@ -26,9 +26,13 @@ package bull.view.room
 			
 		}		
 		
-		public function show(data:Array):void
+		public function show():void
 		{
-			this.visible = true;			
+			this.visible = true;
+		}
+		
+		public function update_data(data:Array):void
+		{
 			list.array = data;	
 		}
 		

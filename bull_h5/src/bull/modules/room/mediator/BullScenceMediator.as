@@ -110,6 +110,8 @@ package bull.modules.room.mediator
 			//notify
 			addNotifiction(BullNotification.STATE_CHANGE);
 			addNotifiction(BullNotification.HISTORY_NOTIFY);
+			addNotifiction(BullNotification.USER_NOTIFY);
+			
 			addNotifiction(BullNotification.SETTLE_NOTIFY);
 			
 			addNotifiction(BullNotification.CASH_TAKEIN_RESPONES);				
@@ -206,7 +208,8 @@ package bull.modules.room.mediator
 				case view.PlayerListBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					
+					onPlayerListUpdateHandler();
+					view.ViewPlayerList.show();
 				break;
 				
 				case view.optionBtn:
@@ -226,6 +229,11 @@ package bull.modules.room.mediator
 				case BullNotification.HISTORY_NOTIFY:
 					onHistoryUpdateHandler();
 				break;
+				
+				case BullNotification.USER_NOTIFY:
+					onPlayerListUpdateHandler();
+				break;
+				
 				
 				case BullNotification.SETTLE_NOTIFY:
 					onSettleUpdateHandler();
@@ -277,6 +285,10 @@ package bull.modules.room.mediator
 			view.viewRecord.histroy_notify(roomData.history_Win_info, roomData.history_lost_info, roomData.history_result_info);			
 		}
 		
+		private function onPlayerListUpdateHandler():void
+		{
+			view.ViewPlayerList.update_data(roomData.playerList);
+		}
 		
 		private function regFont(fontFileName:String,path:String):void
 		{			

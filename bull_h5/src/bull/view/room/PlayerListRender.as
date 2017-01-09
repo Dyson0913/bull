@@ -1,6 +1,7 @@
 package bull.view.room
 {
 	import com.lightUI.events.LightEvent;
+	import conf.SUserInfo;
 	import laya.display.Animation;
 	
 	import laya.events.Event;
@@ -56,16 +57,18 @@ package bull.view.room
 		
 		override public function set dataSource(value:*):void{			
 						
-			if(value == null) return;
-			trace("value ="+value);
-			var arr:Array = value;			
+			if (value == null) return;
+			
+			var data:SUserInfo = value;			
 			_bg.index = index;
-			index  = (index + 1 % 2);			
+			index  = (index + 1 % 2);	
 			
-			_light.visible = arr["is_light"];
-			_Name.text = arr["name"];
-			_Money.text = arr["win_money"];
+			trace("data.is_light = "+data.is_light);
+			_light.visible = data.is_light;
+			_Money.text = data.win_money;
 			
+			//TODO name
+			//_Name.text = 
 			_Head.visible = true;
 			
 			//TODO head
