@@ -193,8 +193,6 @@ package bull.view.room
 		public function onFinishTween():void
 		{
 			Laya.timer.loop(1000, this, timerHandler);
-			//Tween.to(this, { scaleX:1 , scaleY:1 }, rest_Time, Ease.cubicOut,Handler.create(this,onFinishTween));
-			//TweenLite.to(this, rest_Time, {rest_Time:0, onComplete:timeOut, ease:Linear.easeNone});
 		}
 		
 		public function timerHandler():void

@@ -187,15 +187,14 @@ package bull.modules.room.mediator
 				break;
 				
 				case view.CarryInBtn:
-					view.btn_display(!view.btnBg.visible);
-					
-					view.ViewWinLostEffect.set_data([200]);					
+					view.btn_display(!view.btnBg.visible);					
+										
 				break;
 				
 				case view.PlayerListBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					view.BetZoneBoard.hide();
+					
 				break;
 				
 				case view.optionBtn:

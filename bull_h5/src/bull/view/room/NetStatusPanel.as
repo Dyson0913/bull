@@ -31,7 +31,7 @@ package bull.view.room
 			
 		}
 		
-		private function onRollOver(e:MouseEvent):void
+		private function onRollOver(e:Event):void
 		{		
 			showTxt();
 			tip_bg.visible = true;

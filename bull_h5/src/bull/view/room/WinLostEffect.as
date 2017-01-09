@@ -10,9 +10,9 @@ package bull.view.room
 	import laya.utils.Ease;
 	import laya.utils.Handler;
 	
-	import ui.ui.room.BubbleEffectUI
+	import ui.ui.room.WinLostEffectUI
 	
-	public class WinLostEffect extends BubbleEffectUI
+	public class WinLostEffect extends WinLostEffectUI
 	{
 		
 		public function WinLostEffect() 
