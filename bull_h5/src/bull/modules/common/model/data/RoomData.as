@@ -66,7 +66,7 @@ package bull.modules.common.model.data
 		public var bankerlist:Array;
 		
 		public var newBaner_info:SBankerNotify;
-		public var Banker_calcu_info:SBankerCalculateNotify;
+		public var Banker_calcu_info:SBankerCalculateNotify;		
 		
 		
 		
@@ -77,6 +77,8 @@ package bull.modules.common.model.data
 			history_lost_info = [];
 			history_result_info = [];
 			
+			
+			Banker_calcu_info = new SBankerCalculateNotify();
 		}
 		
 	

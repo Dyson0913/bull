@@ -114,6 +114,9 @@ package bull.modules.room.mediator
 			
 			addNotifiction(BullNotification.CASH_TAKEIN_RESPONES);				
 			
+			addNotifiction(BullNotification.BANKER_CALCU);
+			
+			
 			addNotifiction(BullNotification.RoomSocketClose);
 			addNotifiction(BullNotification.ExitRoomEvent);
 			
@@ -154,6 +157,17 @@ package bull.modules.room.mediator
 				sentNotification(BullNotification.CASH_TAKEIN_RESPONES);
 			}
 		}
+		
+		private function onBankerSettleUpdateHandler():void
+		{
+			//appMedel.banker_settle_show = true;
+			
+			//view.bankerResultPanel.set_data(appMedel.Banker_settle,appMedel.Banker_Total_settle);			
+			view.bankerResultPanel.show(roomData.Banker_calcu_info.banker_calc_info_s,roomData.Banker_calcu_info.total_win_money);
+			
+			//Pop_banker_settle();
+		}
+		
 		
 		
 		override public function onInitialize():void 
@@ -217,6 +231,10 @@ package bull.modules.room.mediator
 				
 				case BullNotification.SETTLE_NOTIFY:
 					onSettleUpdateHandler();
+				break;
+				
+				case BullNotification.BANKER_CALCU:
+					onBankerSettleUpdateHandler();
 				break;
 				
 				case BullNotification.CASH_TAKEIN_RESPONES:

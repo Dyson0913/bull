@@ -1,5 +1,6 @@
 package bull.view.room
 {
+	import com.IProtobuf.Long;
 	import laya.events.Event;
 	import ui.ui.room.BankerSettleUI
 	
@@ -26,26 +27,20 @@ package bull.view.room
 		protected function onClick(event:Event):void
 		{
 			this.visible = false;
-		}
+		}		
 		
-		public function show(data:Array):void
+		public function show(value:Array,totalAmount:Long):void
 		{
 			this.visible = true;			
-			xiazhuang_list.array = data;	
-		}
-
-		public function show(value:Array):void
-		{
-			_data = value;
-			list.array = data;
+			xiazhuang_list.array = value;			
 			
 			//TODO 幣值符號
 			var win:Number=0;
 			if( Common.isCoin )
 			{
-				win = _data.totalAmount.toNumber();
+				win = totalAmount.toNumber();
 			}
-			else  win = _data.totalAmount.toNumber() / 100;
+			else  win = totalAmount.toNumber() / 100;
 			
 			total_txt.text = GameUtil.formatMoney(win);			
 		}
