@@ -160,9 +160,7 @@ package bull.modules.room.mediator
 		
 		private function onBankerSettleUpdateHandler():void
 		{
-			//appMedel.banker_settle_show = true;
-			
-			//view.bankerResultPanel.set_data(appMedel.Banker_settle,appMedel.Banker_Total_settle);			
+			//appMedel.banker_settle_show = true;			
 			view.bankerResultPanel.show(roomData.Banker_calcu_info.banker_calc_info_s,roomData.Banker_calcu_info.total_win_money);
 			
 			//Pop_banker_settle();

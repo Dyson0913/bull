@@ -55,7 +55,7 @@ package bull.view.hall
 					this["_light_" + i].play(1);		
 				}			
 			}
-			SoundManager.playMusic(SoundPath.Lobby_BGM, 100);
+			//SoundManager.playMusic(SoundPath.Lobby_BGM, 100);
 			
 			
 			

@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.lightMVC.interfaces.INotification');
+	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -26264,53 +26264,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Filter)
 
 
-	//class laya.webgl.shader.d2.ShaderDefines2D extends laya.webgl.shader.ShaderDefines
-	var ShaderDefines2D=(function(_super){
-		function ShaderDefines2D(){
-			ShaderDefines2D.__super.call(this,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name,ShaderDefines2D.__int2nameMap);
-		}
-
-		__class(ShaderDefines2D,'laya.webgl.shader.d2.ShaderDefines2D',_super);
-		ShaderDefines2D.__init__=function(){
-			ShaderDefines2D.reg("TEXTURE2D",0x01);
-			ShaderDefines2D.reg("COLOR2D",0x02);
-			ShaderDefines2D.reg("PRIMITIVE",0x04);
-			ShaderDefines2D.reg("GLOW_FILTER",0x08);
-			ShaderDefines2D.reg("BLUR_FILTER",0x10);
-			ShaderDefines2D.reg("COLOR_FILTER",0x20);
-			ShaderDefines2D.reg("COLOR_ADD",0x40);
-			ShaderDefines2D.reg("WORLDMAT",0x80);
-		}
-
-		ShaderDefines2D.reg=function(name,value){
-			ShaderDefines._reg(name,value,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name);
-		}
-
-		ShaderDefines2D.toText=function(value,int2name,int2nameMap){
-			return ShaderDefines._toText(value,int2name,int2nameMap);
-		}
-
-		ShaderDefines2D.toInt=function(names){
-			return ShaderDefines._toInt(names,ShaderDefines2D.__name2int);
-		}
-
-		ShaderDefines2D.TEXTURE2D=0x01;
-		ShaderDefines2D.COLOR2D=0x02;
-		ShaderDefines2D.PRIMITIVE=0x04;
-		ShaderDefines2D.FILTERGLOW=0x08;
-		ShaderDefines2D.FILTERBLUR=0x10;
-		ShaderDefines2D.FILTERCOLOR=0x20;
-		ShaderDefines2D.COLORADD=0x40;
-		ShaderDefines2D.WORLDMAT=0x80;
-		ShaderDefines2D.FILLTEXTURE=0x100;
-		ShaderDefines2D.SKINMESH=0x200;
-		ShaderDefines2D.__name2int={};
-		ShaderDefines2D.__int2name=[];
-		ShaderDefines2D.__int2nameMap=[];
-		return ShaderDefines2D;
-	})(ShaderDefines)
-
-
 	/**
 	*发光滤镜(也可以当成阴影滤使用）
 	*/
@@ -26387,6 +26340,53 @@ var Laya=window.Laya=(function(window,document){
 
 		return GlowFilter;
 	})(Filter)
+
+
+	//class laya.webgl.shader.d2.ShaderDefines2D extends laya.webgl.shader.ShaderDefines
+	var ShaderDefines2D=(function(_super){
+		function ShaderDefines2D(){
+			ShaderDefines2D.__super.call(this,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name,ShaderDefines2D.__int2nameMap);
+		}
+
+		__class(ShaderDefines2D,'laya.webgl.shader.d2.ShaderDefines2D',_super);
+		ShaderDefines2D.__init__=function(){
+			ShaderDefines2D.reg("TEXTURE2D",0x01);
+			ShaderDefines2D.reg("COLOR2D",0x02);
+			ShaderDefines2D.reg("PRIMITIVE",0x04);
+			ShaderDefines2D.reg("GLOW_FILTER",0x08);
+			ShaderDefines2D.reg("BLUR_FILTER",0x10);
+			ShaderDefines2D.reg("COLOR_FILTER",0x20);
+			ShaderDefines2D.reg("COLOR_ADD",0x40);
+			ShaderDefines2D.reg("WORLDMAT",0x80);
+		}
+
+		ShaderDefines2D.reg=function(name,value){
+			ShaderDefines._reg(name,value,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name);
+		}
+
+		ShaderDefines2D.toText=function(value,int2name,int2nameMap){
+			return ShaderDefines._toText(value,int2name,int2nameMap);
+		}
+
+		ShaderDefines2D.toInt=function(names){
+			return ShaderDefines._toInt(names,ShaderDefines2D.__name2int);
+		}
+
+		ShaderDefines2D.TEXTURE2D=0x01;
+		ShaderDefines2D.COLOR2D=0x02;
+		ShaderDefines2D.PRIMITIVE=0x04;
+		ShaderDefines2D.FILTERGLOW=0x08;
+		ShaderDefines2D.FILTERBLUR=0x10;
+		ShaderDefines2D.FILTERCOLOR=0x20;
+		ShaderDefines2D.COLORADD=0x40;
+		ShaderDefines2D.WORLDMAT=0x80;
+		ShaderDefines2D.FILLTEXTURE=0x100;
+		ShaderDefines2D.SKINMESH=0x200;
+		ShaderDefines2D.__name2int={};
+		ShaderDefines2D.__int2name=[];
+		ShaderDefines2D.__int2nameMap=[];
+		return ShaderDefines2D;
+	})(ShaderDefines)
 
 
 	/**
@@ -29936,6 +29936,46 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			if(param.uid){
+				bullData.uid=param.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
+
+
 	/**
 	*这里处理大厅的socket连接
 	*@author light-k
@@ -30041,46 +30081,6 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
-
-
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			if(param.uid){
-				bullData.uid=param.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -33354,6 +33354,23 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
+
+
 	/**
 	*场景管理器
 	*@author light-k
@@ -33554,23 +33571,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
-
-
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -34711,32 +34711,6 @@ var Laya=window.Laya=(function(window,document){
 		RenderTarget2D.POOL=[];
 		return RenderTarget2D;
 	})(Texture)
-
-
-	//class com.iflash.net.Socket extends laya.net.Socket
-	var Socket1=(function(_super){
-		function Socket(host,port,byteClass){
-			this._outPut=null;
-			(port===void 0)&& (port=0);
-			byteClass=byteClass?byteClass:com.iflash.ByteArray;
-			Socket.__super.call(this,host,port,byteClass);
-		}
-
-		__class(Socket,'com.iflash.net.Socket',_super,'Socket1');
-		var __proto=Socket.prototype;
-		__proto.connectByUrl=function(url){
-			_super.prototype.connectByUrl.call(this,url);
-			this._outPut=this.output;
-		}
-
-		__proto.writeBytes=function(bytes,offset,length){
-			(offset===void 0)&& (offset=0);
-			(length===void 0)&& (length=0);
-			this._outPut.writeBytes(bytes,offset,length);
-		}
-
-		return Socket;
-	})(Socket)
 
 
 	//class laya.webgl.shader.d2.fillTexture.FillTextureSV extends laya.webgl.shader.d2.value.Value2D
@@ -43597,6 +43571,99 @@ var Laya=window.Laya=(function(window,document){
 	})(Box)
 
 
+	//class bull.view.room.XiaZhuangListRender extends laya.ui.Box
+	var XiaZhuangListRender=(function(_super){
+		function XiaZhuangListRender(){
+			this._bg=null;
+			this.index_txt=null;
+			this._player0_txt=null;
+			this._player1_txt=null;
+			this._player2_txt=null;
+			this._player3_txt=null;
+			this.amount_txt=null;
+			this.rundID_txt=null;
+			this.index=0;
+			XiaZhuangListRender.__super.call(this);
+			this.once("added",this,this._$5_onAdded);
+		}
+
+		__class(XiaZhuangListRender,'bull.view.room.XiaZhuangListRender',_super);
+		var __proto=XiaZhuangListRender.prototype;
+		__proto._$5_onAdded=function(){
+			this._bg=this.getChildByName("bg");
+			this.index_txt=this.getChildByName("index_txt");;
+			this._player0_txt=this.getChildByName("player0_txt");
+			this._player1_txt=this.getChildByName("player1_txt");
+			this._player2_txt=this.getChildByName("player2_txt");
+			this._player3_txt=this.getChildByName("player3_txt");
+			this.amount_txt=this.getChildByName("amount_txt");
+			this.rundID_txt=this.getChildByName("rundID_txt");
+			this.index=0;
+			this.hideAllState();
+		}
+
+		__proto.hideAllState=function(){
+			this._bg.index=0;
+			this.index_txt.text="";
+			this._player0_txt.text="";
+			this._player1_txt.text="";
+			this._player2_txt.text="";
+			this._player3_txt.text="";
+			this.amount_txt.text="";
+			this.rundID_txt.text="";
+		}
+
+		__proto.type_to_String=function(type){
+			var s="";
+			if(type==0)s="无牛";
+			else if(type==1)s="牛1";
+			else if(type==2)s="牛2";
+			else if(type==3)s="牛3";
+			else if(type==4)s="牛4";
+			else if(type==5)s="牛5";
+			else if(type==6)s="牛6";
+			else if(type==7)s="牛7";
+			else if(type==8)s="牛8";
+			else if(type==9)s="牛9";
+			else if(type==10)s="牛牛";
+			else if(type==11)s="五花牛";
+			else if(type==12)s="四炸1";
+			else if(type==13)s="四炸2";
+			else if(type==14)s="四炸3";
+			else if(type==15)s="四炸4";
+			else if(type==16)s="四炸5";
+			else if(type==17)s="四炸6";
+			else if(type==18)s="四炸7";
+			else if(type==19)s="四炸8";
+			else if(type==20)s="四炸9";
+			else if(type==21)s="四炸10";
+			else if(type==22)s="四炸11";
+			else if(type==23)s="四炸12";
+			else if(type==24)s="四炸13";
+			else if(type==25)s="五小牛";
+			return s;
+		}
+
+		__getset(0,__proto,'dataSource',_super.prototype._$get_dataSource,function(value){
+			if (value==null)return;
+			console.log("==============="+value);
+			var data=value;
+			this._bg.index=this.index;
+			this.index=(this.index+1 % 2);
+			data._4_type
+			this.index_txt.text="第"+this.index+"局";
+			this._player0_txt.text=this.type_to_String(data._1_type);
+			this._player1_txt.text=this.type_to_String(data._2_type);
+			this._player2_txt.text=this.type_to_String(data._3_type);
+			this._player3_txt.text=this.type_to_String(data._4_type);
+			this.amount_txt.text=String(data.win_money.toNumber());
+			this.rundID_txt.text=data.round_id;
+		});
+
+		return XiaZhuangListRender;
+	})(Box)
+
+
 	/**
 	*
 	*@author ww
@@ -50134,13 +50201,13 @@ var Laya=window.Laya=(function(window,document){
 		__class(BankerSettleUI,'ui.ui.room.BankerSettleUI',_super);
 		var __proto=BankerSettleUI.prototype;
 		__proto.createChildren=function(){
-			View.regComponent("bull.view.room.BankerListRender",bull.view.room.BankerListRender);
+			View.regComponent("bull.view.room.XiaZhuangListRender",XiaZhuangListRender);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BankerSettleUI.uiView);
 		}
 
 		__static(BankerSettleUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":836,"height":453},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/下庄结算底板.png"}},{"type":"Button","props":{"y":396,"x":349,"var":"ok_btn","skin":"res/gameScene/Btn_bg.png"}},{"type":"Label","props":{"y":405,"x":390,"width":67,"text":"确  定","mouseEnabled":false,"height":32,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":4,"x":365,"width":107,"text":"下庄结算","mouseEnabled":false,"height":32,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":363,"x":13,"width":61,"text":"结算","mouseEnabled":false,"height":33,"fontSize":25,"color":"#ecec1a","bold":false}},{"type":"Label","props":{"y":359,"x":545,"width":119,"var":"total_txt","text":"99999999","mouseEnabled":false,"height":25,"fontSize":25,"color":"#ecec1a","bold":false,"align":"center"}},{"type":"Button","props":{"y":-1,"x":798,"var":"close_btn","skin":"res/gameScene/closeBtn.png"}},{"type":"List","props":{"y":87,"x":9,"width":816,"var":"xiazhuang_list","height":265},"child":[{"type":"Box","props":{"y":-87,"x":-9,"runtime":"bull.view.room.BankerListRender","name":"Render"},"child":[{"type":"Animation","props":{"y":91,"x":10,"var":"bg","source":"res/gameScene/下庄结算横条01.png,res/gameScene/下庄结算横条02.png"}},{"type":"Label","props":{"y":92,"x":470,"width":50,"var":"player3_txt","text":"牛一","name":"player3_txt","mouseEnabled":false,"height":26,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":92,"x":386,"width":52,"var":"player2_txt","text":"牛一","name":"player2_txt","mouseEnabled":false,"height":24,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":92,"x":300,"width":47,"var":"player1_txt","text":"牛一","name":"player1_txt","mouseEnabled":false,"height":23,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":89,"x":656,"width":158,"var":"rundID_txt","text":"5868acad101fa","name":"rundID_txt","mouseEnabled":false,"height":31,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":92,"x":526,"width":104,"var":"amount_txt","text":"9999999","name":"amount_txt","mouseEnabled":false,"height":31,"fontSize":22,"color":"#f6ebea","bold":false,"align":"center"}},{"type":"Label","props":{"y":91,"x":215,"width":50,"var":"player0_txt","text":"牛一","name":"player0_txt","mouseEnabled":false,"height":29,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":92,"x":110,"width":44,"var":"bankerType_txt","text":"牛一","name":"bankerType_txt","mouseEnabled":false,"height":27,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":92,"x":15,"width":54,"var":"index_txt","text":"第1局","name":"index_txt","mouseEnabled":false,"height":27,"fontSize":20,"color":"#f6ebea","bold":false}}]},{"type":"VScrollBar","props":{"y":2,"x":802,"width":17,"skin":"comp/vscroll.png","name":"scrollBar","height":266}}]}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":836,"height":453},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/下庄结算底板.png"}},{"type":"Button","props":{"y":396,"x":349,"var":"ok_btn","skin":"res/gameScene/Btn_bg.png"}},{"type":"Label","props":{"y":405,"x":390,"width":67,"text":"确  定","mouseEnabled":false,"height":32,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":4,"x":365,"width":107,"text":"下庄结算","mouseEnabled":false,"height":32,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":363,"x":13,"width":61,"text":"结算","mouseEnabled":false,"height":33,"fontSize":25,"color":"#ecec1a","bold":false}},{"type":"Label","props":{"y":359,"x":545,"width":119,"var":"total_txt","text":"99999999","mouseEnabled":false,"height":25,"fontSize":25,"color":"#ecec1a","bold":false,"align":"center"}},{"type":"Button","props":{"y":-1,"x":798,"var":"close_btn","skin":"res/gameScene/closeBtn.png"}},{"type":"List","props":{"y":87,"x":9,"width":816,"var":"xiazhuang_list","height":265},"child":[{"type":"Box","props":{"y":0,"x":0,"width":814,"runtime":"bull.view.room.XiaZhuangListRender","name":"render","height":29},"child":[{"type":"Animation","props":{"y":2,"x":-3,"var":"bg","source":"res/gameScene/下庄结算横条01.png,res/gameScene/下庄结算横条02.png","name":"bg"}},{"type":"Label","props":{"y":3,"x":457,"width":50,"var":"player3_txt","text":"牛一","name":"player3_txt","mouseEnabled":false,"height":26,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":373,"width":52,"var":"player2_txt","text":"牛一","name":"player2_txt","mouseEnabled":false,"height":24,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":287,"width":47,"var":"player1_txt","text":"牛一","name":"player1_txt","mouseEnabled":false,"height":23,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":0,"x":643,"width":158,"var":"rundID_txt","text":"5868acad101fa","name":"rundID_txt","mouseEnabled":false,"height":31,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":513,"width":104,"var":"amount_txt","text":"9999999","name":"amount_txt","mouseEnabled":false,"height":31,"fontSize":22,"color":"#f6ebea","bold":false,"align":"center"}},{"type":"Label","props":{"y":2,"x":202,"width":50,"var":"player0_txt","text":"牛一","name":"player0_txt","mouseEnabled":false,"height":29,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":97,"width":44,"var":"bankerType_txt","text":"牛一","name":"bankerType_txt","mouseEnabled":false,"height":27,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":2,"width":54,"var":"index_txt","text":"第1局","name":"index_txt","mouseEnabled":false,"height":27,"fontSize":20,"color":"#f6ebea","bold":false}}]},{"type":"VScrollBar","props":{"y":2,"x":802,"width":17,"skin":"res/gameScene/vscroll.png","name":"scrollBar","height":266}}]}]};}
 		]);
 		return BankerSettleUI;
 	})(View)
@@ -51525,11 +51592,11 @@ var Laya=window.Laya=(function(window,document){
 					this["_light_"+i].play(1);
 				}
 			}
-			SoundManager.playMusic(SoundPath.Lobby_BGM,100);
 		}
 
 		__class(Hall,'bull.view.hall.Hall',_super);
 		var __proto=Hall.prototype;
+		//SoundManager.playMusic(SoundPath.Lobby_BGM,100);
 		__proto.onLowEnter=function(e){
 			console.log("onLowEnter");
 		}
@@ -52936,6 +53003,25 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -52952,25 +53038,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
 
 
 	/**
@@ -53975,65 +54042,65 @@ var Laya=window.Laya=(function(window,document){
 
 
 /*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:Loger.get This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:System.totalMemory This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (99):warning:LocalConnection This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (100):warning:LocalConnection This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:Loger.get This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:System.totalMemory This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:Loger.get This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:System.totalMemory This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (18):warning:internalHigh This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (136):warning:_bankerName This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (137):warning:_bankerName This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (43):warning:s This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (74):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (75):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (77):warning:MouseEvent.CLICK This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (78):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (79):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (81):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (82):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (84):warning:MouseEvent.CLICK This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (85):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (86):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (101):warning:MouseEvent.CLICK This variable is not defined.
-27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (102):warning:MouseEvent.CLICK This variable is not defined.
-28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:dispatchEvent This variable is not defined.
-29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:OperateEvent This variable is not defined.
-30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:NewNewGameEvent.apply_banker This variable is not defined.
-31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:dispatchEvent This variable is not defined.
-32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:OperateEvent This variable is not defined.
-33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:NewNewGameEvent.apply_banker This variable is not defined.
-34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (155):warning:MouseEvent.CLICK This variable is not defined.
-35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (156):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (157):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (159):warning:MouseEvent.CLICK This variable is not defined.
-38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (160):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (161):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (195):warning:textFix_text_1.visible This variable is not defined.
-41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (201):warning:textFix_text_1.visible This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (208):warning:URLRequest This variable is not defined.
-43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (213):warning:　_picforAni This variable is not defined.
-44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (221):warning:_picforAni This variable is not defined.
-45 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (222):warning:headbmp This variable is not defined.
-46 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (233):warning:URLRequest This variable is not defined.
-47 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (245):warning:_picforAni This variable is not defined.
-48 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (246):warning:headbmp This variable is not defined.
-49 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (257):warning:_picforAni This variable is not defined.
-50 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (257):warning:_picforAni This variable is not defined.
-51 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (268):warning:MovieClip This variable is not defined.
-52 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (283):warning:_picforAni This variable is not defined.
-53 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.width This variable is not defined.
-54 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.height This variable is not defined.
-55 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (286):warning:_picforAni This variable is not defined.
-56 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
-57 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
-58 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (51):warning:view.ViewPlayerList.show This variable is not defined.
-59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (218):warning:hide This variable is not defined.
-60 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
-61 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/XiaZhuangPanel.as (64):warning:view.bankerResultPanel.show This variable is not defined.
+1 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:Loger.get This variable is not defined.
+2 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:System.totalMemory This variable is not defined.
+3 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (99):warning:LocalConnection This variable is not defined.
+4 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (100):warning:LocalConnection This variable is not defined.
+5 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:Loger.get This variable is not defined.
+6 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:System.totalMemory This variable is not defined.
+7 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:Loger.get This variable is not defined.
+8 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:System.totalMemory This variable is not defined.
+9 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (18):warning:internalHigh This variable is not defined.
+10 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
+11 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
+12 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
+13 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (136):warning:_bankerName This variable is not defined.
+14 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (137):warning:_bankerName This variable is not defined.
+15 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (43):warning:s This variable is not defined.
+16 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (74):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+17 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (75):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+18 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (77):warning:MouseEvent.CLICK This variable is not defined.
+19 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (78):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+20 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (79):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+21 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (81):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+22 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (82):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+23 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (84):warning:MouseEvent.CLICK This variable is not defined.
+24 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (85):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+25 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (86):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+26 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (101):warning:MouseEvent.CLICK This variable is not defined.
+27 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (102):warning:MouseEvent.CLICK This variable is not defined.
+28 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:dispatchEvent This variable is not defined.
+29 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:OperateEvent This variable is not defined.
+30 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:NewNewGameEvent.apply_banker This variable is not defined.
+31 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:dispatchEvent This variable is not defined.
+32 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:OperateEvent This variable is not defined.
+33 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:NewNewGameEvent.apply_banker This variable is not defined.
+34 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (155):warning:MouseEvent.CLICK This variable is not defined.
+35 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (156):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+36 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (157):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+37 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (159):warning:MouseEvent.CLICK This variable is not defined.
+38 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (160):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+39 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (161):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+40 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (195):warning:textFix_text_1.visible This variable is not defined.
+41 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (201):warning:textFix_text_1.visible This variable is not defined.
+42 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (208):warning:URLRequest This variable is not defined.
+43 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (213):warning:　_picforAni This variable is not defined.
+44 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (221):warning:_picforAni This variable is not defined.
+45 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (222):warning:headbmp This variable is not defined.
+46 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (233):warning:URLRequest This variable is not defined.
+47 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (245):warning:_picforAni This variable is not defined.
+48 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (246):warning:headbmp This variable is not defined.
+49 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (257):warning:_picforAni This variable is not defined.
+50 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (257):warning:_picforAni This variable is not defined.
+51 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (268):warning:MovieClip This variable is not defined.
+52 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (283):warning:_picforAni This variable is not defined.
+53 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.width This variable is not defined.
+54 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.height This variable is not defined.
+55 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BankerPanel.as (286):warning:_picforAni This variable is not defined.
+56 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
+57 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
+58 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (51):warning:view.ViewPlayerList.show This variable is not defined.
+59 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/ResultPanel.as (218):warning:hide This variable is not defined.
+60 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
+61 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/XiaZhuangPanel.as (64):warning:view.bankerResultPanel.show This variable is not defined.
 */

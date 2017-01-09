@@ -27,11 +27,6 @@ package bull.view.room
 		private var amount_txt:Label;
 		private var rundID_txt:Label;
 		
-		
-		
-		
-		
-		
 		public var index:int;
 		
 		public function XiaZhuangListRender()
@@ -69,7 +64,8 @@ package bull.view.room
 		
 		override public function set dataSource(value:*):void{			
 						
-			if(value == null) return;			
+			if (value == null) return;			
+			trace("==============="+value);
 			var data:SBankerCalcInfo = value;			
 			_bg.index = index;
 			index  = (index + 1 % 2);			
