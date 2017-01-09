@@ -111,6 +111,7 @@ package bull.modules.room.mediator
 			addNotifiction(BullNotification.STATE_CHANGE);
 			addNotifiction(BullNotification.HISTORY_NOTIFY);
 			addNotifiction(BullNotification.USER_NOTIFY);
+			addNotifiction(BullNotification.CARD_NOTIFY);
 			
 			addNotifiction(BullNotification.SETTLE_NOTIFY);
 			
@@ -234,6 +235,10 @@ package bull.modules.room.mediator
 					onPlayerListUpdateHandler();
 				break;
 				
+				case BullNotification.CARD_NOTIFY:
+					onDealDataHandler();
+				break;
+				
 				
 				case BullNotification.SETTLE_NOTIFY:
 					onSettleUpdateHandler();
@@ -288,6 +293,49 @@ package bull.modules.room.mediator
 		private function onPlayerListUpdateHandler():void
 		{
 			view.ViewPlayerList.update_data(roomData.playerList);
+		}
+		
+		private function onDealDataHandler():void
+		{
+			if( roomData.State == AppMedel.DEAL)
+			{
+				view.viewPoker.set_data(roomData.card_info);
+				view.viewPoker.play();
+			}
+			else
+			{
+				trace("deal poker in ");
+			}
+			
+			//提示
+			//var total:Number =0;
+			//自己為庄家
+			//if( appMedel.Banker_uid === appMedel.user_id)
+			//{
+				//var allbet:Array = appMedel.dataStartStatus.allBetClips;
+				//for(var k:int =0;k<  allbet.length;k++)
+				//{											
+					//total += Number(appMedel.dataStartStatus.allBetClips[k]);					
+				//}				
+				//
+				//if( total ==0) 	phase_tip("本局无人下注。",0);
+				//else  phase_tip("总下注 " +GameUtil.formatMoney(total) +"，祝吉星高照！",0);
+				//
+			//}
+			//else
+			//{
+				//沒下注
+				//var mybet:Array = appMedel.dataStartStatus.myBetClips;
+				//for(var i:int =0;i<  mybet.length;i++)
+				//{						
+					//total += Number(appMedel.dataStartStatus.myBetClips[i] );
+				//}				
+				//沒下注
+				//if( total ==0) 	phase_tip("您没有参与本局下注",0);
+				//else  phase_tip("总下注 " +GameUtil.formatMoney(total)  +"，祝吉星高照！",0);
+			//}			
+			//
+			//LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().dealpoker, 0,1);
 		}
 		
 		private function regFont(fontFileName:String,path:String):void

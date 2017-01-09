@@ -9,7 +9,7 @@ package bull.view.room
 	
 	import ui.ui.room.PokerUI
 	
-	public class poker extends PokerUI
+	public class Poker extends PokerUI
 	{
 		private var _pokerdata:Array = [];
 		
@@ -21,10 +21,9 @@ package bull.view.room
 		                         ];
 		private var _scale:Array = [[0.43, 0.42], [0.46, 0.46], [0.46, 0.46], [0.46, 0.46], [0.46, 0.46]];
 		
-		public function poker() 
+		public function Poker() 
 		{
 			super();
-			
 		}
 		
 		override protected function createChildren():void
@@ -36,6 +35,7 @@ package bull.view.room
 		public function set_data(data:Array):void
 		{
 			_pokerdata.length = 0;	
+			_pokerdata = data;
 			
 			for (var i:int = 0; i < 5; i++)
 			{
