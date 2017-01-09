@@ -1,7 +1,7 @@
 package msg
 {
-	import conf.SUserInfo;
 	import com.IProtobuf.Message;
+	import conf.SUserInfo;
 
 	public class SBankerListNotify extends Message
 	{

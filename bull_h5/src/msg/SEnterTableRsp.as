@@ -1,6 +1,7 @@
 package msg
 {
 	import com.IProtobuf.Message;
+	import conf.SUserInfo;
 
 	public class SEnterTableRsp extends Message
 	{
@@ -10,6 +11,7 @@ package msg
 		public var room_id:int = 3;
 		public var table_id:int = 4;
 		public var room_type:int = 5;
+		public var user_info:conf.SUserInfo = null;
 		public function writeTo(value:*):void{
 		}
 	}

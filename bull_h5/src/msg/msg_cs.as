@@ -234,6 +234,13 @@ package msg
 			var clazz:* = builder.build("msg")["SOneUserInfoNotify"];
 			return new clazz();
 		};
+		public function SBetNotify_Bet_Builer():Builder{
+			return builder.build("msg")["SBetNotify_Bet"];
+		};
+		public function getSBetNotify_Bet():SBetNotify_Bet{
+			var clazz:* = builder.build("msg")["SBetNotify_Bet"];
+			return new clazz();
+		};
 		public function SBetNotify_Builer():Builder{
 			return builder.build("msg")["SBetNotify"];
 		};

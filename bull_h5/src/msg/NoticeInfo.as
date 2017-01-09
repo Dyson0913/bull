@@ -1,8 +1,8 @@
 package msg
 {
-	import com.IProtobuf.Message;
-	import conf.SNetAddress;
 	import com.IProtobuf.Long;
+	import conf.SNetAddress;
+	import com.IProtobuf.Message;
 
 	public class NoticeInfo extends Message
 	{

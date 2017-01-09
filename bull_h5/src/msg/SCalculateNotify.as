@@ -1,8 +1,8 @@
 package msg
 {
-	import conf.SUserInfo;
 	import com.IProtobuf.Message;
 	import com.IProtobuf.Long;
+	import conf.SUserInfo;
 
 	public class SCalculateNotify extends Message
 	{

@@ -1,8 +1,8 @@
 package msg
 {
-	import conf.SBankerCalcInfo;
 	import com.IProtobuf.Message;
 	import com.IProtobuf.Long;
+	import conf.SBankerCalcInfo;
 
 	public class SBankerCalculateNotify extends Message
 	{

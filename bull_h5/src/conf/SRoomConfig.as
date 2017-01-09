@@ -12,13 +12,10 @@ package conf
 		public var room_name:String = "5";
 		public var max_player:int = 6;
 		public var room_limit:int = 7;
-		public var player_limit:int = 8;
 		public var banker_limit:int = 9;
 		public var banker_times:int = 10;
-		public var pump_rate:int = 11;
 		public var is_robbery:Boolean = 12;
 		public var is_multi:Boolean = 13;
-		public var water_level:int = 14;
 		public var time_id:int = 15;
 		public function writeTo(value:*):void{
 		}

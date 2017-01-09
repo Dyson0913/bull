@@ -1,7 +1,7 @@
 package msg
 {
-	import com.IProtobuf.Message;
 	import conf.SNetAddress;
+	import com.IProtobuf.Message;
 
 	public class ConnSvrInfo extends Message
 	{

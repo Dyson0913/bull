@@ -8,8 +8,7 @@ package conf
 
 		public var uid:Long = null;
 		public var money:conf.SBullMoney = null;
-		public var is_lamp:Boolean = 3;
-		public var vip:int = 4;
+		public var is_light:Boolean = 3;
 		public var win_money:Long = null;
 		public var bet_money:Long = null;
 		public function writeTo(value:*):void{

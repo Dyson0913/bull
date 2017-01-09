@@ -157,6 +157,13 @@ package conf
 			var clazz:* = builder.build("conf")["STimeConfig"];
 			return new clazz();
 		};
+		public function SWaterConfig_Builer():Builder{
+			return builder.build("conf")["SWaterConfig"];
+		};
+		public function getSWaterConfig():SWaterConfig{
+			var clazz:* = builder.build("conf")["SWaterConfig"];
+			return new clazz();
+		};
 		public function Game_Builer():Builder{
 			return builder.build("conf")["Game"];
 		};
@@ -218,6 +225,13 @@ package conf
 		};
 		public function getENBankerType():ENBankerType{
 			var clazz:* = builder.build("conf")["ENBankerType"];
+			return new clazz();
+		};
+		public function ENBankerStatus_Builer():Builder{
+			return builder.build("conf")["ENBankerStatus"];
+		};
+		public function getENBankerStatus():ENBankerStatus{
+			var clazz:* = builder.build("conf")["ENBankerStatus"];
 			return new clazz();
 		};
 		public function ENBullType_Builer():Builder{

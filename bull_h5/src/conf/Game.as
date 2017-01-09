@@ -10,6 +10,7 @@ package conf
 		public var mails:Array = null;
 		public var room_config:Array = null;
 		public var time_config:Array = null;
+		public var water_level_config:Array = null;
 		public function writeTo(value:*):void{
 		}
 	}
