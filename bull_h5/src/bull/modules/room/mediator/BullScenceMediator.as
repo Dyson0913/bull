@@ -102,10 +102,10 @@ package bull.modules.room.mediator
 			view.btn_display(false);			
 			
 			//TEST CMD			
-			//if ( view["TestPanel"] != undefined)
-			//{				
-				//view.TestPanel.on(LightEvent.ITEM_CLICK, this, ontest);
-			//}
+			if ( view["TestPanel"] != undefined)
+			{				
+				view.TestPanel.on(LightEvent.ITEM_CLICK, this, ontest);
+			}
 			
 			//notify
 			addNotifiction(BullNotification.STATE_CHANGE);
@@ -257,7 +257,7 @@ package bull.modules.room.mediator
 					state_change();
 				break;
 				case BullNotification.HISTORY_NOTIFY:
-					history_update();
+					onHistoryUpdateHandler();
 				break;
 				
 				case BullNotification.SETTLE_NOTIFY:
@@ -301,9 +301,9 @@ package bull.modules.room.mediator
 			}
 		}
 		
-		public function history_update():void 
+		public function onHistoryUpdateHandler():void 
 		{
-			view.HistoryBoard.update_info(roomData.history_Win_info, roomData.history_lost_info, roomData.history_result_info);			
+			view.viewRecord.histroy_notify(roomData.history_Win_info, roomData.history_lost_info, roomData.history_result_info);			
 		}
 		
 		

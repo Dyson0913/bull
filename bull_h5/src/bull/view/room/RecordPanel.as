@@ -1,6 +1,7 @@
 package bull.view.room 
 {
 	import com.lightUI.events.LightEvent;
+	import conf.SResultInfo;
 	
 	import laya.events.Event;
 	
@@ -19,6 +20,8 @@ package bull.view.room
 		{
 			super.createChildren();
 			
+			reset();
+			
 			Showing_Recode.on(Event.CLICK, this, onShow);
 			Hidding_Recode.on(Event.CLICK, this, onHide);
 			
@@ -36,8 +39,10 @@ package bull.view.room
 			Hidding_Recode.visible = false;
 		}
 		
-		public function update_info(win:Array,lost:Array,result:Array):void
+		public function histroy_notify(win:Array,lost:Array,result:Array):void
 		{
+			reset();
+			
 			if ( win.length == 0)
 			{
 				spade_win.text = heart_win.text = club_win.text = diamond_win.text = "";
@@ -65,21 +70,26 @@ package bull.view.room
 			var n:int = result.length;
 			for (var i:int = 0; i < n; i++)
 			{
-				this["spade_" + i].text = result[0];
-				this["heart_" + i].text = result[1];				
-				this["club_" + i].text = result[2];				
-				this["diamond_" + i].text = result[3];				
+				var item:SResultInfo = result[i];				
+				this["spade_" + i].index = item[0] == false ? 0: 1;
+				this["heart_" + i].index = item[1] == false ? 0: 1;
+				this["club_" + i].index = item[2] == false ? 0: 1;
+				this["diamond_" + i].index = item[3] == false ? 0: 1;
+			}
+			
+		}
+		
+		private function reset():void
+		{
+			spade_win.text = heart_win.text = club_win.text = diamond_win.text = "";			
+			spade_lost.text = heart_lost.text = club_lost.text = diamond_lost.text = "";
+			for (var i:int = 0; i < 12; i++)
+			{
+				this["spade_" + i].index = 2;
+				this["heart_" + i].index = 2;
+				this["club_" + i].index = 2;			
+				this["diamond_" + i].index = 2;
 			}			
-			
-		}
-		
-		public function hide():void
-		{
-			
-		}
-		
-		public function show():void
-		{
 			
 		}
 		

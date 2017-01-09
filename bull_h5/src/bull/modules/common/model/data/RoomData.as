@@ -73,6 +73,10 @@ package bull.modules.common.model.data
 		
 		public function RoomData()
 		{
+			history_Win_info = [];
+			history_lost_info = [];
+			history_result_info = [];
+			
 		}
 		
 	

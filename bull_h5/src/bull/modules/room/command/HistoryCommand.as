@@ -3,6 +3,7 @@ package bull.modules.room.command
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
+	import conf.SResultInfo;
 	
 	import bull.events.BullNotification;	
 	import bull.modules.perload.services.PreLoadService;
@@ -21,12 +22,14 @@ package bull.modules.room.command
 		override public function handler(notification:INotification):void{
 			
 			if(notification.getName() == ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
-				State(notification.getBody() as CS);
+				histroy_notify(notification.getBody() as CS);
 			}			
 		}
 		
-		private function State(cs:CS):void
+		private function histroy_notify(cs:CS):void
 		{			
+			trace("hisotry = " + cs);
+			
 			var bullData:Data = getSingleton(Data.NAME) as Data;			
 			
 			bullData.roomData.history_Win_info.length = 0;
@@ -42,7 +45,8 @@ package bull.modules.room.command
 			var n:int = cs.histroy_notify.result_info.length;
 			for (var i:int = 0; i < n; i++)
 			{
-				bullData.roomData.history_result_info.push([cs.histroy_notify.result_info._1, cs.histroy_notify.result_info._2, cs.histroy_notify.result_info._3, cs.histroy_notify.result_info._4]);
+				var item:SResultInfo = cs.histroy_notify.result_info[i];
+				bullData.roomData.history_result_info.push([item._1, item._2, item._3, item._4]);
 			}			
 			
 			sentNotification(BullNotification.HISTORY_NOTIFY);

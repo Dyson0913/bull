@@ -20,13 +20,11 @@ package bull.view.room
 			super.createChildren();
 			trace("TestBoard Init");
 			
-			btn_0.on(Event.CLICK, this, onTestClick);
-			btn_1.on(Event.CLICK, this, onTestClick);
-			btn_2.on(Event.CLICK, this, onTestClick);
-			btn_3.on(Event.CLICK, this, onTestClick);
-			btn_4.on(Event.CLICK, this, onTestClick);
-			btn_5.on(Event.CLICK, this, onTestClick);
 			
+			for (var i:int = 0; i < 15; i++)
+			{
+				this["btn_" + i].on(Event.CLICK, this, onTestClick);				
+			}
 		}
 		
 		private function onTestClick(e:Event):void

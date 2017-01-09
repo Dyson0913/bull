@@ -1,0 +1,375 @@
+// File:        conf_game.proto
+// Description: ---
+// Notes:       ---
+// Author:      leoxiang <leoxiang727@qq.com>
+// Revision:    2015-06-09 by leoxiang
+
+
+syntax = "proto2";
+package conf;
+
+////////////////////////////////////////////////////////////
+message Scope
+{
+    optional uint32 min = 1; //下限
+    optional uint32 max = 2; //上限
+}
+
+message Scope64
+{
+    optional uint64 min = 1; //下限
+    optional uint64 max = 2; //上限
+}
+
+enum ENMoneyType
+{
+    MONEY_TYPE_CASH = 1; // 现金
+    MONEY_TYPE_COIN = 2; // 虚拟币
+    MONEY_TYPE_NM   = 3; // 拟码
+}
+
+message Money
+{
+    optional ENMoneyType type = 1; // 类型
+    optional uint64      num  = 2; // 数量
+}
+
+message Prop
+{
+    optional uint32 id = 1;  // ID
+    optional uint32 num = 2; // 数量
+}
+
+////////////////////////////////////////////////////////////
+enum ENTableType
+{
+    TABLE_TYPE_COIN             = 1; // G币场
+    TABLE_TYPE_CASH             = 2; // 现金场
+    TABLE_TYPE_CASH_NM          = 3; // 现金拟码场
+}
+
+message Table
+{
+    optional uint32         table_id            = 1;    // 桌子ID
+    optional string         table_name          = 2;    // 桌子名字
+    optional ENTableType    table_type          = 3;    // 货币类型
+    optional int64          min_bet             = 4;    // 最小下注
+    optional int64          max_bet             = 5;    // 最大下注
+    optional int32          max_player          = 6;    // 最大玩家数
+    optional int32          bet_time            = 7;    // 下注时间
+    optional int32          confirm_time        = 8;    // 确认时间
+    optional int32          cashing_time        = 9;    // 结算时间
+}
+
+////////////////////////////////////////////////////////////
+message DirtyWord
+{
+    optional string word = 1; // 过滤词
+}
+
+////////////////////////////////////////////////////////////
+enum ENNoticeType
+{
+    NOTICE_TYPE_MTT_START    = 1; // MTT开赛
+    NOTICE_TYPE_MTT_CHAMPION = 2; // MTT获得冠军
+    NOTICE_TYPE_SERVER_STOP  = 3; // 停服公告
+    NOTICE_TYPE_GM           = 4; // GM公告
+}
+
+enum ENNoticeLocation
+{
+    NOTICE_LOCATION_GAME  = 1; // 普通场
+    NOTICE_LOCATION_MATCH = 2; // 比赛场
+}
+
+message Notice
+{
+    optional ENNoticeType     type      = 1; // 公告类型
+    repeated ENNoticeLocation locations = 3; // 播放位置
+    optional uint32           duration  = 4; // 播放时长
+    optional string           content   = 6; // 播放内容
+}
+
+////////////////////////////////////////////////////////////
+enum ENMailType
+{
+    MAIL_TYPE_DISCONNECT_NOTICE = 1; // 断线玩家提示
+}
+
+message Mail
+{
+    optional ENMailType type      = 1; // 邮件类型
+    optional uint32     mail_type = 2; // 平台邮件类型
+    optional string     sender    = 3; // 发送人
+    optional string     title     = 4; // 标题
+    optional string     content   = 5; // 内容
+}
+
+////////////////////////////////////////////////////////////
+message Integer2DTable
+{
+    repeated uint64 fields = 1;
+}
+
+message String2DTable
+{
+    repeated string fields = 1;
+}
+
+message Double2DTable
+{
+    repeated double fields = 1;
+}
+
+
+
+
+
+
+
+// vim:ts=4:sw=4:et:ft=proto:
+
+////////////////////////////////////////////////////
+// 网络信息, 发给客户端,让客户端连接一个新的ConnServer时
+message SNetAddress
+{
+    optional string ip      = 1;
+    optional uint32 port    = 2; // 传统Port
+    optional uint32 hport   = 3; // HTML5 Port
+}
+
+////////////////////////////////////////////////////////////
+// 配置
+enum ENRoomType
+{
+    ROOM_TYPE_COIN             = 1; // 虚拟币
+    ROOM_TYPE_CASH             = 2; // 现金
+    ROOM_TYPE_CASH_NM          = 3; // 现金拟码
+}
+
+message SDealInfo
+{
+    optional int32 card1        = 1;    // 第1张手牌
+    optional int32 card2        = 2;    // 第2张手牌
+    optional int32 card3        = 3;    // 第3张手牌
+    optional int32 card4        = 4;    // 第4张手牌
+    optional int32 card5        = 5;    // 第5张手牌
+
+    optional int32 bull_type    = 6;    // 牌型
+    optional int32 max_card     = 7;    // 最大的单张
+    optional int32 odds         = 8;    // 赔率
+    // optional int64 player_win   = 9;    //   玩家赢钱(正数表示玩家赢, 负数表示庄家赢)
+    // remove by wary 改文档了
+    optional int64 player_win   = 9;    // 所有人这里看到的都是自己的钱
+
+
+}
+
+// 房间信息配置
+message SRoomConfig
+{
+    optional int32          room_id       = 1;      // 房间ID
+    optional ENRoomType     room_type     = 2;      // 房间类型
+    optional int32          min_bet       = 3;      // 投注下限
+    optional int32          max_bet       = 4;      // 投注上限
+    optional string         room_name     = 5;      // 房间名称
+    optional int32          max_player    = 6;      // 房间玩家上限
+    optional int32          room_limit    = 7;      // 房间限红
+    // optional int32          player_limit  = 8;      // 玩家限红 remove by wary 这个值和投注上限相等了, 所以已经没有用了
+    optional int32          banker_limit  = 9;      // 坐庄限额
+    optional int32          banker_times  = 10;     // 玩家坐庄次数
+
+    optional bool           is_robbery    = 12;     // 是否可抢庄
+    optional bool           is_multi      = 13;     // 是否允许多开
+
+    optional int32          time_id       = 15;     // 时间ID
+}
+
+// 时间信息配置
+message STimeConfig
+{
+    optional int32          time_id         = 1;    // 时间ID
+    optional int32          start_time      = 2;    // 开始
+    optional int32          banker_time     = 3;    // 定庄
+    optional int32          bet_time        = 4;    // 下注
+    optional int32          sure_time       = 5;    // 确认
+    optional int32          deal_time       = 6;    // 发牌
+    optional int32          end_time        = 7;    // 结算
+}
+
+// 水位信息配置
+message SWaterConfig
+{
+    optional ENRoomType     room_type       = 1;     // 类型
+    optional int32          pump_rate       = 2;     // 抽水比例
+    optional int32          water_level     = 3;     // 参考水位
+}
+
+message Game
+{
+    // repeated Table               tables              = 1; // 桌子配置
+    repeated DirtyWord           dirty_words         = 1; // 关键词配置
+    repeated Notice              notices             = 2; // 公告配置
+    repeated Mail                mails               = 3; // 邮件配置
+
+    repeated SRoomConfig         room_config         = 11;  // 房间信息配置
+    repeated STimeConfig         time_config         = 12;  // 时间信息配置
+    repeated SWaterConfig        water_level_config  = 13;  // 水位信息配置
+}
+
+
+
+
+
+
+
+////////////////////////////////////////////////////
+// 房间信息
+message SRoomInfo
+{
+    optional SRoomConfig config     = 1;  // 配置
+    optional int32    cur_player    = 20; // 当前人数
+}
+
+message SRoomInfos
+{
+    repeated SRoomInfo roominfo     = 1;
+}
+
+////////////////////////////////////////////////////
+// 玩家信息
+
+message SUserInfo
+{
+    optional uint64 uid               = 1;       // UID
+    optional conf.SBullMoney money    = 2;       // 金钱
+    optional bool   is_light          = 3;       // 是否是明灯
+    // optional int32  vip               = 4;       // VIP 等级 // remove by wary 去掉VIP  现在 VIP 不从这里获取
+    optional int64 win_money          = 5;       // 本轮胜利的金额
+    optional int64 bet_money          = 6;       // 本轮下注的金额
+}
+
+
+//
+message SBetInfo
+{
+    optional int64          money       = 1;           // 下注的钱
+    repeated SUserInfo      user_info_s = 2;           // 前三名玩家下注信息
+    optional int64          light_bet   = 3;           // 明灯玩家下注金额
+}
+
+message SBankerCalcInfo
+{
+    optional ENBullType banker_type = 1;   // 庄家的牌型
+    optional ENBullType _1_type     = 2;   // 4家牌型
+    optional ENBullType _2_type     = 3;
+    optional ENBullType _3_type     = 4;
+    optional ENBullType _4_type     = 5;
+    optional int64      win_money   = 6;   // 胜利金额
+    optional string     round_id    = 7;   // 局ID
+}
+
+// 玩家移动状态
+enum ENMoveType
+{
+    MOVE_TYPE_MOVE_IN = 1;      // 进入房间
+    MOVE_TYPE_MOVE_OUT = 2;     // 离开房间
+    MOVE_TYPE_MOVE_REFRESH = 3; // 刷新信息
+}
+
+// 下注位置
+enum ENBetPosition
+{
+    BET_POSITION_BANKER = 0;    // 庄家位置(庄家不能下注, 所以这里只是用来表示位置)
+    BET_POSITION_1      = 1;    // 位置1
+    BET_POSITION_2      = 2;    // 位置2
+    BET_POSITION_3      = 3;    // 位置3
+    BET_POSITION_4      = 4;    // 位置4
+
+    BET_POSITION_REPEAT = 10;   // 重复上一轮下注
+    BET_POSITION_CANCEL = 11;   // 取消下注
+}
+
+enum ENBankerType
+{
+    BANKER_TYPE_UP      = 1;    // 上庄
+    BANKER_TYPE_DOWN    = 2;    // 下庄
+}
+
+enum ENBankerStatus
+{
+    BANKER_STATUS_CONTINUE   = 1; // 继续坐庄
+    BANKER_STATUS_TIME_OVER  = 2; // 时间到
+    BANKER_STATUS_NO_MONEY   = 3; // 金钱不足
+    BANKER_STATUS_INITIATIVE = 4; // 主动下庄
+    BANKER_STATUS_LOST       = 5; // 断开连接
+}
+
+enum ENBullType
+{
+    BULL_TYPE_NOP     = 0;    // 无牛(高牌)
+    BULL_TYPE_SINGLE1 = 1;    // 牛1
+    BULL_TYPE_SINGLE2 = 2;    // 牛2
+    BULL_TYPE_SINGLE3 = 3;    // 牛3
+    BULL_TYPE_SINGLE4 = 4;    // 牛4
+    BULL_TYPE_SINGLE5 = 5;    // 牛5
+    BULL_TYPE_SINGLE6 = 6;    // 牛6
+    BULL_TYPE_SINGLE7 = 7;    // 牛7
+    BULL_TYPE_SINGLE8 = 8;    // 牛8
+    BULL_TYPE_SINGLE9 = 9;    // 牛9
+    BULL_TYPE_DOUBLE = 10;    // 牛牛
+    BULL_TYPE_FLOWER = 11;    // 花牛
+    BULL_TYPE_FOUR1  = 12;    // 炸1
+    BULL_TYPE_FOUR2  = 13;    // 炸2
+    BULL_TYPE_FOUR3  = 14;    // 炸3
+    BULL_TYPE_FOUR4  = 15;    // 炸4
+    BULL_TYPE_FOUR5  = 16;    // 炸5
+    BULL_TYPE_FOUR6  = 17;    // 炸6
+    BULL_TYPE_FOUR7  = 18;    // 炸7
+    BULL_TYPE_FOUR8  = 19;    // 炸8
+    BULL_TYPE_FOUR9  = 20;    // 炸9
+    BULL_TYPE_FOUR10 = 21;    // 炸10
+    BULL_TYPE_FOUR11 = 22;    // 炸11
+    BULL_TYPE_FOUR12 = 23;    // 炸12
+    BULL_TYPE_FOUR13 = 24;    // 炸13
+    BULL_TYPE_MINI   = 25;    // 小牛
+}
+
+enum ENBullStatus
+{
+    BULL_STATUS_NIL     = 0;     // 空状态
+    BULL_STATUS_START   = 1;     // 开始
+    BULL_STATUS_BANKER  = 2;     // 定庄
+    BULL_STATUS_BET     = 3;     // 下注
+    BULL_STATUS_SURE    = 4;     // 确认(下注结束以后)
+    BULL_STATUS_DEAL    = 5;     // 发牌(亮牌)
+    BULL_STATUS_END     = 6;     // 结束
+}
+
+////////////////////////////////////////////////////
+// 金币信息
+message SBullMoney
+{
+    optional int64 gb   = 1;  // 游戏币
+    optional int64 cash = 2;  // 现金
+    optional int64 nm   = 3;  // 拟码
+}
+
+
+// 最近10场的胜负信息
+message SResultInfo
+{
+    optional bool _1 = 1;
+    optional bool _2 = 2;
+    optional bool _3 = 3;
+    optional bool _4 = 4;
+}
+
+// 最近500场的胜利次数或失败次数
+message SCountInfo
+{
+    optional int32 _1 = 1;
+    optional int32 _2 = 2;
+    optional int32 _3 = 3;
+    optional int32 _4 = 4;
+}

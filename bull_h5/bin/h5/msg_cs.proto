@@ -1,0 +1,490 @@
+// File:        msg_cs.proto
+// Description: ---
+// Notes:       ---
+// Author:      leoxiang <leoxiang727@qq.com>
+// Revision:    2015-06-09 by leoxiang
+
+syntax = "proto2";
+import "conf_game.proto";
+package msg;
+
+
+////////////////////////////////////////////////////////////
+// network headers
+message ConnHead
+{
+    optional uint64         uid            = 1;
+    optional string         uname          = 5;
+    optional string         verify_sig     = 2;
+    optional uint64         client_version = 3;
+    optional ENPlatformType platform       = 4;
+
+    optional uint32 conn_id       = 11;
+    repeated uint32 conn_ids      = 16;
+    optional string conn_ip       = 12;
+    optional uint32 conn_port     = 13;
+    optional bool   is_new_conn   = 14;
+    optional bool   is_close_conn = 15;
+    optional bool   is_login      = 21;
+}
+
+enum ENPlatformType
+{
+    PLATFORM_TYPE_WEB = 1;
+    PLATFORM_TYPE_MOBILE = 2;
+}
+
+////////////////////////////////////////////////////////////
+// enum define
+enum ENError
+{
+    ERROR_OK                         = 0;  // 成功
+    ERROR_INVALID_ROOM_ID            = 1;  // 无效的房间ID
+    ERROR_INVALID_TABLE_ID           = 2;  // 无效的桌子号
+    ERROR_INVALID_CONN_ID            = 3;  // 无效的连接ID
+    ERROR_INVALID_USER_INFO          = 4;  // 无效的用户信息
+    ERROR_INVALID_ROOM_TYPE          = 5;  // 无效的房间类型
+    ERROR_INVALID_UID                = 6;  // 无效的UID
+    ERROR_INVALID_SPEED              = 7;  // 无效的速度
+    ERROR_INVALID_VERIFY_SIG         = 10; // 无效的验证签名
+    ERROR_INVALID_CARRY_IN_TYPE      = 12; // 无效的带入类型
+    ERROR_INVALID_POSITION           = 13; // 无效的位置
+    ERROR_INVALID_STATUS             = 14; // 无效的状态
+    ERROR_INVALID_MONEY              = 15; // 无效的金钱值
+    ERROR_INVALID_BANKER_TYPE        = 16; // 无效的上庄类型
+    ERROR_ROOM_LIMIT                 = 17; // 超过房间下注限红
+    ERROR_PLAYER_LIMIT               = 18; // 超过了玩家下注限红
+    ERROR_MAX_BET                    = 19; // 超过最大下注额
+    ERROR_NOT_HISTORY_BET            = 20; // 没有历史下注记录
+    ERROR_ALREADY_BET                = 21; // 已经下注过了
+    ERROR_NOT_ENOUGH_MONEY           = 22; // 金钱不足
+    ERROR_ALREADY_IN_OTHER_TABLE     = 23; // 已经在其他桌内
+    ERROR_SERVER_FULL                = 24; // 服务器已满
+    ERROR_ALREADY_IN_BANKER          = 25; // 已经在上庄列表,或者已经就是庄家了
+    ERROR_BANKER_FULL                = 26; // 上庄队列已满
+    ERROR_NOT_IN_BANKER              = 27; // 不在上庄列表,并且也不是庄家
+    ERROR_MIN_BET                    = 28; // 不够最小下注
+    ERROR_CANT_COMPENSATE            = 29; // 赔不起(10倍下注超过手里的钱)
+    ERROR_SERVER_STOPPING            = 58; // 即将停服
+    ERROR_FORBBIDEN                  = 59; // 被封停
+    ERROR_SERVER_STOPPED             = 62; // 停服中
+
+    ERROR_DBSVR_QUERY                = 500; // 系统内部错误
+    ERROR_DBSVR_UPDATE               = 501; // 系统内部错误
+    ERROR_DBSVR_DELETE               = 502; // 系统内部错误
+    ERROR_DBSVR_INSERT               = 503; // 系统内部错误
+    ERROR_DBSVR_QUERY_TIMEOUT        = 504; // 系统内部错误
+    ERROR_DBSVR_UPDATE_TIMEOUT       = 505; // 系统内部错误
+    ERROR_DBSVR_DELETE_TIMEOUT       = 506; // 系统内部错误
+    ERROR_DBSVR_INSERT_TIMEOUT       = 507; // 系统内部错误
+    ERROR_DBSVR_PARSE                = 508; // 系统内部错误
+    ERROR_DBSVR_PACK                 = 509; // 系统内部错误
+    ERROR_ROOMSVR                    = 510; // 系统内部错误
+    ERROR_ROOMSVR_TIMEOUT            = 511; // 系统内部错误
+    ERROR_HTTPSVR                    = 512; // 系统内部错误
+    ERROR_HTTPSVR_TIMEOUT            = 513; // 系统内部错误
+    ERROR_MATCHSVR_TIMEOUT           = 514; // 系统内部错误
+    ERROR_CONFSVR_TIMEOUT            = 515; // 系统内部错误
+}
+
+////////////////////////////////////////////////////////////
+
+message ConnSvrInfo
+{
+    repeated conf.SNetAddress listen_addresses = 1;
+}
+
+////////////////////////////////////////////////////////////
+// connsvr message
+message LoginReq
+{
+    optional uint64         uid            = 1;
+    optional string         verify_sig     = 3;
+    optional uint64         client_version = 4;
+    optional ENPlatformType platform       = 5;
+}
+
+message LoginRsp
+{
+    optional ENError result = 1;
+    optional uint32         source      = 2;        //用户来源
+    optional string         currency    = 3;        //平台传入的货币类型
+}
+
+message HeartBeatReq
+{
+}
+
+message HeartBeatRsp
+{
+}
+
+message TimeSyncReq
+{
+}
+
+message TimeSyncRsp
+{
+    optional uint32 server_time = 1;
+    optional uint64 server_time_milli = 2;
+}
+
+enum ENConnOperationType
+{
+    CONN_OPERATION_TYPE_STOP_SERVER = 1;
+    CONN_OPERATION_TYPE_START_SERVER = 2;
+}
+
+message ConnOperationNotify
+{
+    optional ENConnOperationType op = 1;
+}
+
+////////////////////////////////////////////////////////////
+// gamesvr message
+
+message ExitTableReq
+{
+}
+
+message ExitTableRsp
+{
+    optional ENError result = 1;
+}
+
+message SGetRoomListReq
+{
+    // 似乎不需要列表
+}
+
+message SGetRoomListRsp
+{
+    optional ENError            error_code  = 1;
+    optional conf.SRoomInfos    room_infos  = 2;   // 房间列表
+    // optional conf.ENRoomType    room_type   = 3;   // 房间类型(如果之前还在房间里的话)
+    optional int32              room_id     = 4;   // 房间ID(如果之前还在房间里的话)
+    optional conf.SNetAddress   net_address = 5;   // 房间地址
+    optional int64              token       = 6;   // 服务器ID 校验码
+}
+
+// [请求]预先进入某个房间
+message STryEnterTableReq
+{
+    // optional conf.ENRoomType    room_type = 1;    // 什么场
+    optional int32              room_id   = 2;    // 房间编号
+}
+
+// [返回]预先进入某个房间
+message STryEnterTableRsp
+{
+    optional ENError            error_code      = 1;   // 错误码
+    // optional conf.ENRoomType    room_type       = 2;   // 房间类型 G币or现金
+    optional int32              room_id         = 3;   // 房间编号
+    optional conf.SNetAddress   net_address     = 4;   // ConnServer信息, 让客户端去连接这个服务器
+    optional int64              token           = 5;   // 服务器ID 校验码
+}
+
+ // [请求]正式进入某个房间       CS_TYPE_ENTER_TABLE_REQ
+message SEnterTableReq
+{
+    optional int32 room_id  = 1;    // 房间编号
+    optional int64 token    = 2;    // 服务器ID 校验码
+}
+
+// [返回]正式进入某个房间       CS_TYPE_ENTER_TABLE_RSP
+message SEnterTableRsp
+{
+    optional ENError            error_code      = 1;   // 错误码
+    optional string             serverinfo      = 2;   // 服务器信息用来显示在PING值上
+    optional int32              room_id         = 3;   // 房间ID
+    optional int32              table_id        = 4;   // 桌子ID
+    optional conf.ENRoomType    room_type       = 5;   // 桌子类型
+    optional conf.SUserInfo     user_info       = 6;   // 玩家的信息(如果有的話) (主要是玩家可能已經在房間了, 這種情況下, 不需要帶入等)
+}
+
+// [请求]带入金钱 CS_TYPE_CARRY_IN_REQ
+message SCarryInReq
+{
+    optional conf.SBullMoney money  = 1;
+    optional string          token  = 2;
+}
+
+// [返回]带入金钱 CS_TYPE_CARRY_IN_RSP
+message SCarryInRsp
+{
+    optional ENError error_code     = 1;    // 错误码
+    optional conf.SBullMoney money  = 2;    //
+}
+
+// [请求]上庄(含下庄)CS_TYPE_BANKER_REQ
+message SBankerReq
+{
+    optional conf.ENBankerType type = 1;             // 上庄类型 (1上, 2下)
+}
+
+// [返回]上庄  CS_TYPE_BANKER_RSP
+message SBankerRsp
+{
+    optional ENError error_code = 1;    // 错误码
+}
+
+// [请求]下注 CS_TYPE_BET_REQ
+message SBetReq
+{
+    optional conf.ENBetPosition position  = 1;    // 下注位置    (-1. 取消,  0. 同上一轮,  1~4. 下注位置)
+    optional int32              bet_money = 2;    // 下注的金额
+}
+
+// [返回]下注 CS_TYPE_BET_RSP
+message SBetRsp
+{
+    optional ENError error_code            = 1;  // 下注错误码
+    optional conf.ENBetPosition position   = 2;  // 下注位置    (-1. 取消,  0. 同上一轮,  1~4. 下注位置)
+    optional int64              hand_money = 3;  // 下注手上的钱值
+    optional int32              bet_money  = 4;  // 下注的金额(本次)
+}
+
+// [请求]离开某个房间           CS_TYPE_EXIT_TABLE_REQ
+message SExitTableReq
+{
+   // 似乎不需要参数
+}
+
+// [返回]离开某个房间           CS_TYPE_EXIT_TABLE_RSP
+message SExitTableRsp
+{
+    optional ENError error_code     = 1;    // 错误码
+}
+
+
+
+// [广播]牌路历史               CS_TYPE_GET_HISTORY_NOTIFY
+message SHistroyNotify
+{
+    optional conf.SCountInfo win_info        = 1;   //  胜利信息
+    optional conf.SCountInfo lose_info       = 2;   //  失败信息
+    repeated conf.SResultInfo result_info    = 3;   //  最近信息
+}
+
+// [广播]定时器                 CS_TYPE_TIMER_NOTIFY
+message STimerNotify
+{
+    optional uint32 timeStamp           = 1;   // 服务器时间戳
+    optional int32  timeLeft            = 2;   // 剩余时间
+    optional conf.ENBullStatus status   = 3;   // 桌子步骤
+    optional bool   bet_area            = 4;   // 下注区
+    optional bool   sure_area           = 5;   // 三秒确认区
+    optional bool   deal_area           = 6;   // 开牌区
+    optional bool   end_area            = 7;   // 结算区
+    optional string order_id            = 8;   // 结算ID
+}
+
+// [广播]所有房间内用户信息     CS_TYPE_ALL_USER_INFO_NOTIFY
+message SAllUserInfoNotify
+{
+    optional int32           player_count = 1;   // 人数
+    repeated conf.SUserInfo  user_info_s  = 2;   // 他们的信息
+}
+
+
+// [广播]单个用户信息           CS_TYPE_ONE_USER_INFO_NOTIFY
+message SOneUserInfoNotify
+{
+    optional conf.SUserInfo   user_info = 1;
+    optional conf.ENMoveType  type      = 2; // in = 1,  out = 2, refresh = 3;
+}
+
+
+message SBetNotify_Bet
+{
+    optional int64 uid          = 1; // 当前下注的玩家的UID
+    optional int32 position     = 2; // 当前下注玩家位置(1-4)
+    optional int32 value        = 3; // 当前下注玩家的金额
+}
+
+// [广播]下注                   CS_TYPE_BET_NOTIFY
+message SBetNotify
+{
+    optional conf.SBetInfo m1        = 1; // 第一家的下注信息
+    optional conf.SBetInfo m2        = 2; // 第二家的下注信息
+    optional conf.SBetInfo m3        = 3; // 第三家的下注信息
+    optional conf.SBetInfo m4        = 4; // 第四家的下注信息
+
+    optional int32              light_pos   = 8; // 明灯玩家最多下注位置(0 表示无,  1-4 表示明灯位置)
+    repeated SBetNotify_Bet     bets        = 9; // 综合下注讯息
+}
+
+// [广播]发牌信息              CS_TYPE_DEAL_CARD_NOTIFY
+message SDealCardNotify
+{
+    optional conf.SDealInfo banker       = 1;    // 庄家
+    optional conf.SDealInfo _1           = 2;    // 第1家
+    optional conf.SDealInfo _2           = 3;    // 第2家
+    optional conf.SDealInfo _3           = 4;    // 第3家
+    optional conf.SDealInfo _4           = 5;    // 第4家
+}
+
+// [广播]结算信息               CS_TYPE_CALCULATE_NOTIFY
+message SCalculateNotify
+{
+    optional uint64             banker_id   = 1;  // 庄家ID
+    optional int64              win_money   = 2;  // 自己胜利金币
+    optional int64              hand_money  = 3;  // 手里金钱信息
+    repeated conf.SUserInfo     user_info_s = 4;  // 其他人(前三名)的胜利金币
+}
+
+// [广播]庄家申请列表           CS_TYPE_BANKER_LIST_NOTIFY
+message SBankerListNotify
+{
+    optional int32           player_count = 1;   // 人数
+    repeated conf.SUserInfo  user_info_s  = 2;   // 他们的信息
+}
+
+// [广播]当前庄家信息           CS_TYPE_BANKER_NOTIFY
+message SBankerNotify
+{
+    optional uint64                 banker_id       = 1;  // 庄家ID
+    optional int64                  hand_money      = 2;  // 庄家手里金钱
+    optional int32                  banker_time     = 3;  // 当庄次数
+    optional int32                  max_time        = 4;  // 最大次数
+    optional conf.ENBankerStatus    banker_status   = 5;  // 庄家状态
+    optional int32                  player_count    = 6;  // 桌内玩家人数
+}
+// [广播]庄家下庄计算信息       CS_TYPE_BANKER_CALCULATE_NOTIFY 40
+message SBankerCalculateNotify
+{
+    optional int64                  total_win_money     = 1;
+    repeated conf.SBankerCalcInfo   banker_calc_info_s  = 2;
+}
+
+////////////////////////////////////////////////////////////
+// common message
+message NoticeInfo
+{
+    optional uint32            id         = 1;
+    optional conf.ENNoticeType type       = 7;
+    optional uint32            start_time = 3;
+    optional uint32            end_time   = 4;
+    optional string            content    = 6;
+    // other info
+    optional conf.SNetAddress   server_address = 10; // for NOTICE_TYPE_MTT_START
+    optional uint64             match_id       = 11; // for NOTICE_TYPE_MTT_START
+}
+
+message PushNoticeNotify
+{
+    repeated NoticeInfo notices = 1;
+}
+
+enum ENKickReason
+{
+    KICK_REASON_FORBID_PLAYER = 1; // 被禁用的用户
+    KICK_REASON_OTHER_LOGIN   = 2; // 异地登录
+    KICK_REASON_SERVER_CLOSE  = 3; // 服务器已关闭
+}
+
+message KickPlayerNotify
+{
+    optional ENKickReason reason = 1;
+}
+
+/////////////////////////////////////////////////////////////
+// client to server messages
+enum ENCSType
+{
+    CS_TYPE_NONE                  = 1;
+    CS_TYPE_HEART_BEAT_REQ        = 3;
+    CS_TYPE_HEART_BEAT_RSP        = 4;
+    CS_TYPE_CONN_OPERATION_NOTIFY = 5;
+    CS_TYPE_TIME_SYNC_REQ         = 6;
+    CS_TYPE_TIME_SYNC_RSP         = 7;
+    CS_TYPE_LOGIN_REQ             = 8;
+    CS_TYPE_LOGIN_RSP             = 9;
+
+
+    // 百人牛牛 房间服
+    CS_TYPE_GET_ROOM_LIST_REQ       = 11;   // [请求]获取房间列表
+    CS_TYPE_GET_ROOM_LIST_RSP       = 12;   // [返回]获取房间列表
+    CS_TYPE_TRY_ENTER_TABLE_REQ     = 13;   // [请求]预先进入某个房间
+    CS_TYPE_TRY_ENTER_TABLE_RSP     = 14;   // [返回]预先进入某个房间
+
+    // 百人牛牛 游戏服
+    CS_TYPE_ENTER_TABLE_REQ         = 21;   // [请求]进入某个房间
+    CS_TYPE_ENTER_TABLE_RSP         = 22;   // [返回]进入某个房间
+    CS_TYPE_CARRY_IN_REQ            = 23;   // [请求]带入金钱
+    CS_TYPE_CARRY_IN_RSP            = 24;   // [返回]带入金钱
+    CS_TYPE_BANKER_REQ              = 25;   // [请求]上庄(含下庄)
+    CS_TYPE_BANKER_RSP              = 26;   // [返回]上庄
+    CS_TYPE_BET_REQ                 = 27;   // [请求]下注(含撤回)
+    CS_TYPE_BET_RSP                 = 28;   // [返回]下注
+    CS_TYPE_EXIT_TABLE_REQ          = 29;   // [请求]离开某个房间
+    CS_TYPE_EXIT_TABLE_RSP          = 30;   // [返回]离开某个房间
+
+    // 主动广播
+    CS_TYPE_GET_HISTORY_NOTIFY      = 31;   // [广播]牌路历史
+    CS_TYPE_TIMER_NOTIFY            = 32;   // [广播]定时器
+    CS_TYPE_ALL_USER_INFO_NOTIFY    = 33;   // [广播]房间内用户信息
+    CS_TYPE_ONE_USER_INFO_NOTIFY    = 34;   // [广播]单个用户信息
+    CS_TYPE_BET_NOTIFY              = 35;   // [广播]下注
+    CS_TYPE_DEAL_CARD_NOTIFY        = 36;   // [广播]发牌信息
+    CS_TYPE_CALCULATE_NOTIFY        = 37;   // [广播]结算信息
+    CS_TYPE_BANKER_LIST_NOTIFY      = 38;   // [广播]庄家申请列表
+    CS_TYPE_BANKER_NOTIFY           = 39;   // [广播]当前坐庄信息
+    CS_TYPE_BANKER_CALCULATE_NOTIFY = 40;   // [广播]庄家下庄计算信息
+
+
+    CS_TYPE_PUSH_NOTICE_NOTIFY = 138;
+    CS_TYPE_KICK_PLAYER_NOTIFY = 143;
+}
+
+message CS
+{
+    // headers
+    optional ENCSType msg_type  = 1;
+    optional ConnHead conn_head = 2;
+
+    // connsvr message
+    optional HeartBeatReq        heart_beat_req        = 3;
+    optional HeartBeatRsp        heart_beat_rsp        = 4;
+    optional ConnOperationNotify conn_operation_notify = 5;
+    optional TimeSyncReq         time_sync_req         = 6;
+    optional TimeSyncRsp         time_sync_rsp         = 7;
+    optional LoginReq            login_req             = 8;
+    optional LoginRsp            login_rsp             = 9;
+
+
+    // 百人牛牛 房间服
+    optional SGetRoomListReq        get_room_list_req        = 11; // [请求]获取房间列表           CS_TYPE_GET_ROOM_LIST_REQ
+    optional SGetRoomListRsp        get_room_list_rsp        = 12; // [返回]获取房间列表           CS_TYPE_GET_ROOM_LIST_RSP
+    optional STryEnterTableReq      try_enter_table_req      = 13; // [请求]预先进入某个房间       CS_TYPE_TRY_ENTER_TABLE_REQ
+    optional STryEnterTableRsp      try_enter_table_rsp      = 14; // [返回]预先进入某个房间       CS_TYPE_TRY_ENTER_TABLE_RSP
+
+    // 百人牛牛 游戏服
+    optional SEnterTableReq         enter_table_req          = 21; // [请求]正式进入某个房间       CS_TYPE_ENTER_TABLE_REQ
+    optional SEnterTableRsp         enter_table_rsp          = 22; // [返回]正式进入某个房间       CS_TYPE_ENTER_TABLE_RSP
+    optional SCarryInReq            carry_in_req             = 23; // [请求]带入金钱               CS_TYPE_CARRY_IN_REQ
+    optional SCarryInRsp            carry_in_rsp             = 24; // [返回]带入金钱               CS_TYPE_CARRY_IN_RSP
+    optional SBankerReq             banker_req               = 25; // [请求]上庄(含下庄)           CS_TYPE_BANKER_REQ
+    optional SBankerRsp             banker_rsp               = 26; // [返回]上庄                   CS_TYPE_BANKER_RSP
+    optional SBetReq                bet_req                  = 27; // [请求]下注                   CS_TYPE_BET_REQ
+    optional SBetRsp                bet_rsp                  = 28; // [返回]下注                   CS_TYPE_BET_RSP
+    optional SExitTableReq          exit_table_req           = 29; // [返回]离开某个房间           CS_TYPE_EXIT_TABLE_RSP
+    optional SExitTableRsp          exit_table_rsp           = 30; // [返回]离开某个房间           CS_TYPE_EXIT_TABLE_RSP
+
+    optional SHistroyNotify         histroy_notify           = 31; // [广播]牌路历史               CS_TYPE_GET_HISTORY_NOTIFY
+    optional STimerNotify           timer_notify             = 32; // [广播]定时器                 CS_TYPE_TIMER_NOTIFY
+    optional SAllUserInfoNotify     all_user_info_notify     = 33; // [广播]所有房间内用户信息     CS_TYPE_ALL_USER_INFO_NOTIFY
+    optional SOneUserInfoNotify     one_user_info_notify     = 34; // [广播]单个用户信息           CS_TYPE_ONE_USER_INFO_NOTIFY
+    optional SBetNotify             bet_notify               = 35; // [广播]下注                   CS_TYPE_BET_NOTIFY
+    optional SDealCardNotify        deal_card_notify         = 36; // [广播]发牌信息               CS_TYPE_DEAL_CARD_NOTIFY
+    optional SCalculateNotify       calculate_notify         = 37; // [广播]结算信息               CS_TYPE_CALCULATE_NOTIFY
+    optional SBankerListNotify      banker_list_notify       = 38; // [广播]庄家申请列表           CS_TYPE_BANKER_LIST_NOTIFY
+    optional SBankerNotify          banker_notify            = 39; // [广播]当前庄家信息           CS_TYPE_BANKER_NOTIFY
+    optional SBankerCalculateNotify banker_calc_notify       = 40; // [广播]庄家下庄计算信息       CS_TYPE_BANKER_CALCULATE_NOTIFY
+
+    // common message
+    optional PushNoticeNotify   push_notice_notify = 138;
+    optional KickPlayerNotify   kick_player_notify = 143;   // CS_TYPE_KICK_PLAYER_NOTIFY
+}
+
+// vim:ts=4:sw=4:et:ft=proto:
