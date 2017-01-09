@@ -31148,12 +31148,11 @@ var Laya=window.Laya=(function(window,document){
 		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
 		__proto.handler=function(notification){
 			if(notification.getName()==ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString()){
-				this.history(notification.getBody());
+				this.histroy_notify(notification.getBody());
 			}
 		}
 
-		__proto.history=function(cs){
-			console.log("hisotry = "+cs);
+		__proto.histroy_notify=function(cs){
 			var bullData=this.getSingleton("Data");
 			bullData.roomData.history_Win_info.length=0;
 			bullData.roomData.history_lost_info.length=0;
@@ -31344,6 +31343,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.settle=function(cs){
+			console.log("settle "+cs);
 			var bullData=this.getSingleton("Data");
 			bullData.roomData.settle_banker_id=cs.calculate_notify.banker_id;
 			bullData.roomData.settle_win_money=cs.calculate_notify.win_money;
@@ -31479,24 +31479,24 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onSettleUpdateHandler=function(){
-			if(this.appMedel.Settle_Time <2){
-				/*no*/this.evt.dispatchEvent(new /*no*/this.NewNewGameEvent(/*no*/this.NewNewGameEvent.RUN_ResultOver));
-			}
-			else{
+			this.appMedel.Banker_uid="10";
+			this.appMedel.user_id="1";
+			this.appMedel.nick_name_64="Dyson";
+			this.appMedel.first_threePlayer=[ {"rank":0,"ligt":true,"name":"dyson1","money":999 },{"rank":1,"ligt":true,"name":"dyson2","money":999 },{"rank":2,"ligt":true,"name":"dyson3","money":999 }];{
 				var isbaner=this.appMedel.Banker_uid===this.appMedel.user_id;
 				if(this._isSys)/*no*/this._bankerName="吉胜游戏平台";
-				this.view.viewResult.initView(this.appMedel.nick_name_64,this.appMedel.TotalMoney,this.appMedel.Settle_Time,this.appMedel.self_settle_win,this.appMedel.first_threePlayer,isbaner,/*no*/this._bankerName);
+				this.view.viewResult.initView(this.appMedel.nick_name_64,this.roomData.settle_hand_money,this.roomData.LeftTime,this.roomData.settle_win_money,this.roomData.settle_User_info,isbaner,/*no*/this._bankerName);
 				this.view.viewResult.show();
 				this.sentNotification("CASH_TAKEIN_RESPONES");
 			}
 		}
 
-		//}
 		__proto.onInitialize=function(){
 			console.log("===========================init");
 		}
 
 		__proto.ontest=function(cmd){
+			console.log("cmd");
 			this.sentNotification("TestOrder",cmd);
 		}
 
@@ -31505,28 +31505,6 @@ var Laya=window.Laya=(function(window,document){
 		*/
 		__proto.onClick=function(e){
 			console.log("onClick:"+e.target);
-			this.appMedel.Banker_uid="10";
-			this.appMedel.user_id="1";
-			this.appMedel.Settle_Time=2;
-			this.appMedel.nick_name_64="Dyson";
-			this.appMedel.TotalMoney=10;
-			this.appMedel.self_settle_win=Long.fromNumber(10000);
-			this.appMedel.first_threePlayer=[{"rank":0,"ligt":true,"name":"dyson1","money":999},{"rank":1,"ligt":true,"name":"dyson2","money":999},{"rank":2,"ligt":true,"name":"dyson3","money":999}];
-			var proto=this.getModel("bullProtoModel");
-			var out=proto.msg_proto.getCS();
-			out.msg_type=37;
-			out.calculate_notify=proto.msg_proto.getSCalculateNotify();
-			out.calculate_notify.banker_id=123121323;
-			var user=new SUserInfo();
-			user.uid=1000;
-			user.money=new SBullMoney();
-			user.money.gb=100
-			user.is_lamp=false;
-			user.win_money=88888;
-			user.bet_money=88888;
-			out.calculate_notify.user_info_s.push(user);
-			this.sentNotification(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),out);
-			return
 			switch(e.target){
 				case this.view.helpBtn:
 					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
@@ -31556,7 +31534,7 @@ var Laya=window.Laya=(function(window,document){
 					this.state_change();
 					break ;
 				case "HistoryNotify":
-					this.history_update();
+					this.onHistoryUpdateHandler();
 					break ;
 				case "settlenotify":
 					this.onSettleUpdateHandler();
@@ -31595,8 +31573,8 @@ var Laya=window.Laya=(function(window,document){
 				}
 		}
 
-		__proto.history_update=function(){
-			this.view.viewRecord.update_info(this.roomData.history_Win_info,this.roomData.history_lost_info,this.roomData.history_result_info);
+		__proto.onHistoryUpdateHandler=function(){
+			this.view.viewRecord.histroy_notify(this.roomData.history_Win_info,this.roomData.history_lost_info,this.roomData.history_result_info);
 		}
 
 		__proto.regFont=function(fontFileName,path){
@@ -49907,7 +49885,6 @@ var Laya=window.Laya=(function(window,document){
 			this.btnClose=null;
 			this.btnok=null;
 			this.rest_time=null;
-			this.banker_Money=null;
 			this.platform_name=null;
 			this.self_name=null;
 			this.self_money=null;
@@ -49919,16 +49896,19 @@ var Laya=window.Laya=(function(window,document){
 			this.Num_0=null;
 			this.light_0=null;
 			this.headPic_0=null;
+			this.mcHead_0=null;
 			this.name_0=null;
 			this.Money_0=null;
 			this.Num_1=null;
 			this.light_1=null;
 			this.headPic_1=null;
+			this.mcHead_1=null;
 			this.name_1=null;
 			this.Money_1=null;
 			this.Num_2=null;
 			this.light_2=null;
 			this.headPic_2=null;
+			this.mcHead_2=null;
 			this.name_2=null;
 			this.Money_2=null;
 			ResultPanelUI.__super.call(this);
@@ -49942,7 +49922,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(ResultPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":679,"height":416},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/结算中心底板.png"}},{"type":"Button","props":{"y":-1,"x":640,"var":"btnClose","skin":"res/gameScene/closeBtn.png","name":"btnClose"}},{"type":"Button","props":{"y":357,"x":265,"var":"btnok","skin":"res/gameScene/Btn_bg.png","name":"btnok"}},{"type":"Label","props":{"y":366,"x":308,"width":43,"text":"确  定","mouseEnabled":false,"height":16,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","mouseEnabled":false,"height":16,"fontSize":23,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":364,"x":498,"width":30,"text":"S","mouseEnabled":false,"height":27,"fontSize":30,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":361,"x":476,"width":25,"var":"rest_time","text":"8","mouseEnabled":false,"height":33,"fontSize":35,"color":"#e53829","bold":true}},{"type":"Label","props":{"y":324,"x":37,"width":114,"var":"banker_Money","text":"+9999999","mouseEnabled":false,"height":20,"fontSize":20,"color":"#9fb23c","bold":false,"align":"center"}},{"type":"Image","props":{"y":294,"x":41,"var":"platform_name","skin":"res/gameScene/吉胜游戏平台.png"}},{"type":"Label","props":{"y":86,"x":106,"width":165,"var":"self_name","text":"天涯歌女爱与仇","height":25,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":119,"x":126,"width":101,"var":"self_money","text":"6666666","height":23,"fontSize":22,"color":"#f8f0ef","align":"left"}},{"type":"Label","props":{"y":87,"x":270,"width":389,"var":"win_bitmap","text":"+¥1234.56","height":60,"font":"settleWin","align":"center"}},{"type":"Label","props":{"y":37,"x":274,"width":389,"var":"lost_bitmap","text":"-¥1234.56","height":60,"font":"settlelost","align":"center"}},{"type":"Image","props":{"y":81,"x":24,"width":68,"var":"mcHead","skin":"res/gameScene/HeadIcon.jpg","height":67}},{"type":"Image","props":{"y":60,"x":6,"var":"isBanker","skin":"res/gameScene/庄家符号.png"}},{"type":"Label","props":{"y":261,"x":337,"width":175,"var":"Text_NoOne_bet","text":"本局无人赢钱","height":16,"fontSize":22,"color":"#f8f0ef","align":"center"}},{"type":"Animation","props":{"y":187,"x":201,"var":"Num_0","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":194,"x":248,"var":"light_0","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":196,"x":303,"var":"headPic_0","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":203,"x":355,"width":93,"var":"name_0","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":204,"x":518,"width":80,"var":"Money_0","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}},{"type":"Animation","props":{"y":244,"x":201,"var":"Num_1","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":251,"x":248,"var":"light_1","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":253,"x":303,"var":"headPic_1","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":260,"x":355,"width":93,"var":"name_1","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":261,"x":518,"width":80,"var":"Money_1","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}},{"type":"Animation","props":{"y":296,"x":201,"var":"Num_2","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":303,"x":248,"var":"light_2","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":305,"x":303,"var":"headPic_2","skin":"res/gameScene/结算玩家头像.png"}},{"type":"Label","props":{"y":312,"x":355,"width":93,"var":"name_2","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":313,"x":518,"width":80,"var":"Money_2","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":679,"height":416},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/结算中心底板.png"}},{"type":"Button","props":{"y":-1,"x":640,"var":"btnClose","skin":"res/gameScene/closeBtn.png","name":"btnClose"}},{"type":"Button","props":{"y":357,"x":265,"var":"btnok","skin":"res/gameScene/Btn_bg.png","name":"btnok"}},{"type":"Label","props":{"y":366,"x":308,"width":43,"text":"确  定","mouseEnabled":false,"height":16,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":367,"x":415,"width":43,"text":"(倒计        后将关闭窗口)","mouseEnabled":false,"height":16,"fontSize":23,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":365,"x":495,"width":23,"text":"S","mouseEnabled":false,"height":27,"fontSize":30,"color":"#e53829","bold":true,"align":"left"}},{"type":"Label","props":{"y":360,"x":469,"width":25,"var":"rest_time","text":"8","mouseEnabled":false,"height":33,"fontSize":35,"color":"#e53829","bold":true,"align":"center"}},{"type":"Image","props":{"y":294,"x":41,"var":"platform_name","skin":"res/gameScene/吉胜游戏平台.png"}},{"type":"Label","props":{"y":86,"x":106,"width":165,"var":"self_name","text":"天涯歌女爱与仇","height":25,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":119,"x":126,"width":101,"var":"self_money","text":"6666666","height":23,"fontSize":22,"color":"#f8f0ef","align":"left"}},{"type":"Label","props":{"y":87,"x":270,"width":389,"var":"win_bitmap","text":"+¥1234.56","height":60,"font":"settleWin","align":"center"}},{"type":"Label","props":{"y":86,"x":274,"width":389,"var":"lost_bitmap","text":"-¥1234.56","height":60,"font":"settlelost","align":"center"}},{"type":"Image","props":{"y":81,"x":24,"width":68,"var":"mcHead","skin":"res/gameScene/HeadIcon.jpg","height":67}},{"type":"Image","props":{"y":60,"x":6,"var":"isBanker","skin":"res/gameScene/庄家符号.png"}},{"type":"Label","props":{"y":261,"x":337,"width":175,"var":"Text_NoOne_bet","text":"本局无人赢钱","height":16,"fontSize":22,"color":"#f8f0ef","align":"center"}},{"type":"Animation","props":{"y":187,"x":201,"var":"Num_0","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":194,"x":248,"var":"light_0","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":196,"x":303,"var":"headPic_0","skin":"res/gameScene/结算玩家头像.png"},"child":[{"type":"Image","props":{"y":5,"x":4,"width":34,"var":"mcHead_0","skin":"res/gameScene/HeadIcon.jpg","height":34}}]},{"type":"Label","props":{"y":203,"x":355,"width":93,"var":"name_0","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":204,"x":518,"width":80,"var":"Money_0","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}},{"type":"Animation","props":{"y":244,"x":201,"var":"Num_1","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":251,"x":248,"var":"light_1","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":253,"x":303,"var":"headPic_1","skin":"res/gameScene/结算玩家头像.png"},"child":[{"type":"Image","props":{"y":5,"x":4,"width":34,"var":"mcHead_1","skin":"res/gameScene/HeadIcon.jpg","height":34}}]},{"type":"Label","props":{"y":260,"x":355,"width":93,"var":"name_1","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":261,"x":518,"width":80,"var":"Money_1","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}},{"type":"Animation","props":{"y":296,"x":201,"var":"Num_2","source":"res/gameScene/NO.1.png,res/gameScene/NO.2.png,res/gameScene/NO.3.png"}},{"type":"Image","props":{"y":303,"x":248,"var":"light_2","skin":"res/share/Light.png"}},{"type":"Image","props":{"y":305,"x":303,"var":"headPic_2","skin":"res/gameScene/结算玩家头像.png"},"child":[{"type":"Image","props":{"y":4,"x":4,"width":34,"var":"mcHead_2","skin":"res/gameScene/HeadIcon.jpg","height":34}}]},{"type":"Label","props":{"y":312,"x":355,"width":93,"var":"name_2","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef"}},{"type":"Label","props":{"y":313,"x":518,"width":80,"var":"Money_2","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":19,"color":"#c09528","align":"center"}}]};}
 		]);
 		return ResultPanelUI;
 	})(View)
@@ -52261,7 +52241,7 @@ var Laya=window.Laya=(function(window,document){
 			this.Hidding_Recode.visible=false;
 		}
 
-		__proto.update_info=function(win,lost,result){
+		__proto.histroy_notify=function(win,lost,result){
 			this.reset();
 			if (win.length==0){
 				this.spade_win.text=this.heart_win.text=this.club_win.text=this.diamond_win.text="";
@@ -52302,7 +52282,6 @@ var Laya=window.Laya=(function(window,document){
 			}
 		}
 
-		__proto.show=function(){}
 		return RecordPanel;
 	})(RecordPanelUI)
 
@@ -52354,7 +52333,6 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.onClick=function(event){
 			this.visible=false;
-			this.event(/*no*/this.NewNewGameEvent.Banker_Settle_pop);
 		}
 
 		//dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Banker_Settle_pop));
@@ -52363,7 +52341,7 @@ var Laya=window.Laya=(function(window,document){
 			var txtitem;
 			for(var i=0;i< 3;i++){
 				item=this.mcRank[i];
-				item.gotoAndStop(2);
+				item.visible=false;
 				item=this.mclight[i]
 				item.visible=false;
 				txtitem=this.txtNames[i];
@@ -52376,45 +52354,6 @@ var Laya=window.Laya=(function(window,document){
 			this.isBanker.visible=false;
 		}
 
-		__proto.setHead2=function(bankerpic){
-			if(bankerpic==null){
-				var user_head=/*no*/this.mcbankerHead["HeadContainer"];
-				while(user_head.numChildren > 0){
-					user_head.removeChildAt(0);
-				}
-			}
-			else{
-				if(/*no*/this._bankerpic==bankerpic){
-					return;
-				}
-				/*no*/this._bankerpic=bankerpic;
-				var b2=new /*no*/this.BitmapData(/*no*/this._bankerpic.width,/*no*/this._bankerpic.height);
-				b2.draw(/*no*/this._bankerpic);
-				var clip_mc=new /*no*/this.Bitmap(b2);
-				clip_mc.width=clip_mc.height=42;
-				/*no*/this.mcbankerHead["HeadContainer"].addChild(clip_mc);
-			}
-		}
-
-		__proto.setHead=function(pic){
-			if(/*no*/this._pic !=null)return;
-			var myBitmapData=new /*no*/this.BitmapData(pic.width,pic.height);
-			myBitmapData.draw(pic);
-			var clip2_mc=new /*no*/this.Bitmap(myBitmapData);
-			clip2_mc.width=clip2_mc.height=42;
-			this.mcHead["HeadContainer"].addChild(clip2_mc);
-			/*no*/this._pic=clip2_mc;
-		}
-
-		// mcHead.width=mcHead.height=50;
-		__proto.mycopy=function(value){
-			var buffer=new /*no*/this.ByteArray();
-			buffer.writeObject(value);
-			buffer.position=0;
-			var result=buffer.readObject();
-			return result;
-		}
-
 		__proto.initView=function(playerName,myMony,restTime,MyWin,data,Isbanker,bankername){
 			this.visible=true;
 			this.reset();
@@ -52424,25 +52363,24 @@ var Laya=window.Laya=(function(window,document){
 			else this.isBanker.visible=false;
 			this.platform_name.text=bankername;
 			this.self_name.text=playerName;
-			this.self_money.text=GameUtil.formatMoney(myMony);
+			this.self_money.text=GameUtil.formatMoney(myMony.toNumber());
 			this._rest_Time=restTime;
-			this.rest_time.text=String(this._rest_Time+"S");
-			console.log("------MyWin--------"+MyWin.toNumber());
+			this.rest_time.text=this._rest_Time.toString();
 			this.win_bitmap.font="SettleWin";
-			this.lost_bitmap.font="SettleLost";
+			this.lost_bitmap.font="Settlelost";
 			if(MyWin.toNumber()>=0){
-				console.log("------MyWin str--------"+GameUtil.formatMoneyBet(MyWin.toNumber()));
 				this.win_bitmap.text="+"+GameUtil.formatMoneyBet(MyWin.toNumber());
 				this.lost_bitmap.text="";
+				SoundManager.playSound(SoundPath.settle_win);
 			}
 			else{
 				this.lost_bitmap.text=GameUtil.formatMoneyBet(MyWin.toNumber());
 				this.win_bitmap.text="";
+				SoundManager.playSound(SoundPath.settle_lose);
 			};
 			var n=data.length;
 			if (n==0){
-				this.Text_NoOne_bet.text="";
-				return;
+				this.Text_NoOne_bet.text="本局无人赢钱";
 			}
 			else{
 				this.Text_NoOne_bet.text="";
@@ -52452,61 +52390,42 @@ var Laya=window.Laya=(function(window,document){
 			for(var i=0;i< n;i++){
 				var _data=data[i];
 				item=this.mcRank[i];
-				item.gotoAndStop(_data["rank"]);
+				item.index=i;
 				item=this.mclight[i];
-				var frame=_data["ligt"];
-				item.visible=true;
+				item.visible=_data.is_light;
 				txtitem=this.txtNames[i];
 				txtitem.text=_data["name"];
 				txtitem=this.txtMoneys[i]
-				txtitem.text=GameUtil.formatMoney(_data["money"]);
+				txtitem.text=GameUtil.formatMoney(_data.win_money.toNumber());
 				item=this.HeadPic[i];
 				item.visible=true;
-				if(i==0)this.loadHead(_data["Head"]);
-				if(i==1)this.loadHead(_data["Head"]);
-				if(i==2)this.loadHead(_data["Head"]);
 			}
 		}
 
-		__proto.loadHead=function(str,callback,i){
-			if(i==0){
-				/*no*/this.info_0.headPic.loadImage(str);
-			}
-			if(i==1){
-				/*no*/this.info_1.headPic.loadImage(str);
-			}
-			if(i==2){
-				/*no*/this.info_2.headPic.loadImage(str);
-			}
-		}
-
+		//if(i==2)item["mcHead_2"].loadImage(_data["Head"]);
 		__proto.show=function(){
 			this.scaleX=this.scaleY=.2;
 			Tween.to(this,{scaleX:1 ,scaleY:1 },300,Ease.cubicOut,Handler.create(this,this.onFinishTween));
 		}
 
-		//TweenLite.to(this,0.3,{scaleX:1,scaleY:1,ease:Back.easeOut,onComplete:onFinishTween});
-		__proto.onFinishTween=function(){}
-		__proto.timeOut=function(){
-			this.hide();
-			/*no*/this.dispatchEvent(new /*no*/this.NewNewGameEvent(/*no*/this.NewNewGameEvent.RUN_ResultOver));
-		}
-
-		__proto.hide=function(){
-			if(this.parent)
-				this.parent.removeChild(this);
-		}
-
-		__proto.setData=function(userName,myWinClip,list){
-			var txtName;
-			var txtMoney;
-			this.self_name.text=userName;
-			var i=0;
-			for (i=0;i < list.length;i++){
-			}
+		__proto.onFinishTween=function(){
+			Laya.timer.loop(1000,this,this.timerHandler);
 		}
 
 		//TweenLite.to(this,rest_Time,{rest_Time:0,onComplete:timeOut,ease:Linear.easeNone});
+		__proto.timerHandler=function(){
+			this._rest_Time-=1;
+			this.rest_time.text=this._rest_Time.toString();
+			if (this._rest_Time==-1){
+				Laya.timer.clear(this,this.timerHandler);
+				this.visible=false;
+			}
+		}
+
+		__proto.timeOut=function(){
+			/*no*/this.hide();
+		}
+
 		__getset(0,__proto,'rest_Time',function(){
 			return this._rest_Time;
 			},function(value){
@@ -52590,9 +52509,10 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onTestClick=function(e){
-			var s=e.target.name;
-			s=s.substr(4,1);
-			this.event("item_click",parseInt(s));
+			var sName=e.target.name;
+			var pattern=/btn_/;
+			sName=sName.replace(pattern,"");
+			this.event("item_click",parseInt(sName));
 		}
 
 		__proto.hide=function(){
@@ -53923,74 +53843,51 @@ var Laya=window.Laya=(function(window,document){
 10 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
 11 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
 12 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (129):warning:evt.dispatchEvent This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (129):warning:NewNewGameEvent This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (129):warning:NewNewGameEvent.RUN_ResultOver This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (135):warning:_bankerName This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (136):warning:_bankerName This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (43):warning:s This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (74):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (75):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (77):warning:MouseEvent.CLICK This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (78):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (79):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (81):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (82):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (84):warning:MouseEvent.CLICK This variable is not defined.
-27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (85):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (86):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (101):warning:MouseEvent.CLICK This variable is not defined.
-30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (102):warning:MouseEvent.CLICK This variable is not defined.
-31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:dispatchEvent This variable is not defined.
-32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:OperateEvent This variable is not defined.
-33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:NewNewGameEvent.apply_banker This variable is not defined.
-34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:dispatchEvent This variable is not defined.
-35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:OperateEvent This variable is not defined.
-36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:NewNewGameEvent.apply_banker This variable is not defined.
-37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (155):warning:MouseEvent.CLICK This variable is not defined.
-38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (156):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (157):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (159):warning:MouseEvent.CLICK This variable is not defined.
-41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (160):warning:MouseEvent.MOUSE_OVER This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (161):warning:MouseEvent.MOUSE_OUT This variable is not defined.
-43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (195):warning:textFix_text_1.visible This variable is not defined.
-44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (201):warning:textFix_text_1.visible This variable is not defined.
-45 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (208):warning:URLRequest This variable is not defined.
-46 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (213):warning:　_picforAni This variable is not defined.
-47 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (221):warning:_picforAni This variable is not defined.
-48 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (222):warning:headbmp This variable is not defined.
-49 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (233):warning:URLRequest This variable is not defined.
-50 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (245):warning:_picforAni This variable is not defined.
-51 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (246):warning:headbmp This variable is not defined.
-52 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (257):warning:_picforAni This variable is not defined.
-53 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (257):warning:_picforAni This variable is not defined.
-54 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (268):warning:MovieClip This variable is not defined.
-55 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (283):warning:_picforAni This variable is not defined.
-56 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.width This variable is not defined.
-57 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.height This variable is not defined.
-58 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (286):warning:_picforAni This variable is not defined.
-59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
-60 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
-61 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (77):warning:NewNewGameEvent.Banker_Settle_pop This variable is not defined.
-62 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (109):warning:mcbankerHead This variable is not defined.
-63 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (117):warning:_bankerpic This variable is not defined.
-64 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (122):warning:_bankerpic This variable is not defined.
-65 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:BitmapData This variable is not defined.
-66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:_bankerpic.width This variable is not defined.
-67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (126):warning:_bankerpic.height This variable is not defined.
-68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (127):warning:_bankerpic This variable is not defined.
-69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (128):warning:Bitmap This variable is not defined.
-70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (130):warning:mcbankerHead This variable is not defined.
-71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (137):warning:_pic This variable is not defined.
-72 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (139):warning:BitmapData This variable is not defined.
-73 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (141):warning:Bitmap This variable is not defined.
-74 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (144):warning:_pic This variable is not defined.
-75 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (149):warning:ByteArray This variable is not defined.
-76 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (235):warning:info_0.headPic.loadImage This variable is not defined.
-77 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (240):warning:info_1.headPic.loadImage This variable is not defined.
-78 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (245):warning:info_2.headPic.loadImage This variable is not defined.
-79 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:dispatchEvent This variable is not defined.
-80 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:NewNewGameEvent This variable is not defined.
-81 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (277):warning:NewNewGameEvent.RUN_ResultOver This variable is not defined.
-82 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (133):warning:_bankerName This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (134):warning:_bankerName This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (43):warning:s This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (74):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (75):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (77):warning:MouseEvent.CLICK This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (78):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (79):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (81):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (82):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (84):warning:MouseEvent.CLICK This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (85):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (86):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (101):warning:MouseEvent.CLICK This variable is not defined.
+27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (102):warning:MouseEvent.CLICK This variable is not defined.
+28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:dispatchEvent This variable is not defined.
+29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:OperateEvent This variable is not defined.
+30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (143):warning:NewNewGameEvent.apply_banker This variable is not defined.
+31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:dispatchEvent This variable is not defined.
+32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:OperateEvent This variable is not defined.
+33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (150):warning:NewNewGameEvent.apply_banker This variable is not defined.
+34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (155):warning:MouseEvent.CLICK This variable is not defined.
+35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (156):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (157):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (159):warning:MouseEvent.CLICK This variable is not defined.
+38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (160):warning:MouseEvent.MOUSE_OVER This variable is not defined.
+39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (161):warning:MouseEvent.MOUSE_OUT This variable is not defined.
+40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (195):warning:textFix_text_1.visible This variable is not defined.
+41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (201):warning:textFix_text_1.visible This variable is not defined.
+42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (208):warning:URLRequest This variable is not defined.
+43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (213):warning:　_picforAni This variable is not defined.
+44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (221):warning:_picforAni This variable is not defined.
+45 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (222):warning:headbmp This variable is not defined.
+46 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (233):warning:URLRequest This variable is not defined.
+47 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (245):warning:_picforAni This variable is not defined.
+48 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (246):warning:headbmp This variable is not defined.
+49 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (257):warning:_picforAni This variable is not defined.
+50 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (257):warning:_picforAni This variable is not defined.
+51 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (268):warning:MovieClip This variable is not defined.
+52 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (283):warning:_picforAni This variable is not defined.
+53 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.width This variable is not defined.
+54 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (285):warning:_picforAni.height This variable is not defined.
+55 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BankerPanel.as (286):warning:_picforAni This variable is not defined.
+56 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
+57 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
+58 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (218):warning:hide This variable is not defined.
+59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
 */

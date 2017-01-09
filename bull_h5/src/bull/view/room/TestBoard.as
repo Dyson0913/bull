@@ -28,11 +28,13 @@ package bull.view.room
 		}
 		
 		private function onTestClick(e:Event):void
-		{			
-			var s:String = e.target.name;
-			s = s.substr(4, 1);			
+		{
+			var sName:String = e.target.name;
+			var pattern:RegExp = /btn_/;
+			sName = sName.replace(pattern, "");			
+			//s = s.substr(4, );			
 			
-			event(LightEvent.ITEM_CLICK,parseInt(s));			
+			event(LightEvent.ITEM_CLICK,parseInt(sName));			
 		}
 		
 		public function hide():void

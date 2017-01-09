@@ -132,37 +132,26 @@ package bull.modules.room.mediator
 		
 		private function onSettleUpdateHandler():void
 		{
-			
+			appMedel.Banker_uid = "10";
+			appMedel.user_id = "1";
+			appMedel.nick_name_64 = "Dyson";
+			appMedel.first_threePlayer = [ { "rank":0, "ligt":true, "name":"dyson1", "money":999 }, { "rank":1, "ligt":true, "name":"dyson2", "money":999 }, { "rank":2, "ligt":true, "name":"dyson3", "money":999 } ];
 			
 			//無人下注,跳過結算面版
-			if( appMedel.Settle_Time <2)
-			{
-				evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.RUN_ResultOver));				
-			}
-			else
+			//if( appMedel.Settle_Time <2)
+			//{
+				//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.RUN_ResultOver));				
+			//}
+			//else
 			{				
 			    //本局庄資訊
-				//game.viewResult.setHead2(game.viewBankerPanel.headbmp);				
-				//game.viewResult.setHead(game.viewHead.headbmp);
 				
 				var isbaner:Boolean = appMedel.Banker_uid === appMedel.user_id;
 				if( _isSys ) _bankerName = "吉胜游戏平台";
-				view.viewResult.initView(appMedel.nick_name_64,appMedel.TotalMoney,appMedel.Settle_Time,appMedel.self_settle_win,appMedel.first_threePlayer,isbaner,_bankerName);
+				view.viewResult.initView(appMedel.nick_name_64,roomData.settle_hand_money,roomData.LeftTime,roomData.settle_win_money,roomData.settle_User_info,isbaner,_bankerName);
 				view.viewResult.show();
 				
-				sentNotification(BullNotification.CASH_TAKEIN_RESPONES);				
-											
-				//if (appMedel.self_settle_win.toNumber() >0)
-				//{				
-					//LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().settle_win, 0, 1);		
-				//}
-				//else
-				//{
-					//LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().settle_lose, 0, 1);
-				//}
-				
-				
-				
+				sentNotification(BullNotification.CASH_TAKEIN_RESPONES);
 			}
 		}
 		
@@ -175,6 +164,7 @@ package bull.modules.room.mediator
 		
 		private function ontest(cmd:int):void 
 		{
+			trace("cmd");
 			sentNotification(BullNotification.TestOrder,cmd);
 		}
 		
@@ -183,42 +173,8 @@ package bull.modules.room.mediator
 		 */		
 		private function onClick(e:Event):void
 		{
-			trace("onClick:" + e.target);			
-			
-			//test
-			//構建回調封包
-			appMedel.Banker_uid = "10";
-			appMedel.user_id = "1";
-			appMedel.Settle_Time = 2;
-			appMedel.nick_name_64 = "Dyson";
-			appMedel.TotalMoney = 10;
-			appMedel.self_settle_win = Long.fromNumber(10000);
-			appMedel.first_threePlayer = [{"rank":0,"ligt":true,"name":"dyson1","money":999},{"rank":1,"ligt":true,"name":"dyson2","money":999},{"rank":2,"ligt":true,"name":"dyson3","money":999}];
-			
-			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
-			
-			var out:CS = proto.msg_proto.getCS();
-			out.msg_type = ENCSType.CS_TYPE_CALCULATE_NOTIFY;
-			out.calculate_notify = proto.msg_proto.getSCalculateNotify();
-			out.calculate_notify.banker_id = 123121323;			
-			
-			var user:SUserInfo = new SUserInfo();
-			user.uid = 1000;
-			user.money = new SBullMoney();
-			user.money.gb = 100
-			user.is_lamp = false;
-			user.win_money = 88888;
-			user.bet_money = 88888;
-			out.calculate_notify.user_info_s.push(user);
-			
-			
-			sentNotification(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),out);						
-			
-			
-			
-			
-			
-			return
+			trace("onClick:" + e.target);
+		
 			switch(e.target)
 			{
 				case view.helpBtn:

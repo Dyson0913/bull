@@ -4,6 +4,7 @@ package bull.modules.room.command
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
 	import conf.SResultInfo;
+	import msg.SHistroyNotify;
 	
 	import bull.events.BullNotification;	
 	import bull.modules.perload.services.PreLoadService;
@@ -27,9 +28,7 @@ package bull.modules.room.command
 		}
 		
 		private function histroy_notify(cs:CS):void
-		{			
-			trace("hisotry = " + cs);
-			
+		{
 			var bullData:Data = getSingleton(Data.NAME) as Data;			
 			
 			bullData.roomData.history_Win_info.length = 0;

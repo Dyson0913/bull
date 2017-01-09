@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":21,
+    "selecteID":23,
     "props":{"width":679,"sceneColor":"#000000","height":416},
     "nodeParent":-1,
     "label":"View",
@@ -122,7 +122,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":364,"x":498,"width":30,"text":"S","mouseEnabled":false,"height":27,"fontSize":30,"color":"#e53829","bold":true},
+            "props":{"y":365,"x":495,"width":23,"text":"S","mouseEnabled":false,"height":27,"fontSize":30,"color":"#e53829","bold":true,"align":"left"},
             "nodeParent":1,
             "label":"Label",
             "isDirectory":false,
@@ -142,7 +142,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":361,"x":476,"width":25,"var":"rest_time","text":"8","mouseEnabled":false,"height":33,"fontSize":35,"color":"#e53829","bold":true},
+            "props":{"y":360,"x":469,"width":25,"var":"rest_time","text":"8","mouseEnabled":false,"height":33,"fontSize":35,"color":"#e53829","bold":true,"align":"center"},
             "nodeParent":1,
             "label":"Label(rest_time)",
             "isDirectory":false,
@@ -156,26 +156,6 @@
                     "__InPool":false
                 }],
             "compId":22,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Label",
-            "props":{"y":324,"x":37,"width":114,"var":"banker_Money","text":"+9999999","mouseEnabled":false,"height":20,"fontSize":20,"color":"#9fb23c","bold":false,"align":"center"},
-            "nodeParent":1,
-            "label":"Label(banker_Money)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"text":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":23,
             "child":[
                 ]
         },
@@ -263,7 +243,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":37,"x":274,"width":389,"var":"lost_bitmap","text":"-¥1234.56","height":60,"font":"settlelost","align":"center"},
+            "props":{"y":86,"x":274,"width":389,"var":"lost_bitmap","text":"-¥1234.56","height":60,"font":"settlelost","align":"center"},
             "nodeParent":1,
             "label":"Label(lost_bitmap)",
             "isDirectory":false,
@@ -387,9 +367,10 @@
             "props":{"y":196,"x":303,"var":"headPic_0","skin":"res/gameScene/结算玩家头像.png"},
             "nodeParent":1,
             "label":"Image(headPic_0)",
-            "isDirectory":false,
+            "isOpen":true,
+            "isDirectory":true,
             "isAniNode":true,
-            "hasChild":false,
+            "hasChild":true,
             "frames":[
                 {
                     "type":1,
@@ -399,7 +380,27 @@
                 }],
             "compId":35,
             "child":[
-                ]
+                {
+                    "x":30,
+                    "type":"Image",
+                    "props":{"y":5,"x":4,"width":34,"var":"mcHead_0","skin":"res/gameScene/HeadIcon.jpg","height":34},
+                    "nodeParent":35,
+                    "label":"Image(mcHead_0)",
+                    "isOpen":true,
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "frames":[
+                        {
+                            "type":1,
+                            "props":{"y":190,"x":49,"skin":"res/gameScene/HeadIcon.jpg"},
+                            "frame":0,
+                            "__InPool":false
+                        }],
+                    "compId":48,
+                    "child":[
+                        ]
+                }]
         },
         {
             "x":15,
@@ -487,9 +488,10 @@
             "props":{"y":253,"x":303,"var":"headPic_1","skin":"res/gameScene/结算玩家头像.png"},
             "nodeParent":1,
             "label":"Image(headPic_1)",
-            "isDirectory":false,
+            "isOpen":true,
+            "isDirectory":true,
             "isAniNode":true,
-            "hasChild":false,
+            "hasChild":true,
             "frames":[
                 {
                     "type":1,
@@ -499,7 +501,27 @@
                 }],
             "compId":40,
             "child":[
-                ]
+                {
+                    "x":30,
+                    "type":"Image",
+                    "props":{"y":5,"x":4,"width":34,"var":"mcHead_1","skin":"res/gameScene/HeadIcon.jpg","height":34},
+                    "nodeParent":40,
+                    "label":"Image(mcHead_1)",
+                    "isOpen":false,
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "frames":[
+                        {
+                            "type":1,
+                            "props":{"y":190,"x":49,"skin":"res/gameScene/HeadIcon.jpg"},
+                            "frame":0,
+                            "__InPool":false
+                        }],
+                    "compId":49,
+                    "child":[
+                        ]
+                }]
         },
         {
             "x":15,
@@ -587,9 +609,10 @@
             "props":{"y":305,"x":303,"var":"headPic_2","skin":"res/gameScene/结算玩家头像.png"},
             "nodeParent":1,
             "label":"Image(headPic_2)",
-            "isDirectory":false,
+            "isOpen":true,
+            "isDirectory":true,
             "isAniNode":true,
-            "hasChild":false,
+            "hasChild":true,
             "frames":[
                 {
                     "type":1,
@@ -599,7 +622,26 @@
                 }],
             "compId":45,
             "child":[
-                ]
+                {
+                    "x":30,
+                    "type":"Image",
+                    "props":{"y":4,"x":4,"width":34,"var":"mcHead_2","skin":"res/gameScene/HeadIcon.jpg","height":34},
+                    "nodeParent":45,
+                    "label":"Image(mcHead_2)",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "frames":[
+                        {
+                            "type":1,
+                            "props":{"y":190,"x":49,"skin":"res/gameScene/HeadIcon.jpg"},
+                            "frame":0,
+                            "__InPool":false
+                        }],
+                    "compId":50,
+                    "child":[
+                        ]
+                }]
         },
         {
             "x":15,
