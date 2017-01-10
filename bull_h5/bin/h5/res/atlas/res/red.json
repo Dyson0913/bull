@@ -1,0 +1,558 @@
+{
+    "frames": {
+        "diamand_10.png": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_2.png": {
+            "frame": {
+                "x": 0,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_3.png": {
+            "frame": {
+                "x": 0,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_4.png": {
+            "frame": {
+                "x": 0,
+                "y": 798,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_5.png": {
+            "frame": {
+                "x": 0,
+                "y": 1064,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_6.png": {
+            "frame": {
+                "x": 192,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_7.png": {
+            "frame": {
+                "x": 192,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_8.png": {
+            "frame": {
+                "x": 192,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_9.png": {
+            "frame": {
+                "x": 192,
+                "y": 798,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_A.png": {
+            "frame": {
+                "x": 192,
+                "y": 1064,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_J.png": {
+            "frame": {
+                "x": 384,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_K.png": {
+            "frame": {
+                "x": 576,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "diamand_Q.png": {
+            "frame": {
+                "x": 768,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_10.png": {
+            "frame": {
+                "x": 960,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_2.png": {
+            "frame": {
+                "x": 384,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_3.png": {
+            "frame": {
+                "x": 384,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_4.png": {
+            "frame": {
+                "x": 384,
+                "y": 798,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_5.png": {
+            "frame": {
+                "x": 384,
+                "y": 1064,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_6.png": {
+            "frame": {
+                "x": 576,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_7.png": {
+            "frame": {
+                "x": 768,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_8.png": {
+            "frame": {
+                "x": 960,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_9.png": {
+            "frame": {
+                "x": 576,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_A.png": {
+            "frame": {
+                "x": 576,
+                "y": 798,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_J.png": {
+            "frame": {
+                "x": 576,
+                "y": 1064,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_K.png": {
+            "frame": {
+                "x": 768,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "heart_Q.png": {
+            "frame": {
+                "x": 960,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        }
+    },
+    "meta": {
+        "app": "http:\/\/www.layabox.com",
+        "version": "0.1.0 alpha",
+        "format": "json",
+        "scale": 1,
+        "image": "red.png",
+        "prefix": "res\/red\/"
+    }
+}

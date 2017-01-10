@@ -27,7 +27,6 @@ package bull.modules.room.command
 		
 		private function settle(cs:CS):void
 		{			
-			trace("settle "+ cs);
 			var bullData:Data = getSingleton(Data.NAME) as Data;			
 			
 			bullData.roomData.settle_banker_id = cs.calculate_notify.banker_id;

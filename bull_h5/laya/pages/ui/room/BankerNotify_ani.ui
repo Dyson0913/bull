@@ -98,7 +98,7 @@
             "compId":4,
             "child":[
                 ],
-            "$HIDDEN":true
+            "$HIDDEN":false
         },
         {
             "x":15,

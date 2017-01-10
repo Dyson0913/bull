@@ -111,11 +111,9 @@ package bull.modules.room.mediator
 			addNotifiction(BullNotification.STATE_CHANGE);
 			addNotifiction(BullNotification.HISTORY_NOTIFY);
 			addNotifiction(BullNotification.USER_NOTIFY);
-			addNotifiction(BullNotification.CARD_NOTIFY);
-			
+			addNotifiction(BullNotification.BET_NOTIFY);
+			addNotifiction(BullNotification.CARD_NOTIFY);			
 			addNotifiction(BullNotification.SETTLE_NOTIFY);
-			
-			addNotifiction(BullNotification.CASH_TAKEIN_RESPONES);				
 			
 			
 			//banker
@@ -123,6 +121,10 @@ package bull.modules.room.mediator
 			addNotifiction(BullNotification.NEW_BANKER);
 			addNotifiction(BullNotification.BANKER_CALCU);
 			
+			//reaction
+			
+			
+			addNotifiction(BullNotification.CASH_TAKEIN_RESPONES);				
 			
 			
 			addNotifiction(BullNotification.RoomSocketClose);
@@ -255,6 +257,11 @@ package bull.modules.room.mediator
 					onDealDataHandler();
 				break;				
 				
+				case BullNotification.BET_NOTIFY:
+					bet_otherHandler();
+				break;	
+				
+				
 				case BullNotification.SETTLE_NOTIFY:
 					onSettleUpdateHandler();
 				break;
@@ -359,6 +366,140 @@ package bull.modules.room.mediator
 			//}			
 			//
 			//LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().dealpoker, 0,1);
+		}
+		
+		
+		private function bet_otherHandler():void		
+		{
+			var data:Array = e.info;
+			var position:int = data[0];
+			var value:int = data[1];
+			var zone_total:Number = data[2];
+			var isMybet:Boolean = data[3];
+			var IsSub:Boolean = data[4];
+			var my_total:Number = data[5];
+			var bet_info:SBetNotify_Bet = data[6];
+			
+			if ( isMybet)
+			{
+				if (IsSub) 
+				{
+					//cnacelOkHandler 處理
+					game.viewArea.update_total(position,0);
+					
+					//每個注區金額更新
+					game.viewArea.update_other_total(appMedel.dataStartStatus.allBetClips);
+					
+				}
+				else if( appMedel.IsBetMax )
+				{
+					game.viewArea.my_batch_bet(value,position,my_total,zone_total);
+				}
+				else if( appMedel.IsRepeat )
+				{
+					//4包變一包					
+					var bet:SBetNotify_Bet;
+					for(var k:int =0;k< appMedel.sameBetinfo.length;k++)
+					{
+						bet = appMedel.sameBetinfo[k];
+						var zone:Number =  appMedel.dataStartStatus.allBetClips[bet.position-1];
+						var my:Number = appMedel.dataStartStatus.myBetClips[bet.position-1];
+						
+						var singlebet:Number = 0;
+						if( appMedel.roomParam.roomType != conf.ENRoomType.ROOM_TYPE_COIN )
+						{
+							singlebet = bet.value /100; 
+						}
+						else singlebet  = bet.value ;
+						
+						game.viewArea.my_batch_bet(singlebet,bet.position -1,my,zone);
+					}									
+				}
+				else
+				{					
+					//var chipVo:ChipVo = appMedel.chipVo;
+					//game.viewArea.betcoin(chipVo,my_total ,zone_total);
+					
+					//有可能是下50,最大只能下30,變批量下
+					game.viewArea.my_batch_bet(value,position,my_total,zone_total);
+					
+					
+				}
+			}
+			else
+			{
+				//是 取消下注嗎				
+				if (IsSub)
+				{					
+					value = -value;
+					game.viewArea.other_bet_cancel(value,position,zone_total);
+					
+					//每個注區金額更新
+					game.viewArea.update_other_total(appMedel.dataStartStatus.allBetClips);
+				}			
+				else
+				{					
+					//中途進入 ,沒有SBetNotify_Bet bet = null
+					if( bet_info ==null)
+					{
+						//桌面COIN清理
+						game.viewArea.clear_allChip();		
+						
+						for(var i:int =0;i< 4;i++)
+						{
+							var zonet:Number =  appMedel.dataStartStatus.allBetClips[i];
+							var singlebet:Number = 0;
+							if( appMedel.roomParam.roomType != conf.ENRoomType.ROOM_TYPE_COIN )
+							{
+								singlebet = zonet /100; 
+							}
+							else singlebet  = zonet ;
+							
+							game.viewArea.other_bet(i,singlebet ,zonet,isMybet);
+							
+							//TODO 更新自己的
+							var my_half:Number = appMedel.dataStartStatus.myBetClips[i];							
+							var mytotal:Number = 0;
+							if( appMedel.roomParam.roomType != conf.ENRoomType.ROOM_TYPE_COIN )
+							{
+								mytotal = my_half /100; 
+							}
+							else mytotal  = my_half ;
+							
+							game.viewArea.half_in_update_self_bet_hint(mytotal,i);
+						}
+					}
+					else
+					{
+						var betb:SBetNotify_Bet;
+						for(var i:int =0;i< appMedel.sameBetinfo.length;i++)
+						{
+							betb = appMedel.sameBetinfo[i];
+							var zonet:Number =  appMedel.dataStartStatus.allBetClips[betb.position-1];
+							
+							var singlebet:Number = 0;
+							if( appMedel.roomParam.roomType != conf.ENRoomType.ROOM_TYPE_COIN )
+							{
+								singlebet = betb.value /100; 
+							}
+							else singlebet  = betb.value ;
+							
+							game.viewArea.other_bet(betb.position-1,singlebet ,zonet,isMybet);
+						}				
+					}
+					//game.viewArea.other_bet(position,value,zone_total,isMybet);
+				}
+			}
+			
+			//前三名名單更新
+			game.viewArea.set_zoneList(appMedel.TabPlayerList);
+			
+			//限額更新
+			game.viewArea.update_limit(appMedel.roomParam.roomlimit,roomlimit);
+			
+			//明燈更新
+			game.viewArea.update_lamp(appMedel.where_is_lamp);
+			LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().Coin, 0,1);
 		}
 		
 		private function regFont(fontFileName:String,path:String):void

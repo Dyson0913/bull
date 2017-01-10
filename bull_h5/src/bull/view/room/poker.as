@@ -1,6 +1,7 @@
 package bull.view.room 
 {
 	import com.lightUI.events.LightEvent;
+	import conf.SDealInfo;
 	
 	import laya.events.Event;
 	import laya.utils.Tween;
@@ -13,6 +14,7 @@ package bull.view.room
 	{
 		private var _pokerdata:Array = [];
 		
+		//莊,閒1~~閒4
 		private var _po:Array = [ [[609, 92, -2], [636, 92, -2], [663, 92, -1], [690, 92, 0], [718, 92, 1]],
 								   [[221, 445, -6], [251, 445, -6], [281, 445, -6], [310, 445, -5], [340, 445, -4]],
 								   [[479, 443, -3], [509, 443, -3], [538, 443, -2], [569, 443, -2], [599, 443, -1]],
@@ -34,7 +36,6 @@ package bull.view.room
 		
 		public function set_data(data:Array):void
 		{
-			_pokerdata.length = 0;	
 			_pokerdata = data;
 			
 			for (var i:int = 0; i < 5; i++)
@@ -85,10 +86,6 @@ package bull.view.room
 		
 		private function set_poker_image(idx_i:int, idx_j:int ):void 
 		{
-			//var idx:int = _pokerdata[idx_i][idx_j];
-			
-			//TODO wait poker
-			this["poker_" + idx_i + "_" + idx_j].index = 1;
 			
 			if ( idx_i == 4 && idx_j == 4)
 			{
@@ -96,6 +93,10 @@ package bull.view.room
 				{
 					for (var j = 0; j < 5; j++)
 					{
+						var info:SDealInfo = _pokerdata[i];
+						var idx:int =info["card" + (j + 1)];
+						this["poker_" + i + "_" + j].index = idx;
+						
 						Tween.to(this["poker_" + i + "_" + j], { x:this["poker_" + i + "_" + j].x  + (j*27)}, 500, Ease.cubicOut,Handler.create(this,ani_ok,[i,j]));						
 					}
 				}
@@ -104,9 +105,40 @@ package bull.view.room
 		
 		private function ani_ok(idx_i:int, idx_j:int ):void 
 		{
+			//TODO上移牌型
+			if ( idx_j == 4)
+			{
+				var info:SDealInfo = _pokerdata[idx_i];
+				if (info.bull_type == 0)
+				{
+					//移一張
+					this["poker_" + idx_i + "_" + 4].y -= 10;
+				}
+				else if (info.bull_type >= 1 && info.bull_type <= 9)
+				{
+					//移最右兩張
+					this["poker_" + idx_i + "_" + 4].y -= 10;
+					this["poker_" + idx_i + "_" + 3].y -= 10;
+					
+				}
+				else
+				{
+					//移五張
+					this["poker_" + idx_i + "_" + 0].y -= 10;
+					this["poker_" + idx_i + "_" + 1].y -= 10;
+					this["poker_" + idx_i + "_" + 2].y -= 10;
+					this["poker_" + idx_i + "_" + 3].y -= 10;
+					this["poker_" + idx_i + "_" + 4].y -= 10;
+				}
+				
+			}
+			
+			
 			if ( idx_i == 4 && idx_j == 4)
 			{
-				//TODO　報牌型
+				//　報牌型
+				
+				
 			}
 		}
 		

@@ -1,0 +1,558 @@
+{
+    "frames": {
+        "club_10.png": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_2.png": {
+            "frame": {
+                "x": 0,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_3.png": {
+            "frame": {
+                "x": 0,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_4.png": {
+            "frame": {
+                "x": 0,
+                "y": 798,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_5.png": {
+            "frame": {
+                "x": 0,
+                "y": 1064,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_6.png": {
+            "frame": {
+                "x": 192,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_7.png": {
+            "frame": {
+                "x": 192,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_8.png": {
+            "frame": {
+                "x": 192,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_9.png": {
+            "frame": {
+                "x": 192,
+                "y": 798,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_A.png": {
+            "frame": {
+                "x": 192,
+                "y": 1064,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_J.png": {
+            "frame": {
+                "x": 384,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_K.png": {
+            "frame": {
+                "x": 576,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "club_Q.png": {
+            "frame": {
+                "x": 768,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_10.png": {
+            "frame": {
+                "x": 960,
+                "y": 0,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_2.png": {
+            "frame": {
+                "x": 384,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_3.png": {
+            "frame": {
+                "x": 384,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_4.png": {
+            "frame": {
+                "x": 384,
+                "y": 798,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_5.png": {
+            "frame": {
+                "x": 384,
+                "y": 1064,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_6.png": {
+            "frame": {
+                "x": 576,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_7.png": {
+            "frame": {
+                "x": 768,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_8.png": {
+            "frame": {
+                "x": 960,
+                "y": 266,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_9.png": {
+            "frame": {
+                "x": 576,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_A.png": {
+            "frame": {
+                "x": 576,
+                "y": 798,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_J.png": {
+            "frame": {
+                "x": 576,
+                "y": 1064,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_K.png": {
+            "frame": {
+                "x": 768,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "spade_Q.png": {
+            "frame": {
+                "x": 960,
+                "y": 532,
+                "w": 190,
+                "h": 264,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 190,
+                "h": 264
+            },
+            "sourceSize": {
+                "w": 190,
+                "h": 264
+            },
+            "rotated": false,
+            "trimed": false
+        }
+    },
+    "meta": {
+        "app": "http:\/\/www.layabox.com",
+        "version": "0.1.0 alpha",
+        "format": "json",
+        "scale": 1,
+        "image": "black.png",
+        "prefix": "res\/black\/"
+    }
+}

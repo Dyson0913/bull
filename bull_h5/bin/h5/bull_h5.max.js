@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
+	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -926,8 +926,10 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.ROOM_SOCKET_CONNECT_FAILED="roomSocketConnectFailed";
 		BullNotification.LOGIN_ROOM_RQS="loginRoomRequest";
 		BullNotification.STATE_CHANGE="STATE_CHANGE";
+		BullNotification.CASH_TAKEIN_RESPONES="CASH_TAKEIN_RESPONES";
 		BullNotification.HISTORY_NOTIFY="HistoryNotify";
 		BullNotification.USER_NOTIFY="usernotify";
+		BullNotification.BET_NOTIFY="betnotify";
 		BullNotification.CARD_NOTIFY="cardnotify";
 		BullNotification.SETTLE_NOTIFY="settlenotify";
 		BullNotification.BANKER_LIST="bankerlist";
@@ -947,7 +949,6 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.ROUND_COMMIT_RSP="roundCommitRsp";
 		BullNotification.ROUND_SETTLEMENT_RSP="roundSettlementRsp";
 		BullNotification.Change_Scene="car.Change_Scene";
-		BullNotification.CASH_TAKEIN_RESPONES="CASH_TAKEIN_RESPONES";
 		BullNotification.Scene_Hall="Scene_Hall";
 		BullNotification.Scene_Game="Scene_Game";
 		BullNotification.RoomSocketClose="RoomSocketClose";
@@ -23282,18 +23283,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Message)
 
 
-	//class msg.TimeSyncReq extends com.IProtobuf.Message
-	var TimeSyncReq=(function(_super){
-		function TimeSyncReq(){TimeSyncReq.__super.call(this);;
-		};
-
-		__class(TimeSyncReq,'msg.TimeSyncReq',_super);
-		var __proto=TimeSyncReq.prototype;
-		__proto.writeTo=function(value){}
-		return TimeSyncReq;
-	})(Message)
-
-
 	/**
 	*<code>Resource</code> 资源存取类。
 	*/
@@ -23526,6 +23515,18 @@ var Laya=window.Laya=(function(window,document){
 		Resource._isLoadedResourcesSorted=false;
 		return Resource;
 	})(EventDispatcher1)
+
+
+	//class msg.TimeSyncReq extends com.IProtobuf.Message
+	var TimeSyncReq=(function(_super){
+		function TimeSyncReq(){TimeSyncReq.__super.call(this);;
+		};
+
+		__class(TimeSyncReq,'msg.TimeSyncReq',_super);
+		var __proto=TimeSyncReq.prototype;
+		__proto.writeTo=function(value){}
+		return TimeSyncReq;
+	})(Message)
 
 
 	//class msg.TimeSyncRsp extends com.IProtobuf.Message
@@ -26264,53 +26265,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Filter)
 
 
-	//class laya.webgl.shader.d2.ShaderDefines2D extends laya.webgl.shader.ShaderDefines
-	var ShaderDefines2D=(function(_super){
-		function ShaderDefines2D(){
-			ShaderDefines2D.__super.call(this,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name,ShaderDefines2D.__int2nameMap);
-		}
-
-		__class(ShaderDefines2D,'laya.webgl.shader.d2.ShaderDefines2D',_super);
-		ShaderDefines2D.__init__=function(){
-			ShaderDefines2D.reg("TEXTURE2D",0x01);
-			ShaderDefines2D.reg("COLOR2D",0x02);
-			ShaderDefines2D.reg("PRIMITIVE",0x04);
-			ShaderDefines2D.reg("GLOW_FILTER",0x08);
-			ShaderDefines2D.reg("BLUR_FILTER",0x10);
-			ShaderDefines2D.reg("COLOR_FILTER",0x20);
-			ShaderDefines2D.reg("COLOR_ADD",0x40);
-			ShaderDefines2D.reg("WORLDMAT",0x80);
-		}
-
-		ShaderDefines2D.reg=function(name,value){
-			ShaderDefines._reg(name,value,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name);
-		}
-
-		ShaderDefines2D.toText=function(value,int2name,int2nameMap){
-			return ShaderDefines._toText(value,int2name,int2nameMap);
-		}
-
-		ShaderDefines2D.toInt=function(names){
-			return ShaderDefines._toInt(names,ShaderDefines2D.__name2int);
-		}
-
-		ShaderDefines2D.TEXTURE2D=0x01;
-		ShaderDefines2D.COLOR2D=0x02;
-		ShaderDefines2D.PRIMITIVE=0x04;
-		ShaderDefines2D.FILTERGLOW=0x08;
-		ShaderDefines2D.FILTERBLUR=0x10;
-		ShaderDefines2D.FILTERCOLOR=0x20;
-		ShaderDefines2D.COLORADD=0x40;
-		ShaderDefines2D.WORLDMAT=0x80;
-		ShaderDefines2D.FILLTEXTURE=0x100;
-		ShaderDefines2D.SKINMESH=0x200;
-		ShaderDefines2D.__name2int={};
-		ShaderDefines2D.__int2name=[];
-		ShaderDefines2D.__int2nameMap=[];
-		return ShaderDefines2D;
-	})(ShaderDefines)
-
-
 	/**
 	*发光滤镜(也可以当成阴影滤使用）
 	*/
@@ -26387,6 +26341,53 @@ var Laya=window.Laya=(function(window,document){
 
 		return GlowFilter;
 	})(Filter)
+
+
+	//class laya.webgl.shader.d2.ShaderDefines2D extends laya.webgl.shader.ShaderDefines
+	var ShaderDefines2D=(function(_super){
+		function ShaderDefines2D(){
+			ShaderDefines2D.__super.call(this,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name,ShaderDefines2D.__int2nameMap);
+		}
+
+		__class(ShaderDefines2D,'laya.webgl.shader.d2.ShaderDefines2D',_super);
+		ShaderDefines2D.__init__=function(){
+			ShaderDefines2D.reg("TEXTURE2D",0x01);
+			ShaderDefines2D.reg("COLOR2D",0x02);
+			ShaderDefines2D.reg("PRIMITIVE",0x04);
+			ShaderDefines2D.reg("GLOW_FILTER",0x08);
+			ShaderDefines2D.reg("BLUR_FILTER",0x10);
+			ShaderDefines2D.reg("COLOR_FILTER",0x20);
+			ShaderDefines2D.reg("COLOR_ADD",0x40);
+			ShaderDefines2D.reg("WORLDMAT",0x80);
+		}
+
+		ShaderDefines2D.reg=function(name,value){
+			ShaderDefines._reg(name,value,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name);
+		}
+
+		ShaderDefines2D.toText=function(value,int2name,int2nameMap){
+			return ShaderDefines._toText(value,int2name,int2nameMap);
+		}
+
+		ShaderDefines2D.toInt=function(names){
+			return ShaderDefines._toInt(names,ShaderDefines2D.__name2int);
+		}
+
+		ShaderDefines2D.TEXTURE2D=0x01;
+		ShaderDefines2D.COLOR2D=0x02;
+		ShaderDefines2D.PRIMITIVE=0x04;
+		ShaderDefines2D.FILTERGLOW=0x08;
+		ShaderDefines2D.FILTERBLUR=0x10;
+		ShaderDefines2D.FILTERCOLOR=0x20;
+		ShaderDefines2D.COLORADD=0x40;
+		ShaderDefines2D.WORLDMAT=0x80;
+		ShaderDefines2D.FILLTEXTURE=0x100;
+		ShaderDefines2D.SKINMESH=0x200;
+		ShaderDefines2D.__name2int={};
+		ShaderDefines2D.__int2name=[];
+		ShaderDefines2D.__int2nameMap=[];
+		return ShaderDefines2D;
+	})(ShaderDefines)
 
 
 	/**
@@ -29581,6 +29582,7 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(),HistoryCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(),UserNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(),UserNotifyCommand);
+			this.registerCommand(ENCSType.CS_TYPE_BET_NOTIFY.toString(),/*no*/this.BetNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString(),DealCardNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString(),BankerNotifyCommand);
@@ -30374,7 +30376,7 @@ var Laya=window.Laya=(function(window,document){
 			var proto=this.getModel("bullProtoModel");
 			var out=proto.msg_proto.getCS();
 			out.msg_type=11;
-			out.get_room_list_req=proto.msg_proto.getSGetRoomListReq()
+			out.get_room_list_req=proto.msg_proto.getSGetRoomListReq();
 			var socket=this.getModel("hallSocketService");
 			socket.sentMsg(out);
 		}
@@ -30681,39 +30683,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
 	/**
 	*规则面板
 	*/
@@ -30781,6 +30750,39 @@ var Laya=window.Laya=(function(window,document){
 		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
 		return RuleMediator;
 	})(Mediator)
+
+
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
 
 
 	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
@@ -31117,30 +31119,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Command)
 
 
-	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
-	var EnterRoomCommand=(function(_super){
-		function EnterRoomCommand(){
-			EnterRoomCommand.__super.call(this);
-		}
-
-		__class(EnterRoomCommand,'bull.modules.room.command.EnterRoomCommand',_super);
-		var __proto=EnterRoomCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="enterRoom"){
-				this.enterRoomRqsHandler(notification.getBody());
-			}
-		}
-
-		__proto.enterRoomRqsHandler=function(data){
-			var preLoad=this.getModel("perLoadService");
-			preLoad.loadRoom();
-		}
-
-		return EnterRoomCommand;
-	})(Command)
-
-
 	//class bull.modules.perload.services.PreLoadService extends com.lightMVC.parrerns.Model
 	var PreLoadService=(function(_super){
 		function PreLoadService(proxyName){
@@ -31295,6 +31273,30 @@ var Laya=window.Laya=(function(window,document){
 	})(Model)
 
 
+	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
+	var EnterRoomCommand=(function(_super){
+		function EnterRoomCommand(){
+			EnterRoomCommand.__super.call(this);
+		}
+
+		__class(EnterRoomCommand,'bull.modules.room.command.EnterRoomCommand',_super);
+		var __proto=EnterRoomCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="enterRoom"){
+				this.enterRoomRqsHandler(notification.getBody());
+			}
+		}
+
+		__proto.enterRoomRqsHandler=function(data){
+			var preLoad=this.getModel("perLoadService");
+			preLoad.loadRoom();
+		}
+
+		return EnterRoomCommand;
+	})(Command)
+
+
 	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
 	var HistoryCommand=(function(_super){
 		function HistoryCommand(){
@@ -31347,7 +31349,6 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.settle=function(cs){
-			console.log("settle "+cs);
 			var bullData=this.getSingleton("Data");
 			bullData.roomData.settle_banker_id=cs.calculate_notify.banker_id;
 			bullData.roomData.settle_win_money=cs.calculate_notify.win_money;
@@ -31471,12 +31472,13 @@ var Laya=window.Laya=(function(window,document){
 			this.addNotifiction("STATE_CHANGE");
 			this.addNotifiction("HistoryNotify");
 			this.addNotifiction("usernotify");
+			this.addNotifiction("betnotify");
 			this.addNotifiction("cardnotify");
 			this.addNotifiction("settlenotify");
-			this.addNotifiction("CASH_TAKEIN_RESPONES");
 			this.addNotifiction("bankerlist");
 			this.addNotifiction("newbanker");
 			this.addNotifiction("Bankercalcu");
+			this.addNotifiction("CASH_TAKEIN_RESPONES");
 			this.addNotifiction("RoomSocketClose");
 			this.addNotifiction("ExitRoomEvent");
 		}
@@ -31565,6 +31567,9 @@ var Laya=window.Laya=(function(window,document){
 				case "cardnotify":
 					this.onDealDataHandler();
 					break ;
+				case "betnotify":
+					this.bet_otherHandler();
+					break ;
 				case "settlenotify":
 					this.onSettleUpdateHandler();
 					break ;
@@ -31630,6 +31635,88 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		//LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().dealpoker,0,1);
+		__proto.bet_otherHandler=function(){
+			var data=/*no*/this.e.info;
+			var position=data[0];
+			var value=data[1];
+			var zone_total=data[2];
+			var isMybet=data[3];
+			var IsSub=data[4];
+			var my_total=data[5];
+			var bet_info=data[6];
+			if (isMybet){
+				if (IsSub){
+					/*no*/this.game.viewArea.update_total(position,0);
+					/*no*/this.game.viewArea.update_other_total(this.appMedel.dataStartStatus.allBetClips);
+				}
+				else if(this.appMedel.IsBetMax){
+					/*no*/this.game.viewArea.my_batch_bet(value,position,my_total,zone_total);
+				}
+				else if(this.appMedel.IsRepeat){
+					var bet;
+					for(var k=0;k< this.appMedel.sameBetinfo.length;k++){
+						bet=this.appMedel.sameBetinfo[k];
+						var zone=this.appMedel.dataStartStatus.allBetClips[bet.position-1];
+						var my=this.appMedel.dataStartStatus.myBetClips[bet.position-1];
+						var singlebet=0;
+						if(this.appMedel.roomParam.roomType !=1){
+							singlebet=bet.value /100;
+						}
+						else singlebet=bet.value;
+						/*no*/this.game.viewArea.my_batch_bet(singlebet,bet.position-1,my,zone);
+					}
+				}
+				else{
+					/*no*/this.game.viewArea.my_batch_bet(value,position,my_total,zone_total);
+				}
+			}
+			else{
+				if (IsSub){
+					value=-value;
+					/*no*/this.game.viewArea.other_bet_cancel(value,position,zone_total);
+					/*no*/this.game.viewArea.update_other_total(this.appMedel.dataStartStatus.allBetClips);
+				}
+				else{
+					if(bet_info==null){
+						/*no*/this.game.viewArea.clear_allChip();
+						for(var i=0;i< 4;i++){
+							var zonet=this.appMedel.dataStartStatus.allBetClips[i];
+							var singlebet=0;
+							if(this.appMedel.roomParam.roomType !=1){
+								singlebet=zonet /100;
+							}
+							else singlebet=zonet;
+							/*no*/this.game.viewArea.other_bet(i,singlebet ,zonet,isMybet);
+							var my_half=this.appMedel.dataStartStatus.myBetClips[i];
+							var mytotal=0;
+							if(this.appMedel.roomParam.roomType !=1){
+								mytotal=my_half /100;
+							}
+							else mytotal=my_half;
+							/*no*/this.game.viewArea.half_in_update_self_bet_hint(mytotal,i);
+						}
+					}
+					else{
+						var betb;
+						for(var i=0;i< this.appMedel.sameBetinfo.length;i++){
+							betb=this.appMedel.sameBetinfo[i];
+							var zonet=this.appMedel.dataStartStatus.allBetClips[betb.position-1];
+							var singlebet=0;
+							if(this.appMedel.roomParam.roomType !=1){
+								singlebet=betb.value /100;
+							}
+							else singlebet=betb.value;
+							/*no*/this.game.viewArea.other_bet(betb.position-1,singlebet ,zonet,isMybet);
+						}
+					}
+				}
+			}
+			/*no*/this.game.viewArea.set_zoneList(this.appMedel.TabPlayerList);
+			/*no*/this.game.viewArea.update_limit(this.appMedel.roomParam.roomlimit,/*no*/this.roomlimit);
+			/*no*/this.game.viewArea.update_lamp(this.appMedel.where_is_lamp);
+			/*no*/this.LightAssetManager.getInstance().playSound(/*no*/this.SoundNameManager.getInstance().Coin,0,1);
+		}
+
 		__proto.regFont=function(fontFileName,path){
 			var newFont=new BitmapFont();
 			var fnt=Light.loader.getRes(fontFileName);
@@ -33397,6 +33484,23 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
+
+
 	/**
 	*场景管理器
 	*@author light-k
@@ -33597,23 +33701,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
-
-
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -48252,6 +48339,107 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
+	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
+	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
+	*
+	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.HSlider;
+		*import laya.ui.VSlider;
+		*import laya.utils.Handler;
+		*public class VSlider_Example
+		*{
+			*private var vSlider:VSlider;
+			*public function VSlider_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
+				*}
+			*private function onLoadComplete():void
+			*{
+				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+				*vSlider.min=0;//设置 vSlider 最低位置值。
+				*vSlider.max=10;//设置 vSlider 最高位置值。
+				*vSlider.value=2;//设置 vSlider 当前位置值。
+				*vSlider.tick=1;//设置 vSlider 刻度值。
+				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
+				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+				*}
+			*private function onChange(value:Number):void
+			*{
+				*trace("滑块的位置： value="+value);
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*var vSlider;
+	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
+	*function onLoadComplete(){
+		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+		*vSlider.min=0;//设置 vSlider 最低位置值。
+		*vSlider.max=10;//设置 vSlider 最高位置值。
+		*vSlider.value=2;//设置 vSlider 当前位置值。
+		*vSlider.tick=1;//设置 vSlider 刻度值。
+		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
+		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+		*}
+	*function onChange(value){
+		*console.log("滑块的位置： value="+value);
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*import HSlider=laya.ui.HSlider;
+	*import VSlider=laya.ui.VSlider;
+	*import Handler=laya.utils.Handler;
+	*class VSlider_Example {
+		*private vSlider:VSlider;
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
+			*}
+		*private onLoadComplete():void {
+			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+			*this.vSlider.min=0;//设置 vSlider 最低位置值。
+			*this.vSlider.max=10;//设置 vSlider 最高位置值。
+			*this.vSlider.value=2;//设置 vSlider 当前位置值。
+			*this.vSlider.tick=1;//设置 vSlider 刻度值。
+			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
+			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
+			*}
+		*private onChange(value:number):void {
+			*console.log("滑块的位置： value="+value);
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.Slider
+	*/
+	//class laya.ui.VSlider extends laya.ui.Slider
+	var VSlider=(function(_super){
+		function VSlider(){VSlider.__super.call(this);;
+		};
+
+		__class(VSlider,'laya.ui.VSlider',_super);
+		return VSlider;
+	})(Slider)
+
+
+	/**
 	*<code>TextInput</code> 类用于创建显示对象以显示和输入文本。
 	*
 	*@example 以下示例代码，创建了一个 <code>TextInput</code> 实例。
@@ -48564,107 +48752,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return TextInput;
 	})(Label)
-
-
-	/**
-	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
-	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
-	*
-	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.HSlider;
-		*import laya.ui.VSlider;
-		*import laya.utils.Handler;
-		*public class VSlider_Example
-		*{
-			*private var vSlider:VSlider;
-			*public function VSlider_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
-				*}
-			*private function onLoadComplete():void
-			*{
-				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-				*vSlider.min=0;//设置 vSlider 最低位置值。
-				*vSlider.max=10;//设置 vSlider 最高位置值。
-				*vSlider.value=2;//设置 vSlider 当前位置值。
-				*vSlider.tick=1;//设置 vSlider 刻度值。
-				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
-				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-				*}
-			*private function onChange(value:Number):void
-			*{
-				*trace("滑块的位置： value="+value);
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*var vSlider;
-	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
-	*function onLoadComplete(){
-		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-		*vSlider.min=0;//设置 vSlider 最低位置值。
-		*vSlider.max=10;//设置 vSlider 最高位置值。
-		*vSlider.value=2;//设置 vSlider 当前位置值。
-		*vSlider.tick=1;//设置 vSlider 刻度值。
-		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
-		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-		*}
-	*function onChange(value){
-		*console.log("滑块的位置： value="+value);
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*import HSlider=laya.ui.HSlider;
-	*import VSlider=laya.ui.VSlider;
-	*import Handler=laya.utils.Handler;
-	*class VSlider_Example {
-		*private vSlider:VSlider;
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
-			*}
-		*private onLoadComplete():void {
-			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-			*this.vSlider.min=0;//设置 vSlider 最低位置值。
-			*this.vSlider.max=10;//设置 vSlider 最高位置值。
-			*this.vSlider.value=2;//设置 vSlider 当前位置值。
-			*this.vSlider.tick=1;//设置 vSlider 刻度值。
-			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
-			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
-			*}
-		*private onChange(value:number):void {
-			*console.log("滑块的位置： value="+value);
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.Slider
-	*/
-	//class laya.ui.VSlider extends laya.ui.Slider
-	var VSlider=(function(_super){
-		function VSlider(){VSlider.__super.call(this);;
-		};
-
-		__class(VSlider,'laya.ui.VSlider',_super);
-		return VSlider;
-	})(Slider)
 
 
 	/**
@@ -49858,9 +49945,9 @@ var Laya=window.Laya=(function(window,document){
 			this.viewHead=null;
 			this.viewSelectClip=null;
 			this.ViewBetGroup=null;
-			this.TestPanel=null;
 			this.ViewPlayerList=null;
 			this.viewBankerPanel=null;
+			this.TestPanel=null;
 			BullSceneUI.__super.call(this);
 		}
 
@@ -49868,7 +49955,7 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=BullSceneUI.prototype;
 		__proto.createChildren=function(){
 			View.regComponent("bull.view.room.RecordPanel",RecordPanel);
-			View.regComponent("bull.view.room.bankerBoard",bankerBoard);
+			View.regComponent("bull.view.room.TestBoard",TestBoard);
 			View.regComponent("bull.view.room.XiaZhuangPanel",XiaZhuangPanel);
 			View.regComponent("bull.view.room.BetAreaView",bull.view.room.BetAreaView);
 			View.regComponent("bull.view.room.Poker",Poker);
@@ -49879,15 +49966,15 @@ var Laya=window.Laya=(function(window,document){
 			View.regComponent("bull.view.room.HeadView",HeadView);
 			View.regComponent("bull.view.room.SelectClipView",SelectClipView);
 			View.regComponent("bull.view.room.BetBtnGroup",BetBtnGroup);
-			View.regComponent("bull.view.room.TestBoard",TestBoard);
 			View.regComponent("bull.view.room.PlayerListPanel",PlayerListPanel);
+			View.regComponent("bull.view.room.bankerBoard",bankerBoard);
 			View.regComponent("bull.view.room.WinLostEffect",WinLostEffect);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BullSceneUI.uiView);
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"Test","props":{"y":568,"x":85,"var":"TestPanel","runtime":"bull.view.room.TestBoard"}},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}},{"type":"Test","props":{"y":575,"x":24,"var":"TestPanel","runtime":"bull.view.room.TestBoard"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
@@ -50040,7 +50127,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(PokerUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"height":800},"child":[{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_0","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_1","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_2","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_3","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_4","source":"res/gameScene/牌背.png,res/gameScene/牌面.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"height":800},"child":[{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_0","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_1","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_2","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_3","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_0_4","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_0","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_1","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_2","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_3","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_1_4","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_0","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_1","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_2","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_3","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_2_4","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_0","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_1","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_2","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_3","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_3_4","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_0","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_1","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_2","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_3","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}},{"type":"Animation","props":{"y":139,"x":1118,"var":"poker_4_4","source":"res/gameScene/牌背.png,res/red/diamand_A.png,res/red/heart_A.png,res/black/club_A.png,res/black/spade_A.png,res/red/diamand_2.png,res/red/heart_2.png,res/black/club_2.png,res/black/spade_2.png,res/red/diamand_3.png,res/red/heart_3.png,res/black/club_3.png,res/black/spade_3.png,res/red/diamand_4.png,res/red/heart_4.png,res/black/club_4.png,res/black/spade_4.png,res/red/diamand_5.png,res/red/heart_5.png,res/black/club_5.png,res/black/spade_5.png,res/red/diamand_6.png,res/red/heart_6.png,res/black/club_6.png,res/black/spade_6.png,res/red/diamand_7.png,res/red/heart_7.png,res/black/club_7.png,res/black/spade_7.png,res/red/diamand_8.png,res/red/heart_8.png,res/black/club_8.png,res/black/spade_8.png,res/red/diamand_9.png,res/red/heart_9.png,res/black/club_9.png,res/black/spade_9.png,res/red/diamand_10.png,res/red/heart_10.png,res/black/club_10.png,res/black/spade_10.png,res/red/diamand_J.png,res/red/heart_J.png,res/black/club_J.png,res/black/spade_J.png,res/red/diamand_Q.png,res/red/heart_Q.png,res/black/club_Q.png,res/black/spade_Q.png,res/red/diamand_K.png,res/red/heart_K.png,res/black/club_K.png,res/black/spade_K.png","scaleY":0.4,"scaleX":0.4,"rotation":-69}}]};}
 		]);
 		return PokerUI;
 	})(View)
@@ -52333,7 +52420,6 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.set_data=function(data){
-			this._pokerdata.length=0;
 			this._pokerdata=data;
 			for (var i=0;i < 5;i++){
 				var list=this._po[i];
@@ -52373,10 +52459,12 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.set_poker_image=function(idx_i,idx_j){
-			this["poker_"+idx_i+"_"+idx_j].index=1;
 			if (idx_i==4 && idx_j==4){
 				for(var i=0;i< 5;i++){
 					for (var j=0;j < 5;j++){
+						var info=this._pokerdata[i];
+						var idx=info["card"+(j+1)];
+						this["poker_"+i+"_"+j].index=idx;
 						Tween.to(this["poker_"+i+"_"+j],{x:this["poker_"+i+"_"+j].x+(j*27)},500,Ease.cubicOut,Handler.create(this,this.ani_ok,[i,j]));
 					}
 				}
@@ -52384,11 +52472,28 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.ani_ok=function(idx_i,idx_j){
+			if (idx_j==4){
+				var info=this._pokerdata[idx_i];
+				if (info.bull_type==0){
+					this["poker_"+idx_i+"_"+4].y-=10;
+				}
+				else if (info.bull_type >=1 && info.bull_type <=9){
+					this["poker_"+idx_i+"_"+4].y-=10;
+					this["poker_"+idx_i+"_"+3].y-=10;
+				}
+				else{
+					this["poker_"+idx_i+"_"+0].y-=10;
+					this["poker_"+idx_i+"_"+1].y-=10;
+					this["poker_"+idx_i+"_"+2].y-=10;
+					this["poker_"+idx_i+"_"+3].y-=10;
+					this["poker_"+idx_i+"_"+4].y-=10;
+				}
+			}
 			if (idx_i==4 && idx_j==4){
 			}
 		}
 
-		//TODO　報牌型
+		//　報牌型
 		__proto.hide=function(){
 			for(var i=0;i< 5;i++){
 				for (var j=0;j < 5;j++){
@@ -53066,25 +53171,6 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -53101,6 +53187,25 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
 
 
 	/**
@@ -54117,11 +54222,30 @@ var Laya=window.Laya=(function(window,document){
 10 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
 11 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
 12 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (143):warning:_bankerName This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/BullConfigure.as (120):warning:BetNotifyCommand This variable is not defined.
 14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (144):warning:_bankerName This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (218):warning:hide This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (145):warning:_bankerName This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (322):warning:e.info This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (335):warning:game.viewArea.update_total This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (337):warning:game.viewArea.update_other_total This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (342):warning:game.viewArea.my_batch_bet This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (360):warning:game.viewArea.my_batch_bet This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (366):warning:game.viewArea.my_batch_bet This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (376):warning:game.viewArea.other_bet_cancel This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (378):warning:game.viewArea.update_other_total This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (384):warning:game.viewArea.clear_allChip This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (396):warning:game.viewArea.other_bet This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (406):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
+27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (424):warning:game.viewArea.other_bet This variable is not defined.
+28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (430):warning:game.viewArea.set_zoneList This variable is not defined.
+29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (432):warning:game.viewArea.update_limit This variable is not defined.
+30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (432):warning:roomlimit This variable is not defined.
+31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (434):warning:game.viewArea.update_lamp This variable is not defined.
+32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (435):warning:LightAssetManager.getInstance This variable is not defined.
+33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (435):warning:SoundNameManager.getInstance This variable is not defined.
+34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
+35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
+36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
+37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (218):warning:hide This variable is not defined.
+38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
 */

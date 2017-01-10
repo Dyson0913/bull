@@ -37,7 +37,7 @@ package bull.modules.common.command
 			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
 			var out:CS = proto.msg_proto.getCS();
 			out.msg_type = ENCSType.CS_TYPE_GET_ROOM_LIST_REQ;
-			out.get_room_list_req = proto.msg_proto.getSGetRoomListReq()
+			out.get_room_list_req = proto.msg_proto.getSGetRoomListReq();
 			
 			var socket:HallSocketService = getModel(HallSocketService.NAME) as HallSocketService;
 			socket.sentMsg(out);

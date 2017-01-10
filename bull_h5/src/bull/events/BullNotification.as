@@ -36,11 +36,15 @@ package bull.events
 		
 		public static const LOGIN_ROOM_RQS:String = "loginRoomRequest";//////////////////登录房间请求
 		
+		
+		//遊戲內
 		public static const STATE_CHANGE:String = "STATE_CHANGE";//////////////////狀態改變
+		public static const CASH_TAKEIN_RESPONES:String = "CASH_TAKEIN_RESPONES"; //更新手中金額
 		
 		//notify
 		public static const HISTORY_NOTIFY:String = "HistoryNotify";
 		public static const USER_NOTIFY:String = "usernotify";
+		public static const BET_NOTIFY:String = "betnotify";
 		public static const CARD_NOTIFY:String = "cardnotify";
 		public static const SETTLE_NOTIFY:String = "settlenotify";
 		
@@ -66,7 +70,7 @@ package bull.events
 		public static const ROUND_SETTLEMENT_RSP:String="roundSettlementRsp";
 		public static const Change_Scene:String = "car.Change_Scene"; //切换场景，主要是用于大厅和游戏场景切换
 		
-		public static const CASH_TAKEIN_RESPONES:String = "CASH_TAKEIN_RESPONES"; //切换场景，主要是用于大厅和游戏场景切换
+		
 		
 		
 		public static const Scene_Hall:String = "Scene_Hall"; 	//大厅场景
