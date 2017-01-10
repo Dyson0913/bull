@@ -117,7 +117,12 @@ package bull.modules.room.mediator
 			
 			addNotifiction(BullNotification.CASH_TAKEIN_RESPONES);				
 			
+			
+			//banker
+			addNotifiction(BullNotification.BANKER_LIST);
+			addNotifiction(BullNotification.NEW_BANKER);
 			addNotifiction(BullNotification.BANKER_CALCU);
+			
 			
 			
 			addNotifiction(BullNotification.RoomSocketClose);
@@ -169,7 +174,18 @@ package bull.modules.room.mediator
 			//Pop_banker_settle();
 		}
 		
+		private function onbankerlist_upateHandler():void
+		{			
+			view.viewBankerPanel.set_bankerlist([["player1","player2","player3","player4","player5","player6","player7","player8","player9","player10"],"[G币达到",3]);
+			//view.bnaklis.viewBankerPanel.set_list(appMedel.WaitBankList,appMedel.nick_name_64);
+		}
 		
+		private function onbankerInfoHandler():void
+		{
+			//view.viewBankerPanel.loadingpic(bankerHandler);
+			view.viewBankerPanel.newBanker(["dyson",5,"7894"])
+			
+		}
 		
 		override public function onInitialize():void 
 		{ 
@@ -237,16 +253,23 @@ package bull.modules.room.mediator
 				
 				case BullNotification.CARD_NOTIFY:
 					onDealDataHandler();
-				break;
-				
+				break;				
 				
 				case BullNotification.SETTLE_NOTIFY:
 					onSettleUpdateHandler();
 				break;
 				
+				
+				case BullNotification.NEW_BANKER:
+					onbankerInfoHandler();
+				break;								
 				case BullNotification.BANKER_CALCU:
 					onBankerSettleUpdateHandler();
+				break;				
+				case BullNotification.BANKER_LIST:
+					onbankerlist_upateHandler();
 				break;
+				
 				
 				case BullNotification.CASH_TAKEIN_RESPONES:
 					cashViewHandler();

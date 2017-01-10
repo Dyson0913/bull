@@ -46,7 +46,7 @@ package bull.events
 		
 		//banker_notify
 		public static const BANKER_LIST:String = "bankerlist";
-		public static const New_Banker:String = "newbanker";
+		public static const NEW_BANKER:String = "newbanker";
 		public static const BANKER_CALCU:String = "Bankercalcu";
 		
 		

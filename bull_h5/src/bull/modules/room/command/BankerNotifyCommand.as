@@ -47,7 +47,7 @@ package bull.modules.room.command
 			var bullData:Data = getSingleton(Data.NAME) as Data;			
 			bullData.roomData.newBaner_info = cs.banker_notify;			
 			
-			sentNotification(BullNotification.BANKER_LIST);			
+			sentNotification(BullNotification.NEW_BANKER);			
 		}
 		
 		private function banker_calcu(cs:CS):void

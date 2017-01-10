@@ -9,10 +9,10 @@ package bull.view.room
 	import laya.utils.Ease;
 	import laya.utils.Handler;
 	
-	import ui.ui.room.BankerBoardUI
+	import ui.ui.room.BankerPanelUI
 	
 	
-	public class bankerBoard extends BankerBoardUI
+	public class bankerBoard extends BankerPanelUI
 	{		
 		
 		public function bankerBoard() 
@@ -25,38 +25,38 @@ package bull.view.room
 		{
 			super.createChildren();			
 			
-			bankerapply.on(Event.CLICK, this, onClick);
-			deapply.on(Event.CLICK, this, onClick);			
+			btnBanker.on(Event.CLICK, this, onClick);
+			btndeBanker.on(Event.CLICK, this, onClick);			
 			
-			bankerapply.on(Event.MOUSE_OVER, this, onOver);
-			deapply.on(Event.MOUSE_OVER, this, onOver);
+			btnBanker.on(Event.MOUSE_OVER, this, onOver);
+			btndeBanker.on(Event.MOUSE_OVER, this, onOver);
 			
-			bankerapply.on(Event.MOUSE_OUT, this, onOut);
-			deapply.on(Event.MOUSE_OUT, this, onOut);
+			btnBanker.on(Event.MOUSE_OUT, this, onOut);
+			btndeBanker.on(Event.MOUSE_OUT, this, onOut);
 			
-			listHint.visible = false;
-			update_list(0,[],-1);
+			mcHintBoard.visible = false;
+			update_list([],-1);
 		}
 		
 		private function onOver(e:Event):void
 		{
-			listHint.visible = true;
+			mcHintBoard.visible = true;
 		}
 		
 		private function onOut(e:Event):void
 		{
-			listHint.visible = false;
+			mcHintBoard.visible = false;
 		}
 		
 		private function onClick(e:Event):void
 		{					
 			e.target			
 			
-			if ( e.target == bankerapply)
+			if ( e.target == btnBanker)
 			{
 				trace("bankerapply");
 			}
-			else if ( e.target == deapply)
+			else if ( e.target == btndeBanker)
 			{
 				trace("deapply");
 			}
@@ -66,53 +66,75 @@ package bull.view.room
 			//event(LightEvent.ITEM_CLICK,parseInt(s));			
 		}
 		
-		public function set_data(data:Array):void
-		{
-			
-			Title.text = data[0];
-			BankerTimes.text = data[1];
-			Money.text = data[2];
-			var playerCnt:int = data[3];			
-			
-			
-			Banker_ani.visible = true;
-			Banker_ani.alpha = 0;			
-			Tween.to(Banker_ani, { x:212, y:150, alpha:1, scaleX:1 , scaleY:1 }, 1000, Ease.cubicOut, Handler.create(this, ani_mid));			
-			
-			update_list(playerCnt, data[4],data[6]);
-			listHint.title.text = data[5];
+		public function set_bankerlist(data:Array):void
+		{				
+			update_list(data[0],data[2]);			
+			mcHintBoard.title.text = data[1];
+		}
+		
+		public function loadingpic(cmp:Handler):void
+		{			
 			
 		}
 		
-		private function update_list(playerCnt:int,playerlist:Array,self_po:int):void
+		public function newBanker(data:Array):void
 		{
-			//沒人排隊
+			mc_bankerAni.mcHead.loadImage("http://statics.kgame63.com/common/images/avatars/1.png", 0, 0, 143, 139);			
+			
+			txtname.text = data[0];
+			BankerTimes.text = data[1];
+			Point.text = data[2];
+			
+			mc_bankerAni.visible = true;
+			mc_bankerAni.alpha = 0;			
+			
+			mc_bankerAni["Name"].text = txtname.text;
+			Tween.to(mc_bankerAni, { x:212, y:150, alpha:1, scaleX:1 , scaleY:1 }, 1000, Ease.cubicOut, Handler.create(this, ani_mid));
+		}
+		
+		private function ani_mid( ):void 
+		{			
+			Tween.to(mc_bankerAni, { x:26, y:5, alpha:0, scaleX:0.3 , scaleY:0.3 }, 1000,Ease.cubicOut, Handler.create(this, ani_ok));
+		}
+		
+		private function ani_ok( ):void 
+		{
+			mc_bankerAni.visible = false;
+			mc_bankerAni.x = 563;
+			mc_bankerAni.y = 5;					
+			mc_bankerAni.alpha = 0;		
+		}
+		
+		private function update_list(playerlist:Array,self_po:int):void
+		{
+			//沒人排隊			
+			var playerCnt:int = playerlist.length;
 			if ( playerCnt == 0)
 			{
-				listHint.NoPlayer.visible = true;
+				mcHintBoard.NoPlayer.visible = true;
 				
-				listHint.NextPoint.visible = false;
-				listHint.Page.y = 126;				
-				listHint.bg.height = 168;
+				mcHintBoard.NextPoint.visible = false;
+				mcHintBoard.Page.y = 126;				
+				mcHintBoard.bg.height = 168;
 				
 				for (var i:int = 0; i < 10; i++)
 				{
-					listHint["player_" + i].text = "";
+					mcHintBoard["player_" + i].text = "";
 				}
 				
 				return;
 			}
 			
 			//有人排隊
-			listHint.NoPlayer.visible = false;			
-			listHint.NextPoint.visible = true;
+			mcHintBoard.NoPlayer.visible = false;			
+			mcHintBoard.NextPoint.visible = true;
 			
 			for (var i:int = 0; i < playerCnt; i++)
 			{
-				listHint["player_" + i].text = (i + 1) + " " + playerlist[i];
+				mcHintBoard["player_" + i].text = (i + 1) + " " + playerlist[i];
 				if ( i == self_po )
 				{					
-					listHint["player_" + i].color = "#b6c325";
+					mcHintBoard["player_" + i].color = "#b6c325";
 				}
 			}
 			
@@ -120,28 +142,15 @@ package bull.view.room
 			if (playerCnt <= 2 ) return;
 			
 			//底版高度動態拉伸
-			listHint.bg.height = 168 + (playerCnt - 2) * 28;
-			listHint.Page.y = 126 + (playerCnt - 2) * 28;	
-		}
-		
-		private function ani_mid( ):void 
-		{			
-			Tween.to(Banker_ani, { x:26, y:5, alpha:0, scaleX:0.3 , scaleY:0.3 }, 1000,Ease.cubicOut, Handler.create(this, ani_ok));			
-		}
-		
-		private function ani_ok( ):void 
-		{
-			Banker_ani.visible = false;
-			Banker_ani.x = 563;
-			Banker_ani.y = 5;					
-			Banker_ani.alpha = 0;		
+			mcHintBoard.bg.height = 168 + (playerCnt - 2) * 28;
+			mcHintBoard.Page.y = 126 + (playerCnt - 2) * 28;	
 		}
 		
 		
 		private function test():void
 		{			
-		//	view.bankerPanel.set_data(["jjj",99999,"111",0,["player1","player2"],"[现金达到",-1]);
-		//	view.bankerPanel.set_data(["jjj",99999,"111",6,["player1","player2","player3","player4","player5","player6","player7","player8","player9","player10"],"[G币达到",3]);
+			//view.viewBankerPanel.set_bankerlist([["player1","player2","player3","player4","player5","player6","player7","player8","player9","player10"],"[G币达到",3]);		
+			//view.viewBankerPanel.newBanker("dyson",5,"7894")
 		}			
 		
 	}
