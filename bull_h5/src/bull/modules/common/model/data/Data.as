@@ -16,7 +16,7 @@ package bull.modules.common.model.data
 		//public var carConfigData:CarConfigData;
 		
 		public var uid:Number;
-		public var token:Long;
+		public var token:String;
 		
 		public var truthLogin:Boolean;
 		public var hallHeartBeat:Boolean;

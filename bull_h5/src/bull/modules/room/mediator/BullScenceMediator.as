@@ -131,11 +131,20 @@ package bull.modules.room.mediator
 			addNotifiction(BullNotification.ExitRoomEvent);
 			
 			
-			
+			view.viewArea.on(LightEvent.ITEM_CLICK,this, onBetzoneClick);
 			
 			//廣播訊息			
 			
 		}
+		
+		private function onBetzoneClick(idx:int):void
+		{
+			trace("onBetzoneClick = " + idx);
+			view.viewArea.update_total(idx, 100);
+			view.viewArea.update_self(idx, 100);
+			view.viewArea.zone_light(3);
+		}
+		
 		
 		private function cashViewHandler():void
 		{			
@@ -221,13 +230,13 @@ package bull.modules.room.mediator
 				
 				case view.CarryInBtn:
 					view.btn_display(!view.btnBg.visible);					
-										
+					view.viewArea.set_();	
 				break;
 				
 				case view.PlayerListBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					onPlayerListUpdateHandler();
+					view.viewArea.hide();
 					view.ViewPlayerList.show();
 				break;
 				

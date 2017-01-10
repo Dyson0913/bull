@@ -7,7 +7,7 @@ package ui.ui.room {
 	import ui.ui.room.BetLImitUI;
 	import ui.ui.room.RankPanelUI;
 
-	public class BetZoneUI extends View {
+	public class BetAreaViewUI extends View {
 		public var zone_0:Image;
 		public var zone_1:Image;
 		public var zone_2:Image;

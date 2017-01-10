@@ -45,7 +45,7 @@ package bull.modules.common.command
 		{
 			trace("heartRspHandler");		
 			var bullData:Data = getSingleton(Data.NAME) as Data;
-			if(!bullData.hallHeartBeat) return;
+			//if(!bullData.hallHeartBeat) return;
 			bullData.hallHeartBeat = false;
 			(getMediator(HallMediator.NAME) as HallMediator).receiveHeartBeat();
 		}

@@ -47,8 +47,7 @@ package bull.modules.common.command
 			var roominfo:SRoomInfo = bullData.hallData.roomList[bullData.hallData.join_room_idx] as SRoomInfo;					
 			var config:SRoomConfig = roominfo.config;
 			
-			out.try_enter_table_req.room_type = config.room_type;
-			out.try_enter_table_req.room_id = config.room_id;
+			out.try_enter_table_req.room_id = config.room_id;			
 			
 			var socket:HallSocketService = getModel(HallSocketService.NAME) as HallSocketService;
 			socket.sentMsg(out);

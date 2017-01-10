@@ -22,9 +22,9 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":3,"x":2,"var":"mcItem0","skin":"res/gameScene/闲家下注区4.png","name":"mcItem0"},
+            "props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"},
             "nodeParent":1,
-            "label":"Image(mcItem0)",
+            "label":"Image(zone_0)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -62,9 +62,9 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":3,"x":503,"var":"mcItem2","skin":"res/gameScene/闲家下注区2.png","name":"mcItem2"},
+            "props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"},
             "nodeParent":1,
-            "label":"Image(mcItem2)",
+            "label":"Image(zone_2)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -82,9 +82,9 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":3,"x":747,"var":"mcItem3","skin":"res/gameScene/闲家下注区1.png","name":"mcItem3"},
+            "props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"},
             "nodeParent":1,
-            "label":"Image(mcItem3)",
+            "label":"Image(zone_3)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -265,7 +265,8 @@
                 }],
             "compId":22,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
@@ -286,7 +287,8 @@
                 }],
             "compId":31,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
@@ -575,6 +577,89 @@
                                 ]
                         }]
                 }],
+            "$HIDDEN":true
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":1,"x":0,"var":"Scene_0","skin":"res/gameScene/闲家下注区4.png","name":"Scene_0","alpha":0},
+            "nodeParent":1,
+            "label":"Image(Scene_0)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":259,"x":95,"skin":"res/gameScene/闲家下注区4.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":47,
+            "child":[
+                ],
+            "$HIDDEN":true
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":2,"x":253,"var":"Scene_1","skin":"res/gameScene/闲家下注区3.png","name":"Scene_1","alpha":0},
+            "nodeParent":1,
+            "label":"Image(Scene_1)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":263,"x":304,"skin":"res/gameScene/闲家下注区3.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":48,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":2,"x":501,"var":"Scene_2","skin":"res/gameScene/闲家下注区2.png","name":"Scene_2","alpha":0},
+            "nodeParent":1,
+            "label":"Image(Scene_2)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":86,"x":559,"skin":"res/gameScene/闲家下注区2.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":49,
+            "child":[
+                ],
+            "$HIDDEN":true
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":0,"x":747,"var":"Scene_3","skin":"res/gameScene/闲家下注区1.png","name":"Scene_3","alpha":0},
+            "nodeParent":1,
+            "label":"Image(Scene_3)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":295,"x":647,"skin":"res/gameScene/闲家下注区1.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":50,
+            "child":[
+                ],
             "$HIDDEN":true
         }],
     "animations":[

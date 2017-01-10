@@ -40,13 +40,13 @@ package bull.modules.common.command
 		
 		private function hallConnectCompleteHandler():void{
 			trace("hallConnectCompleteHandler");
-			var param:WebParam = WebService.resolveBrowserParam();
+			var param:WebParam = WebService.resolveBrowserParam();			
 			var bullData:Data = getSingleton(Data.NAME) as Data;
 			if(param.uid) {
 				bullData.uid = param.uid;
 				ShareObjectMgr.get().init(param.uid.toString());
 			}
-			//if(param.access_token) bullData.token = parseFloat(param.access_token);
+			if (param.access_token) bullData.token = param.access_token;
 			
 			sentNotification(BullNotification.LOGIN_HALL_RQS);
 		}

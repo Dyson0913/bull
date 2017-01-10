@@ -113,7 +113,7 @@ package bull.modules.BullHall.mediator
 		
 		private function onLowEnter(e:Event):void
 		{
-			if ( hallData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN) hallData.join_room_idx = 0;
+			if ( hallData.Cash_Type == ENMoneyType.MONEY_TYPE_COIN) hallData.join_room_idx = 0;
 			else hallData.join_room_idx = 2;
 			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
 		}
@@ -121,7 +121,7 @@ package bull.modules.BullHall.mediator
 		
 		private function onHighEnter(e:Event):void
 		{
-			if ( hallData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN) hallData.join_room_idx = 1;
+			if ( hallData.Cash_Type == ENMoneyType.MONEY_TYPE_COIN) hallData.join_room_idx = 1;
 			else hallData.join_room_idx = 3;
 			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
 		}		

@@ -56,12 +56,13 @@ package bull.modules.common.services
 		static public function resolveBrowserParam():WebParam {
 			
 			//FOR test test
-			var param:WebParam = new WebParam();
-			param.uid = 1014495;
-			param.access_token = "7b8007aaaef180fb1c0d78bc9c4b5589";
-			return param;
+			//var param:WebParam = new WebParam();
+			//param.uid = 1014495;
+			//param.access_token = "7b8007aaaef180fb1c0d78bc9c4b5589";
+			//return param;
 			
 			var browserStr:String = Browser.document.location.href.toString();
+			trace("browserStr = "+browserStr);
 			var askIndex:int = browserStr.indexOf("?");
 			var paramAry:Array = browserStr.substr(askIndex+1).split("&");
 			var param:WebParam = new WebParam();
