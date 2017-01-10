@@ -143,6 +143,8 @@ package bull.modules.room.mediator
 			view.viewArea.update_total(idx, 100);
 			view.viewArea.update_self(idx, 100);
 			view.viewArea.zone_light(3);
+			
+			view.viewArea.tablelimit_updata(800);
 		}
 		
 		
@@ -230,7 +232,7 @@ package bull.modules.room.mediator
 				
 				case view.CarryInBtn:
 					view.btn_display(!view.btnBg.visible);					
-					view.viewArea.set_();	
+					view.viewArea.set_(true,20000);	
 				break;
 				
 				case view.PlayerListBtn:

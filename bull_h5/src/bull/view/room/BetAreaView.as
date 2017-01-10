@@ -13,6 +13,8 @@ package bull.view.room
 	public class BetAreaView extends BetAreaViewUI
 	{		
 		private var zone_flash_times:int = 0;
+		private var _isPlayerbanker:Boolean;
+		private var _tableLimit:Number;
 		
 		public function BetAreaView() 
 		{
@@ -59,8 +61,12 @@ package bull.view.room
 			
 		}
 		
-		public function set_():void
+		public function set_(isPlayerbanker:Boolean,limit:Number):void
 		{			
+			hide();
+			_isPlayerbanker = isPlayerbanker;
+			_tableLimit = limit;
+			
 			this.visible = true;
 			zone_flash_times = 0;
 			for (var i:int = 0; i < 4; i++)
@@ -79,12 +85,17 @@ package bull.view.room
 			zone_flash_times++;
 			if (zone_flash_times == 4)
 			{
+				//閃爍結束
 				Laya.timer.clear(this, timerHandler);
 				for (var i:int = 0; i < 4; i++)
 				{					
 					this["Scene_" + i].on(Event.MOUSE_DOWN, this, onScenedown);
 					this["Scene_" + i].on(Event.MOUSE_UP, this, onSceneup);				
 				}	
+				BetLimit.visible = _isPlayerbanker;
+				BetLimit.amount.font = "LimitFont";
+				//TODO 幣值符號
+				BetLimit.amount.text  = _tableLimit;
 			}
 			
 			for (var i:int = 0; i < 4; i++)
@@ -93,15 +104,22 @@ package bull.view.room
 			}	
 		}
 				
-		public function table_limit(isbanker:Boolean,limit:Number):void
+		public function tablelimit_updata(rest:Number):void
 		{
-			if ( isbanker)
+			if ( BetLimit.visible)
 			{
-				BetLimit.visible = isbanker;			
-				BetLimit.amount.font = "LimitFont";
-				BetLimit.amount.text = limit.toString();
+				BetLimit.amount.text = rest.toString();
+				var percent:Number = rest / _tableLimit ;
+				if ( percent > 0.5) 
+				{
+					BetLimit.Green.width = 146 * percent;
+				}
+				else
+				{
+					BetLimit.Green.visible = false;
+					BetLimit.Red.width = 73 * (percent*2);
+				}
 			}
-			else BetLimit.visible = isbanker;
 		}
 		
 		public function update_total(idx:int,amount:Number ):void
@@ -148,6 +166,7 @@ package bull.view.room
 				this["self_amount_" + i]["amount"].text = "";
 				
 			}	
+			_isPlayerbanker = false;
 		}
 		
 		private function test():void
