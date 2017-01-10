@@ -15,7 +15,9 @@ package bull.view.room
 	public class PokerTypeBoard extends PokerTypeUI
 	{
 		private var blurFilter:BlurFilter 
-			
+		private var _pokerdata:Array = [];
+		
+		private var _Wineffect:WinLostEffect = null;
 		
 		public function PokerTypeBoard() 
 		{
@@ -30,9 +32,16 @@ package bull.view.room
 			blurFilter.strength = 5;			
 		}
 		
+		public function set_winlost(effect:WinLostEffect):void
+		{
+			_Wineffect = effect;
+			_Wineffect.hide();
+		}
+		
 		public function set_data(data:Array):void
 		{
 			this.hide();
+			_pokerdata = data;
 			
 			for (var i:int = 0; i < 5; i++)
 			{
@@ -65,7 +74,18 @@ package bull.view.room
 			this["pokerType_" + i]["odds"].alpha = 0;
 			this["pokerType_" + i]["odds"].text = odd.toString();;
 			Tween.to(this["pokerType_" + i]["odds"], {scaleX:1,scaleY:1,alpha:1}, 500, Ease.cubicOut,null,2);
+			
+			//庄家報完牌型
+			trace("i=="+i);
+			if (i == 4)
+			{
+				if ( _Wineffect != null)
+				{
+					_Wineffect.set_data(_pokerdata);
+				}
 				
+			}
+			
 		}
 		
 		

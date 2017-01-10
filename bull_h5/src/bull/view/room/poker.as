@@ -15,6 +15,7 @@ package bull.view.room
 		private var _pokerdata:Array = [];
 		private var _PokerType:PokerTypeBoard;
 		
+		
 		//莊,閒1~~閒4
 		private var _po:Array = [ [[609, 92, -2], [636, 92, -2], [663, 92, -1], [690, 92, 0], [718, 92, 1]],
 								   [[221, 445, -6], [251, 445, -6], [281, 445, -6], [310, 445, -5], [340, 445, -4]],
@@ -35,11 +36,12 @@ package bull.view.room
 			
 		}
 		
-		public function set_data(data:Array,pokertype:PokerTypeBoard):void
+		public function set_data(data:Array,pokertype:PokerTypeBoard,Wineffect:WinLostEffect):void
 		{
 			_pokerdata = data;
 			_PokerType = pokertype;
-			_PokerType.hide();
+			_PokerType.hide();						
+			_PokerType.set_winlost(Wineffect);
 			
 			for (var i:int = 0; i < 5; i++)
 			{

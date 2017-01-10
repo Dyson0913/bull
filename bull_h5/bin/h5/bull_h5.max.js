@@ -31453,7 +31453,7 @@ var Laya=window.Laya=(function(window,document){
 			this.regFont("SettleWin.fnt","res/gameScene/settleWin.png");
 			this.regFont("Settlelost.fnt","res/gameScene/settlelost.png");
 			this.regFont("bubbleWin.fnt","res/gameScene/bubbleWin.png");
-			this.regFont("bubbleLost.fnt","res/gameScene/bubbleWin.png");
+			this.regFont("bubbleLost.fnt","res/gameScene/bubbleLost.png");
 			this.regFont("LimitFont.fnt","res/gameScene/limitFont.png");
 			this.regFont("mybetFont.fnt","res/gameScene/tableFont.png");
 			this.regFont("vipfont.fnt","res/gameScene/vipfont.png");
@@ -31626,7 +31626,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.onDealDataHandler=function(){
 			if(this.roomData.State==5){
-				this.view.viewPoker.set_data(this.roomData.card_info,this.view.PokerTypePanel);
+				this.view.viewPoker.set_data(this.roomData.card_info,this.view.PokerTypePanel,this.view.ViewWinLostEffect);
 				this.view.viewPoker.play();
 			}
 			else{
@@ -52420,10 +52420,11 @@ var Laya=window.Laya=(function(window,document){
 			_super.prototype.createChildren.call(this);
 		}
 
-		__proto.set_data=function(data,pokertype){
+		__proto.set_data=function(data,pokertype,Wineffect){
 			this._pokerdata=data;
 			this._PokerType=pokertype;
 			this._PokerType.hide();
+			this._PokerType.set_winlost(Wineffect);
 			for (var i=0;i < 5;i++){
 				var list=this._po[i];
 				for (var j=0;j < 5;j++){
@@ -52513,7 +52514,9 @@ var Laya=window.Laya=(function(window,document){
 	//class bull.view.room.PokerTypeBoard extends ui.ui.room.PokerTypeUI
 	var PokerTypeBoard=(function(_super){
 		function PokerTypeBoard(){
-			this.blurFilter
+			this.blurFilter=null;
+			this._pokerdata=[];
+			this._Wineffect=null;
 			PokerTypeBoard.__super.call(this);
 		}
 
@@ -52525,8 +52528,14 @@ var Laya=window.Laya=(function(window,document){
 			this.blurFilter.strength=5;
 		}
 
+		__proto.set_winlost=function(effect){
+			this._Wineffect=effect;
+			this._Wineffect.hide();
+		}
+
 		__proto.set_data=function(data){
 			this.hide();
+			this._pokerdata=data;
 			for (var i=0;i < 5;i++){
 				this["pokerType_"+i].filters=[this.blurFilter];
 				this["pokerType_"+i]["odds"].font="SettleWin";
@@ -52548,6 +52557,12 @@ var Laya=window.Laya=(function(window,document){
 			this["pokerType_"+i]["odds"].alpha=0;
 			this["pokerType_"+i]["odds"].text=odd.toString();;
 			Tween.to(this["pokerType_"+i]["odds"],{scaleX:1,scaleY:1,alpha:1},500,Ease.cubicOut,null,2);
+			console.log("i=="+i);
+			if (i==4){
+				if (this._Wineffect !=null){
+					this._Wineffect.set_data(this._pokerdata);
+				}
+			}
 		}
 
 		__proto.hide=function(){
@@ -52889,17 +52904,21 @@ var Laya=window.Laya=(function(window,document){
 		__proto.set_data=function(data){
 			this.hide();
 			for (var i=0;i < 4;i++){
-				var win=data[i];
+				var info=data[i];
+				var win=0;
+				if (info.player_win !=null)win=info.player_win.toNumber();
 				if (win==0)continue ;
 				var lableItem;
 				var str;
 				if (win >=0){
 					lableItem=this["Win_"+i];
 					str="+"+win.toString();
+					lableItem.font="bubbleWin";
 				}
 				else{
 					lableItem=this["Lost_"+i];
 					str=win.toString();
+					lableItem.font="bubbleLost";
 				}
 				lableItem.visible=true;
 				lableItem.text=str;

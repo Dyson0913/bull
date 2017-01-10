@@ -1,6 +1,7 @@
 package bull.view.room 
 {
 	import com.lightUI.events.LightEvent;
+	import conf.SDealInfo;
 	import laya.ui.Label;
 	
 	import laya.filters.BlurFilter;
@@ -32,22 +33,29 @@ package bull.view.room
 			
 			for (var i:int = 0; i < 4; i++)
 			{
-				var win:int = data[i];
+				var info:SDealInfo = data[i];
+				
+				var win:Number = 0;
+				if ( info.player_win != null) win = info.player_win.toNumber();
+				
 				if ( win == 0) continue;
 				
 				var lableItem:Label;
 				var str:String;
+				
 				
 				//TODO 幣值符號
 				if ( win >= 0) 
 				{
 					lableItem = this["Win_" + i];
 					str = "+" + win.toString();
+					lableItem.font = "bubbleWin";
 				}
 				else
 				{
 					lableItem = this["Lost_" + i];
-					str = win.toString();					
+					str = win.toString();
+					lableItem.font = "bubbleLost";
 				}				
 				lableItem.visible = true;
 				lableItem.text = str;

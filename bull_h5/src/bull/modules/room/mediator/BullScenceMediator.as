@@ -78,7 +78,7 @@ package bull.modules.room.mediator
 			
 			//冒泡字型
 			regFont("bubbleWin.fnt", "res/gameScene/bubbleWin.png");			
-			regFont("bubbleLost.fnt", "res/gameScene/bubbleWin.png");
+			regFont("bubbleLost.fnt", "res/gameScene/bubbleLost.png");
 			
 			//限紅字型
 			regFont("LimitFont.fnt", "res/gameScene/limitFont.png");
@@ -329,7 +329,7 @@ package bull.modules.room.mediator
 		{
 			if( roomData.State == AppMedel.DEAL)
 			{
-				view.viewPoker.set_data(roomData.card_info,view.PokerTypePanel);
+				view.viewPoker.set_data(roomData.card_info,view.PokerTypePanel,view.ViewWinLostEffect);
 				view.viewPoker.play();
 			}
 			else
