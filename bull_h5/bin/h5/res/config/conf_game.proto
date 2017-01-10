@@ -133,8 +133,9 @@ message Double2DTable
 // 网络信息, 发给客户端,让客户端连接一个新的ConnServer时
 message SNetAddress
 {
-    optional string ip = 1;
-    optional uint32 port = 2;
+    optional string ip      = 1;
+    optional uint32 port    = 2; // 传统Port
+    optional uint32 hport   = 3; // HTML5 Port
 }
 
 ////////////////////////////////////////////////////////////
@@ -157,7 +158,11 @@ message SDealInfo
     optional int32 bull_type    = 6;    // 牌型
     optional int32 max_card     = 7;    // 最大的单张
     optional int32 odds         = 8;    // 赔率
-    optional int64 player_win   = 9;    // 玩家赢钱(正数表示玩家赢, 负数表示庄家赢)
+    // optional int64 player_win   = 9;    //   玩家赢钱(正数表示玩家赢, 负数表示庄家赢)
+    // remove by wary 改文档了
+    optional int64 player_win   = 9;    // 所有人这里看到的都是自己的钱
+
+
 }
 
 // 房间信息配置
@@ -170,13 +175,13 @@ message SRoomConfig
     optional string         room_name     = 5;      // 房间名称
     optional int32          max_player    = 6;      // 房间玩家上限
     optional int32          room_limit    = 7;      // 房间限红
-    optional int32          player_limit  = 8;      // 玩家限红
+    // optional int32          player_limit  = 8;      // 玩家限红 remove by wary 这个值和投注上限相等了, 所以已经没有用了
     optional int32          banker_limit  = 9;      // 坐庄限额
     optional int32          banker_times  = 10;     // 玩家坐庄次数
-    optional int32          pump_rate     = 11;     // 抽水比例
+
     optional bool           is_robbery    = 12;     // 是否可抢庄
     optional bool           is_multi      = 13;     // 是否允许多开
-    optional int32          water_level   = 14;     // 参考水位
+
     optional int32          time_id       = 15;     // 时间ID
 }
 
@@ -192,6 +197,14 @@ message STimeConfig
     optional int32          end_time        = 7;    // 结算
 }
 
+// 水位信息配置
+message SWaterConfig
+{
+    optional ENRoomType     room_type       = 1;     // 类型
+    optional int32          pump_rate       = 2;     // 抽水比例
+    optional int32          water_level     = 3;     // 参考水位
+}
+
 message Game
 {
     // repeated Table               tables              = 1; // 桌子配置
@@ -201,6 +214,7 @@ message Game
 
     repeated SRoomConfig         room_config         = 11;  // 房间信息配置
     repeated STimeConfig         time_config         = 12;  // 时间信息配置
+    repeated SWaterConfig        water_level_config  = 13;  // 水位信息配置
 }
 
 
@@ -229,8 +243,8 @@ message SUserInfo
 {
     optional uint64 uid               = 1;       // UID
     optional conf.SBullMoney money    = 2;       // 金钱
-    optional bool   is_lamp           = 3;       // 是否是明灯
-    optional int32  vip               = 4;       // VIP 等级
+    optional bool   is_light          = 3;       // 是否是明灯
+    // optional int32  vip               = 4;       // VIP 等级 // remove by wary 去掉VIP  现在 VIP 不从这里获取
     optional int64 win_money          = 5;       // 本轮胜利的金额
     optional int64 bet_money          = 6;       // 本轮下注的金额
 }
@@ -260,6 +274,7 @@ enum ENMoveType
 {
     MOVE_TYPE_MOVE_IN = 1;      // 进入房间
     MOVE_TYPE_MOVE_OUT = 2;     // 离开房间
+    MOVE_TYPE_MOVE_REFRESH = 3; // 刷新信息
 }
 
 // 下注位置
@@ -279,6 +294,15 @@ enum ENBankerType
 {
     BANKER_TYPE_UP      = 1;    // 上庄
     BANKER_TYPE_DOWN    = 2;    // 下庄
+}
+
+enum ENBankerStatus
+{
+    BANKER_STATUS_CONTINUE   = 1; // 继续坐庄
+    BANKER_STATUS_TIME_OVER  = 2; // 时间到
+    BANKER_STATUS_NO_MONEY   = 3; // 金钱不足
+    BANKER_STATUS_INITIATIVE = 4; // 主动下庄
+    BANKER_STATUS_LOST       = 5; // 断开连接
 }
 
 enum ENBullType

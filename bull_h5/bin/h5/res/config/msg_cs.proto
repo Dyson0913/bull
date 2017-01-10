@@ -11,7 +11,7 @@ package msg;
 
 ////////////////////////////////////////////////////////////
 // network headers
-message ConnHead 
+message ConnHead
 {
     optional uint64         uid            = 1;
     optional string         uname          = 5;
@@ -28,7 +28,7 @@ message ConnHead
     optional bool   is_login      = 21;
 }
 
-enum ENPlatformType 
+enum ENPlatformType
 {
     PLATFORM_TYPE_WEB = 1;
     PLATFORM_TYPE_MOBILE = 2;
@@ -36,7 +36,7 @@ enum ENPlatformType
 
 ////////////////////////////////////////////////////////////
 // enum define
-enum ENError 
+enum ENError
 {
     ERROR_OK                         = 0;  // 成功
     ERROR_INVALID_ROOM_ID            = 1;  // 无效的房间ID
@@ -89,14 +89,14 @@ enum ENError
 
 ////////////////////////////////////////////////////////////
 
-message ConnSvrInfo 
+message ConnSvrInfo
 {
     repeated conf.SNetAddress listen_addresses = 1;
 }
 
 ////////////////////////////////////////////////////////////
 // connsvr message
-message LoginReq 
+message LoginReq
 {
     optional uint64         uid            = 1;
     optional string         verify_sig     = 3;
@@ -104,38 +104,38 @@ message LoginReq
     optional ENPlatformType platform       = 5;
 }
 
-message LoginRsp 
+message LoginRsp
 {
     optional ENError result = 1;
     optional uint32         source      = 2;        //用户来源
     optional string         currency    = 3;        //平台传入的货币类型
 }
 
-message HeartBeatReq 
+message HeartBeatReq
 {
 }
 
-message HeartBeatRsp 
+message HeartBeatRsp
 {
 }
 
-message TimeSyncReq 
+message TimeSyncReq
 {
 }
 
-message TimeSyncRsp 
+message TimeSyncRsp
 {
     optional uint32 server_time = 1;
     optional uint64 server_time_milli = 2;
 }
 
-enum ENConnOperationType 
+enum ENConnOperationType
 {
     CONN_OPERATION_TYPE_STOP_SERVER = 1;
     CONN_OPERATION_TYPE_START_SERVER = 2;
 }
 
-message ConnOperationNotify 
+message ConnOperationNotify
 {
     optional ENConnOperationType op = 1;
 }
@@ -143,11 +143,11 @@ message ConnOperationNotify
 ////////////////////////////////////////////////////////////
 // gamesvr message
 
-message ExitTableReq 
+message ExitTableReq
 {
 }
 
-message ExitTableRsp 
+message ExitTableRsp
 {
     optional ENError result = 1;
 }
@@ -161,16 +161,16 @@ message SGetRoomListRsp
 {
     optional ENError            error_code  = 1;
     optional conf.SRoomInfos    room_infos  = 2;   // 房间列表
-    optional conf.ENRoomType    room_type   = 3;   // 房间类型(如果之前还在房间里的话)
+    // optional conf.ENRoomType    room_type   = 3;   // 房间类型(如果之前还在房间里的话)
     optional int32              room_id     = 4;   // 房间ID(如果之前还在房间里的话)
-    optional conf.SNetAddress   net_address = 5;  // 房间地址
+    optional conf.SNetAddress   net_address = 5;   // 房间地址
     optional int64              token       = 6;   // 服务器ID 校验码
 }
 
 // [请求]预先进入某个房间
 message STryEnterTableReq
 {
-    optional conf.ENRoomType    room_type = 1;    // 什么场
+    // optional conf.ENRoomType    room_type = 1;    // 什么场
     optional int32              room_id   = 2;    // 房间编号
 }
 
@@ -178,27 +178,28 @@ message STryEnterTableReq
 message STryEnterTableRsp
 {
     optional ENError            error_code      = 1;   // 错误码
-    optional conf.ENRoomType    room_type       = 2;   // 房间类型 G币or现金
+    // optional conf.ENRoomType    room_type       = 2;   // 房间类型 G币or现金
     optional int32              room_id         = 3;   // 房间编号
     optional conf.SNetAddress   net_address     = 4;   // ConnServer信息, 让客户端去连接这个服务器
     optional int64              token           = 5;   // 服务器ID 校验码
 }
 
  // [请求]正式进入某个房间       CS_TYPE_ENTER_TABLE_REQ
-message SEnterTableReq 
+message SEnterTableReq
 {
     optional int32 room_id  = 1;    // 房间编号
     optional int64 token    = 2;    // 服务器ID 校验码
 }
 
 // [返回]正式进入某个房间       CS_TYPE_ENTER_TABLE_RSP
-message SEnterTableRsp 
+message SEnterTableRsp
 {
     optional ENError            error_code      = 1;   // 错误码
     optional string             serverinfo      = 2;   // 服务器信息用来显示在PING值上
     optional int32              room_id         = 3;   // 房间ID
     optional int32              table_id        = 4;   // 桌子ID
     optional conf.ENRoomType    room_type       = 5;   // 桌子类型
+    optional conf.SUserInfo     user_info       = 6;   // 玩家的信息(如果有的話) (主要是玩家可能已經在房間了, 這種情況下, 不需要帶入等)
 }
 
 // [请求]带入金钱 CS_TYPE_CARRY_IN_REQ
@@ -228,14 +229,14 @@ message SBankerRsp
 }
 
 // [请求]下注 CS_TYPE_BET_REQ
-message SBetReq 
+message SBetReq
 {
     optional conf.ENBetPosition position  = 1;    // 下注位置    (-1. 取消,  0. 同上一轮,  1~4. 下注位置)
     optional int32              bet_money = 2;    // 下注的金额
 }
 
 // [返回]下注 CS_TYPE_BET_RSP
-message SBetRsp 
+message SBetRsp
 {
     optional ENError error_code            = 1;  // 下注错误码
     optional conf.ENBetPosition position   = 2;  // 下注位置    (-1. 取消,  0. 同上一轮,  1~4. 下注位置)
@@ -290,7 +291,15 @@ message SAllUserInfoNotify
 message SOneUserInfoNotify
 {
     optional conf.SUserInfo   user_info = 1;
-    optional conf.ENMoveType  type      = 2; // in = 1,  out = 2;
+    optional conf.ENMoveType  type      = 2; // in = 1,  out = 2, refresh = 3;
+}
+
+
+message SBetNotify_Bet
+{
+    optional int64 uid          = 1; // 当前下注的玩家的UID
+    optional int32 position     = 2; // 当前下注玩家位置(1-4)
+    optional int32 value        = 3; // 当前下注玩家的金额
 }
 
 // [广播]下注                   CS_TYPE_BET_NOTIFY
@@ -301,12 +310,8 @@ message SBetNotify
     optional conf.SBetInfo m3        = 3; // 第三家的下注信息
     optional conf.SBetInfo m4        = 4; // 第四家的下注信息
 
-
-    optional int64 uid          = 5; // 当前下注的玩家的UID
-    optional int32 position     = 6; // 当前下注玩家位置(1-4)
-    optional int32 value        = 7; // 当前下注玩家的金额
-
-    optional int32 light_pos    = 8; // 明灯玩家最多下注位置(0 表示无,  1-4 表示明灯位置)
+    optional int32              light_pos   = 8; // 明灯玩家最多下注位置(0 表示无,  1-4 表示明灯位置)
+    repeated SBetNotify_Bet     bets        = 9; // 综合下注讯息
 }
 
 // [广播]发牌信息              CS_TYPE_DEAL_CARD_NOTIFY
@@ -338,10 +343,12 @@ message SBankerListNotify
 // [广播]当前庄家信息           CS_TYPE_BANKER_NOTIFY
 message SBankerNotify
 {
-    optional uint64             banker_id   = 1;  // 庄家ID
-    optional int64              hand_money  = 2;  // 庄家手里金钱
-    optional int32              banker_time = 3;  // 当庄次数
-    optional int32              max_time    = 4;  // 最大次数
+    optional uint64                 banker_id       = 1;  // 庄家ID
+    optional int64                  hand_money      = 2;  // 庄家手里金钱
+    optional int32                  banker_time     = 3;  // 当庄次数
+    optional int32                  max_time        = 4;  // 最大次数
+    optional conf.ENBankerStatus    banker_status   = 5;  // 庄家状态
+    optional int32                  player_count    = 6;  // 桌内玩家人数
 }
 // [广播]庄家下庄计算信息       CS_TYPE_BANKER_CALCULATE_NOTIFY 40
 message SBankerCalculateNotify
@@ -352,7 +359,7 @@ message SBankerCalculateNotify
 
 ////////////////////////////////////////////////////////////
 // common message
-message NoticeInfo 
+message NoticeInfo
 {
     optional uint32            id         = 1;
     optional conf.ENNoticeType type       = 7;
@@ -364,26 +371,26 @@ message NoticeInfo
     optional uint64             match_id       = 11; // for NOTICE_TYPE_MTT_START
 }
 
-message PushNoticeNotify 
+message PushNoticeNotify
 {
     repeated NoticeInfo notices = 1;
 }
 
-enum ENKickReason 
+enum ENKickReason
 {
     KICK_REASON_FORBID_PLAYER = 1; // 被禁用的用户
     KICK_REASON_OTHER_LOGIN   = 2; // 异地登录
     KICK_REASON_SERVER_CLOSE  = 3; // 服务器已关闭
 }
 
-message KickPlayerNotify 
+message KickPlayerNotify
 {
     optional ENKickReason reason = 1;
 }
 
 /////////////////////////////////////////////////////////////
 // client to server messages
-enum ENCSType 
+enum ENCSType
 {
     CS_TYPE_NONE                  = 1;
     CS_TYPE_HEART_BEAT_REQ        = 3;
@@ -430,7 +437,7 @@ enum ENCSType
     CS_TYPE_KICK_PLAYER_NOTIFY = 143;
 }
 
-message CS 
+message CS
 {
     // headers
     optional ENCSType msg_type  = 1;
