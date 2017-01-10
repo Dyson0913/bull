@@ -31626,7 +31626,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.onDealDataHandler=function(){
 			if(this.roomData.State==5){
-				this.view.viewPoker.set_data(this.roomData.card_info);
+				this.view.viewPoker.set_data(this.roomData.card_info,this.view.PokerTypePanel);
 				this.view.viewPoker.play();
 			}
 			else{
@@ -49974,7 +49974,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}},{"type":"Test","props":{"y":575,"x":24,"var":"TestPanel","runtime":"bull.view.room.TestBoard"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetZone","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"visible":true,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}},{"type":"Test","props":{"y":575,"x":24,"var":"TestPanel","runtime":"bull.view.room.TestBoard"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
@@ -50153,7 +50153,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(PokerTypeUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"PokerEffect","props":{"y":501,"x":81,"visible":false,"var":"pokerType_0","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":504,"x":368,"visible":false,"var":"pokerType_1","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":506,"x":651,"visible":false,"var":"pokerType_2","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":505,"x":904,"visible":false,"var":"pokerType_3","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":126,"x":467,"visible":false,"var":"pokerType_4","runtime":"ui.ui.room.PokerEffectUI"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"PokerEffect","props":{"y":491,"x":58,"visible":false,"var":"pokerType_0","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":491,"x":320,"visible":false,"var":"pokerType_1","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":491,"x":595,"visible":false,"var":"pokerType_2","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":491,"x":850,"visible":false,"var":"pokerType_3","runtime":"ui.ui.room.PokerEffectUI"}},{"type":"PokerEffect","props":{"y":126,"x":424,"visible":false,"var":"pokerType_4","runtime":"ui.ui.room.PokerEffectUI"}}]};}
 		]);
 		return PokerTypeUI;
 	})(View)
@@ -52404,6 +52404,7 @@ var Laya=window.Laya=(function(window,document){
 	var Poker=(function(_super){
 		function Poker(){
 			this._pokerdata=[];
+			this._PokerType=null;
 			this._po=[ [[609,92,-2],[636,92,-2],[663,92,-1],[690,92,0],[718,92,1]],
 			[[221,445,-6],[251,445,-6],[281,445,-6],[310,445,-5],[340,445,-4]],
 			[[479,443,-3],[509,443,-3],[538,443,-2],[569,443,-2],[599,443,-1]],
@@ -52419,8 +52420,10 @@ var Laya=window.Laya=(function(window,document){
 			_super.prototype.createChildren.call(this);
 		}
 
-		__proto.set_data=function(data){
+		__proto.set_data=function(data,pokertype){
 			this._pokerdata=data;
+			this._PokerType=pokertype;
+			this._PokerType.hide();
 			for (var i=0;i < 5;i++){
 				var list=this._po[i];
 				for (var j=0;j < 5;j++){
@@ -52490,10 +52493,10 @@ var Laya=window.Laya=(function(window,document){
 				}
 			}
 			if (idx_i==4 && idx_j==4){
+				this._PokerType.set_data(this._pokerdata);
 			}
 		}
 
-		//　報牌型
 		__proto.hide=function(){
 			for(var i=0;i< 5;i++){
 				for (var j=0;j < 5;j++){
@@ -52529,12 +52532,12 @@ var Laya=window.Laya=(function(window,document){
 				this["pokerType_"+i]["odds"].font="SettleWin";
 				var info=data[i];
 				var de=i *1500;
-				this["pokerType_"+i].visible=true;
-				Tween.to(this["pokerType_"+i],{x:this["pokerType_"+i].x+200},500,Ease.quintInOut,Handler.create(this,this.onCompleteHandler,[i,info[1]]),de);
+				Tween.to(this["pokerType_"+i],{x:this["pokerType_"+i].x+150},500,Ease.quintInOut,Handler.create(this,this.onCompleteHandler,[i,info.odds]),de);
 			}
 		}
 
 		__proto.onCompleteHandler=function(i,odd){
+			this["pokerType_"+i].visible=true;
 			this["pokerType_"+i].filters=[];
 			this["pokerType_"+i]["multi"].scaleX=1.5;
 			this["pokerType_"+i]["multi"].scaleY=1.5;
@@ -52543,7 +52546,7 @@ var Laya=window.Laya=(function(window,document){
 			this["pokerType_"+i]["odds"].scaleX=1.5;
 			this["pokerType_"+i]["odds"].scaleY=1.5;
 			this["pokerType_"+i]["odds"].alpha=0;
-			this["pokerType_"+i]["odds"].text=odd;
+			this["pokerType_"+i]["odds"].text=odd.toString();;
 			Tween.to(this["pokerType_"+i]["odds"],{scaleX:1,scaleY:1,alpha:1},500,Ease.cubicOut,null,2);
 		}
 

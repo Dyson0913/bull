@@ -329,7 +329,7 @@ package bull.modules.room.mediator
 		{
 			if( roomData.State == AppMedel.DEAL)
 			{
-				view.viewPoker.set_data(roomData.card_info);
+				view.viewPoker.set_data(roomData.card_info,view.PokerTypePanel);
 				view.viewPoker.play();
 			}
 			else

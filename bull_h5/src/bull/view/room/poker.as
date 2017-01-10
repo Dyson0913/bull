@@ -13,6 +13,7 @@ package bull.view.room
 	public class Poker extends PokerUI
 	{
 		private var _pokerdata:Array = [];
+		private var _PokerType:PokerTypeBoard;
 		
 		//莊,閒1~~閒4
 		private var _po:Array = [ [[609, 92, -2], [636, 92, -2], [663, 92, -1], [690, 92, 0], [718, 92, 1]],
@@ -34,9 +35,11 @@ package bull.view.room
 			
 		}
 		
-		public function set_data(data:Array):void
+		public function set_data(data:Array,pokertype:PokerTypeBoard):void
 		{
 			_pokerdata = data;
+			_PokerType = pokertype;
+			_PokerType.hide();
 			
 			for (var i:int = 0; i < 5; i++)
 			{
@@ -136,9 +139,8 @@ package bull.view.room
 			
 			if ( idx_i == 4 && idx_j == 4)
 			{
-				//　報牌型
-				
-				
+				//開始報牌型
+				_PokerType.set_data(_pokerdata);
 			}
 		}
 		

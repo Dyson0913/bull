@@ -1,6 +1,7 @@
 package bull.view.room 
 {
 	import com.lightUI.events.LightEvent;
+	import conf.SDealInfo;
 	
 	import laya.filters.BlurFilter;
 	
@@ -38,12 +39,12 @@ package bull.view.room
 				this["pokerType_" + i].filters = [blurFilter];
 				this["pokerType_" + i]["odds"].font = "SettleWin";
 				//TODO 牌型
-				var info:Array = data[i];
+				var info:SDealInfo = data[i];
 				//this["pokerType_" + i]["Type"].index = 1;
 				var de:int = i * 1500;
 				
-				this["pokerType_" + i].visible = true;
-				Tween.to(this["pokerType_" + i], { x:this["pokerType_" + i].x+200}, 500, Ease.quintInOut,Handler.create(this,onCompleteHandler,[i,info[1]]),de);
+				
+				Tween.to(this["pokerType_" + i], { x:this["pokerType_" + i].x+150}, 500, Ease.quintInOut,Handler.create(this,onCompleteHandler,[i,info.odds]),de);
 			}
 			
 			
@@ -51,6 +52,7 @@ package bull.view.room
 		
 		private function onCompleteHandler(i:int,odd:int):void 
 		{
+			this["pokerType_" + i].visible = true;
 			this["pokerType_" + i].filters = [];
 			this["pokerType_" + i]["multi"].scaleX = 1.5;
 			this["pokerType_" + i]["multi"].scaleY = 1.5;
@@ -61,7 +63,7 @@ package bull.view.room
 			this["pokerType_" + i]["odds"].scaleX = 1.5;
 			this["pokerType_" + i]["odds"].scaleY = 1.5;
 			this["pokerType_" + i]["odds"].alpha = 0;
-			this["pokerType_" + i]["odds"].text = odd;
+			this["pokerType_" + i]["odds"].text = odd.toString();;
 			Tween.to(this["pokerType_" + i]["odds"], {scaleX:1,scaleY:1,alpha:1}, 500, Ease.cubicOut,null,2);
 				
 		}

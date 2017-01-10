@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":40,
+    "selecteID":33,
     "props":{"width":1400,"sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -292,7 +292,7 @@
             "compId":32,
             "child":[
                 ],
-            "$HIDDEN":false
+            "$HIDDEN":true
         },
         {
             "x":15,
@@ -314,13 +314,13 @@
             "compId":23,
             "child":[
                 ],
-            "$HIDDEN":false
+            "$HIDDEN":true
         },
         {
             "x":15,
             "type":"UIView",
             "source":"ui/room/PokerType.ui",
-            "props":{"y":0,"x":0,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"},
+            "props":{"y":0,"x":0,"visible":true,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"},
             "nodeParent":1,
             "label":"UIView(PokerTypePanel)",
             "isDirectory":false,
@@ -336,7 +336,8 @@
             "compId":33,
             "child":[
                 ],
-            "$HIDDEN":true
+            "$LOCKED":false,
+            "$HIDDEN":false
         },
         {
             "x":15,
