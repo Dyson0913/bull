@@ -160,7 +160,7 @@ package bull.modules.room.mediator
 				//dispatchEvent(new OperateEvent(NewNewGameEvent.SameBet, []));
 				//折分coin
 				var chips:Array = [];
-				chips = get_coin_info(3500, 0, false);
+				chips = get_coin_info(5000, 0, false);
 				add_otherbet(chips);				
 				
 			}
@@ -169,7 +169,7 @@ package bull.modules.room.mediator
 				//view.flySelfChipBack();
 				
 				var chips:Array = [];
-				chips = get_coin_info(2000, 0, false);
+				chips = get_coin_info(1000, 0, false);
 				sub_otherbet(chips);	
 				
 				//updateBetAmount();
