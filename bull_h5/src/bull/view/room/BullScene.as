@@ -97,6 +97,8 @@ package bull.view.room
 		public function bet():void
 		{
 			trace("bet");
+			
+			viewArea.set_fellow_coin(viewSelectClip["mcSelect_0"]);
 		}
 		
 		public function betCheck():void

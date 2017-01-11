@@ -52545,6 +52545,7 @@ var Laya=window.Laya=(function(window,document){
 			this.zone_flash_times=0;
 			this._isPlayerbanker=false;
 			this._tableLimit=NaN;
+			this.dragChip=new Chip();
 			BetAreaView.__super.call(this);
 		}
 
@@ -52555,6 +52556,8 @@ var Laya=window.Laya=(function(window,document){
 			for (var i=0;i < 4;i++){
 				this["total_amount_"+i]["bg_ani"].index=i;
 			}
+			this._arrows.visible=false;
+			this.dragChip.visible=false;
 		}
 
 		__proto.onScenedown=function(e){
@@ -52573,6 +52576,33 @@ var Laya=window.Laya=(function(window,document){
 			sName=sName.replace(pattern,"");
 			var idx=parseInt(sName);
 			this["zone_"+idx].visible=false;
+		}
+
+		__proto.onSceneOver=function(e){
+			this.dragChip.visible=true;
+			this._arrows.visible=true;
+			this._arrows.x=this.mouseX;
+			this._arrows.y=this.mouseY;
+			this.dragChip.x=this._arrows.x+20;
+			this.dragChip.y=this._arrows.x+30;
+			this.on("mousemove",this,this.dragChipHandler);
+		}
+
+		__proto.onSceneOut=function(e){
+			this.stopDragChip();
+		}
+
+		__proto.dragChipHandler=function(){
+			this._arrows.x=this.mouseX;
+			this._arrows.y=this.mouseY;
+			this.dragChip.x=this._arrows.x+20;
+			this.dragChip.y=this._arrows.x+30;
+		}
+
+		__proto.stopDragChip=function(){
+			this._arrows.visible=false;
+			this.dragChip.visible=false;
+			this.off("mousemove",this,this.dragChipHandler);
 		}
 
 		__proto.set_=function(isPlayerbanker,limit){
@@ -52596,6 +52626,8 @@ var Laya=window.Laya=(function(window,document){
 				for (var i=0;i < 4;i++){
 					this["Scene_"+i].on("mousedown",this,this.onScenedown);
 					this["Scene_"+i].on("mouseup",this,this.onSceneup);
+					this["Scene_"+i].on("mousemove",this,this.onSceneOver);
+					this["Scene_"+i].on("mouseout",this,this.onSceneOut);
 				}
 				this.BetLimit.visible=this._isPlayerbanker;
 				this.BetLimit.amount.font="LimitFont";
@@ -52654,6 +52686,10 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.get_zone=function(i){
 			return this["zone_"+i];
+		}
+
+		__proto.set_fellow_coin=function(chip){
+			this.dragChip.dataSource=chip.dataSource;
 		}
 
 		__proto.test=function(){}
@@ -52842,6 +52878,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.bet=function(){
 			console.log("bet");
+			this.viewArea.set_fellow_coin(this.viewSelectClip["mcSelect_0"]);
 		}
 
 		__proto.betCheck=function(){

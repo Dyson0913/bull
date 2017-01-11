@@ -17,6 +17,8 @@ package bull.view.room
 		private var _isPlayerbanker:Boolean;
 		private var _tableLimit:Number;
 		
+		public var dragChip:Chip = new Chip();
+		
 		public function BetAreaView() 
 		{
 			super();
@@ -32,6 +34,8 @@ package bull.view.room
 				this["total_amount_" + i]["bg_ani"].index = i;
 			}	
 			
+			_arrows.visible = false;
+			dragChip.visible = false;
 		}
 		
 		private function onScenedown(e:Event):void
@@ -60,6 +64,39 @@ package bull.view.room
 			this["zone_" + idx].visible = false;
 			
 			
+		}
+		
+		private function onSceneOver(e:Event):void
+		{			
+			dragChip.visible = true;
+			_arrows.visible = true;
+			
+			
+			_arrows.x = this.mouseX;
+			_arrows.y = this.mouseY;
+			dragChip.x = _arrows.x +20;
+			dragChip.y = _arrows.x +30;
+			this.on(Event.MOUSE_MOVE,this, dragChipHandler);
+			
+		}
+		
+		private function onSceneOut(e:Event):void
+		{
+			stopDragChip();
+		}
+		
+		
+		private function dragChipHandler():void{
+			_arrows.x = this.mouseX;
+			_arrows.y = this.mouseY;
+			dragChip.x = _arrows.x +20;
+			dragChip.y = _arrows.x +30;
+		}
+		
+		private function stopDragChip():void{
+			_arrows.visible = false;
+			dragChip.visible = false;
+			this.off(Event.MOUSE_MOVE,this, dragChipHandler);
 		}
 		
 		public function set_(isPlayerbanker:Boolean,limit:Number):void
@@ -91,7 +128,9 @@ package bull.view.room
 				for (var i:int = 0; i < 4; i++)
 				{					
 					this["Scene_" + i].on(Event.MOUSE_DOWN, this, onScenedown);
-					this["Scene_" + i].on(Event.MOUSE_UP, this, onSceneup);				
+					this["Scene_" + i].on(Event.MOUSE_UP, this, onSceneup);	
+					this["Scene_" + i].on(Event.MOUSE_MOVE, this, onSceneOver);	
+					this["Scene_" + i].on(Event.MOUSE_OUT, this, onSceneOut);	
 				}	
 				BetLimit.visible = _isPlayerbanker;
 				BetLimit.amount.font = "LimitFont";
@@ -173,6 +212,11 @@ package bull.view.room
 		public function get_zone(i:int):Image
 		{
 			return this["zone_" + i];
+		}
+		
+		public function set_fellow_coin(chip:Image):void
+		{
+			dragChip.dataSource = chip.dataSource;
 		}
 		
 		private function test():void
