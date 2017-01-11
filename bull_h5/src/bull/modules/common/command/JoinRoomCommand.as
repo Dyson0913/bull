@@ -44,7 +44,7 @@ package bull.modules.common.command
 			out.enter_table_req = proto.msg_proto.getSEnterTableReq();
 			
 			var bullData:Data = getSingleton(Data.NAME) as Data;
-			var roominfo:SRoomInfo = bullData.hallData.roomList[bullData.hallData.join_room_idx] as SRoomInfo;					
+			var roominfo:SRoomInfo = bullData.hallData.roomList[bullData.hallData.join_room_idx] as SRoomInfo;
 			var config:SRoomConfig = roominfo.config;
 			out.enter_table_req.room_id = config.room_id;
 			out.enter_table_req.token = bullData.token;

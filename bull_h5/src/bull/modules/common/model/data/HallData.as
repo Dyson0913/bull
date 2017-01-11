@@ -14,6 +14,8 @@ package bull.modules.common.model.data
 		
 		
 		private var _roomList:Array;////////////HallRoomVO
+		public var _already_in_msg:String;
+		public var _already_in_room_idx:int;
 		
 		private var _join_room_idx:int;
 		public var ip:String
@@ -26,6 +28,7 @@ package bull.modules.common.model.data
 		public function HallData()
 		{
 			super();
+			_already_in_roomid = -1;
 		}
 		
 		public function get roomList():Array

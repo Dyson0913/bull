@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
+	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -19615,10 +19615,6 @@ var Laya=window.Laya=(function(window,document){
 		WebGLContext._frontFace=0x0901;
 		WebGLContext.curBindTexTarget=null
 		WebGLContext.curBindTexValue=null
-		WebGLContext.__init$=function(){
-			;
-		}
-
 		return WebGLContext;
 	})()
 
@@ -29752,6 +29748,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.userBalanceCallback=function(param){
 			var hallData=this.getSingleton("hallData");
+			console.log("userBalanceCallback = "+param);
 			this.sentNotification("Close_BGM");
 			this.sentNotification("enterRoom");
 			return;
@@ -29830,15 +29827,31 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onLowEnter=function(e){
+			if (this.hallData._already_in_room_idx !=-1){
+				Alert.show(this.hallData._already_in_msg,"",AlertCancelPanel,null,Handler.create(this,this.enterGame));
+				return;
+			}
 			if (this.hallData.Cash_Type==2)this.hallData.join_room_idx=0;
 			else this.hallData.join_room_idx=2;
 			this.sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
 		}
 
 		__proto.onHighEnter=function(e){
+			if (this.hallData._already_in_room_idx !=-1){
+				Alert.show(this.hallData._already_in_msg,"",AlertCancelPanel,null,Handler.create(this,this.enterGame));
+				return;
+			}
 			if (this.hallData.Cash_Type==2)this.hallData.join_room_idx=1;
 			else this.hallData.join_room_idx=3;
 			this.sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+		}
+
+		__proto.enterGame=function(data,flg){
+			if (flg=="ok_btn"){
+				console.log("ok_btn");
+				this.hallData.join_room_idx=this.hallData._already_in_room_idx;
+				this.sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+			}
 		}
 
 		/**
@@ -30385,7 +30398,7 @@ var Laya=window.Laya=(function(window,document){
 			console.log("roomListResponseHandler",param);
 			var bulldata=this.getSingleton("Data");
 			if (param.get_room_list_rsp.error_code !=0){
-				Alert.show("无法取得桌资讯!","",AlertPanel);
+				Alert.show("无法取得桌资讯!","",/*no*/this.AlertPanel);
 				return;
 			};
 			var list=param.get_room_list_rsp.room_infos;
@@ -30395,6 +30408,25 @@ var Laya=window.Laya=(function(window,document){
 				roomList.push(list.roominfo[i]);
 			}
 			bulldata.hallData.roomList=roomList;
+			console.log("---------room id"+param.get_room_list_rsp.room_id);
+			if (param.get_room_list_rsp.room_id !=null){
+				for (var i=0;i < bulldata.hallData.roomList.length;i++){
+					var roominfo=bulldata.hallData.roomList [i];
+					var config=roominfo.config;
+					if (config.room_id==param.get_room_list_rsp.room_id){
+						bulldata.hallData._already_in_room_idx=i;
+						break ;
+					}
+				};
+				var roominfo=bulldata.hallData.roomList [bulldata.hallData._already_in_room_idx];
+				var config=roominfo.config;
+				var str="";
+				if (config.room_type==1)str="G币场"+" - "+config.room_name;
+				else str="现金场"+" - "+config.room_name;
+				console.log("---------room str"+str);
+				bulldata.hallData._already_in_msg="您正在"+str+" \n桌进行游戏，是否进入？";
+			}
+			else bulldata.hallData._already_in_room_idx=-1;
 		}
 
 		return RoomListCommand;
@@ -30467,8 +30499,7 @@ var Laya=window.Laya=(function(window,document){
 			if (e.try_enter_table_rsp.error_code==0){
 				var hallData=this.getSingleton("hallData");
 				hallData.ip=e.try_enter_table_rsp.net_address.ip;
-				hallData.port=e.try_enter_table_rsp.net_address.port;
-				hallData.Token=e.try_enter_table_rsp.token;
+				hallData.port=e.try_enter_table_rsp.net_address.hport;
 				this.sentNotification("getUserBalance",true);
 				(this.getModel("hallSocketService")).close();
 				}else{
@@ -30755,6 +30786,8 @@ var Laya=window.Laya=(function(window,document){
 	var HallData=(function(_super){
 		function HallData(){
 			this._roomList=null;
+			this._already_in_msg=null;
+			this._already_in_room_idx=0;
 			this._join_room_idx=0;
 			this.ip=null;
 			this.port=0;
@@ -30762,6 +30795,7 @@ var Laya=window.Laya=(function(window,document){
 			this.Cash_Type=0;
 			this.ViewIn="Lobby";
 			HallData.__super.call(this);
+			/*no*/this._already_in_roomid=-1;
 		}
 
 		__class(HallData,'bull.modules.common.model.data.HallData',_super);
@@ -30931,51 +30965,6 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
-	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
-	var BankerNotifyCommand=(function(_super){
-		function BankerNotifyCommand(){
-			BankerNotifyCommand.__super.call(this);
-		}
-
-		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
-		var __proto=BankerNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
-				this.bankerlist(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
-				this.newbaner(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
-				this.banker_calcu(notification.getBody());
-			}
-		}
-
-		__proto.bankerlist=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
-			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.newbaner=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.newBaner_info=cs.banker_notify;
-			this.sentNotification("newbanker");
-		}
-
-		__proto.banker_calcu=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.Banker_calcu_info.banker_calc_info_s=cs.banker_calc_notify.banker_calc_info_s;
-			bullData.roomData.Banker_calcu_info.total_win_money=cs.banker_calc_notify.total_win_money;
-			this.sentNotification("Bankercalcu");
-		}
-
-		return BankerNotifyCommand;
-	})(Command)
-
-
 	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
 	var TipsLoadMediator=(function(_super){
 		function TipsLoadMediator(mediatorName,viewComponent){
@@ -31021,6 +31010,51 @@ var Laya=window.Laya=(function(window,document){
 		TipsLoadMediator.NAME="tipsLoadMediator";
 		return TipsLoadMediator;
 	})(Mediator)
+
+
+	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
+	var BankerNotifyCommand=(function(_super){
+		function BankerNotifyCommand(){
+			BankerNotifyCommand.__super.call(this);
+		}
+
+		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
+		var __proto=BankerNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
+				this.bankerlist(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
+				this.newbaner(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
+				this.banker_calcu(notification.getBody());
+			}
+		}
+
+		__proto.bankerlist=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
+			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.newbaner=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.newBaner_info=cs.banker_notify;
+			this.sentNotification("newbanker");
+		}
+
+		__proto.banker_calcu=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.Banker_calcu_info.banker_calc_info_s=cs.banker_calc_notify.banker_calc_info_s;
+			bullData.roomData.Banker_calcu_info.total_win_money=cs.banker_calc_notify.total_win_money;
+			this.sentNotification("Bankercalcu");
+		}
+
+		return BankerNotifyCommand;
+	})(Command)
 
 
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
@@ -31112,6 +31146,30 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		return DealCardNotifyCommand;
+	})(Command)
+
+
+	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
+	var EnterRoomCommand=(function(_super){
+		function EnterRoomCommand(){
+			EnterRoomCommand.__super.call(this);
+		}
+
+		__class(EnterRoomCommand,'bull.modules.room.command.EnterRoomCommand',_super);
+		var __proto=EnterRoomCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="enterRoom"){
+				this.enterRoomRqsHandler(notification.getBody());
+			}
+		}
+
+		__proto.enterRoomRqsHandler=function(data){
+			var preLoad=this.getModel("perLoadService");
+			preLoad.loadRoom();
+		}
+
+		return EnterRoomCommand;
 	})(Command)
 
 
@@ -31267,30 +31325,6 @@ var Laya=window.Laya=(function(window,document){
 		PreLoadService.NAME="perLoadService";
 		return PreLoadService;
 	})(Model)
-
-
-	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
-	var EnterRoomCommand=(function(_super){
-		function EnterRoomCommand(){
-			EnterRoomCommand.__super.call(this);
-		}
-
-		__class(EnterRoomCommand,'bull.modules.room.command.EnterRoomCommand',_super);
-		var __proto=EnterRoomCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="enterRoom"){
-				this.enterRoomRqsHandler(notification.getBody());
-			}
-		}
-
-		__proto.enterRoomRqsHandler=function(data){
-			var preLoad=this.getModel("perLoadService");
-			preLoad.loadRoom();
-		}
-
-		return EnterRoomCommand;
-	})(Command)
 
 
 	//class bull.modules.room.command.HistoryCommand extends com.lightMVC.parrerns.Command
@@ -34847,6 +34881,32 @@ var Laya=window.Laya=(function(window,document){
 		RenderTarget2D.POOL=[];
 		return RenderTarget2D;
 	})(Texture)
+
+
+	//class com.iflash.net.Socket extends laya.net.Socket
+	var Socket1=(function(_super){
+		function Socket(host,port,byteClass){
+			this._outPut=null;
+			(port===void 0)&& (port=0);
+			byteClass=byteClass?byteClass:com.iflash.ByteArray;
+			Socket.__super.call(this,host,port,byteClass);
+		}
+
+		__class(Socket,'com.iflash.net.Socket',_super,'Socket1');
+		var __proto=Socket.prototype;
+		__proto.connectByUrl=function(url){
+			_super.prototype.connectByUrl.call(this,url);
+			this._outPut=this.output;
+		}
+
+		__proto.writeBytes=function(bytes,offset,length){
+			(offset===void 0)&& (offset=0);
+			(length===void 0)&& (length=0);
+			this._outPut.writeBytes(bytes,offset,length);
+		}
+
+		return Socket;
+	})(Socket)
 
 
 	//class laya.webgl.shader.d2.fillTexture.FillTextureSV extends laya.webgl.shader.d2.value.Value2D
@@ -48319,6 +48379,107 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
+	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
+	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
+	*
+	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.HSlider;
+		*import laya.ui.VSlider;
+		*import laya.utils.Handler;
+		*public class VSlider_Example
+		*{
+			*private var vSlider:VSlider;
+			*public function VSlider_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
+				*}
+			*private function onLoadComplete():void
+			*{
+				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+				*vSlider.min=0;//设置 vSlider 最低位置值。
+				*vSlider.max=10;//设置 vSlider 最高位置值。
+				*vSlider.value=2;//设置 vSlider 当前位置值。
+				*vSlider.tick=1;//设置 vSlider 刻度值。
+				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
+				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+				*}
+			*private function onChange(value:Number):void
+			*{
+				*trace("滑块的位置： value="+value);
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*var vSlider;
+	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
+	*function onLoadComplete(){
+		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+		*vSlider.min=0;//设置 vSlider 最低位置值。
+		*vSlider.max=10;//设置 vSlider 最高位置值。
+		*vSlider.value=2;//设置 vSlider 当前位置值。
+		*vSlider.tick=1;//设置 vSlider 刻度值。
+		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
+		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+		*}
+	*function onChange(value){
+		*console.log("滑块的位置： value="+value);
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*import HSlider=laya.ui.HSlider;
+	*import VSlider=laya.ui.VSlider;
+	*import Handler=laya.utils.Handler;
+	*class VSlider_Example {
+		*private vSlider:VSlider;
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
+			*}
+		*private onLoadComplete():void {
+			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+			*this.vSlider.min=0;//设置 vSlider 最低位置值。
+			*this.vSlider.max=10;//设置 vSlider 最高位置值。
+			*this.vSlider.value=2;//设置 vSlider 当前位置值。
+			*this.vSlider.tick=1;//设置 vSlider 刻度值。
+			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
+			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
+			*}
+		*private onChange(value:number):void {
+			*console.log("滑块的位置： value="+value);
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.Slider
+	*/
+	//class laya.ui.VSlider extends laya.ui.Slider
+	var VSlider=(function(_super){
+		function VSlider(){VSlider.__super.call(this);;
+		};
+
+		__class(VSlider,'laya.ui.VSlider',_super);
+		return VSlider;
+	})(Slider)
+
+
+	/**
 	*<code>TextInput</code> 类用于创建显示对象以显示和输入文本。
 	*
 	*@example 以下示例代码，创建了一个 <code>TextInput</code> 实例。
@@ -48631,107 +48792,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return TextInput;
 	})(Label)
-
-
-	/**
-	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
-	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
-	*
-	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.HSlider;
-		*import laya.ui.VSlider;
-		*import laya.utils.Handler;
-		*public class VSlider_Example
-		*{
-			*private var vSlider:VSlider;
-			*public function VSlider_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
-				*}
-			*private function onLoadComplete():void
-			*{
-				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-				*vSlider.min=0;//设置 vSlider 最低位置值。
-				*vSlider.max=10;//设置 vSlider 最高位置值。
-				*vSlider.value=2;//设置 vSlider 当前位置值。
-				*vSlider.tick=1;//设置 vSlider 刻度值。
-				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
-				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-				*}
-			*private function onChange(value:Number):void
-			*{
-				*trace("滑块的位置： value="+value);
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*var vSlider;
-	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
-	*function onLoadComplete(){
-		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-		*vSlider.min=0;//设置 vSlider 最低位置值。
-		*vSlider.max=10;//设置 vSlider 最高位置值。
-		*vSlider.value=2;//设置 vSlider 当前位置值。
-		*vSlider.tick=1;//设置 vSlider 刻度值。
-		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
-		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-		*}
-	*function onChange(value){
-		*console.log("滑块的位置： value="+value);
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*import HSlider=laya.ui.HSlider;
-	*import VSlider=laya.ui.VSlider;
-	*import Handler=laya.utils.Handler;
-	*class VSlider_Example {
-		*private vSlider:VSlider;
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
-			*}
-		*private onLoadComplete():void {
-			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-			*this.vSlider.min=0;//设置 vSlider 最低位置值。
-			*this.vSlider.max=10;//设置 vSlider 最高位置值。
-			*this.vSlider.value=2;//设置 vSlider 当前位置值。
-			*this.vSlider.tick=1;//设置 vSlider 刻度值。
-			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
-			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
-			*}
-		*private onChange(value:number):void {
-			*console.log("滑块的位置： value="+value);
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.Slider
-	*/
-	//class laya.ui.VSlider extends laya.ui.Slider
-	var VSlider=(function(_super){
-		function VSlider(){VSlider.__super.call(this);;
-		};
-
-		__class(VSlider,'laya.ui.VSlider',_super);
-		return VSlider;
-	})(Slider)
 
 
 	/**
@@ -51817,6 +51877,30 @@ var Laya=window.Laya=(function(window,document){
 	})(TextInput)
 
 
+	//class ui.ui.alert.AlertCancelPanelUI extends laya.ui.Dialog
+	var AlertCancelPanelUI=(function(_super){
+		function AlertCancelPanelUI(){
+			this.close_btn=null;
+			this.ok_btn=null;
+			this.cancel_btn=null;
+			this.txt_label=null;
+			AlertCancelPanelUI.__super.call(this);
+		}
+
+		__class(AlertCancelPanelUI,'ui.ui.alert.AlertCancelPanelUI',_super);
+		var __proto=AlertCancelPanelUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(AlertCancelPanelUI.uiView);
+		}
+
+		__static(AlertCancelPanelUI,
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":273},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_hint.png"}},{"type":"Button","props":{"y":-2,"x":406,"var":"close_btn","skin":"res/alert/btn_close.png","name":"close_btn"}},{"type":"Button","props":{"y":232,"x":89,"var":"ok_btn","skin":"assetsIn/ok.png","name":"ok_btn"}},{"type":"Button","props":{"y":232,"x":290,"var":"cancel_btn","skin":"assetsIn/cancel.png","name":"cancel_btn"}},{"type":"Label","props":{"y":114,"x":20,"width":410,"var":"txt_label","text":"label","height":96,"color":"#f1ebea","align":"center"}},{"type":"Label","props":{"y":7,"x":194,"width":59,"text":"温馨提示","scaleY":1.5,"scaleX":1.5,"height":19,"color":"#f4e6e6"}}]};}
+		]);
+		return AlertCancelPanelUI;
+	})(Dialog)
+
+
 	//class ui.ui.alert.AlertPanelUI extends laya.ui.Dialog
 	var AlertPanelUI=(function(_super){
 		function AlertPanelUI(){
@@ -53392,6 +53476,25 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -53408,25 +53511,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
 
 
 	/**
@@ -53531,6 +53615,26 @@ var Laya=window.Laya=(function(window,document){
 		__proto.createChildren=function(){}
 		return NodeTool;
 	})(NodeToolUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
+	var NodeTreeSetting=(function(_super){
+		function NodeTreeSetting(){
+			NodeTreeSetting.__super.call(this);
+			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
+			this.createView(NodeTreeSettingUI.uiView);
+		}
+
+		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
+		var __proto=NodeTreeSetting.prototype;
+		//inits();
+		__proto.createChildren=function(){}
+		return NodeTreeSetting;
+	})(NodeTreeSettingUI)
 
 
 	/**
@@ -53774,26 +53878,6 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return NodeTree;
 	})(NodeTreeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
-	var NodeTreeSetting=(function(_super){
-		function NodeTreeSetting(){
-			NodeTreeSetting.__super.call(this);
-			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
-			this.createView(NodeTreeSettingUI.uiView);
-		}
-
-		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
-		var __proto=NodeTreeSetting.prototype;
-		//inits();
-		__proto.createChildren=function(){}
-		return NodeTreeSetting;
-	})(NodeTreeSettingUI)
 
 
 	/**
@@ -54099,6 +54183,49 @@ var Laya=window.Laya=(function(window,document){
 
 		return AssetsInSlider;
 	})(AssetsInSliderUI)
+
+
+	//class bull.view.alert.AlertCancelPanel extends ui.ui.alert.AlertCancelPanelUI
+	var AlertCancelPanel=(function(_super){
+		function AlertCancelPanel(){
+			this._data=null;
+			AlertCancelPanel.__super.call(this);
+			this.init();
+		}
+
+		__class(AlertCancelPanel,'bull.view.alert.AlertCancelPanel',_super);
+		var __proto=AlertCancelPanel.prototype;
+		Laya.imps(__proto,{"com.lightUI.components.alert.IAlertWindow":true})
+		__proto.init=function(){
+			var l=this.numChildren;
+			var child;
+			for (var i=0;i < l;i++){
+				child=this.getChildAt(i);
+				if(((this.getChildAt(i))instanceof laya.ui.Button )){
+					child.on("mousedown",this,this._$8_onClick);
+				}
+			}
+		}
+
+		__proto._$8_onClick=function(e){
+			this.event("close",e.target.name);
+		}
+
+		__getset(0,__proto,'title',null,function(value){
+		});
+
+		__getset(0,__proto,'msg',null,function(value){
+			this.txt_label.text=value;
+		});
+
+		__getset(0,__proto,'data',function(){
+			return this._data;
+			},function(value){
+			this._data=value;
+		});
+
+		return AlertCancelPanel;
+	})(AlertCancelPanelUI)
 
 
 	//class bull.view.alert.AlertPanel extends ui.ui.alert.AlertPanelUI
@@ -54424,49 +54551,51 @@ var Laya=window.Laya=(function(window,document){
 	})(SmallPanelUI)
 
 
-	Laya.__init([EventDispatcher1,Dialog,LocalStorage,Timer,Browser,Proxy,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,WebGLFilter,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile]);
+	Laya.__init([EventDispatcher1,Dialog,LocalStorage,Timer,Browser,Proxy,ShareObjectMgr,Render,View,WebGLContext2D,WebGLFilter,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile]);
 	new Main();
 
 })(window,document,Laya);
 
 
 /*
-1 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:Loger.get This variable is not defined.
-2 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:System.totalMemory This variable is not defined.
-3 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (99):warning:LocalConnection This variable is not defined.
-4 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (100):warning:LocalConnection This variable is not defined.
-5 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:Loger.get This variable is not defined.
-6 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:System.totalMemory This variable is not defined.
-7 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:Loger.get This variable is not defined.
-8 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:System.totalMemory This variable is not defined.
-9 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (18):warning:internalHigh This variable is not defined.
-10 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
-11 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
-12 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
-13 file:///E:/game_dev/laya/bull/bull_h5/src/bull/BullConfigure.as (120):warning:BetNotifyCommand This variable is not defined.
-14 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (155):warning:_bankerName This variable is not defined.
-15 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (156):warning:_bankerName This variable is not defined.
-16 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (333):warning:e.info This variable is not defined.
-17 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (346):warning:game.viewArea.update_total This variable is not defined.
-18 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (348):warning:game.viewArea.update_other_total This variable is not defined.
-19 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (353):warning:game.viewArea.my_batch_bet This variable is not defined.
-20 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (371):warning:game.viewArea.my_batch_bet This variable is not defined.
-21 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (377):warning:game.viewArea.my_batch_bet This variable is not defined.
-22 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (387):warning:game.viewArea.other_bet_cancel This variable is not defined.
-23 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (389):warning:game.viewArea.update_other_total This variable is not defined.
-24 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (395):warning:game.viewArea.clear_allChip This variable is not defined.
-25 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (407):warning:game.viewArea.other_bet This variable is not defined.
-26 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (417):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
-27 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (435):warning:game.viewArea.other_bet This variable is not defined.
-28 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (441):warning:game.viewArea.set_zoneList This variable is not defined.
-29 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (443):warning:game.viewArea.update_limit This variable is not defined.
-30 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (443):warning:roomlimit This variable is not defined.
-31 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (445):warning:game.viewArea.update_lamp This variable is not defined.
-32 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (446):warning:LightAssetManager.getInstance This variable is not defined.
-33 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (446):warning:SoundNameManager.getInstance This variable is not defined.
-34 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
-35 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
-36 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
-37 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/ResultPanel.as (218):warning:hide This variable is not defined.
-38 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
+1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:Loger.get This variable is not defined.
+2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:System.totalMemory This variable is not defined.
+3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (99):warning:LocalConnection This variable is not defined.
+4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (100):warning:LocalConnection This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:Loger.get This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:System.totalMemory This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:Loger.get This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:System.totalMemory This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (18):warning:internalHigh This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/BullConfigure.as (120):warning:BetNotifyCommand This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/RoomListCommand.as (57):warning:AlertPanel This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/HallData.as (29):warning:_already_in_roomid This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (155):warning:_bankerName This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (156):warning:_bankerName This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (333):warning:e.info This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (346):warning:game.viewArea.update_total This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (348):warning:game.viewArea.update_other_total This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (353):warning:game.viewArea.my_batch_bet This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (371):warning:game.viewArea.my_batch_bet This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (377):warning:game.viewArea.my_batch_bet This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (387):warning:game.viewArea.other_bet_cancel This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (389):warning:game.viewArea.update_other_total This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (395):warning:game.viewArea.clear_allChip This variable is not defined.
+27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (407):warning:game.viewArea.other_bet This variable is not defined.
+28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (417):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
+29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (435):warning:game.viewArea.other_bet This variable is not defined.
+30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (441):warning:game.viewArea.set_zoneList This variable is not defined.
+31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (443):warning:game.viewArea.update_limit This variable is not defined.
+32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (443):warning:roomlimit This variable is not defined.
+33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (445):warning:game.viewArea.update_lamp This variable is not defined.
+34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (446):warning:LightAssetManager.getInstance This variable is not defined.
+35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (446):warning:SoundNameManager.getInstance This variable is not defined.
+36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
+37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
+38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
+39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (218):warning:hide This variable is not defined.
+40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (78):warning:Coin_5.filters This variable is not defined.
 */

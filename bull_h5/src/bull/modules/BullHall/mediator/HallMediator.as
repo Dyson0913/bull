@@ -7,9 +7,15 @@ package bull.modules.BullHall.mediator
 	import com.lightUI.events.ScenceManagerEvent;
 	import conf.ENMoneyType;
 	
+	import laya.utils.Handler;
 	import laya.events.Event;
 	import laya.utils.Timer;
 	import laya.media.SoundManager;
+	
+	
+	import com.lightUI.core.Light;
+	import com.lightUI.components.alert.Alert;
+	import bull.view.alert.AlertCancelPanel
 	
 	import bull.events.BullNotification;
 	import bull.modules.common.mediator.MusicSetMediator;
@@ -113,6 +119,12 @@ package bull.modules.BullHall.mediator
 		
 		private function onLowEnter(e:Event):void
 		{
+			if ( hallData._already_in_room_idx != -1)
+			{
+				Alert.show(hallData._already_in_msg, "",AlertCancelPanel,null, Handler.create(this, enterGame));
+				return;
+			}
+			
 			if ( hallData.Cash_Type == ENMoneyType.MONEY_TYPE_COIN) hallData.join_room_idx = 0;
 			else hallData.join_room_idx = 2;
 			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
@@ -121,10 +133,26 @@ package bull.modules.BullHall.mediator
 		
 		private function onHighEnter(e:Event):void
 		{
+			if ( hallData._already_in_room_idx != -1)
+			{
+				Alert.show(hallData._already_in_msg, "",AlertCancelPanel,null, Handler.create(this, enterGame));
+				return;
+			}
+			
 			if ( hallData.Cash_Type == ENMoneyType.MONEY_TYPE_COIN) hallData.join_room_idx = 1;
 			else hallData.join_room_idx = 3;
 			sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
 		}		
+		
+		private function enterGame(data:int,flg:String):void{
+			if (flg == "ok_btn")
+			{
+				trace("ok_btn");
+				hallData.join_room_idx = hallData._already_in_room_idx;
+				sentNotification(ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ.toString());
+			}
+		}
+		
 		
 		
 		/**

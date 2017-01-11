@@ -60,8 +60,8 @@ package bull.modules.common.command
 				
 				var hallData:HallData = getSingleton(HallData.NAME) as HallData;
 				hallData.ip = e.try_enter_table_rsp.net_address.ip;
-				hallData.port = e.try_enter_table_rsp.net_address.port;
-				hallData.Token = e.try_enter_table_rsp.token;
+				hallData.port = e.try_enter_table_rsp.net_address.hport;
+				//hallData.Token = e.try_enter_table_rsp.token;
 				
 				sentNotification(BullNotification.GET_USER_BALANCE, true);
 				(getModel(HallSocketService.NAME) as HallSocketService).close();

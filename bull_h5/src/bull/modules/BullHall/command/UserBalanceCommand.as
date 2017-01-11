@@ -46,6 +46,7 @@ package bull.modules.BullHall.command
 		private function userBalanceCallback(param:Object):void{			
 			var hallData:HallData = getSingleton(HallData.NAME) as HallData;
 			
+			trace("userBalanceCallback = "+param);
 			//TODO parse param			
 			
 			//關閉大廳音樂
