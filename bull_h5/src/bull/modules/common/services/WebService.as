@@ -50,6 +50,10 @@ package bull.modules.common.services
 			webApi.getUserBalance(callback);			
 		}
 		
+		public function getPlayerGuideStatus(callback:Handler):void
+		{					
+			webApi.getPlayerGuideStatus(callback);			
+		}
 		
 	
 		

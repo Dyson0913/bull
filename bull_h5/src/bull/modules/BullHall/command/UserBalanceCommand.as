@@ -41,13 +41,28 @@ package bull.modules.BullHall.command
 			var ws:WebService = getModel(WebService.NAME) as WebService;
 			ws.getUserBalance(new Handler(this, userBalanceCallback));
 			_firstEnter = firstEnter;
+			
 		}		
+		
+		private function getPlayerGuideStatusCallback(param:Object):void 
+		{			
+			trace("jjj = " + param.info);
+			//code
+			 for (var id:String in param.info)
+                       {
+                         var value:Object = param.info[id];
+                         trace(" msg =" + id + " = " + value);
+                       }
+		}
 		
 		private function userBalanceCallback(param:Object):void{			
 			var hallData:HallData = getSingleton(HallData.NAME) as HallData;
 			
-			trace("userBalanceCallback = "+param);
-			//TODO parse param			
+			trace("userBalanceCallback = " + param);
+			trace("userBalanceCallback = " + param.info.cash);
+			trace("userBalanceCallback = " + param.info.coin);
+			trace("userBalanceCallback = " + param.info.nm);						
+			//TODO 放到room data 
 			
 			//關閉大廳音樂
 			sentNotification(BullNotification.Close_BGM);

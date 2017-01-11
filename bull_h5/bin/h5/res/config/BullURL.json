@@ -17,12 +17,14 @@
     "mybetFont.fnt": { "url": "BitmapFont/tableFont.fnt", "type":"xml"},
     "vipfont.fnt": { "url": "BitmapFont/vipfont.fnt", "type":"xml"},
     "smallvip.fnt": { "url": "BitmapFont/smallvip.fnt", "type":"xml"},
+    "clipConfig": { "url": "res/config/clipConfig.json","type":"json"},
     "GameSprite": { "url": "res/atlas/gameScene.json","type":"atlas"},    
     "red": { "url": "res/atlas/red.json","type":"atlas"},
     "black": { "url": "res/atlas/black.json","type":"atlas"},
     "error_code": { "url": "res/config/error_code.json", "type":"json"},
     "assetsIn": { "url": "res/atlas/assetsIn.json", "type":"atlas"},
     "language": { "url": "res/config/language.json", "type":"json"},  
+
     "group":{
         "config":["carError"]
     },
@@ -41,7 +43,7 @@
             "assets":["red","black","GameSprite","assetsIn","alert","SettleWin.fnt","Settlelost.fnt","bubbleWin.fnt","bubbleLost.fnt","LimitFont.fnt","mybetFont.fnt"]
         },
         "config":{
-            "assets":["language","error_code","msg_proto","conf_proto"]
+            "assets":["language","error_code","msg_proto","conf_proto","clipConfig"]
         },
         "common":{
             "assets":["alert"]

@@ -12,8 +12,7 @@ package bull.view.room
 	
 	
 	public class SelectClipView extends SelectClipViewUI
-	{
-		private var  _coinValue:Array = [];
+	{		
 		
 		private var ligth_po:Array = [1,89,179,268,358,448];
 		private var arror_po:Array = [35,123,213,302,392,483];
@@ -67,16 +66,11 @@ package bull.view.room
 		}
 		
 		public function set_data(data:Array):void
-		{
-			_coinValue.length = 0;
-			_coinValue.push(data);
-			
-			var coinlist:Array = _coinValue[0];
-			for (var i:int = 0; i < coinlist.length ; i++)
+		{				
+			for (var i:int = 0; i < data.length ; i++)
 			{				
-				this["mcSelect_"+i].source = Light.loader.getRes("res/gameScene/chip_" + coinlist[i] + ".png");
+				this["mcSelect_"+i].source = Light.loader.getRes("res/gameScene/chip_" + data[i] + ".png");
 			}
-			
 		}
 		
 		public function set_gray():void

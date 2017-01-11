@@ -66,9 +66,7 @@ package bull.modules.common.command
 			{							
 				roomList.push(list.roominfo[i]);
 			}
-			bulldata.hallData.roomList = roomList;
-			
-			trace("---------room id" + param.get_room_list_rsp.room_id);
+			bulldata.hallData.roomList = roomList;			
 			
 			//己經在桌內處理
 			if ( param.get_room_list_rsp.room_id != null)

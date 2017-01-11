@@ -1,18 +1,26 @@
 package bull.view.room
 {
 	import laya.events.Event;
-	import ui.ui.room.HistoryRecordUI;
+	
+	import com.lightUI.comman.bet.BetInfoVO;
+	import com.lightUI.comman.bet.BetSplit;
+	import bull.modules.common.model.data.RoomData;
+	
+	import bull.modules.common.model.data.vo.ChipVO;
+	import bull.modules.common.model.data.vo.ClipConfigVo;
 	
 	import laya.utils.Tween;
 	import laya.utils.Ease;	
 	
 	import ui.ui.room.BullSceneUI;
 	
-
+	
+	
 
 	public class BullScene extends BullSceneUI
-	{
-		
+	{		
+		private var _roomData:RoomData;
+		private var _betSplitUtil:BetSplit;
 		
 		public function BullScene()
 		{
@@ -34,9 +42,8 @@ package bull.view.room
 			Tween.to(viewRecord, { x:viewRecord.x + 173 }, 1000, Ease.backIn);
 			
 			//向上滑入
-			Tween.to(viewHead, { y:viewHead.y  -96 }, 1000, Ease.backIn);									
-			
-			Tween.to(ViewBetGroup, { y:ViewBetGroup.y -96 }, 1000, Ease.backIn);			
+			Tween.to(viewHead, { y:viewHead.y  -96 }, 1000, Ease.backIn);												
+			Tween.to(ViewBetGroup, { y:ViewBetGroup.y -96 }, 1000, Ease.backIn);
 			Tween.to(viewSelectClip, { y:viewSelectClip.y -138 }, 1000, Ease.backIn);
 			
 			//向下滑入
@@ -54,7 +61,7 @@ package bull.view.room
 			viewHead.y = 816;			
 			viewBankerPanel.y = -81;
 			ViewBetGroup.y = 805;
-			//BetChip.y = 803;
+			viewSelectClip.y = 803;
 		}
 		
 		public function btn_display(show:Boolean):void
@@ -96,6 +103,47 @@ package bull.view.room
 		private function onReturnClick(e:Event):void
 		{			
 			
+		}
+		
+		/**
+		 * 初始化选择筹码 
+		 */		
+		public function initSelectClip(join_group:int):void
+		{			
+			_betSplitUtil = _roomData.chipTool;
+			var clipConfigs:Array = [];
+			//TODO join group
+			var dataSelectClip:ClipConfigVo = roomData.getClipBets(join_group);
+			if(dataSelectClip){
+				for (var i:int = 0; i < dataSelectClip.selectClips.length; i++) 
+				{
+					clipConfigs.push(new BetInfoVO(parseInt(dataSelectClip.selectClips[i]),dataSelectClip.clipConfigs[i]));
+				}
+			}
+			//trace("clipConfigs ==> ",clipConfigs);
+			_betSplitUtil.betConfig = clipConfigs;
+			//trace(" after clipConfigs ==> ", _betSplitUtil.betConfig);
+			
+			
+			viewSelectClip.set_data(dataSelectClip.selectClips);			
+		}
+		
+		public function get roomData():RoomData
+		{
+			return _roomData;
+		}
+		public function set roomData(value:RoomData):void
+		{
+			_roomData = value;
+			//_roomData.on(RoomData.START_BET,this,onStartBet);
+			//_roomData.on(RoomData.END_BET,this,onEndBet);
+			//_roomData.on(RoomData.LOTTERY_DRAW,this, onLotteryDraw);
+			//
+			//_roomData.on(RoomData.UPDATA,this,onUpData);
+			//_roomData.on(RoomData.ADD_BET,this, onAddBet);
+			//_roomData.on(RoomData.REMOVE_BET,this, onRemoveBet);
+			//_roomData.on(RoomData.CANCEL_BET_SELF, this, onCancelBetSelf);
+			//_roomData.on(RoomData.ADD_BET_SELF, this, onAddBetSelf);
 		}
 		
 		public function clear():void {

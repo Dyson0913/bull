@@ -62,6 +62,8 @@ package bull.modules.common.command
 				var hallData:HallData = getSingleton(HallData.NAME) as HallData;				
 				
 				
+				//TODO 帶入
+				
 				
 				
 			}else{

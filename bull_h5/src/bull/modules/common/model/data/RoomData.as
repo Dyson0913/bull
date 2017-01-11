@@ -16,8 +16,8 @@ package bull.modules.common.model.data
 	import conf.BetInfo;
 	import conf.Money;
 	
-	import light.car.modules.common.model.data.vo.ChipVO;
-	import light.car.modules.common.model.data.vo.ClipConfigVo;
+	import bull.modules.common.model.data.vo.ChipVO;
+	import bull.modules.common.model.data.vo.ClipConfigVo;
 	
 	import msg.RoundInfo;
 	import msg.RoundResult;
@@ -68,8 +68,9 @@ package bull.modules.common.model.data
 		public var newBaner_info:SBankerNotify;
 		public var Banker_calcu_info:SBankerCalculateNotify;		
 		
-		
-		
+		/** 保存筹码配置列表 **/
+		public var dataSelectClips:Array = null;
+		public var chipTool:BetSplit = new BetSplit();
 		
 		public function RoomData()
 		{
@@ -83,7 +84,43 @@ package bull.modules.common.model.data
 			Banker_calcu_info = new SBankerCalculateNotify();
 		}
 		
-	
+		/**
+		 * 初始化选择筹码配置 
+		 */		
+		public function initClipConfig():void
+		{
+			var objData:Object = Light.loader.getRes("clipConfig");
+			if( objData == null )
+				return;
+			dataSelectClips = [];
+			var objItem:Object;
+			for each (objItem in objData) 
+			{
+				var dataSelectClip:ClipConfigVo = new ClipConfigVo();
+				dataSelectClip.type = objItem.type; 
+				dataSelectClip.selectClips = String(objItem.value).split("、");
+				dataSelectClip.clipConfigs = String(objItem.config).split("、");
+				dataSelectClips.push(dataSelectClip);
+			}
+		}
+		
+		/**
+		 * 根据筹码类型，获取当前选择筹码面板的筹码 
+		 * @param clipType
+		 * @return 
+		 */		
+		public function getClipBets( clipType:uint ):ClipConfigVo
+		{
+			if( dataSelectClips==null || dataSelectClips.length==0 )
+				return null;
+			for (var j:int = 0; j < dataSelectClips.length; j++) 
+			{
+				var dataSelectClip:ClipConfigVo = dataSelectClips[j];
+				if(dataSelectClip.type == clipType)
+					return dataSelectClip;
+			}
+			return null;
+		}
 		
 	}
 }

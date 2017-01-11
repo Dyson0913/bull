@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":22,
+    "selecteID":20,
     "props":{"width":1400,"sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -187,50 +187,6 @@
         {
             "x":15,
             "type":"UIView",
-            "source":"ui/room/RecordPanel.ui",
-            "props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"},
-            "nodeParent":1,
-            "label":"UIView(viewRecord)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":278,"x":273},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":11,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"UIView",
-            "source":"ui/room/ResultPanel.ui",
-            "props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"},
-            "nodeParent":1,
-            "label":"UIView(viewResult)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":270,"x":448},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":20,
-            "child":[
-                ],
-            "$LOCKED":false,
-            "$HIDDEN":true
-        },
-        {
-            "x":15,
-            "type":"UIView",
             "source":"ui/room/BankerSettle.ui",
             "props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"},
             "nodeParent":1,
@@ -342,6 +298,27 @@
         {
             "x":15,
             "type":"UIView",
+            "source":"ui/room/RecordPanel.ui",
+            "props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"},
+            "nodeParent":1,
+            "label":"UIView(viewRecord)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":278,"x":273},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":11,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"UIView",
             "source":"ui/room/WinLostEffect.ui",
             "props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"},
             "nodeParent":1,
@@ -359,6 +336,29 @@
             "compId":34,
             "child":[
                 ],
+            "$HIDDEN":true
+        },
+        {
+            "x":15,
+            "type":"UIView",
+            "source":"ui/room/ResultPanel.ui",
+            "props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"},
+            "nodeParent":1,
+            "label":"UIView(viewResult)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":270,"x":448},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":20,
+            "child":[
+                ],
+            "$LOCKED":false,
             "$HIDDEN":true
         },
         {

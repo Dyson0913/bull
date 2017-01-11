@@ -10,6 +10,7 @@ package bull.modules.room.mediator
 	import com.lightUI.components.alert.Alert;
 	import com.lightUI.core.Light;	
 	import com.lightUI.events.ScenceManagerEvent;
+	import conf.ENMoneyType;
 	import conf.SBullMoney;
 	import conf.SUserInfo;
 	import msg.CS;
@@ -38,15 +39,23 @@ package bull.modules.room.mediator
 	import bull.modules.perload.services.PreLoadService;
 	import bull.modules.room.services.RoomSocketService;
 	import light.car.utils.AlertTextUtil;
-	import light.car.view.alert.AlertCancelPanel;
+	import bull.view.alert.AlertCancelPanel;
 	import bull.view.room.BullScene;
 	
 	import bull.modules.common.model.data.Data;
+	import bull.modules.common.model.data.HallData;
+	
+	
+	import com.lightUI.comman.bet.BetInfoVO;
+	import com.lightUI.comman.bet.BetSlipParam;
+	import com.lightUI.comman.bet.BetSplit;
+	
 	
 	import msg.ENCSType;
 	
 	public class BullScenceMediator extends Mediator implements IMediator
 	{
+		public var hallData:HallData;
 		public var perLoadService:PreLoadService;		
 		public var roomSocketService:RoomSocketService;
 		public var roomData:RoomData;
@@ -56,6 +65,8 @@ package bull.modules.room.mediator
 		private var timer:Timer;
 		private var _isSys:Boolean = true;		
 		
+		public var chipTool:BetSplit = new BetSplit();
+		
 		public static const NAME:String = "BullScenceMediator";
 		public function BullScenceMediator(mediatorName:String="", viewComponent:Object=null)
 		{
@@ -63,7 +74,7 @@ package bull.modules.room.mediator
 		}
 		
 		override public function getInjector():Array {			
-			return ["roomData","roomSocketService","perLoadService","userInfoData","appMedel"];
+			return ["roomData","roomSocketService","perLoadService","userInfoData","appMedel",HallData.NAME];
 		}
 		
 		override public function setViewComponent(viewComponent:Object):void {			
@@ -145,6 +156,33 @@ package bull.modules.room.mediator
 			view.viewArea.zone_light(3);
 			
 			view.viewArea.tablelimit_updata(800);
+			
+			//折分coin
+			
+			var bet:Number = 100;
+			bet = roomData.chipsType == ENMoneyType.MONEY_TYPE_COIN ? bet : bet / 100;			
+			var chip:BetInfoVO = chipTool.getChip(bet);
+			var chips:Array = [];
+			var chipVO:ChipVO;				
+			if(!chip){
+				//找不倒 一个整的筹码  需要拆分
+				var temp:BetSlipParam = roomData.chipTool.splitBet(bet);
+				for (var i:int = 0; i < temp.chips.length; i++) 
+				{
+					chip = temp.chips[i];
+					chipVO = new ChipVO(true,cs.player_bet_rsp.item_id,chip.value);
+					chips.push(chipVO);
+				}
+					
+			}else{
+				chipVO = new ChipVO(true, cs.player_bet_rsp.item_id, chip.value);
+				chips.push(chipVO);
+			}
+				
+			roomData.addBetsSelf(chips);
+			
+			
+			
 		}
 		
 		
@@ -594,10 +632,10 @@ package bull.modules.room.mediator
 			view.viewSelectClip.set_data([100,500,1000,5000,10000,"max"]);
 			
 			//先别影藏 等数据请求回来再显示
-			//view.roomData = roomData;
+			view.roomData = roomData;
 			//view.userInfoData = userInfoData;
-			//roomData.initClipConfig();
-			//view.initSelectClip();
+			roomData.initClipConfig();
+			view.initSelectClip(hallData.join_room_idx);
 			//
 			//view.img_cash.visible = view.img_coin.visible = false;
 			//roomData.chipsType == MoneyType.CASH ? view.img_cash.visible = true : view.img_coin.visible =true;
