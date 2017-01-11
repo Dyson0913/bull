@@ -1,6 +1,6 @@
 package bull.view.room
 {
-	
+	import com.lightUI.events.LightEvent;
 	import laya.filters.ColorFilter;
 	import ui.ui.room.BetBtnGroupUI
 	
@@ -88,22 +88,11 @@ package bull.view.room
 		
 		private function onClick(e:Event):void
 		{								
-			
-			if ( e.target == betBtn_cancel)
-			{
-				trace("Btn_CancelBet");
-				init();
-				//dispatchEvent(new OperateEvent(NewNewGameEvent.CancelMybet, []));
-			}
-			else if ( e.target == betBtn_same)
-			{
-				trace("Btn_SameBet");
-				btnSame_disapear();	
-				//dispatchEvent(new OperateEvent(NewNewGameEvent.SameBet, []));
-			}			
-			
-			//TODO 
-			//event(LightEvent.ITEM_CLICK,parseInt(s));			
+			var sName:String = e.target.name;
+			var pattern:RegExp = /betBtn_/;
+			sName = sName.replace(pattern, "");			
+						
+			event(LightEvent.ITEM_CLICK,sName);			
 		}
 		
 		private function btnSame_disapear():void			

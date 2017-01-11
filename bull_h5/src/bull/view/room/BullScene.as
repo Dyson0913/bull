@@ -1,6 +1,8 @@
 package bull.view.room
 {
 	import laya.events.Event;
+	import laya.maths.Point;
+	import laya.ui.Image;
 	
 	import com.lightUI.comman.bet.BetInfoVO;
 	import com.lightUI.comman.bet.BetSplit;
@@ -14,6 +16,7 @@ package bull.view.room
 	import laya.utils.Ease;
 	import laya.utils.Handler;	
 	
+	import bull.utils.BetAreaUtil;
 	import ui.ui.room.BullSceneUI;
 	
 	
@@ -23,6 +26,9 @@ package bull.view.room
 	{		
 		private var _roomData:RoomData;
 		private var _betSplitUtil:BetSplit;
+		
+		private var _selfChips:Array = [];////////////////////记录自己的筹码   每次下注结束后清零
+		private var _otherChips:Array = [];////////////////////记录自己的筹码   每次下注结束后清零
 		
 		public function BullScene()
 		{
@@ -143,11 +149,52 @@ package bull.view.room
 			trace("onFlySelfCompleteHandler ");
 			//updateMyBetAmountByID(chip.vo.type);
 			//updateTotalBetAmountByID(chip.vo.type);
-			//addChip(chip);
+			addChip(chip);
 			//updateBtnStatus();
 			
 			//如果是自己投的解开状态
 			//if(chip.vo.isSelf) roomData.xutou = false;
+		}
+		
+		public function addChip(chip:Chip):void{			
+			if(chip.vo.isSelf) _selfChips.push(chip);
+		}
+		
+		public function flySelfChipBack():void{
+			trace("flySelfChipBack", _selfChips.length);
+			var chip:Chip;
+			for (var i:int = 0; i < _selfChips.length; i++) 
+			{
+				chip = _selfChips[i];
+				Tween.to(chip,{x:637,y:923},500,Ease.cubicOut,Handler.create(this,onFlySelfBackCompleteHandler,[chip]));
+				//SoundManager.playSound(SoundPath.Sound_sound_jetton);
+			}
+		}
+		
+		private function onFlySelfBackCompleteHandler(chip:Chip):void{
+			if(chip.parent) chip.parent.removeChild(chip);
+			_selfChips = [];
+			//updateBtnStatus();
+			//cz_btn.disabled = true;
+		}
+		
+		public function flayChipOther(chip:Chip,pos:Point):void
+		{			
+			
+			chip.x = 1419;
+			chip.y = 194;
+			this.addChildAt(chip,getChildIndex(viewArea));
+			Tween.to(chip, { x:viewArea.x + pos.x, y:viewArea.y + pos.y }, 500, Ease.cubicOut, Handler.create(this, onFlyOtherCompleteHandler, [chip]));
+			//SoundManager.playSound(SoundPath.Sound_sound_jetton);
+			return;		
+		}
+		
+		private function onFlyOtherCompleteHandler(chip:Chip):void {
+			trace("onFlyOtherCompleteHandler");
+			//显示总的下注额变动
+			//updateTotalBetAmountByID(chip.vo.type);
+			
+			//if(!chip.vo.isSelf) addOthersChip(chip);
 		}
 		
 		public function get roomData():RoomData

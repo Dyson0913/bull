@@ -4,6 +4,7 @@ package bull.modules.room.mediator
 	import bull.modules.common.model.data.AppMedel;
 	import bull.modules.common.model.data.appmodel;
 	import bull.view.room.Chip;
+	import com.iflash.utils.BindMethod;
 	import com.IProtobuf.Long;
 	import com.lightMVC.interfaces.IMediator;
 	import com.lightMVC.interfaces.INotification;
@@ -146,8 +147,35 @@ package bull.modules.room.mediator
 			
 			
 			view.viewArea.on(LightEvent.ITEM_CLICK,this, onBetzoneClick);
-			
+			view.ViewBetGroup.on(LightEvent.ITEM_CLICK,this, onBetAction);
 			//廣播訊息			
+			
+		}
+		
+		private function onBetAction(name:String):void
+		{
+			trace("name = "+name);
+			if (name == "same")
+			{
+				//dispatchEvent(new OperateEvent(NewNewGameEvent.SameBet, []));
+				//折分coin
+				var chips:Array = [];
+				chips = get_coin_info(3500, 0, true);
+				add_otherbet(chips);				
+				
+			}
+			else if (name =="cancel")
+			{
+				//updateBetAmount();
+				view.flySelfChipBack();
+				//dispatchEvent(new OperateEvent(NewNewGameEvent.CancelMybet, []));
+			}
+			
+		}
+		
+		
+		private function onCancelBetSelf():void{
+			updateBetAmount();
 			
 		}
 		
@@ -161,8 +189,18 @@ package bull.modules.room.mediator
 			view.viewArea.tablelimit_updata(800);
 			
 			//折分coin
+			var chips:Array = [];
+			chips = get_coin_info(3500, idx, true);
 			
-			var bet:Number = 3500;
+			//roomData.addBetsSelf(chips);
+			add_selfbet(chips);
+			
+			
+		}
+		
+		private function get_coin_info(amount:Number,zone:int,is_my:Boolean):Array
+		{
+			var bet:Number = amount;
 			bet = roomData.Cash_Type == ENMoneyType.MONEY_TYPE_COIN ? bet : bet / 100;			
 			var chip:BetInfoVO = chipTool.getChip(bet);
 			var chips:Array = [];
@@ -173,26 +211,22 @@ package bull.modules.room.mediator
 				for (var i:int = 0; i < temp.chips.length; i++) 
 				{
 					chip = temp.chips[i];
-					chipVO = new ChipVO(true,idx,chip.value);
+					chipVO = new ChipVO(is_my,zone,chip.value);
 					chips.push(chipVO);
 				}
 					
 			}else{
-				chipVO = new ChipVO(true, cs.player_bet_rsp.item_id, chip.value);
+				chipVO = new ChipVO(is_my,zone,chip.value);
 				chips.push(chipVO);
 			}
-				
-			for ( var i:int = 0; i < chips.length; i++)
-			{
-				var item:ChipVO = chips[i];
-				trace("chips type= " + item.type);
-				trace("chips valu= " + item.value);				
-			}
-			//trace("chips = "+chips);
-			//roomData.addBetsSelf(chips);
-			add_selfbet(chips);
-			
-			
+			//check number
+			//for ( var i:int = 0; i < chips.length; i++)
+			//{
+				//var item:ChipVO = chips[i];
+				//trace("chips type= " + item.type);
+				//trace("chips valu= " + item.value);				
+			//}
+			return chips;
 		}
 		
 		private function add_selfbet(arr_chipsVO:Array):void
@@ -203,9 +237,7 @@ package bull.modules.room.mediator
 			for (var i:int = 0; i < l; i++) 
 			{
 				chipVO = arr_chipsVO[i];
-				var betArea:Image = view.viewArea.get_zone(chipVO.type)
-				 //= getChildByName("bet_"+chipVO.type) as Image;
-				 
+				var betArea:Image = view.viewArea.get_zone(chipVO.type)	;				 
 				var betInfo:BetInfoVO = roomData.chipTool.getChip(chipVO.value);
 				if(!betInfo){
 					var temp:BetSlipParam = roomData.chipTool.splitBet(chipVO.value);
@@ -230,6 +262,38 @@ package bull.modules.room.mediator
 			
 		}
 		
+		private function add_otherbet(arr_chipsVO:Array):void
+		{
+			var l:int = arr_chipsVO.length;
+			var chipVO:ChipVO;
+			var chip:Chip = null;
+			for (var i:int = 0; i < l; i++) 
+			{
+				chipVO = arr_chipsVO[i];
+				var betArea:Image = view.viewArea.get_zone(chipVO.type)	;				 
+				var betInfo:BetInfoVO = roomData.chipTool.getChip(chipVO.value);
+				if(!betInfo){
+					var temp:BetSlipParam = roomData.chipTool.splitBet(chipVO.value);
+					for (var j:int = 0; j < temp.chips.length; j++) 
+					{
+						chip = new Chip();
+						betInfo = temp.chips[j];
+						chipVO = new ChipVO(true,chipsVO[i].type,betInfo.value);
+						chip.vo = chipVO;
+						pos = BetAreaUtil.getRandomByRectangle(chipVO.type,betArea.getBounds());
+						view.flayChipOther(chip,pos);
+					}
+					
+				}else{
+					chip = new Chip();
+					var pos:Point = BetAreaUtil.getRandomByRectangle(chipVO.type,betArea.getBounds());
+					chip.vo = chipVO;
+					trace("userBet",chipVO);
+					view.flayChipOther(chip,pos);
+				}
+			}
+			
+		}
 		
 	
 		
