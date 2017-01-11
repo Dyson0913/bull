@@ -61,8 +61,7 @@ package bull.view.room
 			
 			_pre_idx = idx;
 			 
-			//TODO 改變選定值
-			//event(LightEvent.ITEM_CLICK,parseInt(s));			
+			event(LightEvent.ITEM_CLICK,idx);			
 		}
 		
 		public function set_data(data:Array):void

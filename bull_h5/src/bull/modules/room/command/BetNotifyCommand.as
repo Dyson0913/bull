@@ -1,9 +1,15 @@
 package bull.modules.room.command
 {	
 	
+	import bull.modules.common.model.BullProtoModel;
+	import bull.modules.common.model.data.HallData;
+	import bull.modules.common.model.data.RoomData;
+	import bull.modules.common.model.data.vo.ClipConfigVo;
+	import bull.modules.room.services.RoomSocketService;
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
+	import conf.ENMoneyType;
 	import conf.SBetInfo;
 	import conf.SUserInfo;
 	import msg.SBetNotify;
@@ -29,12 +35,16 @@ package bull.modules.room.command
 		
 		override public function handler(notification:INotification):void{
 			
-			if(notification.getName() == ENCSType.CS_TYPE_BET_NOTIFY.toString()){
-				betnotify(notification.getBody() as CS);
+			if(notification.getName() == ENCSType.CS_TYPE_BET_REQ.toString()){
+				Request();
 			}
 			else if(notification.getName() == ENCSType.CS_TYPE_BET_RSP.toString()){
 				betResponse(notification.getBody() as CS);
 			}
+			else if(notification.getName() == ENCSType.CS_TYPE_BET_NOTIFY.toString()){
+				betnotify(notification.getBody() as CS);
+			}
+			
 			
 		}
 		
@@ -42,9 +52,6 @@ package bull.modules.room.command
 		{
 			switch(e.type)
 			{
-				case NewNewGameEvent.Bet_Clip_Req:
-					Request();
-				break;
 				case String(ENCSType.CS_TYPE_BET_RSP):
 					betResponse(e.data as CS)
 					break;
@@ -59,47 +66,50 @@ package bull.modules.room.command
 		
 		private function Request():void
 		{
-			var cs:CS = new CS(); 
-			cs.msgType = ENCSType.CS_TYPE_BET_REQ;
-			var req:SBetReq = new SBetReq();			
-			if( appMedel.chipVo.chip_zone ==0)  req.position = conf.ENBetPosition.BET_POSITION_1;
-			else if (appMedel.chipVo.chip_zone ==1) req.position = conf.ENBetPosition.BET_POSITION_2;
-			else if (appMedel.chipVo.chip_zone ==2) req.position = conf.ENBetPosition.BET_POSITION_3;
-			else if (appMedel.chipVo.chip_zone ==3) req.position = conf.ENBetPosition.BET_POSITION_4;
+			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
+			var out:CS = proto.msg_proto.getCS();
+			out.msg_type = ENCSType.CS_TYPE_BET_REQ;
+			out.bet_req = proto.msg_proto.getSBetReq();
 			
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
+			//下那區
+			var betzone:int = 0;
+			if( roomData.bet_zone == 0) betzone = conf.ENBetPosition.BET_POSITION_1;
+			else if (roomData.bet_zone == 1) betzone = conf.ENBetPosition.BET_POSITION_2;
+			else if (roomData.bet_zone == 2) betzone = conf.ENBetPosition.BET_POSITION_3;
+			else if (roomData.bet_zone == 3) betzone = conf.ENBetPosition.BET_POSITION_4;
+			
+			out.bet_req.position = betzone;
+			
+			//金額
+			var hallData:HallData = getSingleton(HallData.NAME) as HallData;
+			var dataSelectClip:ClipConfigVo  = roomData.getClipBets(hallData.join_room_idx);
 			var bet_add_value:int;
-			if( appMedel.Current_chipValue[appMedel.chipVo.chipValue] == "Max")
+			if ( roomData.bet_idx == 5) bet_add_value = -1;  //MAX
+			else 
 			{
-				bet_add_value = -1;
-			}
-			else bet_add_value = appMedel.Current_chipValue[appMedel.chipVo.chipValue];
-			
-			//現金下10塊,傳1000
-			if( appMedel.roomParam.roomType != conf.ENRoomType.ROOM_TYPE_COIN )
-			{
-				if( bet_add_value !=-1) 
-				{
-					bet_add_value =bet_add_value*100;	
-				}
+				bet_add_value = parseInt(dataSelectClip.selectClips[roomData.bet_idx]);
+				
+				//現金下10塊,傳1000
+				if( roomData.Cash_Type != ENMoneyType.MONEY_TYPE_COIN ) bet_add_value = bet_add_value*100;
 			}
 			
+			out.bet_req.bet_money  = bet_add_value;
+			//if( bet_add_value ==-1) appMedel.IsBetMax = true;
+			//else appMedel.IsBetMax =  false;
+			//
+			//appMedel.IsRepeat = false;
 			
-			req.betMoney = bet_add_value;
-			if( bet_add_value ==-1) appMedel.IsBetMax = true;
-			else appMedel.IsBetMax =  false;
-			
-			appMedel.IsRepeat = false;
-			
-			cs.betReq =req;
-			evt.dispatchEvent(new SocketEvent(SocketEvent.SEND, cs));
+			var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
+			socket.sentMsg(out);
 		}
 		
 		private function betResponse(cs:CS):void
 		{
-			var bullData:Data = getSingleton(Data.NAME) as Data;		
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;	
 			
-			var rsp:SBetRsp = cs.bet_rsp;			
-			switch(rsp.errorCode)
+			var rsp:SBetRsp = cs.bet_rsp;		
+			switch(rsp.error_code)
 			{
 				case 0:
 					//下注位置    (11. 取消,  10. 同上一轮,  1~4. 下注位置)
@@ -124,23 +134,23 @@ package bull.modules.room.command
 					}
 					else 
 					{
-						appMedel.BetRecode =true;		
+						//appMedel.BetRecode =true;		
 						
-						if( appMedel.roomParam.roomType != conf.ENRoomType.ROOM_TYPE_COIN )
+						if( roomData.Cash_Type != ENMoneyType.MONEY_TYPE_COIN )
 						{
-							appMedel.TotalMoney = rsp.handMoney.toNumber() /100;		
+							roomData.Total_money = rsp.hand_money.toNumber() /100;		
 						}
-						else	appMedel.TotalMoney = rsp.handMoney.toNumber() ;
+						else	roomData.Total_money = rsp.hand_money.toNumber() ;
 						
-						//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Bet_Clip_Rsp, cs)); 
+						sentNotification(BullNotification.BET_RSP);		
 					}
 				break;
 				
 				default:				
-					if (  rsp.errorCode ==14 ||  rsp.errorCode ==7 || rsp.errorCode >=17 &&  rsp.errorCode <=29)
+					if (  rsp.error_code ==14 ||  rsp.error_code ==7 || rsp.error_code >=17 &&  rsp.error_code <=29)
 					{
 						
-						var alertMsg:String = MessageCodeMgr.getInstance().getError( String(rsp.errorCode) );
+						var alertMsg:String = MessageCodeMgr.getInstance().getError( String(rsp.error_code) );
 						var po:int; 
 						//相同下注失敗 po 回傳10
 						if( rsp.position ==10 )

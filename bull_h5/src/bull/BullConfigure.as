@@ -38,6 +38,7 @@ package bull
 	import bull.modules.room.command.DealCardNotifyCommand;
 	import bull.modules.room.command.SettleNotifyCommand;
 	import bull.modules.room.command.BankerNotifyCommand;
+	import bull.modules.room.command.BetNotifyCommand;
 	
 	import bull.modules.common.mediator.AlertMediator;
 	import bull.modules.common.mediator.AssetInMediator;	
@@ -151,6 +152,9 @@ package bull
 			registerCommand(ENCSType.CS_TYPE_BANKER_NOTIFY.toString(),BankerNotifyCommand);
 			registerCommand(ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString(),BankerNotifyCommand);
 			
+			//下注
+			registerCommand(ENCSType.CS_TYPE_BET_REQ.toString(),BetNotifyCommand);
+			registerCommand(ENCSType.CS_TYPE_BET_RSP.toString(),BetNotifyCommand);
 			
 //			registerCommand(MessageID.USERINFO_REQUEST.toString(),UserInfoCommand);
 //			registerCommand(MessageID.USERINFO_RESPONSE.toString(), UserInfoCommand);

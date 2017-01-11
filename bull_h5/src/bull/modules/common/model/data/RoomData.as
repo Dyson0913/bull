@@ -70,6 +70,11 @@ package bull.modules.common.model.data
 		public var newBaner_info:SBankerNotify;
 		public var Banker_calcu_info:SBankerCalculateNotify;		
 		
+		//bet info
+		public var Total_money:Number;
+		public var bet_zone:int;
+		public var bet_idx:int;
+		
 		/** 保存筹码配置列表 **/
 		public var dataSelectClips:Array = null;
 		public var chipTool:BetSplit = new BetSplit();

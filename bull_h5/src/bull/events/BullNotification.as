@@ -53,6 +53,8 @@ package bull.events
 		public static const NEW_BANKER:String = "newbanker";
 		public static const BANKER_CALCU:String = "Bankercalcu";
 		
+		//bet
+		public static const BET_RSP:String = "bet_rsp";
 		
 		public static const SOCKET_CONNECT:String = "socketConnect";////////////////通知连接服务器 
 		public static const ONLOGIN:String = "onLogin";/////////////////////////////登录成功   发送房间列表

@@ -136,6 +136,8 @@ package bull.modules.room.mediator
 			addNotifiction(BullNotification.NEW_BANKER);
 			addNotifiction(BullNotification.BANKER_CALCU);
 			
+			//bet
+			addNotifiction(BullNotification.BET_RSP);		
 			//reaction
 			
 			
@@ -145,16 +147,21 @@ package bull.modules.room.mediator
 			addNotifiction(BullNotification.RoomSocketClose);
 			addNotifiction(BullNotification.ExitRoomEvent);
 			
-			
+			//元件點擊事件
 			view.viewArea.on(LightEvent.ITEM_CLICK,this, onBetzoneClick);
 			view.ViewBetGroup.on(LightEvent.ITEM_CLICK,this, onBetAction);
+			view.viewSelectClip.on(LightEvent.ITEM_CLICK,this, onCoinSelect);
 			//廣播訊息			
 			
 		}
 		
+		private function onCoinSelect(select:int):void
+		{
+			roomData.bet_idx = select;
+		}
+		
 		private function onBetAction(name:String):void
 		{
-			trace("name = "+name);
 			if (name == "same")
 			{
 				//dispatchEvent(new OperateEvent(NewNewGameEvent.SameBet, []));
@@ -172,8 +179,6 @@ package bull.modules.room.mediator
 				chips = get_coin_info(1000, 0, false);
 				sub_otherbet(chips);	
 				
-				//updateBetAmount();
-				
 				//dispatchEvent(new OperateEvent(NewNewGameEvent.CancelMybet, []));
 			}
 			
@@ -182,20 +187,19 @@ package bull.modules.room.mediator
 		private function onBetzoneClick(idx:int):void
 		{
 			trace("onBetzoneClick = " + idx);
-			view.viewArea.update_total(idx, 100);
-			view.viewArea.update_self(idx, 100);
-			view.viewArea.zone_light(3);
 			
-			view.viewArea.tablelimit_updata(800);
+			roomData.bet_zone = idx;
+			sentNotification(ENCSType.CS_TYPE_BET_REQ.toString());
+			//view.viewArea.update_total(idx, 100);
+			//view.viewArea.update_self(idx, 100);
+			//view.viewArea.zone_light(3);
+			
+			//view.viewArea.tablelimit_updata(800);
 			
 			//折分coin
-			var chips:Array = [];
-			chips = get_coin_info(3500, idx, true);
-			
-			//roomData.addBetsSelf(chips);
-			add_selfbet(chips);
-			
-			
+			//var chips:Array = [];
+			//chips = get_coin_info(3500, idx, true);
+			//add_selfbet(chips);
 		}
 		
 		private function get_coin_info(amount:Number,zone:int,is_my:Boolean):Array
@@ -324,8 +328,6 @@ package bull.modules.room.mediator
 			
 		}
 		
-		
-		
 		private function cashViewHandler():void
 		{			
 			view.viewHead.setMoney(appMedel.TotalMoney); 
@@ -450,6 +452,11 @@ package bull.modules.room.mediator
 					bet_otherHandler();
 				break;	
 				
+				case BullNotification.BET_RSP:
+					betRepHandler();
+				break;	
+				
+				
 				
 				case BullNotification.SETTLE_NOTIFY:
 					onSettleUpdateHandler();
@@ -502,6 +509,18 @@ package bull.modules.room.mediator
 					view.end();
 				break;
 			}
+		}
+		
+		private function betRepHandler():void
+		{
+			
+			//隨後注區更新包,統一刷總金額,這裡只刷新 自己的金額
+			if( roomData.State == RoomData.BET)
+			{
+				//顥示重新下注
+				game.ViewBetGroup.rebet_popup();
+			}
+			
 		}
 		
 		public function onHistoryUpdateHandler():void 
@@ -692,8 +711,7 @@ package bull.modules.room.mediator
 		}
 		
 		private function regFont(fontFileName:String,path:String):void
-		{			
-			
+		{
 			//結算字型
 			var newFont:BitmapFont = new BitmapFont();
 			var fnt:XmlDom = Light.loader.getRes(fontFileName);
@@ -752,21 +770,6 @@ package bull.modules.room.mediator
 			sentNotification(BullNotification.GET_USER_BALANCE);
 		}
 		
-		//private function onCZClick(e:Event):void{
-			//if(roomData.chongzhi) return;
-			//sentNotification(ENCSType.CS_TYPE_PLAYER_CANCEL_BET_REQ.toString());
-		//}
-		//
-		//private function onXTClick(e:Event):void{
-			//if(roomData.xutou) return;
-			//sentNotification(ENCSType.CS_TYPE_PLAYER_SAVED_BET_REQ.toString());
-		//}
-		
-		
-		//private function onBetHandler(param:BetParam):void{
-			//sentNotification(ENCSType.CS_TYPE_PLAYER_BET_REQ.toString(),param);
-		//}
-		
 		private function onUIShow():void {
 			
 			view.viewSelectClip.set_data([100,500,1000,5000,10000,"max"]);
@@ -777,12 +780,13 @@ package bull.modules.room.mediator
 			roomData.initClipConfig();
 			view.initSelectClip(hallData.join_room_idx);
 			
+			this.onCoinSelect(0);
+			//roomData.bet_idx = 0;
 			if ( hallData.join_room_idx <= 2)
 			{
 				roomData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN;
 			}
 			else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;
-			
 			
 			//
 			//view.img_cash.visible = view.img_coin.visible = false;
