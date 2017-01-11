@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.lightMVC.interfaces.INotification');
+	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -1443,6 +1443,50 @@ var Laya=window.Laya=(function(window,document){
 
 		__class(WebParam,'bull.modules.common.model.param.WebParam');
 		return WebParam;
+	})()
+
+
+	//class bull.utils.BetAreaUtil
+	var BetAreaUtil=(function(){
+		function BetAreaUtil(){};
+		__class(BetAreaUtil,'bull.utils.BetAreaUtil');
+		BetAreaUtil.getRandomByRectangle=function(index,rec){
+			var recX=rec.x;
+			var recY=rec.y;
+			var recW=rec.width;
+			var recH=rec.height;
+			if(index==0){
+				recX+=40;
+				recY+=40;
+				recW-=50;
+				recH-=60;
+				}else if(index==1){
+				recX+=40;
+				recY+=20;
+				recW-=50;
+				recH-=60;
+				}else if(index==6){
+				recX+=16;
+				recY+=40;
+				recW-=50;
+				recH-=60;
+				}else if(index==7){
+				recX+=16;
+				recY+=20;
+				recW-=55;
+				recH-=60;
+				}else{
+				recX+=16;
+				recY+=20;
+				recW-=40;
+				recH-=30;
+			};
+			var x=MyMath.randomIntRange(recX,recX+recW);
+			var y=MyMath.randomIntRange(recY,recY+recH);
+			return new Point(x,y);
+		}
+
+		return BetAreaUtil;
 	})()
 
 
@@ -21246,6 +21290,56 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
+	/**
+	*@author light
+	*创建时间：2015-9-21 上午9:44:04
+	*
+	*/
+	//class com.lightUI.utils.MyMath
+	var MyMath=(function(){
+		function MyMath(){};
+		__class(MyMath,'com.lightUI.utils.MyMath');
+		MyMath.getPersent=function(num1,num2){
+			return Math.ceil((num1/num2)*100)+"%";
+		}
+
+		MyMath.randomIntRange=function(minNum,maxNum){
+			return (Math.floor(Math.random()*(maxNum-minNum+1))+minNum);
+		}
+
+		MyMath.randomFromChange=function(__arg){}
+		MyMath.randomFrom=function(__arg){
+			var arg=arguments;
+			return arg[MyMath.randomIntRange(0,arg.length)];
+		}
+
+		MyMath.randomFromArray=function(arg){
+			return arg[MyMath.randomIntRange(0,arg.length-1)];
+		}
+
+		MyMath.between=function(num,n1,n2){
+			if(n2>n1){
+				var temp=n1;
+				n1=n2;
+				n2=temp;
+			}
+			if(num<=n1 && num>=n2)return true;
+			return false;
+		}
+
+		MyMath.sun=function(__arg){
+			var arg=arguments;
+			var sun=0;
+			for (var i=0;i < arg.length;i++){
+				sun+=arg[i];
+			}
+			return sun;
+		}
+
+		return MyMath;
+	})()
+
+
 	//class com.netease.protobuf.Binary64
 	var Binary641=(function(){
 		function Binary64(param1,param2){
@@ -23254,73 +23348,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Message)
 
 
-	//class msg.SOneUserInfoNotify extends com.IProtobuf.Message
-	var SOneUserInfoNotify=(function(_super){
-		function SOneUserInfoNotify(){
-			this.user_info=null;
-			this.type=2;
-			SOneUserInfoNotify.__super.call(this);
-		}
-
-		__class(SOneUserInfoNotify,'msg.SOneUserInfoNotify',_super);
-		var __proto=SOneUserInfoNotify.prototype;
-		__proto.writeTo=function(value){}
-		return SOneUserInfoNotify;
-	})(Message)
-
-
-	//class msg.STimerNotify extends com.IProtobuf.Message
-	var STimerNotify=(function(_super){
-		function STimerNotify(){
-			this.timeStamp=1;
-			this.timeLeft=2;
-			this.status=3;
-			this.bet_area=4;
-			this.sure_area=5;
-			this.deal_area=6;
-			this.end_area=7;
-			this.order_id="8";
-			STimerNotify.__super.call(this);
-		}
-
-		__class(STimerNotify,'msg.STimerNotify',_super);
-		var __proto=STimerNotify.prototype;
-		__proto.writeTo=function(value){}
-		return STimerNotify;
-	})(Message)
-
-
-	//class msg.STryEnterTableReq extends com.IProtobuf.Message
-	var STryEnterTableReq=(function(_super){
-		function STryEnterTableReq(){
-			this.room_id=2;
-			STryEnterTableReq.__super.call(this);
-		}
-
-		__class(STryEnterTableReq,'msg.STryEnterTableReq',_super);
-		var __proto=STryEnterTableReq.prototype;
-		__proto.writeTo=function(value){}
-		return STryEnterTableReq;
-	})(Message)
-
-
-	//class msg.STryEnterTableRsp extends com.IProtobuf.Message
-	var STryEnterTableRsp=(function(_super){
-		function STryEnterTableRsp(){
-			this.error_code=1;
-			this.room_id=3;
-			this.net_address=null;
-			this.token=null;
-			STryEnterTableRsp.__super.call(this);
-		}
-
-		__class(STryEnterTableRsp,'msg.STryEnterTableRsp',_super);
-		var __proto=STryEnterTableRsp.prototype;
-		__proto.writeTo=function(value){}
-		return STryEnterTableRsp;
-	})(Message)
-
-
 	/**
 	*<code>Resource</code> 资源存取类。
 	*/
@@ -23553,6 +23580,73 @@ var Laya=window.Laya=(function(window,document){
 		Resource._isLoadedResourcesSorted=false;
 		return Resource;
 	})(EventDispatcher1)
+
+
+	//class msg.SOneUserInfoNotify extends com.IProtobuf.Message
+	var SOneUserInfoNotify=(function(_super){
+		function SOneUserInfoNotify(){
+			this.user_info=null;
+			this.type=2;
+			SOneUserInfoNotify.__super.call(this);
+		}
+
+		__class(SOneUserInfoNotify,'msg.SOneUserInfoNotify',_super);
+		var __proto=SOneUserInfoNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SOneUserInfoNotify;
+	})(Message)
+
+
+	//class msg.STimerNotify extends com.IProtobuf.Message
+	var STimerNotify=(function(_super){
+		function STimerNotify(){
+			this.timeStamp=1;
+			this.timeLeft=2;
+			this.status=3;
+			this.bet_area=4;
+			this.sure_area=5;
+			this.deal_area=6;
+			this.end_area=7;
+			this.order_id="8";
+			STimerNotify.__super.call(this);
+		}
+
+		__class(STimerNotify,'msg.STimerNotify',_super);
+		var __proto=STimerNotify.prototype;
+		__proto.writeTo=function(value){}
+		return STimerNotify;
+	})(Message)
+
+
+	//class msg.STryEnterTableReq extends com.IProtobuf.Message
+	var STryEnterTableReq=(function(_super){
+		function STryEnterTableReq(){
+			this.room_id=2;
+			STryEnterTableReq.__super.call(this);
+		}
+
+		__class(STryEnterTableReq,'msg.STryEnterTableReq',_super);
+		var __proto=STryEnterTableReq.prototype;
+		__proto.writeTo=function(value){}
+		return STryEnterTableReq;
+	})(Message)
+
+
+	//class msg.STryEnterTableRsp extends com.IProtobuf.Message
+	var STryEnterTableRsp=(function(_super){
+		function STryEnterTableRsp(){
+			this.error_code=1;
+			this.room_id=3;
+			this.net_address=null;
+			this.token=null;
+			STryEnterTableRsp.__super.call(this);
+		}
+
+		__class(STryEnterTableRsp,'msg.STryEnterTableRsp',_super);
+		var __proto=STryEnterTableRsp.prototype;
+		__proto.writeTo=function(value){}
+		return STryEnterTableRsp;
+	})(Message)
 
 
 	//class msg.TimeSyncReq extends com.IProtobuf.Message
@@ -26303,6 +26397,53 @@ var Laya=window.Laya=(function(window,document){
 	})(Filter)
 
 
+	//class laya.webgl.shader.d2.ShaderDefines2D extends laya.webgl.shader.ShaderDefines
+	var ShaderDefines2D=(function(_super){
+		function ShaderDefines2D(){
+			ShaderDefines2D.__super.call(this,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name,ShaderDefines2D.__int2nameMap);
+		}
+
+		__class(ShaderDefines2D,'laya.webgl.shader.d2.ShaderDefines2D',_super);
+		ShaderDefines2D.__init__=function(){
+			ShaderDefines2D.reg("TEXTURE2D",0x01);
+			ShaderDefines2D.reg("COLOR2D",0x02);
+			ShaderDefines2D.reg("PRIMITIVE",0x04);
+			ShaderDefines2D.reg("GLOW_FILTER",0x08);
+			ShaderDefines2D.reg("BLUR_FILTER",0x10);
+			ShaderDefines2D.reg("COLOR_FILTER",0x20);
+			ShaderDefines2D.reg("COLOR_ADD",0x40);
+			ShaderDefines2D.reg("WORLDMAT",0x80);
+		}
+
+		ShaderDefines2D.reg=function(name,value){
+			ShaderDefines._reg(name,value,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name);
+		}
+
+		ShaderDefines2D.toText=function(value,int2name,int2nameMap){
+			return ShaderDefines._toText(value,int2name,int2nameMap);
+		}
+
+		ShaderDefines2D.toInt=function(names){
+			return ShaderDefines._toInt(names,ShaderDefines2D.__name2int);
+		}
+
+		ShaderDefines2D.TEXTURE2D=0x01;
+		ShaderDefines2D.COLOR2D=0x02;
+		ShaderDefines2D.PRIMITIVE=0x04;
+		ShaderDefines2D.FILTERGLOW=0x08;
+		ShaderDefines2D.FILTERBLUR=0x10;
+		ShaderDefines2D.FILTERCOLOR=0x20;
+		ShaderDefines2D.COLORADD=0x40;
+		ShaderDefines2D.WORLDMAT=0x80;
+		ShaderDefines2D.FILLTEXTURE=0x100;
+		ShaderDefines2D.SKINMESH=0x200;
+		ShaderDefines2D.__name2int={};
+		ShaderDefines2D.__int2name=[];
+		ShaderDefines2D.__int2nameMap=[];
+		return ShaderDefines2D;
+	})(ShaderDefines)
+
+
 	/**
 	*发光滤镜(也可以当成阴影滤使用）
 	*/
@@ -26379,53 +26520,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return GlowFilter;
 	})(Filter)
-
-
-	//class laya.webgl.shader.d2.ShaderDefines2D extends laya.webgl.shader.ShaderDefines
-	var ShaderDefines2D=(function(_super){
-		function ShaderDefines2D(){
-			ShaderDefines2D.__super.call(this,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name,ShaderDefines2D.__int2nameMap);
-		}
-
-		__class(ShaderDefines2D,'laya.webgl.shader.d2.ShaderDefines2D',_super);
-		ShaderDefines2D.__init__=function(){
-			ShaderDefines2D.reg("TEXTURE2D",0x01);
-			ShaderDefines2D.reg("COLOR2D",0x02);
-			ShaderDefines2D.reg("PRIMITIVE",0x04);
-			ShaderDefines2D.reg("GLOW_FILTER",0x08);
-			ShaderDefines2D.reg("BLUR_FILTER",0x10);
-			ShaderDefines2D.reg("COLOR_FILTER",0x20);
-			ShaderDefines2D.reg("COLOR_ADD",0x40);
-			ShaderDefines2D.reg("WORLDMAT",0x80);
-		}
-
-		ShaderDefines2D.reg=function(name,value){
-			ShaderDefines._reg(name,value,ShaderDefines2D.__name2int,ShaderDefines2D.__int2name);
-		}
-
-		ShaderDefines2D.toText=function(value,int2name,int2nameMap){
-			return ShaderDefines._toText(value,int2name,int2nameMap);
-		}
-
-		ShaderDefines2D.toInt=function(names){
-			return ShaderDefines._toInt(names,ShaderDefines2D.__name2int);
-		}
-
-		ShaderDefines2D.TEXTURE2D=0x01;
-		ShaderDefines2D.COLOR2D=0x02;
-		ShaderDefines2D.PRIMITIVE=0x04;
-		ShaderDefines2D.FILTERGLOW=0x08;
-		ShaderDefines2D.FILTERBLUR=0x10;
-		ShaderDefines2D.FILTERCOLOR=0x20;
-		ShaderDefines2D.COLORADD=0x40;
-		ShaderDefines2D.WORLDMAT=0x80;
-		ShaderDefines2D.FILLTEXTURE=0x100;
-		ShaderDefines2D.SKINMESH=0x200;
-		ShaderDefines2D.__name2int={};
-		ShaderDefines2D.__int2name=[];
-		ShaderDefines2D.__int2nameMap=[];
-		return ShaderDefines2D;
-	})(ShaderDefines)
 
 
 	/**
@@ -29798,10 +29892,6 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.userBalanceCallback=function(param){
 			var hallData=this.getSingleton("hallData");
-			console.log("userBalanceCallback = "+param);
-			console.log("userBalanceCallback = "+param.info.cash);
-			console.log("userBalanceCallback = "+param.info.coin);
-			console.log("userBalanceCallback = "+param.info.nm);
 			this.sentNotification("Close_BGM");
 			this.sentNotification("enterRoom");
 			return;
@@ -30765,6 +30855,42 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._already_in_msg=null;
+			this._already_in_room_idx=0;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+			/*no*/this._already_in_roomid=-1;
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
+
+
 	/**
 	*规则面板
 	*/
@@ -30834,42 +30960,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._already_in_msg=null;
-			this._already_in_room_idx=0;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-			/*no*/this._already_in_roomid=-1;
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
 	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
 	var SmallLoadingMediator=(function(_super){
 		function SmallLoadingMediator(mediatorName,viewComponent){
@@ -30895,6 +30985,7 @@ var Laya=window.Laya=(function(window,document){
 		function RoomData(){
 			this.id=0;
 			this.name="";
+			this.Cash_Type=null;
 			this.State=0;
 			this.RoundID=null;
 			this.LeftTime=0;
@@ -31056,6 +31147,51 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
+	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
+	var BankerNotifyCommand=(function(_super){
+		function BankerNotifyCommand(){
+			BankerNotifyCommand.__super.call(this);
+		}
+
+		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
+		var __proto=BankerNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
+				this.bankerlist(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
+				this.newbaner(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
+				this.banker_calcu(notification.getBody());
+			}
+		}
+
+		__proto.bankerlist=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
+			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.newbaner=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.newBaner_info=cs.banker_notify;
+			this.sentNotification("newbanker");
+		}
+
+		__proto.banker_calcu=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.Banker_calcu_info.banker_calc_info_s=cs.banker_calc_notify.banker_calc_info_s;
+			bullData.roomData.Banker_calcu_info.total_win_money=cs.banker_calc_notify.total_win_money;
+			this.sentNotification("Bankercalcu");
+		}
+
+		return BankerNotifyCommand;
+	})(Command)
+
+
 	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
 	var TipsLoadMediator=(function(_super){
 		function TipsLoadMediator(mediatorName,viewComponent){
@@ -31103,51 +31239,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
-	var BankerNotifyCommand=(function(_super){
-		function BankerNotifyCommand(){
-			BankerNotifyCommand.__super.call(this);
-		}
-
-		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
-		var __proto=BankerNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
-				this.bankerlist(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
-				this.newbaner(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
-				this.banker_calcu(notification.getBody());
-			}
-		}
-
-		__proto.bankerlist=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
-			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.newbaner=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.newBaner_info=cs.banker_notify;
-			this.sentNotification("newbanker");
-		}
-
-		__proto.banker_calcu=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.Banker_calcu_info.banker_calc_info_s=cs.banker_calc_notify.banker_calc_info_s;
-			bullData.roomData.Banker_calcu_info.total_win_money=cs.banker_calc_notify.total_win_money;
-			this.sentNotification("Bankercalcu");
-		}
-
-		return BankerNotifyCommand;
-	})(Command)
-
-
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
 	var WebService=(function(_super){
 		function WebService(modelName,data){
@@ -31191,6 +31282,10 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		WebService.resolveBrowserParam=function(){
+			var param=new WebParam();
+			param.uid=1014495;
+			param.access_token="7b8007aaaef180fb1c0d78bc9c4b5589";
+			return param;
 			var browserStr=Browser.document.location.href.toString();
 			console.log("browserStr = "+browserStr);
 			var askIndex=browserStr.indexOf("?");
@@ -31618,8 +31713,8 @@ var Laya=window.Laya=(function(window,document){
 			this.view.viewArea.update_self(idx,100);
 			this.view.viewArea.zone_light(3);
 			this.view.viewArea.tablelimit_updata(800);
-			var bet=100;
-			bet=this.roomData.chipsType==2 ? bet :bet / 100;
+			var bet=3500;
+			bet=this.roomData.Cash_Type==2 ? bet :bet / 100;
 			var chip=this.chipTool.getChip(bet);
 			var chips=[];
 			var chipVO;
@@ -31627,14 +31722,47 @@ var Laya=window.Laya=(function(window,document){
 				var temp=this.roomData.chipTool.splitBet(bet);
 				for (var i=0;i < temp.chips.length;i++){
 					chip=temp.chips[i];
-					chipVO=new /*no*/this.ChipVO(true,/*no*/this.cs.player_bet_rsp.item_id,chip.value);
+					chipVO=new ChipVO(true,idx,chip.value);
 					chips.push(chipVO);
 				}
 				}else{
-				chipVO=new /*no*/this.ChipVO(true,/*no*/this.cs.player_bet_rsp.item_id,chip.value);
+				chipVO=new ChipVO(true,/*no*/this.cs.player_bet_rsp.item_id,chip.value);
 				chips.push(chipVO);
 			}
-			this.roomData.addBetsSelf(chips);
+			for (var i=0;i < chips.length;i++){
+				var item=chips[i];
+				console.log("chips type= "+item.type);
+				console.log("chips valu= "+item.value);
+			}
+			this.add_selfbet(chips);
+		}
+
+		__proto.add_selfbet=function(arr_chipsVO){
+			var l=arr_chipsVO.length;
+			var chipVO;
+			var chip=null;
+			for (var i=0;i < l;i++){
+				chipVO=arr_chipsVO[i];
+				var betArea=this.view.viewArea.get_zone(chipVO.type)
+				var betInfo=this.roomData.chipTool.getChip(chipVO.value);
+				if(!betInfo){
+					var temp=this.roomData.chipTool.splitBet(chipVO.value);
+					for (var j=0;j < temp.chips.length;j++){
+						chip=new Chip();
+						betInfo=temp.chips[j];
+						chipVO=new ChipVO(true,/*no*/this.chipsVO[i].type,betInfo.value);
+						chip.vo=chipVO;
+						pos=BetAreaUtil.getRandomByRectangle(chipVO.type,betArea.getBounds());
+						this.view.flySelfChip(chip,pos);
+					}
+					}else{
+					chip=new Chip();
+					var pos=BetAreaUtil.getRandomByRectangle(chipVO.type,betArea.getBounds());
+					chip.vo=chipVO;
+					console.log("userBet",chipVO);
+					this.view.flySelfChip(chip,pos);
+				}
+			}
 		}
 
 		__proto.cashViewHandler=function(){
@@ -31929,6 +32057,10 @@ var Laya=window.Laya=(function(window,document){
 			this.view.roomData=this.roomData;
 			this.roomData.initClipConfig();
 			this.view.initSelectClip(this.hallData.join_room_idx);
+			if (this.hallData.join_room_idx <=2){
+				this.roomData.Cash_Type=2;
+			}
+			else this.roomData.Cash_Type=1;
 			this.view.showme();
 		}
 
@@ -33489,57 +33621,6 @@ var Laya=window.Laya=(function(window,document){
 	})(LoaderManager)
 
 
-	/**
-	*@private
-	*<code>Bitmap</code> 是图片资源类。
-	*/
-	//class laya.resource.Bitmap extends laya.resource.Resource
-	var Bitmap=(function(_super){
-		function Bitmap(){
-			//this._source=null;
-			//this._w=NaN;
-			//this._h=NaN;
-			this.useNum=0;
-			Bitmap.__super.call(this);
-			this._w=0;
-			this._h=0;
-		}
-
-		__class(Bitmap,'laya.resource.Bitmap',_super);
-		var __proto=Bitmap.prototype;
-		/**
-		*彻底清理资源。
-		*/
-		__proto.dispose=function(){
-			this._resourceManager.removeResource(this);
-			_super.prototype.dispose.call(this);
-		}
-
-		/***
-		*宽度。
-		*/
-		__getset(0,__proto,'width',function(){
-			return this._w;
-		});
-
-		/***
-		*高度。
-		*/
-		__getset(0,__proto,'height',function(){
-			return this._h;
-		});
-
-		/***
-		*HTML Image 或 HTML Canvas 或 WebGL Texture 。
-		*/
-		__getset(0,__proto,'source',function(){
-			return this._source;
-		});
-
-		return Bitmap;
-	})(Resource)
-
-
 	//class com.lightUI.manager.LayerMask extends com.iflash.events.EventDispatcher
 	var LayerMask=(function(_super){
 		function LayerMask(){
@@ -33614,6 +33695,57 @@ var Laya=window.Laya=(function(window,document){
 
 		return LayerMask;
 	})(EventDispatcher)
+
+
+	/**
+	*@private
+	*<code>Bitmap</code> 是图片资源类。
+	*/
+	//class laya.resource.Bitmap extends laya.resource.Resource
+	var Bitmap=(function(_super){
+		function Bitmap(){
+			//this._source=null;
+			//this._w=NaN;
+			//this._h=NaN;
+			this.useNum=0;
+			Bitmap.__super.call(this);
+			this._w=0;
+			this._h=0;
+		}
+
+		__class(Bitmap,'laya.resource.Bitmap',_super);
+		var __proto=Bitmap.prototype;
+		/**
+		*彻底清理资源。
+		*/
+		__proto.dispose=function(){
+			this._resourceManager.removeResource(this);
+			_super.prototype.dispose.call(this);
+		}
+
+		/***
+		*宽度。
+		*/
+		__getset(0,__proto,'width',function(){
+			return this._w;
+		});
+
+		/***
+		*高度。
+		*/
+		__getset(0,__proto,'height',function(){
+			return this._h;
+		});
+
+		/***
+		*HTML Image 或 HTML Canvas 或 WebGL Texture 。
+		*/
+		__getset(0,__proto,'source',function(){
+			return this._source;
+		});
+
+		return Bitmap;
+	})(Resource)
 
 
 	/*
@@ -38821,6 +38953,215 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
+	*<code>Image</code> 类是用于表示位图图像或绘制图形的显示对象。
+	*@example 以下示例代码，创建了一个新的 <code>Image</code> 实例，设置了它的皮肤、位置信息，并添加到舞台上。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.Image;
+		*public class Image_Example
+		*{
+			*public function Image_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*onInit();
+				*}
+			*private function onInit():void
+			*{
+				*var bg:Image=new Image("resource/ui/bg.png");//创建一个 Image 类的实例对象 bg ,并传入它的皮肤。
+				*bg.x=100;//设置 bg 对象的属性 x 的值，用于控制 bg 对象的显示位置。
+				*bg.y=100;//设置 bg 对象的属性 y 的值，用于控制 bg 对象的显示位置。
+				*bg.sizeGrid="40,10,5,10";//设置 bg 对象的网格信息。
+				*bg.width=150;//设置 bg 对象的宽度。
+				*bg.height=250;//设置 bg 对象的高度。
+				*Laya.stage.addChild(bg);//将此 bg 对象添加到显示列表。
+				*var image:Image=new Image("resource/ui/image.png");//创建一个 Image 类的实例对象 image ,并传入它的皮肤。
+				*image.x=100;//设置 image 对象的属性 x 的值，用于控制 image 对象的显示位置。
+				*image.y=100;//设置 image 对象的属性 y 的值，用于控制 image 对象的显示位置。
+				*Laya.stage.addChild(image);//将此 image 对象添加到显示列表。
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*onInit();
+	*function onInit(){
+		*var bg=new laya.ui.Image("resource/ui/bg.png");//创建一个 Image 类的实例对象 bg ,并传入它的皮肤。
+		*bg.x=100;//设置 bg 对象的属性 x 的值，用于控制 bg 对象的显示位置。
+		*bg.y=100;//设置 bg 对象的属性 y 的值，用于控制 bg 对象的显示位置。
+		*bg.sizeGrid="40,10,5,10";//设置 bg 对象的网格信息。
+		*bg.width=150;//设置 bg 对象的宽度。
+		*bg.height=250;//设置 bg 对象的高度。
+		*Laya.stage.addChild(bg);//将此 bg 对象添加到显示列表。
+		*var image=new laya.ui.Image("resource/ui/image.png");//创建一个 Image 类的实例对象 image ,并传入它的皮肤。
+		*image.x=100;//设置 image 对象的属性 x 的值，用于控制 image 对象的显示位置。
+		*image.y=100;//设置 image 对象的属性 y 的值，用于控制 image 对象的显示位置。
+		*Laya.stage.addChild(image);//将此 image 对象添加到显示列表。
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*class Image_Example {
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*this.onInit();
+			*}
+		*private onInit():void {
+			*var bg:laya.ui.Image=new laya.ui.Image("resource/ui/bg.png");//创建一个 Image 类的实例对象 bg ,并传入它的皮肤。
+			*bg.x=100;//设置 bg 对象的属性 x 的值，用于控制 bg 对象的显示位置。
+			*bg.y=100;//设置 bg 对象的属性 y 的值，用于控制 bg 对象的显示位置。
+			*bg.sizeGrid="40,10,5,10";//设置 bg 对象的网格信息。
+			*bg.width=150;//设置 bg 对象的宽度。
+			*bg.height=250;//设置 bg 对象的高度。
+			*Laya.stage.addChild(bg);//将此 bg 对象添加到显示列表。
+			*var image:laya.ui.Image=new laya.ui.Image("resource/ui/image.png");//创建一个 Image 类的实例对象 image ,并传入它的皮肤。
+			*image.x=100;//设置 image 对象的属性 x 的值，用于控制 image 对象的显示位置。
+			*image.y=100;//设置 image 对象的属性 y 的值，用于控制 image 对象的显示位置。
+			*Laya.stage.addChild(image);//将此 image 对象添加到显示列表。
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.AutoBitmap
+	*/
+	//class laya.ui.Image extends laya.ui.Component
+	var Image=(function(_super){
+		function Image(skin){
+			this._bitmap=null;
+			this._skin=null;
+			this._group=null;
+			Image.__super.call(this);
+			this.skin=skin;
+		}
+
+		__class(Image,'laya.ui.Image',_super);
+		var __proto=Image.prototype;
+		/**@inheritDoc */
+		__proto.destroy=function(destroyChild){
+			(destroyChild===void 0)&& (destroyChild=true);
+			_super.prototype.destroy.call(this,true);
+			this._bitmap && this._bitmap.destroy();
+			this._bitmap=null;
+		}
+
+		/**
+		*销毁对象并释放加载的皮肤资源。
+		*/
+		__proto.dispose=function(){
+			this.destroy(true);
+			Laya.loader.clearRes(this._skin);
+		}
+
+		/**@inheritDoc */
+		__proto.createChildren=function(){
+			this.graphics=this._bitmap=new AutoBitmap();
+			this._bitmap.autoCacheCmd=false;
+		}
+
+		/**
+		*@private
+		*设置皮肤资源。
+		*/
+		__proto.setSource=function(url,img){
+			if (url===this._skin && img){
+				this.source=img
+				this.onCompResize();
+			}
+		}
+
+		/**
+		*@copy laya.ui.AutoBitmap#source
+		*/
+		__getset(0,__proto,'source',function(){
+			return this._bitmap.source;
+			},function(value){
+			if (!this._bitmap)return;
+			this._bitmap.source=value;
+			this.event("loaded");
+			this.repaint();
+		});
+
+		/**@inheritDoc */
+		__getset(0,__proto,'dataSource',_super.prototype._$get_dataSource,function(value){
+			this._dataSource=value;
+			if ((typeof value=='string'))this.skin=value;
+			else _super.prototype._$set_dataSource.call(this,value);
+		});
+
+		/**@inheritDoc */
+		__getset(0,__proto,'measureHeight',function(){
+			return this._bitmap.height;
+		});
+
+		/**
+		*<p>对象的皮肤地址，以字符串表示。</p>
+		*<p>如果资源未加载，则先加载资源，加载完成后应用于此对象。</p>
+		*<b>注意：</b>资源加载完成后，会自动缓存至资源库中。
+		*/
+		__getset(0,__proto,'skin',function(){
+			return this._skin;
+			},function(value){
+			if (this._skin !=value){
+				this._skin=value;
+				if (value){
+					var source=Loader.getRes(value);
+					if (source){
+						this.source=source;
+						this.onCompResize();
+					}else Laya.loader.load(this._skin,Handler.create(this,this.setSource,[this._skin]),null,"image",1,true,this._group);
+					}else {
+					this.source=null;
+				}
+			}
+		});
+
+		/**
+		*资源分组。
+		*/
+		__getset(0,__proto,'group',function(){
+			return this._group;
+			},function(value){
+			if (value && this._skin)Loader.setGroup(this._skin,value);
+			this._group=value;
+		});
+
+		/**
+		*<p>当前实例的位图 <code>AutoImage</code> 实例的有效缩放网格数据。</p>
+		*<p>数据格式："上边距,右边距,下边距,左边距,是否重复填充(值为0：不重复填充，1：重复填充)"，以逗号分隔。
+		*<ul><li>例如："4,4,4,4,1"。</li></ul></p>
+		*@see laya.ui.AutoBitmap#sizeGrid
+		*/
+		__getset(0,__proto,'sizeGrid',function(){
+			if (this._bitmap.sizeGrid)return this._bitmap.sizeGrid.join(",");
+			return null;
+			},function(value){
+			this._bitmap.sizeGrid=UIUtils.fillArray(Styles.defaultSizeGrid,value,Number);
+		});
+
+		/**@inheritDoc */
+		__getset(0,__proto,'measureWidth',function(){
+			return this._bitmap.width;
+		});
+
+		/**@inheritDoc */
+		__getset(0,__proto,'width',_super.prototype._$get_width,function(value){
+			_super.prototype._$set_width.call(this,value);
+			this._bitmap.width=value==0 ? 0.0000001 :value;
+		});
+
+		/**@inheritDoc */
+		__getset(0,__proto,'height',_super.prototype._$get_height,function(value){
+			_super.prototype._$set_height.call(this,value);
+			this._bitmap.height=value==0 ? 0.0000001 :value;
+		});
+
+		return Image;
+	})(Component)
+
+
+	/**
 	*自动根据大小填充自己全部区域的显示对象
 	*@author ww
 	*/
@@ -41591,215 +41932,6 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
-	*<code>Image</code> 类是用于表示位图图像或绘制图形的显示对象。
-	*@example 以下示例代码，创建了一个新的 <code>Image</code> 实例，设置了它的皮肤、位置信息，并添加到舞台上。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.Image;
-		*public class Image_Example
-		*{
-			*public function Image_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*onInit();
-				*}
-			*private function onInit():void
-			*{
-				*var bg:Image=new Image("resource/ui/bg.png");//创建一个 Image 类的实例对象 bg ,并传入它的皮肤。
-				*bg.x=100;//设置 bg 对象的属性 x 的值，用于控制 bg 对象的显示位置。
-				*bg.y=100;//设置 bg 对象的属性 y 的值，用于控制 bg 对象的显示位置。
-				*bg.sizeGrid="40,10,5,10";//设置 bg 对象的网格信息。
-				*bg.width=150;//设置 bg 对象的宽度。
-				*bg.height=250;//设置 bg 对象的高度。
-				*Laya.stage.addChild(bg);//将此 bg 对象添加到显示列表。
-				*var image:Image=new Image("resource/ui/image.png");//创建一个 Image 类的实例对象 image ,并传入它的皮肤。
-				*image.x=100;//设置 image 对象的属性 x 的值，用于控制 image 对象的显示位置。
-				*image.y=100;//设置 image 对象的属性 y 的值，用于控制 image 对象的显示位置。
-				*Laya.stage.addChild(image);//将此 image 对象添加到显示列表。
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*onInit();
-	*function onInit(){
-		*var bg=new laya.ui.Image("resource/ui/bg.png");//创建一个 Image 类的实例对象 bg ,并传入它的皮肤。
-		*bg.x=100;//设置 bg 对象的属性 x 的值，用于控制 bg 对象的显示位置。
-		*bg.y=100;//设置 bg 对象的属性 y 的值，用于控制 bg 对象的显示位置。
-		*bg.sizeGrid="40,10,5,10";//设置 bg 对象的网格信息。
-		*bg.width=150;//设置 bg 对象的宽度。
-		*bg.height=250;//设置 bg 对象的高度。
-		*Laya.stage.addChild(bg);//将此 bg 对象添加到显示列表。
-		*var image=new laya.ui.Image("resource/ui/image.png");//创建一个 Image 类的实例对象 image ,并传入它的皮肤。
-		*image.x=100;//设置 image 对象的属性 x 的值，用于控制 image 对象的显示位置。
-		*image.y=100;//设置 image 对象的属性 y 的值，用于控制 image 对象的显示位置。
-		*Laya.stage.addChild(image);//将此 image 对象添加到显示列表。
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*class Image_Example {
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*this.onInit();
-			*}
-		*private onInit():void {
-			*var bg:laya.ui.Image=new laya.ui.Image("resource/ui/bg.png");//创建一个 Image 类的实例对象 bg ,并传入它的皮肤。
-			*bg.x=100;//设置 bg 对象的属性 x 的值，用于控制 bg 对象的显示位置。
-			*bg.y=100;//设置 bg 对象的属性 y 的值，用于控制 bg 对象的显示位置。
-			*bg.sizeGrid="40,10,5,10";//设置 bg 对象的网格信息。
-			*bg.width=150;//设置 bg 对象的宽度。
-			*bg.height=250;//设置 bg 对象的高度。
-			*Laya.stage.addChild(bg);//将此 bg 对象添加到显示列表。
-			*var image:laya.ui.Image=new laya.ui.Image("resource/ui/image.png");//创建一个 Image 类的实例对象 image ,并传入它的皮肤。
-			*image.x=100;//设置 image 对象的属性 x 的值，用于控制 image 对象的显示位置。
-			*image.y=100;//设置 image 对象的属性 y 的值，用于控制 image 对象的显示位置。
-			*Laya.stage.addChild(image);//将此 image 对象添加到显示列表。
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.AutoBitmap
-	*/
-	//class laya.ui.Image extends laya.ui.Component
-	var Image=(function(_super){
-		function Image(skin){
-			this._bitmap=null;
-			this._skin=null;
-			this._group=null;
-			Image.__super.call(this);
-			this.skin=skin;
-		}
-
-		__class(Image,'laya.ui.Image',_super);
-		var __proto=Image.prototype;
-		/**@inheritDoc */
-		__proto.destroy=function(destroyChild){
-			(destroyChild===void 0)&& (destroyChild=true);
-			_super.prototype.destroy.call(this,true);
-			this._bitmap && this._bitmap.destroy();
-			this._bitmap=null;
-		}
-
-		/**
-		*销毁对象并释放加载的皮肤资源。
-		*/
-		__proto.dispose=function(){
-			this.destroy(true);
-			Laya.loader.clearRes(this._skin);
-		}
-
-		/**@inheritDoc */
-		__proto.createChildren=function(){
-			this.graphics=this._bitmap=new AutoBitmap();
-			this._bitmap.autoCacheCmd=false;
-		}
-
-		/**
-		*@private
-		*设置皮肤资源。
-		*/
-		__proto.setSource=function(url,img){
-			if (url===this._skin && img){
-				this.source=img
-				this.onCompResize();
-			}
-		}
-
-		/**
-		*@copy laya.ui.AutoBitmap#source
-		*/
-		__getset(0,__proto,'source',function(){
-			return this._bitmap.source;
-			},function(value){
-			if (!this._bitmap)return;
-			this._bitmap.source=value;
-			this.event("loaded");
-			this.repaint();
-		});
-
-		/**@inheritDoc */
-		__getset(0,__proto,'dataSource',_super.prototype._$get_dataSource,function(value){
-			this._dataSource=value;
-			if ((typeof value=='string'))this.skin=value;
-			else _super.prototype._$set_dataSource.call(this,value);
-		});
-
-		/**@inheritDoc */
-		__getset(0,__proto,'measureHeight',function(){
-			return this._bitmap.height;
-		});
-
-		/**
-		*<p>对象的皮肤地址，以字符串表示。</p>
-		*<p>如果资源未加载，则先加载资源，加载完成后应用于此对象。</p>
-		*<b>注意：</b>资源加载完成后，会自动缓存至资源库中。
-		*/
-		__getset(0,__proto,'skin',function(){
-			return this._skin;
-			},function(value){
-			if (this._skin !=value){
-				this._skin=value;
-				if (value){
-					var source=Loader.getRes(value);
-					if (source){
-						this.source=source;
-						this.onCompResize();
-					}else Laya.loader.load(this._skin,Handler.create(this,this.setSource,[this._skin]),null,"image",1,true,this._group);
-					}else {
-					this.source=null;
-				}
-			}
-		});
-
-		/**
-		*资源分组。
-		*/
-		__getset(0,__proto,'group',function(){
-			return this._group;
-			},function(value){
-			if (value && this._skin)Loader.setGroup(this._skin,value);
-			this._group=value;
-		});
-
-		/**
-		*<p>当前实例的位图 <code>AutoImage</code> 实例的有效缩放网格数据。</p>
-		*<p>数据格式："上边距,右边距,下边距,左边距,是否重复填充(值为0：不重复填充，1：重复填充)"，以逗号分隔。
-		*<ul><li>例如："4,4,4,4,1"。</li></ul></p>
-		*@see laya.ui.AutoBitmap#sizeGrid
-		*/
-		__getset(0,__proto,'sizeGrid',function(){
-			if (this._bitmap.sizeGrid)return this._bitmap.sizeGrid.join(",");
-			return null;
-			},function(value){
-			this._bitmap.sizeGrid=UIUtils.fillArray(Styles.defaultSizeGrid,value,Number);
-		});
-
-		/**@inheritDoc */
-		__getset(0,__proto,'measureWidth',function(){
-			return this._bitmap.width;
-		});
-
-		/**@inheritDoc */
-		__getset(0,__proto,'width',_super.prototype._$get_width,function(value){
-			_super.prototype._$set_width.call(this,value);
-			this._bitmap.width=value==0 ? 0.0000001 :value;
-		});
-
-		/**@inheritDoc */
-		__getset(0,__proto,'height',_super.prototype._$get_height,function(value){
-			_super.prototype._$set_height.call(this,value);
-			this._bitmap.height=value==0 ? 0.0000001 :value;
-		});
-
-		return Image;
-	})(Component)
-
-
-	/**
 	*<p> <code>Label</code> 类用于创建显示对象以显示文本。</p>
 	*
 	*@example 以下示例代码，创建了一个 <code>Label</code> 实例。
@@ -43881,6 +44013,45 @@ var Laya=window.Laya=(function(window,document){
 
 		return PlayerListRender;
 	})(Box)
+
+
+	//class bull.view.room.Chip extends laya.ui.Image
+	var Chip=(function(_super){
+		function Chip(isSelf,type,value,skin){
+			this._vo=new ChipVO();
+			(isSelf===void 0)&& (isSelf=false);
+			(type===void 0)&& (type=0);
+			(value===void 0)&& (value=0);
+			this._vo.isSelf=isSelf;
+			this._vo.type=type;
+			this._vo.value=value;
+			Chip.__super.call(this,skin);
+		}
+
+		__class(Chip,'bull.view.room.Chip',_super);
+		var __proto=Chip.prototype;
+		__proto.clear=function(){
+			this.source="";
+		}
+
+		__getset(0,__proto,'source',_super.prototype._$get_source,function(value){
+			_super.prototype._$set_source.call(this,value);
+			this.pivotX=this.width/2;
+			this.pivotY=this.height/2;
+			this.scaleX=this.scaleY=0.5;
+		});
+
+		__getset(0,__proto,'vo',function(){
+			return this._vo;
+			},function(value){
+			this.vo.isSelf=value.isSelf;
+			this.vo.type=value.type;
+			this.vo.value=value.value;
+			this.source=Light.loader.getRes("res/gameScene/chip_"+value.value+".png");
+		});
+
+		return Chip;
+	})(Image)
 
 
 	//class bull.view.room.XiaZhuangListRender extends laya.ui.Box
@@ -48496,107 +48667,6 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
-	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
-	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
-	*
-	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
-	*<listing version="3.0">
-	*package
-	*{
-		*import laya.ui.HSlider;
-		*import laya.ui.VSlider;
-		*import laya.utils.Handler;
-		*public class VSlider_Example
-		*{
-			*private var vSlider:VSlider;
-			*public function VSlider_Example()
-			*{
-				*Laya.init(640,800);//设置游戏画布宽高。
-				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
-				*}
-			*private function onLoadComplete():void
-			*{
-				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-				*vSlider.min=0;//设置 vSlider 最低位置值。
-				*vSlider.max=10;//设置 vSlider 最高位置值。
-				*vSlider.value=2;//设置 vSlider 当前位置值。
-				*vSlider.tick=1;//设置 vSlider 刻度值。
-				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
-				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-				*}
-			*private function onChange(value:Number):void
-			*{
-				*trace("滑块的位置： value="+value);
-				*}
-			*}
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*Laya.init(640,800);//设置游戏画布宽高
-	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
-	*var vSlider;
-	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
-	*function onLoadComplete(){
-		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-		*vSlider.min=0;//设置 vSlider 最低位置值。
-		*vSlider.max=10;//设置 vSlider 最高位置值。
-		*vSlider.value=2;//设置 vSlider 当前位置值。
-		*vSlider.tick=1;//设置 vSlider 刻度值。
-		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
-		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
-		*}
-	*function onChange(value){
-		*console.log("滑块的位置： value="+value);
-		*}
-	*</listing>
-	*<listing version="3.0">
-	*import HSlider=laya.ui.HSlider;
-	*import VSlider=laya.ui.VSlider;
-	*import Handler=laya.utils.Handler;
-	*class VSlider_Example {
-		*private vSlider:VSlider;
-		*constructor(){
-			*Laya.init(640,800);//设置游戏画布宽高。
-			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
-			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
-			*}
-		*private onLoadComplete():void {
-			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
-			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
-			*this.vSlider.min=0;//设置 vSlider 最低位置值。
-			*this.vSlider.max=10;//设置 vSlider 最高位置值。
-			*this.vSlider.value=2;//设置 vSlider 当前位置值。
-			*this.vSlider.tick=1;//设置 vSlider 刻度值。
-			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
-			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
-			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
-			*}
-		*private onChange(value:number):void {
-			*console.log("滑块的位置： value="+value);
-			*}
-		*}
-	*</listing>
-	*@see laya.ui.Slider
-	*/
-	//class laya.ui.VSlider extends laya.ui.Slider
-	var VSlider=(function(_super){
-		function VSlider(){VSlider.__super.call(this);;
-		};
-
-		__class(VSlider,'laya.ui.VSlider',_super);
-		return VSlider;
-	})(Slider)
-
-
-	/**
 	*<code>TextInput</code> 类用于创建显示对象以显示和输入文本。
 	*
 	*@example 以下示例代码，创建了一个 <code>TextInput</code> 实例。
@@ -48909,6 +48979,107 @@ var Laya=window.Laya=(function(window,document){
 
 		return TextInput;
 	})(Label)
+
+
+	/**
+	*使用 <code>VSlider</code> 控件，用户可以通过在滑块轨道的终点之间移动滑块来选择值。
+	*<p> <code>VSlider</code> 控件采用垂直方向。滑块轨道从下往上扩展，而标签位于轨道的左右两侧。</p>
+	*
+	*@example 以下示例代码，创建了一个 <code>VSlider</code> 实例。
+	*<listing version="3.0">
+	*package
+	*{
+		*import laya.ui.HSlider;
+		*import laya.ui.VSlider;
+		*import laya.utils.Handler;
+		*public class VSlider_Example
+		*{
+			*private var vSlider:VSlider;
+			*public function VSlider_Example()
+			*{
+				*Laya.init(640,800);//设置游戏画布宽高。
+				*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+				*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,onLoadComplete));//加载资源。
+				*}
+			*private function onLoadComplete():void
+			*{
+				*vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+				*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+				*vSlider.min=0;//设置 vSlider 最低位置值。
+				*vSlider.max=10;//设置 vSlider 最高位置值。
+				*vSlider.value=2;//设置 vSlider 当前位置值。
+				*vSlider.tick=1;//设置 vSlider 刻度值。
+				*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+				*vSlider.changeHandler=new Handler(this,onChange);//设置 vSlider 位置变化处理器。
+				*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+				*}
+			*private function onChange(value:Number):void
+			*{
+				*trace("滑块的位置： value="+value);
+				*}
+			*}
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*Laya.init(640,800);//设置游戏画布宽高
+	*Laya.stage.bgColor="#efefef";//设置画布的背景颜色
+	*var vSlider;
+	*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],laya.utils.Handler.create(this,onLoadComplete));//加载资源。
+	*function onLoadComplete(){
+		*vSlider=new laya.ui.VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+		*vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+		*vSlider.min=0;//设置 vSlider 最低位置值。
+		*vSlider.max=10;//设置 vSlider 最高位置值。
+		*vSlider.value=2;//设置 vSlider 当前位置值。
+		*vSlider.tick=1;//设置 vSlider 刻度值。
+		*vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+		*vSlider.changeHandler=new laya.utils.Handler(this,onChange);//设置 vSlider 位置变化处理器。
+		*Laya.stage.addChild(vSlider);//把 vSlider 添加到显示列表。
+		*}
+	*function onChange(value){
+		*console.log("滑块的位置： value="+value);
+		*}
+	*</listing>
+	*<listing version="3.0">
+	*import HSlider=laya.ui.HSlider;
+	*import VSlider=laya.ui.VSlider;
+	*import Handler=laya.utils.Handler;
+	*class VSlider_Example {
+		*private vSlider:VSlider;
+		*constructor(){
+			*Laya.init(640,800);//设置游戏画布宽高。
+			*Laya.stage.bgColor="#efefef";//设置画布的背景颜色。
+			*Laya.loader.load(["resource/ui/vslider.png","resource/ui/vslider$bar.png"],Handler.create(this,this.onLoadComplete));//加载资源。
+			*}
+		*private onLoadComplete():void {
+			*this.vSlider=new VSlider();//创建一个 VSlider 类的实例对象 vSlider 。
+			*this.vSlider.skin="resource/ui/vslider.png";//设置 vSlider 的皮肤。
+			*this.vSlider.min=0;//设置 vSlider 最低位置值。
+			*this.vSlider.max=10;//设置 vSlider 最高位置值。
+			*this.vSlider.value=2;//设置 vSlider 当前位置值。
+			*this.vSlider.tick=1;//设置 vSlider 刻度值。
+			*this.vSlider.x=100;//设置 vSlider 对象的属性 x 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.y=100;//设置 vSlider 对象的属性 y 的值，用于控制 vSlider 对象的显示位置。
+			*this.vSlider.changeHandler=new Handler(this,this.onChange);//设置 vSlider 位置变化处理器。
+			*Laya.stage.addChild(this.vSlider);//把 vSlider 添加到显示列表。
+			*}
+		*private onChange(value:number):void {
+			*console.log("滑块的位置： value="+value);
+			*}
+		*}
+	*</listing>
+	*@see laya.ui.Slider
+	*/
+	//class laya.ui.VSlider extends laya.ui.Slider
+	var VSlider=(function(_super){
+		function VSlider(){VSlider.__super.call(this);;
+		};
+
+		__class(VSlider,'laya.ui.VSlider',_super);
+		return VSlider;
+	})(Slider)
 
 
 	/**
@@ -50159,6 +50330,7 @@ var Laya=window.Laya=(function(window,document){
 			this.ViewBetGroup=null;
 			this.ViewPlayerList=null;
 			this.viewBankerPanel=null;
+			this.TestPanel=null;
 			BullSceneUI.__super.call(this);
 		}
 
@@ -50166,7 +50338,7 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=BullSceneUI.prototype;
 		__proto.createChildren=function(){
 			View.regComponent("bull.view.room.XiaZhuangPanel",XiaZhuangPanel);
-			View.regComponent("bull.view.room.bankerBoard",bankerBoard);
+			View.regComponent("bull.view.room.TestBoard",TestBoard);
 			View.regComponent("bull.view.room.Poker",Poker);
 			View.regComponent("bull.view.room.BetTimePanel",BetTimePanel);
 			View.regComponent("bull.view.room.PokerTypeBoard",PokerTypeBoard);
@@ -50178,13 +50350,14 @@ var Laya=window.Laya=(function(window,document){
 			View.regComponent("bull.view.room.SelectClipView",SelectClipView);
 			View.regComponent("bull.view.room.BetBtnGroup",BetBtnGroup);
 			View.regComponent("bull.view.room.PlayerListPanel",PlayerListPanel);
+			View.regComponent("bull.view.room.bankerBoard",bankerBoard);
 			View.regComponent("bull.view.room.ResultPanel",ResultPanel);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BullSceneUI.uiView);
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetAreaView","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"visible":true,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetAreaView","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"visible":true,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}},{"type":"Test","props":{"y":551,"x":73,"var":"TestPanel","runtime":"bull.view.room.TestBoard"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
@@ -50523,6 +50696,41 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":540,"height":110},"child":[{"type":"Image","props":{"y":-6,"x":1,"var":"Coin_light","skin":"res/gameScene/筹码光.png"}},{"type":"Image","props":{"y":79,"x":35,"width":26,"var":"mcArrow","skin":"res/gameScene/筹码指向.png","height":24}},{"type":"Image","props":{"y":7,"x":10,"var":"mcSelect_0","skin":"res/gameScene/chip_1.png","name":"mcSelect_0"}},{"type":"Image","props":{"y":24,"x":98,"var":"mcSelect_1","skin":"res/gameScene/chip_1.png","name":"mcSelect_1"}},{"type":"Image","props":{"y":24,"x":188,"var":"mcSelect_2","skin":"res/gameScene/chip_1.png","name":"mcSelect_2"}},{"type":"Image","props":{"y":24,"x":277,"var":"mcSelect_3","skin":"res/gameScene/chip_1.png","name":"mcSelect_3"}},{"type":"Image","props":{"y":24,"x":367,"var":"mcSelect_4","skin":"res/gameScene/chip_1.png","name":"mcSelect_4"}},{"type":"Image","props":{"y":24,"x":458,"var":"mcSelect_5","skin":"res/gameScene/chip_max.png","name":"mcSelect_5"}}]};}
 		]);
 		return SelectClipViewUI;
+	})(View)
+
+
+	//class ui.ui.room.TestUI extends laya.ui.View
+	var TestUI=(function(_super){
+		function TestUI(){
+			this.btn_0=null;
+			this.btn_1=null;
+			this.btn_2=null;
+			this.btn_3=null;
+			this.btn_4=null;
+			this.btn_5=null;
+			this.btn_6=null;
+			this.btn_7=null;
+			this.btn_8=null;
+			this.btn_9=null;
+			this.btn_10=null;
+			this.btn_11=null;
+			this.btn_12=null;
+			this.btn_13=null;
+			this.btn_14=null;
+			TestUI.__super.call(this);
+		}
+
+		__class(TestUI,'ui.ui.room.TestUI',_super);
+		var __proto=TestUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(TestUI.uiView);
+		}
+
+		__static(TestUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":600,"height":200},"child":[{"type":"Button","props":{"y":0,"x":0,"width":80,"var":"btn_0","skin":"res/gameScene/CarryIn.png","name":"btn_0","label":"Start","height":66}},{"type":"Button","props":{"y":1,"x":74,"width":80,"var":"btn_1","skin":"res/gameScene/CarryIn.png","name":"btn_1","label":"Banker","height":66}},{"type":"Button","props":{"y":0,"x":146,"width":80,"var":"btn_2","skin":"res/gameScene/CarryIn.png","name":"btn_2","label":"Bet","height":66}},{"type":"Button","props":{"y":0,"x":214,"width":80,"var":"btn_3","skin":"res/gameScene/CarryIn.png","name":"btn_3","label":"BetCheck","height":66}},{"type":"Button","props":{"y":-2,"x":292,"width":80,"var":"btn_4","skin":"res/gameScene/CarryIn.png","name":"btn_4","label":"Deal","height":66}},{"type":"Button","props":{"y":0,"x":363,"width":80,"var":"btn_5","skin":"res/gameScene/CarryIn.png","name":"btn_5","label":"End","height":66}},{"type":"Button","props":{"y":60,"x":2,"width":80,"var":"btn_6","skin":"res/gameScene/CarryIn.png","name":"btn_6","label":"hisotryNotify","height":66}},{"type":"Button","props":{"y":61,"x":76,"width":80,"var":"btn_7","skin":"res/gameScene/CarryIn.png","name":"btn_7","label":"AlluserNotify","height":66}},{"type":"Button","props":{"y":60,"x":158,"width":80,"var":"btn_8","skin":"res/gameScene/CarryIn.png","name":"btn_8","label":"OneuserNotify","height":66}},{"type":"Button","props":{"y":58,"x":241,"width":80,"var":"btn_9","skin":"res/gameScene/CarryIn.png","name":"btn_9","label":"BetNotify","height":66}},{"type":"Button","props":{"y":60,"x":320,"width":80,"var":"btn_10","skin":"res/gameScene/CarryIn.png","name":"btn_10","label":"cardnotify","height":66}},{"type":"Button","props":{"y":59,"x":402,"width":80,"var":"btn_11","skin":"res/gameScene/CarryIn.png","name":"btn_11","label":"Calulatnotify","height":66}},{"type":"Button","props":{"y":132,"x":11,"width":80,"var":"btn_12","skin":"res/gameScene/CarryIn.png","name":"btn_12","label":"BankerListNotify","height":66}},{"type":"Button","props":{"y":131,"x":102,"width":80,"var":"btn_13","skin":"res/gameScene/CarryIn.png","name":"btn_13","label":"BankerNotify","height":66}},{"type":"Button","props":{"y":129,"x":197,"width":80,"var":"btn_14","skin":"res/gameScene/CarryIn.png","name":"btn_14","label":"Banker_caludat_Notify","height":66}}]};}
+		]);
+		return TestUI;
 	})(View)
 
 
@@ -52383,6 +52591,10 @@ var Laya=window.Laya=(function(window,document){
 			this._isPlayerbanker=false;
 		}
 
+		__proto.get_zone=function(i){
+			return this["zone_"+i];
+		}
+
 		__proto.test=function(){}
 		return BetAreaView;
 	})(BetAreaViewUI)
@@ -52600,8 +52812,21 @@ var Laya=window.Laya=(function(window,document){
 			this.viewSelectClip.set_data(dataSelectClip.selectClips);
 		}
 
+		__proto.flySelfChip=function(chip,pos){
+			chip.x=657;
+			chip.y=647;
+			this.addChildAt(chip,this.getChildIndex(this.viewPoker));
+			Tween.to(chip,{x:pos.x,y:pos.y},500,Ease.cubicOut,Handler.create(this,this.onFlySelfCompleteHandler,[chip]));
+		}
+
+		//SoundManager.playSound(SoundPath.Sound_sound_jetton);
+		__proto.onFlySelfCompleteHandler=function(chip){
+			console.log("onFlySelfCompleteHandler ");
+		}
+
 		//_roomData.on(RoomData.ADD_BET_SELF,this,onAddBetSelf);
 		__proto.clear=function(){}
+		//if(chip.vo.isSelf)roomData.xutou=false;
 		__getset(0,__proto,'roomData',function(){
 			return this._roomData;
 			},function(value){
@@ -53309,6 +53534,41 @@ var Laya=window.Laya=(function(window,document){
 	})(SelectClipViewUI)
 
 
+	//class bull.view.room.TestBoard extends ui.ui.room.TestUI
+	var TestBoard=(function(_super){
+		function TestBoard(){
+			TestBoard.__super.call(this);
+		}
+
+		__class(TestBoard,'bull.view.room.TestBoard',_super);
+		var __proto=TestBoard.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			console.log("TestBoard Init");
+			for (var i=0;i < 15;i++){
+				this["btn_"+i].on("click",this,this.onTestClick);
+			}
+		}
+
+		__proto.onTestClick=function(e){
+			var sName=e.target.name;
+			var pattern=/btn_/;
+			sName=sName.replace(pattern,"");
+			this.event("item_click",parseInt(sName));
+		}
+
+		__proto.hide=function(){
+			console.log("TestBoard hide");
+		}
+
+		__proto.show=function(){
+			console.log("TestBoard show");
+		}
+
+		return TestBoard;
+	})(TestUI)
+
+
 	//class bull.view.room.WinLostEffect extends ui.ui.room.WinLostEffectUI
 	var WinLostEffect=(function(_super){
 		function WinLostEffect(){
@@ -53614,6 +53874,25 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -53630,25 +53909,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
 
 
 	/**
@@ -54711,33 +54971,31 @@ var Laya=window.Laya=(function(window,document){
 13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/BullConfigure.as (120):warning:BetNotifyCommand This variable is not defined.
 14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/RoomListCommand.as (57):warning:AlertPanel This variable is not defined.
 15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/HallData.as (29):warning:_already_in_roomid This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (159):warning:ChipVO This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (159):warning:cs.player_bet_rsp.item_id This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (164):warning:ChipVO This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (164):warning:cs.player_bet_rsp.item_id This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (191):warning:_bankerName This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (192):warning:_bankerName This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (369):warning:e.info This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (382):warning:game.viewArea.update_total This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (384):warning:game.viewArea.update_other_total This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (389):warning:game.viewArea.my_batch_bet This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (407):warning:game.viewArea.my_batch_bet This variable is not defined.
-27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (413):warning:game.viewArea.my_batch_bet This variable is not defined.
-28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (423):warning:game.viewArea.other_bet_cancel This variable is not defined.
-29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (425):warning:game.viewArea.update_other_total This variable is not defined.
-30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (431):warning:game.viewArea.clear_allChip This variable is not defined.
-31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (443):warning:game.viewArea.other_bet This variable is not defined.
-32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (453):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
-33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (471):warning:game.viewArea.other_bet This variable is not defined.
-34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (477):warning:game.viewArea.set_zoneList This variable is not defined.
-35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (479):warning:game.viewArea.update_limit This variable is not defined.
-36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (479):warning:roomlimit This variable is not defined.
-37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (481):warning:game.viewArea.update_lamp This variable is not defined.
-38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (482):warning:LightAssetManager.getInstance This variable is not defined.
-39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (482):warning:SoundNameManager.getInstance This variable is not defined.
-40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
-41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
-43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (218):warning:hide This variable is not defined.
-44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (72):warning:Coin_5.filters This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (167):warning:cs.player_bet_rsp.item_id This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (199):warning:chipsVO This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (235):warning:_bankerName This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (236):warning:_bankerName This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (413):warning:e.info This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (426):warning:game.viewArea.update_total This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (428):warning:game.viewArea.update_other_total This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (433):warning:game.viewArea.my_batch_bet This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (451):warning:game.viewArea.my_batch_bet This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (457):warning:game.viewArea.my_batch_bet This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (467):warning:game.viewArea.other_bet_cancel This variable is not defined.
+27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (469):warning:game.viewArea.update_other_total This variable is not defined.
+28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (475):warning:game.viewArea.clear_allChip This variable is not defined.
+29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (487):warning:game.viewArea.other_bet This variable is not defined.
+30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (497):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
+31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (515):warning:game.viewArea.other_bet This variable is not defined.
+32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (521):warning:game.viewArea.set_zoneList This variable is not defined.
+33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (523):warning:game.viewArea.update_limit This variable is not defined.
+34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (523):warning:roomlimit This variable is not defined.
+35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (525):warning:game.viewArea.update_lamp This variable is not defined.
+36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (526):warning:LightAssetManager.getInstance This variable is not defined.
+37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (526):warning:SoundNameManager.getInstance This variable is not defined.
+38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
+39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
+40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
+41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (218):warning:hide This variable is not defined.
+42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (72):warning:Coin_5.filters This variable is not defined.
 */

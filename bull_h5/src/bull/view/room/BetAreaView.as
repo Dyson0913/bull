@@ -3,6 +3,7 @@ package bull.view.room
 	import com.lightUI.events.LightEvent;
 	import com.lightUI.core.Light;
 	import laya.filters.ColorFilter;
+	import laya.ui.Image;
 	
 	import laya.utils.Tween;
 	import laya.events.Event;
@@ -167,6 +168,11 @@ package bull.view.room
 				
 			}	
 			_isPlayerbanker = false;
+		}
+		
+		public function get_zone(i:int):Image
+		{
+			return this["zone_" + i];
 		}
 		
 		private function test():void

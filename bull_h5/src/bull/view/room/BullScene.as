@@ -9,8 +9,10 @@ package bull.view.room
 	import bull.modules.common.model.data.vo.ChipVO;
 	import bull.modules.common.model.data.vo.ClipConfigVo;
 	
+	import laya.events.Event;
 	import laya.utils.Tween;
-	import laya.utils.Ease;	
+	import laya.utils.Ease;
+	import laya.utils.Handler;	
 	
 	import ui.ui.room.BullSceneUI;
 	
@@ -126,6 +128,26 @@ package bull.view.room
 			
 			
 			viewSelectClip.set_data(dataSelectClip.selectClips);			
+		}
+		
+		public function flySelfChip(chip:Chip,pos:Point):void{
+			chip.x = 657;
+			chip.y = 647;
+			this.addChildAt(chip,getChildIndex(viewPoker));
+			Tween.to(chip,{x:pos.x,y:pos.y},500,Ease.cubicOut,Handler.create(this,onFlySelfCompleteHandler,[chip]));
+			
+			//SoundManager.playSound(SoundPath.Sound_sound_jetton);
+		}
+		
+		private function onFlySelfCompleteHandler(chip:Chip):void {
+			trace("onFlySelfCompleteHandler ");
+			//updateMyBetAmountByID(chip.vo.type);
+			//updateTotalBetAmountByID(chip.vo.type);
+			//addChip(chip);
+			//updateBtnStatus();
+			
+			//如果是自己投的解开状态
+			//if(chip.vo.isSelf) roomData.xutou = false;
 		}
 		
 		public function get roomData():RoomData

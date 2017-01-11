@@ -3,6 +3,7 @@ package bull.modules.room.mediator
 	import bull.modules.common.model.BullProtoModel;
 	import bull.modules.common.model.data.AppMedel;
 	import bull.modules.common.model.data.appmodel;
+	import bull.view.room.Chip;
 	import com.IProtobuf.Long;
 	import com.lightMVC.interfaces.IMediator;
 	import com.lightMVC.interfaces.INotification;
@@ -13,6 +14,7 @@ package bull.modules.room.mediator
 	import conf.ENMoneyType;
 	import conf.SBullMoney;
 	import conf.SUserInfo;
+	import laya.ui.Image;
 	import msg.CS;
 	import msg.SCalculateNotify;
 	
@@ -45,7 +47,8 @@ package bull.modules.room.mediator
 	import bull.modules.common.model.data.Data;
 	import bull.modules.common.model.data.HallData;
 	
-	
+	import bull.utils.BetAreaUtil;
+	import bull.modules.common.model.data.vo.ChipVO;
 	import com.lightUI.comman.bet.BetInfoVO;
 	import com.lightUI.comman.bet.BetSlipParam;
 	import com.lightUI.comman.bet.BetSplit;
@@ -159,8 +162,8 @@ package bull.modules.room.mediator
 			
 			//折分coin
 			
-			var bet:Number = 100;
-			bet = roomData.chipsType == ENMoneyType.MONEY_TYPE_COIN ? bet : bet / 100;			
+			var bet:Number = 3500;
+			bet = roomData.Cash_Type == ENMoneyType.MONEY_TYPE_COIN ? bet : bet / 100;			
 			var chip:BetInfoVO = chipTool.getChip(bet);
 			var chips:Array = [];
 			var chipVO:ChipVO;				
@@ -170,7 +173,7 @@ package bull.modules.room.mediator
 				for (var i:int = 0; i < temp.chips.length; i++) 
 				{
 					chip = temp.chips[i];
-					chipVO = new ChipVO(true,cs.player_bet_rsp.item_id,chip.value);
+					chipVO = new ChipVO(true,idx,chip.value);
 					chips.push(chipVO);
 				}
 					
@@ -179,12 +182,56 @@ package bull.modules.room.mediator
 				chips.push(chipVO);
 			}
 				
-			roomData.addBetsSelf(chips);
-			
+			for ( var i:int = 0; i < chips.length; i++)
+			{
+				var item:ChipVO = chips[i];
+				trace("chips type= " + item.type);
+				trace("chips valu= " + item.value);				
+			}
+			//trace("chips = "+chips);
+			//roomData.addBetsSelf(chips);
+			add_selfbet(chips);
 			
 			
 		}
 		
+		private function add_selfbet(arr_chipsVO:Array):void
+		{
+			var l:int = arr_chipsVO.length;
+			var chipVO:ChipVO;
+			var chip:Chip = null;
+			for (var i:int = 0; i < l; i++) 
+			{
+				chipVO = arr_chipsVO[i];
+				var betArea:Image = view.viewArea.get_zone(chipVO.type)
+				 //= getChildByName("bet_"+chipVO.type) as Image;
+				 
+				var betInfo:BetInfoVO = roomData.chipTool.getChip(chipVO.value);
+				if(!betInfo){
+					var temp:BetSlipParam = roomData.chipTool.splitBet(chipVO.value);
+					for (var j:int = 0; j < temp.chips.length; j++) 
+					{
+						chip = new Chip();
+						betInfo = temp.chips[j];
+						chipVO = new ChipVO(true,chipsVO[i].type,betInfo.value);
+						chip.vo = chipVO;
+						pos = BetAreaUtil.getRandomByRectangle(chipVO.type,betArea.getBounds());
+						view.flySelfChip(chip,pos);
+					}
+					
+				}else{
+					chip = new Chip();
+					var pos:Point = BetAreaUtil.getRandomByRectangle(chipVO.type,betArea.getBounds());
+					chip.vo = chipVO;
+					trace("userBet",chipVO);
+					view.flySelfChip(chip,pos);
+				}
+			}
+			
+		}
+		
+		
+	
 		
 		private function cashViewHandler():void
 		{			
@@ -636,6 +683,14 @@ package bull.modules.room.mediator
 			//view.userInfoData = userInfoData;
 			roomData.initClipConfig();
 			view.initSelectClip(hallData.join_room_idx);
+			
+			if ( hallData.join_room_idx <= 2)
+			{
+				roomData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN;
+			}
+			else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;
+			
+			
 			//
 			//view.img_cash.visible = view.img_coin.visible = false;
 			//roomData.chipsType == MoneyType.CASH ? view.img_cash.visible = true : view.img_coin.visible =true;

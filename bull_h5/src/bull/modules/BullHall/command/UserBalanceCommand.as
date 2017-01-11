@@ -58,10 +58,10 @@ package bull.modules.BullHall.command
 		private function userBalanceCallback(param:Object):void{			
 			var hallData:HallData = getSingleton(HallData.NAME) as HallData;
 			
-			trace("userBalanceCallback = " + param);
-			trace("userBalanceCallback = " + param.info.cash);
-			trace("userBalanceCallback = " + param.info.coin);
-			trace("userBalanceCallback = " + param.info.nm);						
+			//trace("userBalanceCallback = " + param);
+			//trace("userBalanceCallback = " + param.info.cash);
+			//trace("userBalanceCallback = " + param.info.coin);
+			//trace("userBalanceCallback = " + param.info.nm);						
 			//TODO 放到room data 
 			
 			//關閉大廳音樂

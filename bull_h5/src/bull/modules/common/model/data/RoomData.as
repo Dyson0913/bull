@@ -8,6 +8,7 @@ package bull.modules.common.model.data
 	import com.lightUI.comman.bet.BetSplit;
 	import com.lightUI.core.Light;
 	import com.lightUI.events.LightEvent;
+	import conf.ENMoneyType;
 	import conf.SBankerCalcInfo;
 	import conf.SUserInfo;
 	import msg.SBankerCalculateNotify;
@@ -30,6 +31,7 @@ package bull.modules.common.model.data
 		
 		public var id:int;//////////////////房间名字（id）
 		public var name:String = "";////////////////房间用来展示的名字
+		public var Cash_Type:ENMoneyType;
 		
 		public var State:int;			//桌子状态 
 		//-------------events---------------
