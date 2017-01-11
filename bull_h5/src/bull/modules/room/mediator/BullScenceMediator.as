@@ -299,32 +299,25 @@ package bull.modules.room.mediator
 		{
 			var l:int = arr_chipsVO.length;
 			var chipVO:ChipVO;
-			var chip:Chip = null;
+			var chip:Chip = null;			
 			for (var i:int = 0; i < l; i++) 
 			{
-				chipVO = arr_chipsVO[i];
-				var betArea:Image = view.viewArea.get_zone(chipVO.type)	;				 
+				chipVO = arr_chipsVO[i];				
 				var betInfo:BetInfoVO = roomData.chipTool.getChip(chipVO.value);
 				if(!betInfo){
-					var temp:BetSlipParam = roomData.chipTool.splitBet(chipVO.value);
+					var temp:BetSlipParam = roomData.chipTool.splitBet(chipVO.value);					
 					for (var j:int = 0; j < temp.chips.length; j++) 
 					{
 						chip = new Chip();
-						betInfo = temp.chips[j];
-						trace("arr_chipsVO[i] = " + arr_chipsVO[i].type);
-						trace("betInfo.value = " + betInfo.value);
+						betInfo = temp.chips[j];						
 						chipVO = new ChipVO(false,arr_chipsVO[i].type,betInfo.value);
-						chip.vo = chipVO;
-						trace("sub = "+chipVO.type);
+						chip.vo = chipVO;						
 						view.removeOthersChip(chipVO);
 					}
 					
-				}else{
-					chip = new Chip();
-					var pos:Point = BetAreaUtil.getRandomByRectangle(chipVO.type,betArea.getBounds());
-					chip.vo = chipVO;
-					trace("userBet", chipVO);
-					//chip.vo.value = chip.vo.value;
+				}else {					
+					chip = new Chip();					
+					chip.vo = chipVO;					
 					view.removeOthersChip(chipVO);
 				}
 			}

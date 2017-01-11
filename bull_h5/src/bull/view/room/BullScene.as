@@ -209,16 +209,17 @@ package bull.view.room
 		}
 		
 		
-		public function removeOthersChip(chipVO:ChipVO):void {
-			
-			trace("other chip  =" + _otherChips.length);
+		public function removeOthersChip(chipVO:ChipVO):void 
+		{
 			for(var i:int =0; i<_otherChips.length; i++){
 				
-				var chip:Chip = _otherChips[i]; 
-				trace("other chip  =" + chip.vo.type);
-				trace("chipVO chip  ="+chipVO.type);
+				var chip:Chip = _otherChips[i]; 				
 				if(chip.vo.type == chipVO.type){
-					if(chip.parent) chip.parent.removeChild(chip);
+					if (chip.parent) 
+					{
+						chip.parent.removeChild(chip);
+						break;
+					}
 				}
 			}
 		} 
