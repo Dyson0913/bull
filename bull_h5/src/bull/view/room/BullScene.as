@@ -1,5 +1,6 @@
 package bull.view.room
 {
+	import laya.display.Sprite;
 	import laya.events.Event;
 	import laya.maths.Point;
 	import laya.ui.Image;
@@ -29,6 +30,8 @@ package bull.view.room
 		
 		private var _selfChips:Array = [];////////////////////记录自己的筹码   每次下注结束后清零
 		private var _otherChips:Array = [];////////////////////记录自己的筹码   每次下注结束后清零
+		private var _betsBox:Sprite;
+		
 		
 		public function BullScene()
 		{
@@ -38,6 +41,9 @@ package bull.view.room
 		
 		private function onAdded():void {
 			this.off(Event.ADDED,this,onAdded);
+			
+			_betsBox = new Sprite();
+			addChildAt(_betsBox, getChildIndex(viewArea));
 			
 			trace("gameview init");
 		}
@@ -179,11 +185,10 @@ package bull.view.room
 		}
 		
 		public function flayChipOther(chip:Chip,pos:Point):void
-		{			
-			
+		{						
 			chip.x = 1419;
 			chip.y = 194;
-			this.addChildAt(chip,getChildIndex(viewArea));
+			_betsBox.addChild(chip);
 			Tween.to(chip, { x:viewArea.x + pos.x, y:viewArea.y + pos.y }, 500, Ease.cubicOut, Handler.create(this, onFlyOtherCompleteHandler, [chip]));
 			//SoundManager.playSound(SoundPath.Sound_sound_jetton);
 			return;		
@@ -194,8 +199,30 @@ package bull.view.room
 			//显示总的下注额变动
 			//updateTotalBetAmountByID(chip.vo.type);
 			
-			//if(!chip.vo.isSelf) addOthersChip(chip);
+			//if(!chip.vo.isSelf)
+			addOthersChip(chip);
 		}
+				
+		
+		private function addOthersChip(chip:Chip):void{
+			_otherChips.push(chip);
+		}
+		
+		
+		public function removeOthersChip(chipVO:ChipVO):void {
+			
+			trace("other chip  =" + _otherChips.length);
+			for(var i:int =0; i<_otherChips.length; i++){
+				
+				var chip:Chip = _otherChips[i]; 
+				trace("other chip  =" + chip.vo.type);
+				trace("chipVO chip  ="+chipVO.type);
+				if(chip.vo.type == chipVO.type){
+					if(chip.parent) chip.parent.removeChild(chip);
+				}
+			}
+		} 
+		
 		
 		public function get roomData():RoomData
 		{

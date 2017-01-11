@@ -160,22 +160,22 @@ package bull.modules.room.mediator
 				//dispatchEvent(new OperateEvent(NewNewGameEvent.SameBet, []));
 				//折分coin
 				var chips:Array = [];
-				chips = get_coin_info(3500, 0, true);
+				chips = get_coin_info(3500, 0, false);
 				add_otherbet(chips);				
 				
 			}
 			else if (name =="cancel")
 			{
+				//view.flySelfChipBack();
+				
+				var chips:Array = [];
+				chips = get_coin_info(2000, 0, false);
+				sub_otherbet(chips);	
+				
 				//updateBetAmount();
-				view.flySelfChipBack();
+				
 				//dispatchEvent(new OperateEvent(NewNewGameEvent.CancelMybet, []));
 			}
-			
-		}
-		
-		
-		private function onCancelBetSelf():void{
-			updateBetAmount();
 			
 		}
 		
@@ -245,7 +245,7 @@ package bull.modules.room.mediator
 					{
 						chip = new Chip();
 						betInfo = temp.chips[j];
-						chipVO = new ChipVO(true,chipsVO[i].type,betInfo.value);
+						chipVO = new ChipVO(true,arr_chipsVO[i].type,betInfo.value);
 						chip.vo = chipVO;
 						pos = BetAreaUtil.getRandomByRectangle(chipVO.type,betArea.getBounds());
 						view.flySelfChip(chip,pos);
@@ -295,7 +295,43 @@ package bull.modules.room.mediator
 			
 		}
 		
-	
+		private function sub_otherbet(arr_chipsVO:Array):void
+		{
+			var l:int = arr_chipsVO.length;
+			var chipVO:ChipVO;
+			var chip:Chip = null;
+			for (var i:int = 0; i < l; i++) 
+			{
+				chipVO = arr_chipsVO[i];
+				var betArea:Image = view.viewArea.get_zone(chipVO.type)	;				 
+				var betInfo:BetInfoVO = roomData.chipTool.getChip(chipVO.value);
+				if(!betInfo){
+					var temp:BetSlipParam = roomData.chipTool.splitBet(chipVO.value);
+					for (var j:int = 0; j < temp.chips.length; j++) 
+					{
+						chip = new Chip();
+						betInfo = temp.chips[j];
+						trace("arr_chipsVO[i] = " + arr_chipsVO[i].type);
+						trace("betInfo.value = " + betInfo.value);
+						chipVO = new ChipVO(false,arr_chipsVO[i].type,betInfo.value);
+						chip.vo = chipVO;
+						trace("sub = "+chipVO.type);
+						view.removeOthersChip(chipVO);
+					}
+					
+				}else{
+					chip = new Chip();
+					var pos:Point = BetAreaUtil.getRandomByRectangle(chipVO.type,betArea.getBounds());
+					chip.vo = chipVO;
+					trace("userBet", chipVO);
+					//chip.vo.value = chip.vo.value;
+					view.removeOthersChip(chipVO);
+				}
+			}
+			
+		}
+		
+		
 		
 		private function cashViewHandler():void
 		{			
