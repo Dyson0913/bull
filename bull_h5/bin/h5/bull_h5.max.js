@@ -1455,32 +1455,10 @@ var Laya=window.Laya=(function(window,document){
 			var recY=rec.y;
 			var recW=rec.width;
 			var recH=rec.height;
-			if(index==0){
-				recX+=40;
-				recY+=40;
-				recW-=50;
-				recH-=60;
-				}else if(index==1){
-				recX+=40;
-				recY+=20;
-				recW-=50;
-				recH-=60;
-				}else if(index==6){
-				recX+=16;
-				recY+=40;
-				recW-=50;
-				recH-=60;
-				}else if(index==7){
-				recX+=16;
-				recY+=20;
-				recW-=55;
-				recH-=60;
-				}else{
-				recX+=16;
-				recY+=20;
-				recW-=40;
-				recH-=30;
-			};
+			recX+=30;
+			recY+=60;
+			recW-=80;
+			recH-=110;
 			var x=MyMath.randomIntRange(recX,recX+recW);
 			var y=MyMath.randomIntRange(recY,recY+recH);
 			return new Point(x,y);
@@ -52815,8 +52793,8 @@ var Laya=window.Laya=(function(window,document){
 		__proto.flySelfChip=function(chip,pos){
 			chip.x=657;
 			chip.y=647;
-			this.addChildAt(chip,this.getChildIndex(this.viewPoker));
-			Tween.to(chip,{x:pos.x,y:pos.y},500,Ease.cubicOut,Handler.create(this,this.onFlySelfCompleteHandler,[chip]));
+			this.addChildAt(chip,this.getChildIndex(this.viewArea));
+			Tween.to(chip,{x:this.viewArea.x+pos.x,y:this.viewArea.y+pos.y},500,Ease.cubicOut,Handler.create(this,this.onFlySelfCompleteHandler,[chip]));
 		}
 
 		//SoundManager.playSound(SoundPath.Sound_sound_jetton);

@@ -133,8 +133,8 @@ package bull.view.room
 		public function flySelfChip(chip:Chip,pos:Point):void{
 			chip.x = 657;
 			chip.y = 647;
-			this.addChildAt(chip,getChildIndex(viewPoker));
-			Tween.to(chip,{x:pos.x,y:pos.y},500,Ease.cubicOut,Handler.create(this,onFlySelfCompleteHandler,[chip]));
+			this.addChildAt(chip,getChildIndex(viewArea));
+			Tween.to(chip,{x:viewArea.x + pos.x,y:viewArea.y+pos.y},500,Ease.cubicOut,Handler.create(this,onFlySelfCompleteHandler,[chip]));
 			
 			//SoundManager.playSound(SoundPath.Sound_sound_jetton);
 		}
