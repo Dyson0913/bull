@@ -85,33 +85,66 @@ package bull.view.room
 		public function start():void
 		{
 			trace("start");
+			
+			
+			
+			//中途進入元件處理			
+			viewBetTime.hide();
+			viewPoker.hide();
+			viewArea.hide();
 		}
 		
 		public function banker():void
 		{
 			trace("banker");
+			
+			//下注區閃櫟
+			viewArea.set_(true, 20000);	
+			
+			//中途進入元件處理
+			viewBetTime.hide();
+			viewPoker.hide();
+			viewArea.hide();
 		}
 		
 		public function bet():void
 		{
 			trace("bet");
 			
-			viewArea.set_fellow_coin(viewSelectClip["mcSelect_0"]);
+			viewArea.set_fellow_coin(viewSelectClip["mcSelect_0"]);			
+			viewBetTime.set_data([_roomData.LeftTime]);
+			
+			//中途進入元件處理
+			viewPoker.hide();
+			
 		}
 		
 		public function betCheck():void
 		{
 			trace("betCheck");
+			
+			//中途進入元件處理
+			viewBetTime.hide();
+			viewPoker.hide();
+			viewArea.disable_zone();
 		}
 		
 		public function deal():void
 		{
-			trace("deal");
+			trace("deal");			
+			
+			//中途進入元件處理
+			viewBetTime.hide();
+			viewArea.disable_zone();
 		}
 		
 		public function end():void
 		{
 			trace("end");
+			
+			//中途進入元件處理
+			viewBetTime.hide();
+			viewArea.disable_zone();
 		}
 		
 		private function onReturnClick(e:Event):void

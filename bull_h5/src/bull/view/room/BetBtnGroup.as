@@ -92,7 +92,7 @@ package bull.view.room
 			var pattern:RegExp = /betBtn_/;
 			sName = sName.replace(pattern, "");			
 						
-			event(LightEvent.ITEM_CLICK,sName);			
+			event(LightEvent.ITEM_CLICK,sName);
 		}
 		
 		private function btnSame_disapear():void			

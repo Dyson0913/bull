@@ -7,6 +7,7 @@ package bull.view.room
 	import laya.ui.Image;
 	import laya.ui.Label;
 	
+	import com.lightUI.events.LightEvent;
 	import laya.utils.Tween;
 	import laya.utils.Ease;
 	import laya.utils.Handler;
@@ -202,6 +203,7 @@ package bull.view.room
 			if (_rest_Time == -1)
 			{
 				Laya.timer.clear(this, timerHandler);
+				event(LightEvent.ITEM_CLICK);
 				this.visible = false;
 			}
 			

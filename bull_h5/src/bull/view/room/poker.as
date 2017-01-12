@@ -146,7 +146,7 @@ package bull.view.room
 			}
 		}
 		
-		public function hide():void
+		public function recycle():void
 		{			
 			for(var i:int =0;i< 5;i++)
 			{
@@ -157,6 +157,10 @@ package bull.view.room
 			}
 		}
 		
+		public function hide():void
+		{
+			this.visible = false;
+		}
 		
 		private function test():void
 		{

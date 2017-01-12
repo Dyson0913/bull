@@ -58,6 +58,7 @@ package bull.events
 		
 		//bet
 		public static const BET_RSP:String = "bet_rsp";
+		public static const BET_INFO_UPDATE:String = "BET_INFO_UPDATE";
 		
 		public static const SOCKET_CONNECT:String = "socketConnect";////////////////通知连接服务器 
 		public static const ONLOGIN:String = "onLogin";/////////////////////////////登录成功   发送房间列表

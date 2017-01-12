@@ -177,23 +177,44 @@ package bull.modules.room.command
 		
 		private function betnotify(cs:CS):void
 		{
-			return;
 			var data:SBetNotify = cs.bet_notify;
 			
-			appMedel.sameBetinfo = [];
-			appMedel.sameBetinfo = data.bets;			
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
+			
+			var divi_100:Boolean = false;
+			if ( roomData.Cash_Type != conf.ENRoomType.ROOM_TYPE_COIN ) divi_100 = true;
+			
+			var bullData:Data = getSingleton(Data.NAME) as Data;
+			var myuid:Number =  bullData.uid;
 			
 			var m1:SBetInfo = data.m1;
 			var m2:SBetInfo = data.m2;
 			var m3:SBetInfo = data.m3;
 			var m4:SBetInfo = data.m4;
 			
-			if ( m1 == null) return;
+			//總下注更新
+			roomData.Zone_Total_bet[0] = divi_100 == true ? m1.money.toNumber() / 100 : m1.money.toNumber();
+			roomData.Zone_Total_bet[1] = divi_100 == true ? m2.money.toNumber() / 100 : m2.money.toNumber();
+			roomData.Zone_Total_bet[2] = divi_100 == true ? m3.money.toNumber() / 100 : m3.money.toNumber();
+			roomData.Zone_Total_bet[3] = divi_100 == true ? m4.money.toNumber() / 100 : m4.money.toNumber();
 			
-			appMedel.dataStartStatus.allBetClips[0] = m1.money;
-			appMedel.dataStartStatus.allBetClips[1] = m2.money;
-			appMedel.dataStartStatus.allBetClips[2] = m3.money;
-			appMedel.dataStartStatus.allBetClips[3] = m4.money;
+			//下注資訊更新
+			roomData.sameBetinfo = [];
+			roomData.sameBetinfo = data.bets;		
+			
+			
+			sentNotification(BullNotification.bet_info_update,[myuid,divi_100,roomData.sameBetinfo]);
+			
+			return;
+						
+			var m1:SBetInfo = data.m1;
+			var m2:SBetInfo = data.m2;
+			var m3:SBetInfo = data.m3;
+			var m4:SBetInfo = data.m4;
+			
+			//if ( m1 == null) return;
+			
+			
 			
 			var Total_batch_bet:Number=0;
 			var bet:SBetNotify_Bet =null;
@@ -213,10 +234,6 @@ package bull.modules.room.command
 			//現金下1塊,傳100 ,回來要/100
 			if( appMedel.roomParam.roomType != conf.ENRoomType.ROOM_TYPE_COIN )
 			{
-				appMedel.dataStartStatus.allBetClips[0]  /=100;
-				appMedel.dataStartStatus.allBetClips[1]  /=100;
-				appMedel.dataStartStatus.allBetClips[2]  /=100;
-				appMedel.dataStartStatus.allBetClips[3]  /=100;
 				
 				//變成一包處理			
 				Total_batch_bet /=100;				

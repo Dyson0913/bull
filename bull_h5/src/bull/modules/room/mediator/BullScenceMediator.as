@@ -17,6 +17,7 @@ package bull.modules.room.mediator
 	import conf.SUserInfo;
 	import laya.ui.Image;
 	import msg.CS;
+	import msg.SBetNotify_Bet;
 	import msg.SCalculateNotify;
 	
 	import bull.view.room.Common;
@@ -125,8 +126,7 @@ package bull.modules.room.mediator
 			//notify
 			addNotifiction(BullNotification.STATE_CHANGE);
 			addNotifiction(BullNotification.HISTORY_NOTIFY);
-			addNotifiction(BullNotification.USER_NOTIFY);
-			addNotifiction(BullNotification.BET_NOTIFY);
+			addNotifiction(BullNotification.USER_NOTIFY);			
 			addNotifiction(BullNotification.CARD_NOTIFY);			
 			addNotifiction(BullNotification.SETTLE_NOTIFY);
 			
@@ -138,6 +138,7 @@ package bull.modules.room.mediator
 			
 			//bet
 			addNotifiction(BullNotification.BET_RSP);		
+			addNotifiction(BullNotification.BET_INFO_UPDATE);
 			//reaction
 			
 			
@@ -151,7 +152,9 @@ package bull.modules.room.mediator
 			//元件點擊事件
 			view.viewArea.on(LightEvent.ITEM_CLICK,this, onBetzoneClick);
 			view.ViewBetGroup.on(LightEvent.ITEM_CLICK,this, onBetAction);
-			view.viewSelectClip.on(LightEvent.ITEM_CLICK,this, onCoinSelect);
+			view.viewSelectClip.on(LightEvent.ITEM_CLICK, this, onCoinSelect);
+			view.viewResult.on(LightEvent.ITEM_CLICK, this, runEnd_recycle);
+			
 			//廣播訊息			
 			addNotifiction(BullNotification.Change_to_Lobby);
 		}
@@ -166,19 +169,12 @@ package bull.modules.room.mediator
 			if (name == "same")
 			{
 				//dispatchEvent(new OperateEvent(NewNewGameEvent.SameBet, []));
-				//折分coin
-				var chips:Array = [];
-				chips = get_coin_info(5000, 0, false);
-				add_otherbet(chips);				
+								
 				
 			}
 			else if (name =="cancel")
 			{
-				//view.flySelfChipBack();
 				
-				var chips:Array = [];
-				chips = get_coin_info(1000, 0, false);
-				sub_otherbet(chips);	
 				
 				//dispatchEvent(new OperateEvent(NewNewGameEvent.CancelMybet, []));
 			}
@@ -191,16 +187,10 @@ package bull.modules.room.mediator
 			
 			roomData.bet_zone = idx;
 			sentNotification(ENCSType.CS_TYPE_BET_REQ.toString());
-			//view.viewArea.update_total(idx, 100);
-			//view.viewArea.update_self(idx, 100);
-			//view.viewArea.zone_light(3);
+			
 			
 			//view.viewArea.tablelimit_updata(800);
 			
-			//折分coin
-			//var chips:Array = [];
-			//chips = get_coin_info(3500, idx, true);
-			//add_selfbet(chips);
 		}
 		
 		private function get_coin_info(amount:Number,zone:int,is_my:Boolean):Array
@@ -360,6 +350,11 @@ package bull.modules.room.mediator
 			}
 		}
 		
+		private function runEnd_recycle():void
+		{
+			view.viewPoker.recycle();
+		}
+		
 		private function onBankerSettleUpdateHandler():void
 		{
 			//appMedel.banker_settle_show = true;			
@@ -413,13 +408,12 @@ package bull.modules.room.mediator
 				
 				case view.CarryInBtn:
 					view.btn_display(!view.btnBg.visible);					
-					view.viewArea.set_(true,20000);	
 				break;
 				
 				case view.PlayerListBtn:
 					view.btn_display(!view.btnBg.visible);
 					
-					view.viewArea.hide();
+					
 					view.ViewPlayerList.show();
 				break;
 				
@@ -452,14 +446,13 @@ package bull.modules.room.mediator
 					onDealDataHandler();
 				break;				
 				
-				case BullNotification.BET_NOTIFY:
-					bet_otherHandler();
-				break;	
-				
 				case BullNotification.BET_RSP:
 					betRepHandler();
 				break;	
 				
+				case BullNotification.BET_INFO_UPDATE:
+					bet_otherHandler(noti.getBody() as Array);
+				break;	
 				
 				
 				case BullNotification.SETTLE_NOTIFY:
@@ -591,8 +584,92 @@ package bull.modules.room.mediator
 		}
 		
 		
-		private function bet_otherHandler():void		
+		private function bet_otherHandler(data:Array):void		
 		{
+			var myuid = data[0];
+			var divid_100:Boolean = data[1];
+			var bet_info:Array = data[2];
+			var betinfo:SBetNotify_Bet;
+			
+			for (var i:int = 0; i < bet_info.length; i++)
+			{
+				betinfo = bet_info[i];
+				var self:Boolean = betinfo.uid == myuid;
+				var bet:Number = divid_100 == true? betinfo.value / 100 : betinfo.value;
+				var po:int = betinfo.position - 1;
+				
+				if (self)
+				{
+					//減注
+					if ( bet < 0)
+					{
+						view.flySelfChipBack();
+						roomData.Zone_self_bet[0] = 0;
+						roomData.Zone_self_bet[1] = 0;
+						roomData.Zone_self_bet[2] = 0;
+						roomData.Zone_self_bet[3] = 0;
+					}
+					else
+					{
+						//下注
+						var chips:Array = [];
+						chips = get_coin_info(bet, po, self);
+						add_selfbet(chips);
+						roomData.Zone_self_bet[po] += bet;
+					}					
+				}
+				else
+				{
+					//他人下注					
+					if ( bet < 0)
+					{
+						//減注
+						var chips:Array = [];
+						chips = get_coin_info(bet, po, false);
+						sub_otherbet(chips);
+					}
+					else
+					{
+						//下注
+						var chips:Array = [];
+						chips = get_coin_info(bet, po, false);
+						add_otherbet(chips);
+					}
+				}
+				
+				
+			}
+			
+			//總注區更新
+			for (var i:int = 0; i < 4; i++)
+			{
+				view.viewArea.update_total(i, roomData.Zone_Total_bet[i]);
+				view.viewArea.update_self(i, roomData.Zone_self_bet[i]);
+			}			
+				
+			
+			//view.viewArea.zone_light(3);
+			
+			//num,idx
+			//自己下注  //折分coin
+			//var chips:Array = [];
+			//chips = get_coin_info(3500, idx, true);
+			//add_selfbet(chips);
+			
+			//自己取消 
+			//view.flySelfChipBack();
+			
+			//他人下注 num,idx
+			//var chips:Array = [];
+			//chips = get_coin_info(5000, 0, false);
+			//add_otherbet(chips);
+			
+			//他人取消 num,idx
+			//var chips:Array = [];
+			//chips = get_coin_info(1000, 0, false);
+			//sub_otherbet(chips);	
+			
+			
 			return;
 			
 			var data:Array = e.info;

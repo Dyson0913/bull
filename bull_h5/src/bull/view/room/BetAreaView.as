@@ -164,20 +164,26 @@ package bull.view.room
 		
 		public function update_total(idx:int,amount:Number ):void
 		{
-			//總數更新
-			this["total_amount_" + idx]["title"].visible = true;
-			this["total_amount_" + idx].visible = true;
-			this["total_amount_" + idx]["amount"].text = amount.toString();			
+			if ( amount != 0)
+			{
+				//總數更新
+				this["total_amount_" + idx]["title"].visible = true;
+				this["total_amount_" + idx].visible = true;
+				this["total_amount_" + idx]["amount"].text = amount.toString();
+			}
 			
 			
 		}
 		
 		public function update_self(idx:int, amount:Number ):void
 		{
-			//自己下注更新
-			this["self_amount_" + idx]["amount"].font = "mybetFont";			
-			this["self_amount_" + idx].visible = true;
-			this["self_amount_" + idx]["amount"].text = amount.toString();
+			if ( amount != 0)
+			{
+				//自己下注更新
+				this["self_amount_" + idx]["amount"].font = "mybetFont";
+				this["self_amount_" + idx].visible = true;
+				this["self_amount_" + idx]["amount"].text = amount.toString();
+			}
 		}
 		
 		public function zone_light(idx:int):void
@@ -207,6 +213,16 @@ package bull.view.room
 				
 			}	
 			_isPlayerbanker = false;
+		}
+		
+		public function disable_zone():void
+		{
+			for (var i:int = 0; i < 4; i++)
+			{												
+				this["Scene_" + i].off(Event.MOUSE_DOWN, this, onScenedown);
+				this["Scene_" + i].off(Event.MOUSE_UP, this, onSceneup);
+				
+			}	
 		}
 		
 		public function get_zone(i:int):Image

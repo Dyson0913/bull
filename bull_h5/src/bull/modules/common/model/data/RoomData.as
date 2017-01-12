@@ -82,6 +82,11 @@ package bull.modules.common.model.data
 		public var Total_money:Number;
 		public var bet_zone:int;
 		public var bet_idx:int;
+		//四區個人和他人下注
+		public var Zone_Total_bet:Array;
+		public var Zone_self_bet:Array;
+		public var sameBetinfo:Array;
+		
 		
 		/** 保存筹码配置列表 **/
 		public var dataSelectClips:Array = null;
@@ -94,7 +99,9 @@ package bull.modules.common.model.data
 			history_result_info = [];
 			playerList = [];
 			card_info = [];
-			
+			Zone_Total_bet = [];
+			Zone_self_bet = [];
+			sameBetinfo = [];
 			
 			Banker_calcu_info = new SBankerCalculateNotify();
 		}
