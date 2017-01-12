@@ -183,6 +183,7 @@ package bull.view.room
 				this["self_amount_" + idx]["amount"].font = "mybetFont";
 				this["self_amount_" + idx].visible = true;
 				this["self_amount_" + idx]["amount"].text = amount.toString();
+				
 			}
 		}
 		

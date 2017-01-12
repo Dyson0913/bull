@@ -14,6 +14,7 @@ package bull.modules.room.command
 	import conf.SUserInfo;
 	import msg.SBetNotify;
 	import msg.SBetRsp;
+	import com.lightUI.core.Light;
 	
 	import bull.events.BullNotification;	
 	import bull.modules.perload.services.PreLoadService;
@@ -151,9 +152,9 @@ package bull.modules.room.command
 				default:				
 					if (  rsp.error_code ==14 ||  rsp.error_code ==7 || rsp.error_code >=17 &&  rsp.error_code <=29)
 					{
-						Alert.show(Light.language.getSrting("alert_msg10"), "", AlertCancelPanel, null, Handler.create(this, exitRoomCall));
-						Alert.show(Light.error.getError("2"), "", AlertPanel);  
-						var alertMsg:String = MessageCodeMgr.getInstance().getError( String(rsp.error_code) );
+						
+						Alert.show(Light.error.getError(rsp.error_code.toString()), "", AlertPanel);  
+						//var alertMsg:String = MessageCodeMgr.getInstance().getError( String(rsp.error_code) );
 						var po:int; 
 						//相同下注失敗 po 回傳10
 						if( rsp.position ==10 )
@@ -179,13 +180,13 @@ package bull.modules.room.command
 		}
 		
 		private function betnotify(cs:CS):void
-		{
+		{			
 			var data:SBetNotify = cs.bet_notify;
 			
 			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 			
 			var divi_100:Boolean = false;
-			if ( roomData.Cash_Type != conf.ENRoomType.ROOM_TYPE_COIN ) divi_100 = true;
+			if ( roomData.Cash_Type != ENMoneyType.MONEY_TYPE_COIN ) divi_100 = true;
 			
 			var bullData:Data = getSingleton(Data.NAME) as Data;
 			var myuid:Number =  bullData.uid;
@@ -206,8 +207,7 @@ package bull.modules.room.command
 			roomData.sameBetinfo = data.bets;		
 			
 			
-			sentNotification(BullNotification.bet_info_update,[myuid,divi_100,roomData.sameBetinfo]);
-			
+			sentNotification(BullNotification.BET_INFO_UPDATE,[myuid,divi_100,roomData.sameBetinfo]);			
 			return;
 						
 			var m1:SBetInfo = data.m1;
