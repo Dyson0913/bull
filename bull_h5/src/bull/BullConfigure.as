@@ -100,6 +100,7 @@ package bull
 			registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),  HallHeartBeatCommand);
 			
 			registerCommand(BullNotification.Leave_Game, LoginHallCommand);
+			registerCommand(ENCSType.CS_TYPE_EXIT_TABLE_RSP.toString(), LoginHallCommand);
 			
 			//要求桌列表
 			registerCommand(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString(), RoomListCommand);
@@ -137,29 +138,24 @@ package bull
 			registerCommand(ENCSType.CS_TYPE_CARRY_IN_REQ.toString(),CarryInCommand);
 			registerCommand(ENCSType.CS_TYPE_CARRY_IN_RSP.toString(),CarryInCommand);
 			
-//			registerCommand(MessageID.ROOM_CONFIG_NOTIFY.toString(), RoomConfigCommand);
-			
 			//notify
-			registerCommand(ENCSType.CS_TYPE_TIMER_NOTIFY.toString(), StateCommand);
-			registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(), HistoryCommand);
-			registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
-			registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
-			registerCommand(ENCSType.CS_TYPE_BET_NOTIFY.toString(), BetNotifyCommand);
-			registerCommand(ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString(),DealCardNotifyCommand);
-			registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyCommand);
+			//registerCommand(ENCSType.CS_TYPE_TIMER_NOTIFY.toString(), StateCommand);
+			//registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(), HistoryCommand);
+			//registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
+			//registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
+			//registerCommand(ENCSType.CS_TYPE_BET_NOTIFY.toString(), BetNotifyCommand);
+			//registerCommand(ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString(),DealCardNotifyCommand);
+			//registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyCommand);
 			
 			
 			//上庄
-			registerCommand(ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString(),BankerNotifyCommand);
-			registerCommand(ENCSType.CS_TYPE_BANKER_NOTIFY.toString(),BankerNotifyCommand);
-			registerCommand(ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString(),BankerNotifyCommand);
-			
+			//registerCommand(ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString(),BankerNotifyCommand);
+			//registerCommand(ENCSType.CS_TYPE_BANKER_NOTIFY.toString(),BankerNotifyCommand);
+			//registerCommand(ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString(),BankerNotifyCommand);
+			//
 			//下注
 			registerCommand(ENCSType.CS_TYPE_BET_REQ.toString(),BetNotifyCommand);
 			registerCommand(ENCSType.CS_TYPE_BET_RSP.toString(),BetNotifyCommand);
-			
-//			registerCommand(MessageID.USERINFO_REQUEST.toString(),UserInfoCommand);
-//			registerCommand(MessageID.USERINFO_RESPONSE.toString(), UserInfoCommand);
 			
 			registerCommand(BullNotification.TestOrder, TestCommand);
 		}

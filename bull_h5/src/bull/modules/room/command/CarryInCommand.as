@@ -57,7 +57,7 @@ package bull.modules.room.command
 		
 		private function onCarryInResponse(cs:CS):void
 		{
-			
+			trace("===========onCarryInResponse");
 			//var userInfo:UserInfoData = getSingleton(UserInfoData.NAME) as UserInfoData;
 			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 			var rsp:SCarryInRsp = cs.carry_in_rsp;

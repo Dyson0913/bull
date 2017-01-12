@@ -1,10 +1,13 @@
 package bull.modules.common.command
 {
+	import bull.modules.room.services.RoomSocketService;
 	import com.IProtobuf.Long;
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
 	import com.lightMVC.parrerns.Mediator;
+	import msg.ExitTableRsp;
+	import msg.SExitTableRsp;
 	
 	import bull.events.BullNotification;
 	import bull.modules.common.model.BullProtoModel;
@@ -38,9 +41,9 @@ package bull.modules.common.command
 				case BullNotification.Leave_Game:
 					returnHallReq();
 					break;
-				//case ENCSType.CS_TYPE_RETURN_HALL_RSP.toString():
-					//returnHallRsp(noti.getBody() as CS);
-					//break;
+				case ENCSType.CS_TYPE_EXIT_TABLE_RSP.toString():
+					exit_game(noti.getBody() as CS);
+				break;
 			}
 		}
 		
@@ -82,6 +85,16 @@ package bull.modules.common.command
 			trace("-----------------back to hall");
 			var bullData:Data = getSingleton(Data.NAME) as Data;
 			bullData.hallData.ViewIn = "Lobby";
+			
+			
+			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
+			var out:CS = proto.msg_proto.getCS();
+			out.msg_type = ENCSType.CS_TYPE_EXIT_TABLE_REQ;
+			
+			
+			var roomService:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;			
+			roomService.sentMsg(out);
+			
 			return;
 			
 			//var proto:CarProtoModel = getModel(CarProtoModel.NAME) as CarProtoModel;
@@ -93,13 +106,14 @@ package bull.modules.common.command
 			//socket.sentMsg(out);
 		}
 		
-		private function returnHallRsp(cs:CS):void
+		private function exit_game(cs:CS):void
 		{
-			//var rsp:ReturnHallRsp = cs.return_hall_rsp;
-			//switch(rsp.result)
-			//{
-				//case 0:
-					//trace("returnHallRsp rsp:",rsp);
+			var rsp:SExitTableRsp = cs.exit_table_rsp;
+			switch(rsp.error_code)
+			{
+				case 0:
+					trace("============exit_game ok"  );
+					sentNotification(BullNotification.Change_to_Lobby);
 					//sentNotification(ENCSType.CS_TYPE_GET_TABLE_LIST_REQ.toString());
 //					sentNotification(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString());
 					//break;
@@ -107,7 +121,7 @@ package bull.modules.common.command
 					//trace("returnHallRsp ........... errorCode:" + rsp.result);
 					//
 					//break;
-			//}
+			}
 		}
 		
 	}

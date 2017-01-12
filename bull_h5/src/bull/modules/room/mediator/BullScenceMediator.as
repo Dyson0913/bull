@@ -153,7 +153,7 @@ package bull.modules.room.mediator
 			view.ViewBetGroup.on(LightEvent.ITEM_CLICK,this, onBetAction);
 			view.viewSelectClip.on(LightEvent.ITEM_CLICK,this, onCoinSelect);
 			//廣播訊息			
-			
+			addNotifiction(BullNotification.Change_to_Lobby);
 		}
 		
 		private function onCoinSelect(select:int):void
@@ -487,6 +487,10 @@ package bull.modules.room.mediator
 					break;
 				case BullNotification.ExitRoomEvent:
 					exitRoom();
+				break;
+				case BullNotification.Change_to_Lobby:
+					real_exit_room();
+				breq;
 			}
 		}
 		
@@ -811,10 +815,30 @@ package bull.modules.room.mediator
 		
 		private function onReturnClick():void{
 			trace("onReturnClick exit room");
-			//if(roomData.isSelfBet()) 
-				//Alert.show("确定退出"+AlertTextUtil.getEnterRoomText(roomData.chipsType,roomData.name)+"？\n\n\n    (本局下注将正常结算)","",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
-			//else
-				exitRoom();
+			var banker:Boolean = false;
+			var self_totalbet:Number = 0;
+			if (banker)
+			{
+				Alert.show(Light.language.getSrting("alert_msg10"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
+			}
+			else
+			{
+				//沒下注直接離開
+				if( self_totalbet==0)exitRoom();				
+				else
+				{
+					if ( roomData.State == RoomData.DEAL)
+					{
+						Alert.show(Light.language.getSrting("alert_msg10"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
+					}
+					if ( roomData.State == RoomData.BET)
+					{
+						Alert.show(Light.language.getSrting("alert_msg10"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
+					}
+				}
+				
+			}
+			
 				
 		}
 		
@@ -826,10 +850,14 @@ package bull.modules.room.mediator
 		
 		public function exitRoom():void {
 				
-		
 			
-			perLoadService.loadHall();
 			sentNotification(BullNotification.Leave_Game);
+			
+		}
+		
+		public function real_exit_room()
+		{
+			perLoadService.loadHall();
 			dispose();
 		}
 		

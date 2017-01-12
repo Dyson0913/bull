@@ -83,6 +83,7 @@ package bull.events
 		public static const RoomSocketClose:String = "RoomSocketClose" ;
 		public static const ExitRoomEvent:String = "ExitRoomEvent";
 		public static const Leave_Game:String = "car.Leave_Game"; //离开游戏
+		public static const Change_to_Lobby:String = "Change_to_Lobby"; 
 		
 		public static const TestOrder:String = "TestOrder";
 	}
