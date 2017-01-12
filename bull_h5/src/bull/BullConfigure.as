@@ -56,7 +56,7 @@ package bull
 	import bull.modules.BullHall.mediator.HallMediator;
 	import bull.modules.BullHall.service.HallSocketService;
 	
-	//import light.car.modules.room.command.CarryInCommand;
+	import bull.modules.room.command.CarryInCommand;
 	import bull.modules.room.command.EnterRoomCommand;
 	import bull.modules.room.mediator.BullScenceMediator;
 	import bull.modules.room.services.RoomSocketService;
@@ -133,7 +133,9 @@ package bull
 			registerCommand(ENCSType.CS_TYPE_ENTER_TABLE_RSP.toString(), JoinRoomCommand);
 			
 			
-			//TODO carry in
+			//帶入
+			registerCommand(ENCSType.CS_TYPE_CARRY_IN_REQ.toString(),CarryInCommand);
+			registerCommand(ENCSType.CS_TYPE_CARRY_IN_RSP.toString(),CarryInCommand);
 			
 //			registerCommand(MessageID.ROOM_CONFIG_NOTIFY.toString(), RoomConfigCommand);
 			

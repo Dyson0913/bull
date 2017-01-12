@@ -33,6 +33,14 @@ package bull.modules.common.model.data
 		public var name:String = "";////////////////房间用来展示的名字
 		public var Cash_Type:ENMoneyType;
 		
+		//
+		// player_Money.cash
+		// player_Money.coin
+		// player_Money.nm	
+		
+		public var player_Money:Object;
+		
+		
 		public var State:int;			//桌子状态 
 		//-------------events---------------
 		public static const START:int = 1; 

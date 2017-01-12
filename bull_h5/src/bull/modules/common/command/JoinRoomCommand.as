@@ -1,5 +1,6 @@
 package bull.modules.common.command
 {
+	import bull.modules.common.model.data.RoomData;
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
@@ -62,8 +63,22 @@ package bull.modules.common.command
 				var hallData:HallData = getSingleton(HallData.NAME) as HallData;				
 				
 				
-				//TODO 帶入
-				
+				//己在遊戲內不帶入
+				if ( e.enter_table_rsp.user_info != null && e.enter_table_rsp.user_info.money != null)
+				{
+					//TODO更新HEAD money
+					sentNotification(BullNotification.VIEW_INIT);
+				}
+				else 
+				{
+					var hallData:HallData = getSingleton(HallData.NAME) as HallData;			
+					var roominfo:SRoomInfo = hallData.roomList[hallData.join_room_idx] as SRoomInfo;					
+					var config:SRoomConfig = roominfo.config;
+					
+					var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;	
+					
+					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL,[config,roomData]);	
+				}
 				
 				
 			}else{

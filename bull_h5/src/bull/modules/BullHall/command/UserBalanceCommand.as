@@ -8,17 +8,12 @@ package bull.modules.BullHall.command
 	
 	import laya.utils.Handler;
 	
-	import bull.events.BullNotification
-	import light.car.modules.common.model.data.CarData;
-	import light.car.modules.common.model.data.ConstData;
+	import bull.events.BullNotification		
 	import bull.modules.common.model.data.HallData;
-	import light.car.modules.common.model.data.RoomData;
-	import light.car.modules.common.model.data.UserInfoData;	
-	import light.car.modules.common.model.param.CarryInParam;
-	import bull.modules.common.services.WebService;
-	import light.car.utils.MoneyUtils;
-	import light.car.view.alert.AlertCancelPanel;
-	import light.car.view.alert.AlertPanel;
+	import bull.modules.common.model.data.RoomData;	
+	import bull.modules.common.services.WebService;	
+	import bull.view.alert.AlertCancelPanel;
+	import bull.view.alert.AlertPanel;
 	
 	import msg.ENCSType;
 	
@@ -56,13 +51,18 @@ package bull.modules.BullHall.command
 		}
 		
 		private function userBalanceCallback(param:Object):void{			
-			var hallData:HallData = getSingleton(HallData.NAME) as HallData;
-			
+			var hallData:HallData = getSingleton(HallData.NAME) as HallData;			
 			//trace("userBalanceCallback = " + param);
-			//trace("userBalanceCallback = " + param.info.cash);
-			//trace("userBalanceCallback = " + param.info.coin);
-			//trace("userBalanceCallback = " + param.info.nm);						
-			//TODO 放到room data 
+			trace("userBalanceCallback = " + param.info.cash);
+			trace("userBalanceCallback = " + param.info.coin);
+			trace("userBalanceCallback = " + param.info.nm);						
+			 
+			//userBalanceCallback = 6728  
+			//userBalanceCallback = 999927978 
+			//userBalanceCallback = 1500
+			
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;	
+			roomData.player_Money = param.info;
 			
 			//關閉大廳音樂
 			sentNotification(BullNotification.Close_BGM);

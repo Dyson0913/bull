@@ -142,6 +142,7 @@ package bull.modules.room.mediator
 			
 			
 			addNotifiction(BullNotification.CASH_TAKEIN_RESPONES);				
+			addNotifiction(BullNotification.VIEW_INIT);				
 			
 			
 			addNotifiction(BullNotification.RoomSocketClose);
@@ -330,7 +331,7 @@ package bull.modules.room.mediator
 		
 		private function cashViewHandler():void
 		{			
-			view.viewHead.setMoney(appMedel.TotalMoney); 
+			view.viewHead.setMoney(roomData.Total_money); 
 			view.viewHead.setMoneyT(Common.isCoin?2:1);					
 		}
 		
@@ -433,6 +434,9 @@ package bull.modules.room.mediator
 		{
 			switch(noti.getName())
 			{
+				case BullNotification.VIEW_INIT:
+					view_init();
+				break;
 				case BullNotification.STATE_CHANGE:
 					state_change();
 				break;
@@ -485,7 +489,7 @@ package bull.modules.room.mediator
 					exitRoom();
 			}
 		}
-
+		
 		public function state_change():void 
 		{
 			switch( roomData.State) 
@@ -509,6 +513,12 @@ package bull.modules.room.mediator
 					view.end();
 				break;
 			}
+		}
+		
+		private function view_init():void
+		{
+			//帶入再滑入
+			view.showme();
 		}
 		
 		private function betRepHandler():void
@@ -579,6 +589,8 @@ package bull.modules.room.mediator
 		
 		private function bet_otherHandler():void		
 		{
+			return;
+			
 			var data:Array = e.info;
 			var position:int = data[0];
 			var value:int = data[1];
@@ -772,7 +784,7 @@ package bull.modules.room.mediator
 		
 		private function onUIShow():void {
 			
-			view.viewSelectClip.set_data([100,500,1000,5000,10000,"max"]);
+			//view.viewSelectClip.set_data([100,500,1000,5000,10000,"max"]);
 			
 			//先别影藏 等数据请求回来再显示
 			view.roomData = roomData;
@@ -788,10 +800,7 @@ package bull.modules.room.mediator
 			}
 			else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;
 			
-			//
-			//view.img_cash.visible = view.img_coin.visible = false;
-			//roomData.chipsType == MoneyType.CASH ? view.img_cash.visible = true : view.img_coin.visible =true;
-			view.showme();
+			
 			
 		}
 		

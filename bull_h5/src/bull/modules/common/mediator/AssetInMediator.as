@@ -1,5 +1,8 @@
 package bull.modules.common.mediator
 {
+	import bull.modules.common.model.data.HallData;
+	import bull.modules.common.model.data.RoomData;
+	import bull.modules.common.services.WebService;
 	import com.lightMVC.interfaces.IMediator;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Mediator;
@@ -10,14 +13,16 @@ package bull.modules.common.mediator
 	import com.lightUI.components.alert.Alert;
 	import com.lightUI.core.Light;
 	import com.lightUI.manager.timer.Timer;
+	import conf.ENRoomType;
+	import conf.SRoomConfig;
+	import conf.SRoomInfo;
 	
 	import laya.utils.Handler;
 	
-	import bull.events.BullNotification;
-	import light.car.modules.common.model.param.CarryInParam;
+	import bull.events.BullNotification;	
 	import bull.modules.perload.services.PreLoadService;
 	import bull.modules.room.services.RoomSocketService;
-	import bull.view.alert.AlertPanel;
+	import bull.view.alert.AlertCancelPanel;
 	
 	import msg.ENCSType;
 	
@@ -55,7 +60,7 @@ package bull.modules.common.mediator
 			super.viewComponent = viewComponent;
 			
 			getAssetsPanel().visible = false;
-//			Light.layer.top.addChild(getAssetsPanel());
+			Light.layer.top.addChild(getAssetsPanel());
 			
 			addNotifiction(BullNotification.SHOW_CARRY_IN_PANEL);
 			getAssetsPanel().on(AssetsInEvent.OK, this, onCommitCarryIn);
@@ -65,45 +70,96 @@ package bull.modules.common.mediator
 		override public function handler(notification:INotification):void{
 			if(notification.getName() == BullNotification.SHOW_CARRY_IN_PANEL){
 				trace("SHOW_CARRY_IN_PANEL Handler");
-				//carryInPanelShow(notification.getBody() as CarryInParam);
+				carryInPanelShow(notification.getBody() as Array);
 			}
-		}
-		private var timerId:int;
-		//private function carryInPanelShow(param:CarryInParam):void{
-			//first = param.isFirst;
-			//if(first){
-				//timerId = timer.setTimeout(this, countCarryInTime, 30000, null);
-			//}
+		}		
+		private function carryInPanelShow(data:Array):void{
+			var config:SRoomConfig = data[0];			
+			var roomData:RoomData = data[1];
+			
+			
+			//房間類型
+			var money_type:Number = config.room_type == ENRoomType.ROOM_TYPE_COIN ? CurrencyType.COIN : CurrencyType.CASH;
+			
+			var betMin:Number;
+			var betMax:Number;
+			var nm:Number;
+			var hint:String;
+			if (money_type == CurrencyType.COIN)
+			{
+				//最小帶入需要是房間最小下注額10倍,因為可能一把輸十倍,最大帶入是自己所有的錢
+			   	betMin = config.min_bet * 10;
+				betMax = roomData.player_Money.coin;
+			}
+			else if( money_type == CurrencyType.COIN)
+			{
+				betMin = (config.min_bet / 100) * 10;
+				betMax = (roomData.player_Money.cash + roomData.player_Money.nm) / 100;
+				
+				nm = 0;
+				hint = "玩家上庄桌，不允许带入拟码。";
+			}
+			else
+			{
+				betMin = (config.min_bet / 100) * 10;
+				betMax = (roomData.player_Money.cash + roomData.player_Money.nm) / 100;
+				nm = roomData.player_Money.nm;
+				hint = "投注优先扣除拟码";
+			}
+			
+			//錢不夠最低帶入,直接提示
+			if ( betMax < betMin)
+			{
+				//TODO
+				Alert.show(Light.language.getSrting("alert_msg7"), "", AlertCancelPanel, null, Handler.create(this, GotoRecharge));
+				return;				
+			}
+			
+			getAssetsPanel().roomName = config.room_name;
+			
 			//现金带入需要把步长设成0.01	
 			//getAssetsPanel().assetsIn(param.betMin, param.betMax, param.carrayType, param.betMin, param.cash, param.coin, param.nm, 0.01);
-				//
-		//}
-		
-		private function countCarryInTime():void{
-			Alert.show("带入超时","",AlertPanel,null,Handler.create(this,onCancelCarryIn),null, 3000);
-		}
-		
-		private function onTimeOver(data:int, flg:String):void{
-			onCancelCarryIn(null);
+			getAssetsPanel().assetsIn(betMin, betMax,money_type,betMin,roomData.player_Money.cash, roomData.player_Money.coin,roomData.player_Money.nm);
+			
 		}
 		
 		private function onCancelCarryIn(e:AssetsInEvent):void
 		{
 			//退出房间消息
-			if(first){
-				roomSocketService.close();
-				perLoadService.loadHall();
-			}
-			timer.clearTimeout(timerId);
+			//if(first){
+				//roomSocketService.close();
+				//perLoadService.loadHall();
+			//}
+			
 			getAssetsPanel().close();
 		}
 		
 		private function onCommitCarryIn(vo:AssetsVO):void
 		{
-			timer.clearTimeout(timerId);
+			
 			trace("amountCash: "+vo.amount_cash+"amount_nm: "+vo.amount_nm+"amount_total: "+vo.amount_total);
 			sentNotification(ENCSType.CS_TYPE_CARRY_IN_REQ.toString(), vo);
 			getAssetsPanel().close();
+		}
+		
+		private function GotoRecharge():void{
+			if (flg == "ok_btn")
+			{
+				trace("ok_btn");
+				//TODO 去充值頁面
+				var ws:WebService = getModel(WebService.NAME) as WebService;
+				ws.recharge(new Handler(this, GotoRechargeCallback));
+			}
+			else
+			{
+				//TODO更新HEAD money
+				sentNotification(BullNotification.VIEW_INIT);
+			}
+		}
+		
+		private function GotoRechargeCallback(param:Object):void 
+		{
+			trace("GotoRechargeCallback  ="+param);
 		}
 		
 	}

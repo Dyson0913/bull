@@ -177,6 +177,7 @@ package bull.modules.room.command
 		
 		private function betnotify(cs:CS):void
 		{
+			return;
 			var data:SBetNotify = cs.bet_notify;
 			
 			appMedel.sameBetinfo = [];

@@ -35,11 +35,14 @@ package bull.events
 		public static const ROOM_SOCKET_CONNECT_FAILED:String = "roomSocketConnectFailed";//////////////////房间大厅失败
 		
 		public static const LOGIN_ROOM_RQS:String = "loginRoomRequest";//////////////////登录房间请求
+		public static const SHOW_CARRY_IN_PANEL:String = "show_carry_in_panel";//////////////////帶入
 		
 		
 		//遊戲內
 		public static const STATE_CHANGE:String = "STATE_CHANGE";//////////////////狀態改變
+		public static const VIEW_INIT:String = "view_init";
 		public static const CASH_TAKEIN_RESPONES:String = "CASH_TAKEIN_RESPONES"; //更新手中金額
+		
 		
 		//notify
 		public static const HISTORY_NOTIFY:String = "HistoryNotify";

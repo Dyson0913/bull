@@ -53,13 +53,11 @@ package bull.view.room
 			
 			
 			//向左滑入
-			Tween.to(viewRecord, { x:viewRecord.x + 173 }, 1000, Ease.backIn);
-			
+			Tween.to(viewRecord, { x:viewRecord.x + 173 }, 1000, Ease.backIn);			
 			//向上滑入
 			Tween.to(viewHead, { y:viewHead.y  -96 }, 1000, Ease.backIn);												
 			Tween.to(ViewBetGroup, { y:ViewBetGroup.y -96 }, 1000, Ease.backIn);
-			Tween.to(viewSelectClip, { y:viewSelectClip.y -138 }, 1000, Ease.backIn);
-			
+			Tween.to(viewSelectClip, { y:viewSelectClip.y -138 }, 1000, Ease.backIn);			
 			//向下滑入
 			Tween.to(viewBankerPanel, { y:viewBankerPanel.y +76 }, 1000, Ease.backIn);			
 		
