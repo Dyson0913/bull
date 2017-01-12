@@ -32249,6 +32249,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.runEnd_recycle=function(){
 			this.view.viewPoker.recycle();
+			this.view.PokerTypePanel.hide();
 		}
 
 		__proto.onBankerSettleUpdateHandler=function(){
@@ -32380,10 +32381,10 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.betRepHandler=function(){
 			if(this.roomData.State==3){
-				/*no*/this.game.ViewBetGroup.rebet_popup();
 			}
 		}
 
+		//game.ViewBetGroup.rebet_popup();
 		__proto.onHistoryUpdateHandler=function(){
 			this.view.viewRecord.histroy_notify(this.roomData.history_Win_info,this.roomData.history_lost_info,this.roomData.history_result_info);
 		}
@@ -32404,6 +32405,7 @@ var Laya=window.Laya=(function(window,document){
 
 		//LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().dealpoker,0,1);
 		__proto.bet_otherHandler=function(data){
+			console.log("=====================bet notity start");
 			var myuid=data[0];
 			var divid_100=data[1];
 			var bet_info=data[2];
@@ -32445,6 +32447,7 @@ var Laya=window.Laya=(function(window,document){
 				this.view.viewArea.update_total(i,this.roomData.Zone_Total_bet[i]);
 				this.view.viewArea.update_self(i,this.roomData.Zone_self_bet[i]);
 			}
+			console.log("=====================bet notity over");
 			return;
 			var data=/*no*/this.e.info;
 			var position=data[0];
@@ -53261,13 +53264,13 @@ var Laya=window.Laya=(function(window,document){
 		__proto.set_data=function(data){
 			this.visible=true;
 			this._time=data[0];
-			/*no*/this.LeftTime.text=this._time.toString();
+			this.bt_txt.text=this._time.toString();
 			Laya.timer.loop(1000,this,this.timerHandler);
 		}
 
 		__proto.timerHandler=function(){
 			this._time-=1;
-			/*no*/this.LeftTime.text=this._time.toString();
+			this.bt_txt.text=this._time.toString();
 			if (this._time==0){
 				Laya.timer.clear(this,this.timerHandler);
 			}
@@ -55630,29 +55633,26 @@ var Laya=window.Laya=(function(window,document){
 81 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (251):warning:chipsVO This variable is not defined.
 82 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (313):warning:_bankerName This variable is not defined.
 83 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (314):warning:_bankerName This variable is not defined.
-84 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (450):warning:breq This variable is not defined.
-85 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (489):warning:game.ViewBetGroup.rebet_popup This variable is not defined.
-86 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (585):warning:e.info This variable is not defined.
-87 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (598):warning:game.viewArea.update_total This variable is not defined.
-88 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (600):warning:game.viewArea.update_other_total This variable is not defined.
-89 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (605):warning:game.viewArea.my_batch_bet This variable is not defined.
-90 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (623):warning:game.viewArea.my_batch_bet This variable is not defined.
-91 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (629):warning:game.viewArea.my_batch_bet This variable is not defined.
-92 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (639):warning:game.viewArea.other_bet_cancel This variable is not defined.
-93 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (641):warning:game.viewArea.update_other_total This variable is not defined.
-94 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (647):warning:game.viewArea.clear_allChip This variable is not defined.
-95 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (659):warning:game.viewArea.other_bet This variable is not defined.
-96 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (669):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
-97 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (687):warning:game.viewArea.other_bet This variable is not defined.
-98 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (693):warning:game.viewArea.set_zoneList This variable is not defined.
-99 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (695):warning:game.viewArea.update_limit This variable is not defined.
-100 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (695):warning:roomlimit This variable is not defined.
-101 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (697):warning:game.viewArea.update_lamp This variable is not defined.
-102 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (698):warning:LightAssetManager.getInstance This variable is not defined.
-103 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (698):warning:SoundNameManager.getInstance This variable is not defined.
-104 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (42):warning:LeftTime.text This variable is not defined.
-105 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (50):warning:LeftTime.text This variable is not defined.
-106 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
-107 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (220):warning:hide This variable is not defined.
-108 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (73):warning:Coin_5.filters This variable is not defined.
+84 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (451):warning:breq This variable is not defined.
+85 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (587):warning:e.info This variable is not defined.
+86 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (600):warning:game.viewArea.update_total This variable is not defined.
+87 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (602):warning:game.viewArea.update_other_total This variable is not defined.
+88 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (607):warning:game.viewArea.my_batch_bet This variable is not defined.
+89 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (625):warning:game.viewArea.my_batch_bet This variable is not defined.
+90 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (631):warning:game.viewArea.my_batch_bet This variable is not defined.
+91 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (641):warning:game.viewArea.other_bet_cancel This variable is not defined.
+92 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (643):warning:game.viewArea.update_other_total This variable is not defined.
+93 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (649):warning:game.viewArea.clear_allChip This variable is not defined.
+94 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (661):warning:game.viewArea.other_bet This variable is not defined.
+95 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (671):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
+96 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (689):warning:game.viewArea.other_bet This variable is not defined.
+97 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (695):warning:game.viewArea.set_zoneList This variable is not defined.
+98 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (697):warning:game.viewArea.update_limit This variable is not defined.
+99 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (697):warning:roomlimit This variable is not defined.
+100 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (699):warning:game.viewArea.update_lamp This variable is not defined.
+101 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (700):warning:LightAssetManager.getInstance This variable is not defined.
+102 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (700):warning:SoundNameManager.getInstance This variable is not defined.
+103 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
+104 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (220):warning:hide This variable is not defined.
+105 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (73):warning:Coin_5.filters This variable is not defined.
 */

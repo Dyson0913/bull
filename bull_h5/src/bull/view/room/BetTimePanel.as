@@ -40,7 +40,7 @@ package bull.view.room
 		{
 			this.visible = true;
 			_time = data[0];
-			LeftTime.text = _time.toString();			
+			bt_txt.text = _time.toString();			
 			Laya.timer.loop(1000, this, timerHandler);
 			
 		}
@@ -48,7 +48,7 @@ package bull.view.room
 		public function timerHandler():void
 		{
 			_time -= 1;	
-			LeftTime.text = _time.toString();
+			bt_txt.text = _time.toString();
 			if (_time == 0)
 			{
 				Laya.timer.clear(this, timerHandler);

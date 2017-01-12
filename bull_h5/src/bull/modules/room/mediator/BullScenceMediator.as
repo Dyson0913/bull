@@ -353,6 +353,7 @@ package bull.modules.room.mediator
 		private function runEnd_recycle():void
 		{
 			view.viewPoker.recycle();
+			view.PokerTypePanel.hide();
 		}
 		
 		private function onBankerSettleUpdateHandler():void
@@ -525,7 +526,7 @@ package bull.modules.room.mediator
 			if( roomData.State == RoomData.BET)
 			{
 				//顥示重新下注
-				game.ViewBetGroup.rebet_popup();
+				//game.ViewBetGroup.rebet_popup();
 			}
 			
 		}
@@ -586,6 +587,7 @@ package bull.modules.room.mediator
 		
 		private function bet_otherHandler(data:Array):void		
 		{
+			trace("=====================bet notity start");
 			var myuid = data[0];
 			var divid_100:Boolean = data[1];
 			var bet_info:Array = data[2];
@@ -647,6 +649,7 @@ package bull.modules.room.mediator
 				view.viewArea.update_self(i, roomData.Zone_self_bet[i]);
 			}			
 				
+			trace("=====================bet notity over");
 			
 			//view.viewArea.zone_light(3);
 			

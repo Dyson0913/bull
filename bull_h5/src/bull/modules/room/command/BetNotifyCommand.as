@@ -19,6 +19,8 @@ package bull.modules.room.command
 	import bull.modules.perload.services.PreLoadService;
 	import bull.modules.common.model.data.Data;
 	
+	import bull.view.alert.AlertPanel;
+	import com.lightUI.components.alert.Alert;
 	
 	import msg.CS;
 	import msg.ENCSType;
@@ -149,7 +151,8 @@ package bull.modules.room.command
 				default:				
 					if (  rsp.error_code ==14 ||  rsp.error_code ==7 || rsp.error_code >=17 &&  rsp.error_code <=29)
 					{
-						
+						Alert.show(Light.language.getSrting("alert_msg10"), "", AlertCancelPanel, null, Handler.create(this, exitRoomCall));
+						Alert.show(Light.error.getError("2"), "", AlertPanel);  
 						var alertMsg:String = MessageCodeMgr.getInstance().getError( String(rsp.error_code) );
 						var po:int; 
 						//相同下注失敗 po 回傳10
