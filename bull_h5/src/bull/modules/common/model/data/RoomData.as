@@ -99,8 +99,8 @@ package bull.modules.common.model.data
 			history_result_info = [];
 			playerList = [];
 			card_info = [];
-			Zone_Total_bet = [];
-			Zone_self_bet = [];
+			Zone_Total_bet = [0,0,0,0];
+			Zone_self_bet = [0,0,0,0];
 			sameBetinfo = [];
 			
 			Banker_calcu_info = new SBankerCalculateNotify();

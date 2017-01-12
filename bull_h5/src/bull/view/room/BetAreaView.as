@@ -99,7 +99,7 @@ package bull.view.room
 			this.off(Event.MOUSE_MOVE,this, dragChipHandler);
 		}
 		
-		public function set_(isPlayerbanker:Boolean,limit:Number):void
+		public function set_ready(isPlayerbanker:Boolean,limit:Number):void
 		{			
 			hide();
 			_isPlayerbanker = isPlayerbanker;
@@ -117,6 +117,8 @@ package bull.view.room
 			Laya.timer.loop(500, this, timerHandler);
 			
 		}
+		
+		
 		
 		public function timerHandler():void
 		{
@@ -180,6 +182,7 @@ package bull.view.room
 			if ( amount != 0)
 			{
 				//自己下注更新
+				trace("==========update_self  "+idx);
 				this["self_amount_" + idx]["amount"].font = "mybetFont";
 				this["self_amount_" + idx].visible = true;
 				this["self_amount_" + idx]["amount"].text = amount.toString();

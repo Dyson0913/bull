@@ -201,8 +201,7 @@ package bull.modules.room.mediator
 			var chips:Array = [];
 			var chipVO:ChipVO;				
 			if(!chip){
-				//找不倒 一个整的筹码  需要拆分
-				trace("==================="+bet);
+				//找不倒 一个整的筹码  需要拆分				
 				var temp:BetSlipParam = roomData.chipTool.splitBet(bet);
 				for (var i:int = 0; i < temp.chips.length; i++) 
 				{
@@ -499,7 +498,7 @@ package bull.modules.room.mediator
 				case RoomData.BANKER:
 					view.banker();
 				break;
-				case RoomData.BET:
+				case RoomData.BET:				
 					view.bet();
 				break;
 				case RoomData.BET_CHECK:
@@ -588,8 +587,6 @@ package bull.modules.room.mediator
 		
 		public function bet_otherHandler(data:Array):void		
 		{
-			trace("==============================bet notity start");
-			
 			var myuid = data[0];
 			var divid_100:Boolean = data[1];
 			var bet_info:Array = data[2];
@@ -600,8 +597,7 @@ package bull.modules.room.mediator
 				betinfo = bet_info[i];
 				var self:Boolean = betinfo.uid == myuid;
 				var bet:Number = divid_100 == true? betinfo.value / 100 : betinfo.value;
-				var po:int = betinfo.position - 1;
-				trace("==============================bet notity start" +bet);
+				var po:int = betinfo.position - 1;		
 				if (self)
 				{
 					//減注
@@ -647,6 +643,7 @@ package bull.modules.room.mediator
 			//總注區更新
 			for (var i:int = 0; i < 4; i++)
 			{
+				trace("=====================roomData.Zone_self_bet[i]" +roomData.Zone_self_bet[i]);
 				view.viewArea.update_total(i, roomData.Zone_Total_bet[i]);
 				view.viewArea.update_self(i, roomData.Zone_self_bet[i]);
 			}			

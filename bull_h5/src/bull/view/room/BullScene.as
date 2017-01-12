@@ -20,7 +20,7 @@ package bull.view.room
 	import bull.utils.BetAreaUtil;
 	import ui.ui.room.BullSceneUI;
 	
-	
+	import com.lightUI.utils.DisplayUtil;
 	
 
 	public class BullScene extends BullSceneUI
@@ -92,6 +92,7 @@ package bull.view.room
 			viewBetTime.hide();
 			viewPoker.hide();
 			viewArea.hide();
+			DisplayUtil.removeAllChildren(_betsBox);
 		}
 		
 		public function banker():void
@@ -99,17 +100,22 @@ package bull.view.room
 			trace("banker");
 			
 			//下注區閃櫟
-			viewArea.set_(true, 20000);	
+			viewArea.set_ready(true, 20000);
 			
 			//中途進入元件處理
 			viewBetTime.hide();
 			viewPoker.hide();
 			viewArea.hide();
+			DisplayUtil.removeAllChildren(_betsBox);
 		}
 		
 		public function bet():void
 		{
 			trace("bet");
+			_roomData.Zone_self_bet = [0, 0, 0, 0];
+			_roomData.Zone_Total_bet = [0, 0, 0, 0];
+			
+			
 			
 			viewArea.set_fellow_coin(viewSelectClip["mcSelect_0"]);			
 			viewBetTime.set_data([_roomData.LeftTime]);
@@ -178,7 +184,8 @@ package bull.view.room
 		public function flySelfChip(chip:Chip,pos:Point):void{
 			chip.x = 657;
 			chip.y = 647;
-			this.addChildAt(chip,getChildIndex(viewArea));
+			_betsBox.addChild(chip);
+			//_betsBox.addChildAt(chip,getChildIndex(viewArea));
 			Tween.to(chip,{x:viewArea.x + pos.x,y:viewArea.y+pos.y},500,Ease.cubicOut,Handler.create(this,onFlySelfCompleteHandler,[chip]));
 			
 			//SoundManager.playSound(SoundPath.Sound_sound_jetton);
