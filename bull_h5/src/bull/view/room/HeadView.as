@@ -42,9 +42,9 @@ package bull.view.room
 		{
 			txtName.text = str;
 		}
-		public function setMoney(num:Number):void
+		public function setMoney(num:String):void
 		{
-			txtMoney.text = GameUtil.formatMoney1(num); 
+			txtMoney.text = num
 		}
 		public function setMoneyT(num:uint):void
 		{

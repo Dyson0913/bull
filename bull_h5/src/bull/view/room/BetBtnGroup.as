@@ -11,9 +11,6 @@ package bull.view.room
 	 */	
 	public class BetBtnGroup extends BetBtnGroupUI
 	{
-		private var _samebet:Boolean;
-		private var _rebet:Boolean;
-		
 		private var grayscaleFilter:ColorFilter;		
 		
 		public function BetBtnGroup()
@@ -36,55 +33,32 @@ package bull.view.room
 		
 		public function disapear():void
 		{
-			_samebet =false;
-			_rebet = false;
+			this.visible = false;
 		}		
 		
-		public function samebet_rep():void
+		public function appear(betrecode:Boolean):void
 		{
-			if( _samebet == true )
-			{
-				_samebet = false;
-				//重新彈出取消下注
-				withdraw_pop();
-				
-			}
-		}
-				
-		public function rebet_popup():void
-		{
-			if( _rebet == true ) return;						
-			
-			withdraw_pop();			
-		}
-		
-		
-		private function withdraw_pop():void
-		{			
-			//重新下注彈出
-			betBtn_cancel.disabled = false;
-			betBtn_same.disabled = true;		
-			
-			_rebet = true;
-		}
-		
-		public function initView(betrecode:Boolean):void
-		{	
 			this.visible = true;
 			
-			if(betrecode ==false) 
+			//有下注記錄
+			if ( betrecode)
 			{
-				init();		
-				
-				return;
-			}			
-			
-			//相同下注
-			betBtn_same.disabled = false;
-			betBtn_cancel.disabled = true;			
-			
-			_samebet = true;
-		}	
+				betBtn_cancel.disabled = true;
+				betBtn_same.disabled = false;		
+			}
+			else
+			{
+				betBtn_cancel.disabled = true;
+				betBtn_same.disabled = true;
+			}
+		}
+		
+		public function rebet_popup():void
+		{
+			//重新下注 可按
+			betBtn_cancel.disabled = false;
+			betBtn_same.disabled = true;		
+		}
 		
 		private function onClick(e:Event):void
 		{								
@@ -93,24 +67,6 @@ package bull.view.room
 			sName = sName.replace(pattern, "");			
 						
 			event(LightEvent.ITEM_CLICK,sName);
-		}
-		
-		private function btnSame_disapear():void			
-		{
-			betBtn_same.disabled = true;			
-		}
-		
-		private function btncancel_disapear():void			
-		{
-			betBtn_same.disabled = true;
-			betBtn_cancel.disabled = true;			
-		}
-		
-		
-		private function init():void
-		{
-			betBtn_cancel.disabled = true;
-			betBtn_same.disabled = true;			
 		}
 		
 	}

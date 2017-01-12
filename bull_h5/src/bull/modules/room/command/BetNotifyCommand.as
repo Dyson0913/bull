@@ -47,24 +47,13 @@ package bull.modules.room.command
 			else if(notification.getName() == ENCSType.CS_TYPE_BET_NOTIFY.toString()){
 				betnotify(notification.getBody() as CS);
 			}
-			
-			
-		}
-		
-		public function execute(e:NewNewGameEvent):void
-		{
-			switch(e.type)
-			{
-				case String(ENCSType.CS_TYPE_BET_RSP):
-					betResponse(e.data as CS)
-					break;
-				case NewNewGameEvent.CancelMybet_Req:
-					CancelRequest();
-				break;
-				case NewNewGameEvent.Samebet_Req:
-					SameRequest();
-					break;				
+			else if(notification.getName() == BullNotification.BET_SAME){
+				SameRequest();
 			}
+			else if(notification.getName() == BullNotification.BET_CANCEL){
+				CancelRequest();
+			}
+			
 		}
 		
 		private function Request():void
@@ -101,7 +90,6 @@ package bull.modules.room.command
 			//if( bet_add_value ==-1) appMedel.IsBetMax = true;
 			//else appMedel.IsBetMax =  false;
 			//
-			//appMedel.IsRepeat = false;
 			
 			var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
 			socket.sentMsg(out);
@@ -118,33 +106,28 @@ package bull.modules.room.command
 					//下注位置    (11. 取消,  10. 同上一轮,  1~4. 下注位置)
 					if ( rsp.position ==  conf.ENBetPosition.BET_POSITION_CANCEL )
 					{						
-						appMedel.BetRecode = false;
+						roomData.Has_bet  = false;
 						//還回全部和自己的金額
-						var mybet:Array = appMedel.dataStartStatus.myBetClips;
-						for(var i:int =0;i<  mybet.length;i++)
+						for(var i:int =0;i<  roomData.Zone_self_bet.length;i++)
 						{						
-							appMedel.dataStartStatus.myBetClips[i] =0;
-						}					
-						appMedel.roomParam.roomlimit += rsp.betMoney;
+							roomData.Zone_self_bet[i] = 0;
+						}			
 						
-						//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.CancelMybet_Rsp, cs)); 
+						//TODO
+						appMedel.roomParam.roomlimit += roomData.GetMoney(rsp.bet_money);
+						
+						sentNotification(BullNotification.BET_CANCEL_OK); 
 					}
 					else if (rsp.position == conf.ENBetPosition.BET_POSITION_REPEAT)
-					{						
-						appMedel.BetRecode =true;						
-						appMedel.TotalMoney = rsp.handMoney.toNumber();						
-						//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Samebet_Rsp, cs)); 
+					{
+						appMedel.TotalMoney = rsp.hand_money.toNumber();				
+						sentNotification(BullNotification.BET_RSP);
 					}
 					else 
 					{
-						//appMedel.BetRecode =true;		
-						
-						if( roomData.Cash_Type != ENMoneyType.MONEY_TYPE_COIN )
-						{
-							roomData.Total_money = rsp.hand_money.toNumber() /100;		
-						}
-						else	roomData.Total_money = rsp.hand_money.toNumber() ;
-						
+						roomData.Has_bet = true;	
+						//更新自己手中的錢
+						roomData.Total_money = roomData.GetMoney(rsp.hand_money.toNumber());
 						sentNotification(BullNotification.BET_RSP);		
 					}
 				break;
@@ -152,26 +135,23 @@ package bull.modules.room.command
 				default:				
 					if (  rsp.error_code ==14 ||  rsp.error_code ==7 || rsp.error_code >=17 &&  rsp.error_code <=29)
 					{
-						
-						Alert.show(Light.error.getError(rsp.error_code.toString()), "", AlertPanel);  
-						//var alertMsg:String = MessageCodeMgr.getInstance().getError( String(rsp.error_code) );
 						var po:int; 
 						//相同下注失敗 po 回傳10
 						if( rsp.position ==10 )
 						{
-							po =0;
-							//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Samebet_FAILE, cs));
+							po = 0;
+							sentNotification(BullNotification.BET_CANCEL_FAIL);
 						}
 						else
 						{
-							po = rsp.position -1
+							po = rsp.position -1;
 						}
 						
-						//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Bet_Error, {"error_msg":alertMsg,"po":po,"error_code":rsp.errorCode}));
+						sentNotification(BullNotification.BET_ERROR,{"error_msg":Light.error.getError(rsp.error_code.toString()),"po":po,"error_code":rsp.error_code});
 					}
 					else
 					{
-						//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.ErrorCode, rsp.errorCode));
+						Alert.show("error code :"+rsp.error_code.toString,"",AlertPanel);
 					}
 					
 					break;
@@ -423,27 +403,26 @@ package bull.modules.room.command
 		
 		private function CancelRequest():void
 		{
-			var cs:CS = new CS(); 
-			cs.msgType = ENCSType.CS_TYPE_BET_REQ;
-			var req:SBetReq = new SBetReq();			
-			 req.position = conf.ENBetPosition.BET_POSITION_CANCEL;			 
-			 
-			cs.betReq =req;
-			evt.dispatchEvent(new SocketEvent(SocketEvent.SEND, cs));
+			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
+			var out:CS = proto.msg_proto.getCS();
+			out.msg_type = ENCSType.CS_TYPE_BET_REQ;
+			out.bet_req = proto.msg_proto.getSBetReq();
+			out.bet_req.position = conf.ENBetPosition.BET_POSITION_CANCEL;	
+			
+			var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
+			socket.sentMsg(out);
 		}
 		
 		private function SameRequest():void
 		{
-			var cs:CS = new CS(); 
-			cs.msgType = ENCSType.CS_TYPE_BET_REQ;
-			var req:SBetReq = new SBetReq();			
-			req.position = conf.ENBetPosition.BET_POSITION_REPEAT;			
-			cs.betReq =req;
+			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
+			var out:CS = proto.msg_proto.getCS();
+			out.msg_type = ENCSType.CS_TYPE_BET_REQ;
+			out.bet_req = proto.msg_proto.getSBetReq();
+			out.bet_req.position = conf.ENBetPosition.BET_POSITION_REPEAT;	
 			
-			//相同下注 有可能會比廣播的包慢 ,所以一點擊就設定
-			appMedel.IsRepeat = true;
-			
-			evt.dispatchEvent(new SocketEvent(SocketEvent.SEND, cs));
+			var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
+			socket.sentMsg(out);
 		}
 		
 		

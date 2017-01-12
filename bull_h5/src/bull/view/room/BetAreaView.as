@@ -7,6 +7,7 @@ package bull.view.room
 	
 	import laya.utils.Tween;
 	import laya.events.Event;
+	import laya.utils.Ease;
 	
 	import ui.ui.room.BetAreaViewUI
 	
@@ -33,6 +34,8 @@ package bull.view.room
 			{				
 				this["total_amount_" + i]["bg_ani"].index = i;
 			}	
+			
+			hide();
 			
 			_arrows.visible = false;
 			dragChip.visible = false;
@@ -173,8 +176,6 @@ package bull.view.room
 				this["total_amount_" + idx].visible = true;
 				this["total_amount_" + idx]["amount"].text = amount.toString();
 			}
-			
-			
 		}
 		
 		public function update_self(idx:int, amount:Number ):void
@@ -214,6 +215,7 @@ package bull.view.room
 				//自己下注				
 				this["self_amount_" + i].visible = false;
 				this["self_amount_" + i]["amount"].text = "";
+				this["Tips_" + i].alpha = 0;
 				
 			}	
 			_isPlayerbanker = false;
@@ -237,6 +239,16 @@ package bull.view.room
 		public function set_fellow_coin(chip:Image):void
 		{
 			dragChip.dataSource = chip.dataSource;
+		}
+		
+		
+		public function Error_tip(error_msg:String,po:int):void			
+		{				
+			var frame:int = error_msg.length -2;			
+			this["Tips_" + po]["Name_" + po].text = error_msg;
+			
+			this["Tips_" + po]["Name_" + po].alpha = 1;
+			Tween.to(this["Tips_" + po]["Name_" + po], { alpha:0 }, 3000, Ease.linearNone );
 		}
 		
 		private function test():void

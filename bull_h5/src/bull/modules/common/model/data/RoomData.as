@@ -82,6 +82,7 @@ package bull.modules.common.model.data
 		public var Total_money:Number;
 		public var bet_zone:int;
 		public var bet_idx:int;
+		public var Has_bet:Boolean;
 		//四區個人和他人下注
 		public var Zone_Total_bet:Array;
 		public var Zone_self_bet:Array;
@@ -103,7 +104,19 @@ package bull.modules.common.model.data
 			Zone_self_bet = [0,0,0,0];
 			sameBetinfo = [];
 			
+			Has_bet = false;
+			
 			Banker_calcu_info = new SBankerCalculateNotify();
+		}
+		
+		public function GetMoney(money:Number):Number
+		{
+			return (Cash_Type != ENMoneyType.MONEY_TYPE_COIN) == true ? money / 100 : money;
+		}
+		
+		public static function appearMoney(num:Number):String
+		{
+			return (Cash_Type != ENMoneyType.MONEY_TYPE_COIN) == true ? "¥"+num.toFixed(2) : num.toString();
 		}
 		
 		/**

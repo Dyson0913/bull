@@ -108,7 +108,6 @@ package bull.modules.room.mediator
 			
 			view.on(ScenceManagerEvent.UI_SHOW,this, onUIShow);
 			view.on(ScenceManagerEvent.UI_HIDE,this, onUIHide);
-			//view.on(CarSceneEvent.START_BET, this, onBetHandler);
 			
 			view.optionBtn.on(Event.CLICK, this, onClick);
 			view.setupBtn.on(Event.CLICK, this, onClick);
@@ -139,7 +138,9 @@ package bull.modules.room.mediator
 			//bet
 			addNotifiction(BullNotification.BET_RSP);		
 			addNotifiction(BullNotification.BET_INFO_UPDATE);
-			//reaction
+			addNotifiction(BullNotification.BET_CANCEL_OK); 
+			addNotifiction(BullNotification.BET_CANCEL_FAIL); 
+			addNotifiction(BullNotification.BET_ERROR); 
 			
 			
 			addNotifiction(BullNotification.CASH_TAKEIN_RESPONES);				
@@ -166,19 +167,8 @@ package bull.modules.room.mediator
 		
 		private function onBetAction(name:String):void
 		{
-			if (name == "same")
-			{
-				//dispatchEvent(new OperateEvent(NewNewGameEvent.SameBet, []));
-								
-				
-			}
-			else if (name =="cancel")
-			{
-				
-				
-				//dispatchEvent(new OperateEvent(NewNewGameEvent.CancelMybet, []));
-			}
-			
+			if (name == "same") sentNotification(BullNotification.BET_SAME);
+			else if (name =="cancel") sentNotification(BullNotification.BET_CANCEL);
 		}
 		
 		private function onBetzoneClick(idx:int):void
@@ -321,8 +311,8 @@ package bull.modules.room.mediator
 		
 		private function cashViewHandler():void
 		{			
-			view.viewHead.setMoney(roomData.Total_money); 
-			view.viewHead.setMoneyT(Common.isCoin?2:1);					
+			view.viewHead.setMoney( RoomData.appearMoney(roomData.Total_money)); 
+			//view.viewHead.setMoneyT(Common.isCoin?2:1);					
 		}
 		
 		private function onSettleUpdateHandler():void
@@ -450,7 +440,16 @@ package bull.modules.room.mediator
 				case BullNotification.BET_RSP:
 					betRepHandler();
 				break;	
+				case BullNotification.BET_CANCEL_OK:
+					cnacelOkHandler();
+				break;
+				case BullNotification.BET_CANCEL_FAIL:
+					sameFailHandler();
+				break;
 				
+				case BullNotification.BET_ERROR:
+					betErrorHandler(noti.getBody() as Object);
+				break;	
 				case BullNotification.BET_INFO_UPDATE:
 					bet_otherHandler(noti.getBody() as Array);
 				break;	
@@ -521,15 +520,52 @@ package bull.modules.room.mediator
 		
 		private function betRepHandler():void
 		{
-			
-			//隨後注區更新包,統一刷總金額,這裡只刷新 自己的金額
+			//隨後注區更新包,統一刷總金額
 			if( roomData.State == RoomData.BET)
 			{
-				//顥示重新下注
-				//game.ViewBetGroup.rebet_popup();
+				//不管是相同下注或一開始都不能按,只要一下注成功,重新下注就可以按
+				view.ViewBetGroup.rebet_popup();
 			}
 			
+			//更新自己手中的錢
+			view.viewHead.setMoney( RoomData.appearMoney(roomData.Total_money)); 
 		}
+		
+		private function cnacelOkHandler():void
+		{	
+			//COIN 飛回
+			view.flySelfChipBack();
+		}
+		
+		private function sameFailHandler():void
+		{
+			//相同下注失敗,返回最初狀態
+			view.ViewBetGroup.appear(false);
+		}
+		
+		private function betErrorHandler(ob:Object):void
+		{
+			if( ob["error_code"] == 22)
+			{
+				//彈出補充介面
+				//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.MsgCode_NoMoney));
+			}
+			else if( ob["error_code"] == 14)
+			{
+				//下注無效 SERVER停止收注	
+				//phase_tip("停止收注",1);
+			}			
+			else 
+			{
+				if( ob["po"] ==-1)
+				{				
+					ob["po"] = 0;
+				}
+				
+				view.viewArea.Error_tip(ob["error_msg"],	ob["po"]);
+			}
+		}
+		
 		
 		public function onHistoryUpdateHandler():void 
 		{
@@ -603,7 +639,6 @@ package bull.modules.room.mediator
 					//減注
 					if ( bet < 0)
 					{
-						view.flySelfChipBack();
 						roomData.Zone_self_bet[0] = 0;
 						roomData.Zone_self_bet[1] = 0;
 						roomData.Zone_self_bet[2] = 0;

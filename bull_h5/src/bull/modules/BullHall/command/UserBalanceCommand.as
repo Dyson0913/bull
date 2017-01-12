@@ -51,18 +51,14 @@ package bull.modules.BullHall.command
 		}
 		
 		private function userBalanceCallback(param:Object):void{			
-			var hallData:HallData = getSingleton(HallData.NAME) as HallData;			
-			//trace("userBalanceCallback = " + param);
-			trace("userBalanceCallback = " + param.info.cash);
-			trace("userBalanceCallback = " + param.info.coin);
-			trace("userBalanceCallback = " + param.info.nm);						
-			 
-			//userBalanceCallback = 6728  
-			//userBalanceCallback = 999927978 
-			//userBalanceCallback = 1500
+			var hallData:HallData = getSingleton(HallData.NAME) as HallData;	
 			
 			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;	
-			roomData.player_Money = param.info;
+			if( param !=undefined)  roomData.player_Money = param.info;
+			else
+			{
+				roomData.player_Money = { "cash":10000, ",coin":10000, "nm":0 };
+			}
 			
 			//關閉大廳音樂
 			sentNotification(BullNotification.Close_BGM);

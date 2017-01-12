@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
+	Laya.interface('com.lightMVC.interfaces.INotification');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -938,7 +938,12 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.NEW_BANKER="newbanker";
 		BullNotification.BANKER_CALCU="Bankercalcu";
 		BullNotification.BET_RSP="bet_rsp";
-		BullNotification.BET_INFO_UPDATE="BET_INFO_UPDATE";
+		BullNotification.BET_INFO_UPDATE="bet_info_update";
+		BullNotification.BET_SAME="bet_same";
+		BullNotification.BET_CANCEL="bet_cancel";
+		BullNotification.BET_CANCEL_OK="bet_cancel_ok";
+		BullNotification.BET_CANCEL_FAIL="bet_cancel_fail";
+		BullNotification.BET_ERROR="bet_error";
 		BullNotification.SOCKET_CONNECT="socketConnect";
 		BullNotification.ONLOGIN="onLogin";
 		BullNotification.START_ROOM_LIST="startRoomList";
@@ -29903,11 +29908,11 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.userBalanceCallback=function(param){
 			var hallData=this.getSingleton("hallData");
-			console.log("userBalanceCallback = "+param.info.cash);
-			console.log("userBalanceCallback = "+param.info.coin);
-			console.log("userBalanceCallback = "+param.info.nm);
 			var roomData=this.getSingleton("roomData");
-			roomData.player_Money=param.info;
+			if(param !=undefined)roomData.player_Money=param.info;
+			else{
+				roomData.player_Money={"cash":10000,",coin":10000,"nm":0 };
+			}
 			this.sentNotification("Close_BGM");
 			this.sentNotification("enterRoom");
 			return;
@@ -30929,6 +30934,42 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._already_in_msg=null;
+			this._already_in_room_idx=0;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+			/*no*/this._already_in_roomid=-1;
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
+
+
 	/**
 	*规则面板
 	*/
@@ -30998,42 +31039,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._already_in_msg=null;
-			this._already_in_room_idx=0;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-			/*no*/this._already_in_roomid=-1;
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
 	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
 	var SmallLoadingMediator=(function(_super){
 		function SmallLoadingMediator(mediatorName,viewComponent){
@@ -31081,6 +31086,7 @@ var Laya=window.Laya=(function(window,document){
 			this.Total_money=NaN;
 			this.bet_zone=0;
 			this.bet_idx=0;
+			this.Has_bet=false;
 			this.Zone_Total_bet=null;
 			this.Zone_self_bet=null;
 			this.sameBetinfo=null;
@@ -31095,11 +31101,16 @@ var Laya=window.Laya=(function(window,document){
 			this.Zone_Total_bet=[0,0,0,0];
 			this.Zone_self_bet=[0,0,0,0];
 			this.sameBetinfo=[];
+			this.Has_bet=false;
 			this.Banker_calcu_info=new SBankerCalculateNotify();
 		}
 
 		__class(RoomData,'bull.modules.common.model.data.RoomData',_super);
 		var __proto=RoomData.prototype;
+		__proto.GetMoney=function(money){
+			return (this.Cash_Type !=2)==true ? money / 100 :money;
+		}
+
 		/**
 		*初始化选择筹码配置
 		*/
@@ -31134,6 +31145,10 @@ var Laya=window.Laya=(function(window,document){
 					return dataSelectClip;
 			}
 			return null;
+		}
+
+		RoomData.appearMoney=function(num){
+			return (this.Cash_Type !=2)==true ? "¥"+num.toFixed(2):num.toString();
 		}
 
 		RoomData.NAME="roomData";
@@ -31231,6 +31246,51 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
+	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
+	var BankerNotifyCommand=(function(_super){
+		function BankerNotifyCommand(){
+			BankerNotifyCommand.__super.call(this);
+		}
+
+		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
+		var __proto=BankerNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
+				this.bankerlist(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
+				this.newbaner(notification.getBody());
+			}
+			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
+				this.banker_calcu(notification.getBody());
+			}
+		}
+
+		__proto.bankerlist=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
+			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
+			this.sentNotification("bankerlist");
+		}
+
+		__proto.newbaner=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.newBaner_info=cs.banker_notify;
+			this.sentNotification("newbanker");
+		}
+
+		__proto.banker_calcu=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.Banker_calcu_info.banker_calc_info_s=cs.banker_calc_notify.banker_calc_info_s;
+			bullData.roomData.Banker_calcu_info.total_win_money=cs.banker_calc_notify.total_win_money;
+			this.sentNotification("Bankercalcu");
+		}
+
+		return BankerNotifyCommand;
+	})(Command)
+
+
 	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
 	var TipsLoadMediator=(function(_super){
 		function TipsLoadMediator(mediatorName,viewComponent){
@@ -31278,51 +31338,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
-	var BankerNotifyCommand=(function(_super){
-		function BankerNotifyCommand(){
-			BankerNotifyCommand.__super.call(this);
-		}
-
-		__class(BankerNotifyCommand,'bull.modules.room.command.BankerNotifyCommand',_super);
-		var __proto=BankerNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString()){
-				this.bankerlist(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_NOTIFY.toString()){
-				this.newbaner(notification.getBody());
-			}
-			else if(notification.getName()==ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString()){
-				this.banker_calcu(notification.getBody());
-			}
-		}
-
-		__proto.bankerlist=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.banker_num=cs.banker_list_notify.player_count;
-			bullData.roomData.bankerlist=cs.banker_list_notify.user_info_s;
-			this.sentNotification("bankerlist");
-		}
-
-		__proto.newbaner=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.newBaner_info=cs.banker_notify;
-			this.sentNotification("newbanker");
-		}
-
-		__proto.banker_calcu=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.Banker_calcu_info.banker_calc_info_s=cs.banker_calc_notify.banker_calc_info_s;
-			bullData.roomData.Banker_calcu_info.total_win_money=cs.banker_calc_notify.total_win_money;
-			this.sentNotification("Bankercalcu");
-		}
-
-		return BankerNotifyCommand;
-	})(Command)
-
-
 	//class bull.modules.room.command.BetNotifyCommand extends com.lightMVC.parrerns.Command
 	var BetNotifyCommand=(function(_super){
 		function BetNotifyCommand(){
@@ -31342,20 +31357,12 @@ var Laya=window.Laya=(function(window,document){
 			else if(notification.getName()==ENCSType.CS_TYPE_BET_NOTIFY.toString()){
 				this.betnotify(notification.getBody());
 			}
-		}
-
-		__proto.execute=function(e){
-			switch(e.type){
-				case String(28):
-					this.betResponse(e.data)
-					break ;
-				case /*no*/this.NewNewGameEvent.CancelMybet_Req:
-					this.CancelRequest();
-					break ;
-				case /*no*/this.NewNewGameEvent.Samebet_Req:
-					this.SameRequest();
-					break ;
-				}
+			else if(notification.getName()=="bet_same"){
+				this.SameRequest();
+			}
+			else if(notification.getName()=="bet_cancel"){
+				this.CancelRequest();
+			}
 		}
 
 		__proto.Request=function(){
@@ -31389,37 +31396,37 @@ var Laya=window.Laya=(function(window,document){
 			switch(rsp.error_code){
 				case 0:
 					if (rsp.position==11){
-						/*no*/this.appMedel.BetRecode=false;
-						var mybet=/*no*/this.appMedel.dataStartStatus.myBetClips;
-						for(var i=0;i< mybet.length;i++){
-							/*no*/this.appMedel.dataStartStatus.myBetClips[i]=0;
+						roomData.Has_bet=false;
+						for(var i=0;i< roomData.Zone_self_bet.length;i++){
+							roomData.Zone_self_bet[i]=0;
 						}
-						/*no*/this.appMedel.roomParam.roomlimit+=rsp.betMoney;
+						/*no*/this.appMedel.roomParam.roomlimit+=roomData.GetMoney(rsp.bet_money);
+						this.sentNotification("bet_cancel_ok");
 					}
 					else if (rsp.position==10){
-						/*no*/this.appMedel.BetRecode=true;
-						/*no*/this.appMedel.TotalMoney=rsp.handMoney.toNumber();
+						/*no*/this.appMedel.TotalMoney=rsp.hand_money.toNumber();
+						this.sentNotification("bet_rsp");
 					}
 					else{
-						if(roomData.Cash_Type !=2){
-							roomData.Total_money=rsp.hand_money.toNumber()/100;
-						}
-						else roomData.Total_money=rsp.hand_money.toNumber();
+						roomData.Has_bet=true;
+						roomData.Total_money=roomData.GetMoney(rsp.hand_money.toNumber());
 						this.sentNotification("bet_rsp");
 					}
 					break ;
 				default :
 					if (rsp.error_code==14 || rsp.error_code==7 || rsp.error_code >=17 && rsp.error_code <=29){
-						Alert.show(Light.error.getError(rsp.error_code.toString()),"",AlertPanel);
 						var po=0;
 						if(rsp.position==10){
 							po=0;
+							this.sentNotification("bet_cancel_fail");
 						}
 						else{
-							po=rsp.position-1
+							po=rsp.position-1;
 						}
+						this.sentNotification("bet_error",{"error_msg":Light.error.getError(rsp.error_code.toString()),"po":po,"error_code":rsp.error_code});
 					}
 					else{
+						Alert.show("error code :"+rsp.error_code.toString,"",AlertPanel);
 					}
 					break ;
 				}
@@ -31442,7 +31449,7 @@ var Laya=window.Laya=(function(window,document){
 			roomData.Zone_Total_bet[3]=divi_100==true ? m4.money.toNumber()/ 100 :m4.money.toNumber();
 			roomData.sameBetinfo=[];
 			roomData.sameBetinfo=data.bets;
-			this.sentNotification("BET_INFO_UPDATE",[myuid,divi_100,roomData.sameBetinfo]);
+			this.sentNotification("bet_info_update",[myuid,divi_100,roomData.sameBetinfo]);
 			return;
 			var m1=data.m1;
 			var m2=data.m2;
@@ -31574,22 +31581,23 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.CancelRequest=function(){
-			var cs=new CS();
-			cs.msgType=27;
-			var req=new /*no*/this.SBetReq();
-			req.position=11;
-			cs.betReq=req;
-			/*no*/this.evt.dispatchEvent(new /*no*/this.SocketEvent(/*no*/this.SocketEvent.SEND,cs));
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=27;
+			out.bet_req=proto.msg_proto.getSBetReq();
+			out.bet_req.position=11;
+			var socket=this.getModel("roomSocketService");
+			socket.sentMsg(out);
 		}
 
 		__proto.SameRequest=function(){
-			var cs=new CS();
-			cs.msgType=27;
-			var req=new /*no*/this.SBetReq();
-			req.position=10;
-			cs.betReq=req;
-			/*no*/this.appMedel.IsRepeat=true;
-			/*no*/this.evt.dispatchEvent(new /*no*/this.SocketEvent(/*no*/this.SocketEvent.SEND,cs));
+			var proto=this.getModel("bullProtoModel");
+			var out=proto.msg_proto.getCS();
+			out.msg_type=27;
+			out.bet_req=proto.msg_proto.getSBetReq();
+			out.bet_req.position=10;
+			var socket=this.getModel("roomSocketService");
+			socket.sentMsg(out);
 		}
 
 		return BetNotifyCommand;
@@ -32113,7 +32121,10 @@ var Laya=window.Laya=(function(window,document){
 			this.addNotifiction("newbanker");
 			this.addNotifiction("Bankercalcu");
 			this.addNotifiction("bet_rsp");
-			this.addNotifiction("BET_INFO_UPDATE");
+			this.addNotifiction("bet_info_update");
+			this.addNotifiction("bet_cancel_ok");
+			this.addNotifiction("bet_cancel_fail");
+			this.addNotifiction("bet_error");
 			this.addNotifiction("CASH_TAKEIN_RESPONES");
 			this.addNotifiction("view_init");
 			this.addNotifiction("RoomSocketClose");
@@ -32130,13 +32141,10 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onBetAction=function(name){
-			if (name=="same"){
-			}
-			else if (name=="cancel"){
-			}
+			if (name=="same")this.sentNotification("bet_same");
+			else if (name=="cancel")this.sentNotification("bet_cancel");
 		}
 
-		//dispatchEvent(new OperateEvent(NewNewGameEvent.CancelMybet,[]));
 		__proto.onBetzoneClick=function(idx){
 			console.log("onBetzoneClick = "+idx);
 			this.roomData.bet_zone=idx;
@@ -32245,10 +32253,10 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.cashViewHandler=function(){
-			this.view.viewHead.setMoney(this.roomData.Total_money);
-			this.view.viewHead.setMoneyT(Common.isCoin?2:1);
+			this.view.viewHead.setMoney(RoomData.appearMoney(this.roomData.Total_money));
 		}
 
+		//view.viewHead.setMoneyT(Common.isCoin?2:1);
 		__proto.onSettleUpdateHandler=function(){
 			this.appMedel.Banker_uid="10";
 			this.appMedel.user_id="1";
@@ -32337,7 +32345,16 @@ var Laya=window.Laya=(function(window,document){
 				case "bet_rsp":
 					this.betRepHandler();
 					break ;
-				case "BET_INFO_UPDATE":
+				case "bet_cancel_ok":
+					this.cnacelOkHandler();
+					break ;
+				case "bet_cancel_fail":
+					this.sameFailHandler();
+					break ;
+				case "bet_error":
+					this.betErrorHandler(noti.getBody());
+					break ;
+				case "bet_info_update":
 					this.bet_otherHandler(noti.getBody());
 					break ;
 				case "settlenotify":
@@ -32396,10 +32413,32 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.betRepHandler=function(){
 			if(this.roomData.State==3){
+				this.view.ViewBetGroup.rebet_popup();
+			}
+			this.view.viewHead.setMoney(RoomData.appearMoney(this.roomData.Total_money));
+		}
+
+		__proto.cnacelOkHandler=function(){
+			this.view.flySelfChipBack();
+		}
+
+		__proto.sameFailHandler=function(){
+			this.view.ViewBetGroup.appear(false);
+		}
+
+		__proto.betErrorHandler=function(ob){
+			if(ob["error_code"]==22){
+			}
+			else if(ob["error_code"]==14){
+			}
+			else{
+				if(ob["po"]==-1){
+					ob["po"]=0;
+				}
+				this.view.viewArea.Error_tip(ob["error_msg"],ob["po"]);
 			}
 		}
 
-		//game.ViewBetGroup.rebet_popup();
 		__proto.onHistoryUpdateHandler=function(){
 			this.view.viewRecord.histroy_notify(this.roomData.history_Win_info,this.roomData.history_lost_info,this.roomData.history_result_info);
 		}
@@ -32431,7 +32470,6 @@ var Laya=window.Laya=(function(window,document){
 				var po=betinfo.position-1;
 				if (self){
 					if (bet < 0){
-						this.view.flySelfChipBack();
 						this.roomData.Zone_self_bet[0]=0;
 						this.roomData.Zone_self_bet[1]=0;
 						this.roomData.Zone_self_bet[2]=0;
@@ -35692,32 +35730,6 @@ var Laya=window.Laya=(function(window,document){
 		RenderTarget2D.POOL=[];
 		return RenderTarget2D;
 	})(Texture)
-
-
-	//class com.iflash.net.Socket extends laya.net.Socket
-	var Socket1=(function(_super){
-		function Socket(host,port,byteClass){
-			this._outPut=null;
-			(port===void 0)&& (port=0);
-			byteClass=byteClass?byteClass:com.iflash.ByteArray;
-			Socket.__super.call(this,host,port,byteClass);
-		}
-
-		__class(Socket,'com.iflash.net.Socket',_super,'Socket1');
-		var __proto=Socket.prototype;
-		__proto.connectByUrl=function(url){
-			_super.prototype.connectByUrl.call(this,url);
-			this._outPut=this.output;
-		}
-
-		__proto.writeBytes=function(bytes,offset,length){
-			(offset===void 0)&& (offset=0);
-			(length===void 0)&& (length=0);
-			this._outPut.writeBytes(bytes,offset,length);
-		}
-
-		return Socket;
-	})(Socket)
 
 
 	//class laya.webgl.shader.d2.fillTexture.FillTextureSV extends laya.webgl.shader.d2.value.Value2D
@@ -50789,7 +50801,6 @@ var Laya=window.Laya=(function(window,document){
 			this.Rankp_2=null;
 			this.Rankp_3=null;
 			this._arrows=null;
-			this._tips=null;
 			this.Tips_3=null;
 			this.Name_3=null;
 			this.Tips_2=null;
@@ -50817,7 +50828,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BetAreaViewUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"}},{"type":"Image","props":{"y":2,"x":252,"var":"zone_1","skin":"res/gameScene/闲家下注区3.png","name":"zone_1"}},{"type":"Image","props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"}},{"type":"Image","props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"}},{"type":"Bet_Total","props":{"y":4,"x":23,"var":"total_amount_0","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":264,"var":"total_amount_1","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":507,"var":"total_amount_2","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":750,"var":"total_amount_3","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"var":"self_amount_0","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"var":"self_amount_1","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"var":"self_amount_2","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"var":"self_amount_3","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"BetLImit","props":{"y":-117,"x":379,"visible":false,"var":"BetLimit","runtime":"ui.ui.room.BetLImitUI"}},{"type":"RankPanel","props":{"y":18,"x":161,"visible":false,"var":"Rankp_0","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":416,"visible":false,"var":"Rankp_1","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":659,"visible":false,"var":"Rankp_2","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":18,"x":904,"visible":false,"var":"Rankp_3","runtime":"ui.ui.room.RankPanelUI"}},{"type":"Image","props":{"y":232,"x":232,"var":"_arrows","skin":"res/gameScene/牛牛指向箭头.png"}},{"type":"Box","props":{"visible":false,"var":"_tips"},"child":[{"type":"Image","props":{"y":59,"x":624,"var":"Tips_3","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_3","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":59,"x":662,"var":"Tips_2","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_2","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":58,"x":415,"var":"Tips_1","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_1","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":55,"x":163,"var":"Tips_0","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":155,"var":"Name_0","text":"天涯歌女爱与仇","height":32,"fontSize":22,"color":"#f8f0ef","align":"left"}}]}]},{"type":"Image","props":{"y":1,"x":0,"var":"Scene_0","skin":"res/gameScene/闲家下注区4.png","name":"Scene_0","alpha":0}},{"type":"Image","props":{"y":2,"x":253,"var":"Scene_1","skin":"res/gameScene/闲家下注区3.png","name":"Scene_1","alpha":0}},{"type":"Image","props":{"y":2,"x":501,"var":"Scene_2","skin":"res/gameScene/闲家下注区2.png","name":"Scene_2","alpha":0}},{"type":"Image","props":{"y":0,"x":747,"var":"Scene_3","skin":"res/gameScene/闲家下注区1.png","name":"Scene_3","alpha":0}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"}},{"type":"Image","props":{"y":2,"x":252,"var":"zone_1","skin":"res/gameScene/闲家下注区3.png","name":"zone_1"}},{"type":"Image","props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"}},{"type":"Image","props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"}},{"type":"Bet_Total","props":{"y":4,"x":23,"var":"total_amount_0","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":264,"var":"total_amount_1","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":507,"var":"total_amount_2","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":750,"var":"total_amount_3","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"var":"self_amount_0","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"var":"self_amount_1","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"var":"self_amount_2","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"var":"self_amount_3","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"BetLImit","props":{"y":-117,"x":379,"visible":false,"var":"BetLimit","runtime":"ui.ui.room.BetLImitUI"}},{"type":"RankPanel","props":{"y":18,"x":161,"visible":false,"var":"Rankp_0","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":416,"visible":false,"var":"Rankp_1","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":659,"visible":false,"var":"Rankp_2","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":18,"x":904,"visible":false,"var":"Rankp_3","runtime":"ui.ui.room.RankPanelUI"}},{"type":"Image","props":{"y":232,"x":232,"var":"_arrows","skin":"res/gameScene/牛牛指向箭头.png"}},{"type":"Image","props":{"y":59.00000000000005,"x":624,"var":"Tips_3","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_3","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":59.00000000000005,"x":662,"var":"Tips_2","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_2","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":58.000000000000036,"x":415.00000000000006,"var":"Tips_1","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_1","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":54.99999999999998,"x":163,"var":"Tips_0","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":155,"var":"Name_0","text":"天涯歌女爱与仇","height":32,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":1,"x":0,"var":"Scene_0","skin":"res/gameScene/闲家下注区4.png","name":"Scene_0","alpha":0}},{"type":"Image","props":{"y":2,"x":253,"var":"Scene_1","skin":"res/gameScene/闲家下注区3.png","name":"Scene_1","alpha":0}},{"type":"Image","props":{"y":2,"x":501,"var":"Scene_2","skin":"res/gameScene/闲家下注区2.png","name":"Scene_2","alpha":0}},{"type":"Image","props":{"y":0,"x":747,"var":"Scene_3","skin":"res/gameScene/闲家下注区1.png","name":"Scene_3","alpha":0}}]};}
 		]);
 		return BetAreaViewUI;
 	})(View)
@@ -50892,6 +50903,7 @@ var Laya=window.Laya=(function(window,document){
 			this.ViewBetGroup=null;
 			this.ViewPlayerList=null;
 			this.viewBankerPanel=null;
+			this.TestPanel=null;
 			BullSceneUI.__super.call(this);
 		}
 
@@ -50899,7 +50911,7 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=BullSceneUI.prototype;
 		__proto.createChildren=function(){
 			View.regComponent("bull.view.room.XiaZhuangPanel",XiaZhuangPanel);
-			View.regComponent("bull.view.room.bankerBoard",bankerBoard);
+			View.regComponent("bull.view.room.TestBoard",TestBoard);
 			View.regComponent("bull.view.room.Poker",Poker);
 			View.regComponent("bull.view.room.BetTimePanel",BetTimePanel);
 			View.regComponent("bull.view.room.PokerTypeBoard",PokerTypeBoard);
@@ -50911,13 +50923,14 @@ var Laya=window.Laya=(function(window,document){
 			View.regComponent("bull.view.room.SelectClipView",SelectClipView);
 			View.regComponent("bull.view.room.BetBtnGroup",BetBtnGroup);
 			View.regComponent("bull.view.room.PlayerListPanel",PlayerListPanel);
+			View.regComponent("bull.view.room.bankerBoard",bankerBoard);
 			View.regComponent("bull.view.room.ResultPanel",ResultPanel);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(BullSceneUI.uiView);
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetAreaView","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"visible":true,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetAreaView","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"visible":true,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}},{"type":"Test","props":{"y":595,"x":53,"var":"TestPanel","runtime":"bull.view.room.TestBoard"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
@@ -51256,6 +51269,41 @@ var Laya=window.Laya=(function(window,document){
 		['uiView',function(){return this.uiView={"type":"View","props":{"width":540,"height":110},"child":[{"type":"Image","props":{"y":-6,"x":1,"var":"Coin_light","skin":"res/gameScene/筹码光.png"}},{"type":"Image","props":{"y":79,"x":35,"width":26,"var":"mcArrow","skin":"res/gameScene/筹码指向.png","height":24}},{"type":"Image","props":{"y":7,"x":10,"var":"mcSelect_0","skin":"res/gameScene/chip_1.png","name":"mcSelect_0"}},{"type":"Image","props":{"y":24,"x":98,"var":"mcSelect_1","skin":"res/gameScene/chip_1.png","name":"mcSelect_1"}},{"type":"Image","props":{"y":24,"x":188,"var":"mcSelect_2","skin":"res/gameScene/chip_1.png","name":"mcSelect_2"}},{"type":"Image","props":{"y":24,"x":277,"var":"mcSelect_3","skin":"res/gameScene/chip_1.png","name":"mcSelect_3"}},{"type":"Image","props":{"y":24,"x":367,"var":"mcSelect_4","skin":"res/gameScene/chip_1.png","name":"mcSelect_4"}},{"type":"Image","props":{"y":24,"x":458,"var":"mcSelect_5","skin":"res/gameScene/chip_max.png","name":"mcSelect_5"}}]};}
 		]);
 		return SelectClipViewUI;
+	})(View)
+
+
+	//class ui.ui.room.TestUI extends laya.ui.View
+	var TestUI=(function(_super){
+		function TestUI(){
+			this.btn_0=null;
+			this.btn_1=null;
+			this.btn_2=null;
+			this.btn_3=null;
+			this.btn_4=null;
+			this.btn_5=null;
+			this.btn_6=null;
+			this.btn_7=null;
+			this.btn_8=null;
+			this.btn_9=null;
+			this.btn_10=null;
+			this.btn_11=null;
+			this.btn_12=null;
+			this.btn_13=null;
+			this.btn_14=null;
+			TestUI.__super.call(this);
+		}
+
+		__class(TestUI,'ui.ui.room.TestUI',_super);
+		var __proto=TestUI.prototype;
+		__proto.createChildren=function(){
+			laya.ui.Component.prototype.createChildren.call(this);
+			this.createView(TestUI.uiView);
+		}
+
+		__static(TestUI,
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":600,"height":200},"child":[{"type":"Button","props":{"y":0,"x":0,"width":80,"var":"btn_0","skin":"res/gameScene/CarryIn.png","name":"btn_0","label":"Start","height":66}},{"type":"Button","props":{"y":1,"x":74,"width":80,"var":"btn_1","skin":"res/gameScene/CarryIn.png","name":"btn_1","label":"Banker","height":66}},{"type":"Button","props":{"y":0,"x":146,"width":80,"var":"btn_2","skin":"res/gameScene/CarryIn.png","name":"btn_2","label":"Bet","height":66}},{"type":"Button","props":{"y":0,"x":214,"width":80,"var":"btn_3","skin":"res/gameScene/CarryIn.png","name":"btn_3","label":"BetCheck","height":66}},{"type":"Button","props":{"y":-2,"x":292,"width":80,"var":"btn_4","skin":"res/gameScene/CarryIn.png","name":"btn_4","label":"Deal","height":66}},{"type":"Button","props":{"y":0,"x":363,"width":80,"var":"btn_5","skin":"res/gameScene/CarryIn.png","name":"btn_5","label":"End","height":66}},{"type":"Button","props":{"y":60,"x":2,"width":80,"var":"btn_6","skin":"res/gameScene/CarryIn.png","name":"btn_6","label":"hisotryNotify","height":66}},{"type":"Button","props":{"y":61,"x":76,"width":80,"var":"btn_7","skin":"res/gameScene/CarryIn.png","name":"btn_7","label":"AlluserNotify","height":66}},{"type":"Button","props":{"y":60,"x":158,"width":80,"var":"btn_8","skin":"res/gameScene/CarryIn.png","name":"btn_8","label":"OneuserNotify","height":66}},{"type":"Button","props":{"y":58,"x":241,"width":80,"var":"btn_9","skin":"res/gameScene/CarryIn.png","name":"btn_9","label":"BetNotify","height":66}},{"type":"Button","props":{"y":60,"x":320,"width":80,"var":"btn_10","skin":"res/gameScene/CarryIn.png","name":"btn_10","label":"cardnotify","height":66}},{"type":"Button","props":{"y":59,"x":402,"width":80,"var":"btn_11","skin":"res/gameScene/CarryIn.png","name":"btn_11","label":"Calulatnotify","height":66}},{"type":"Button","props":{"y":132,"x":11,"width":80,"var":"btn_12","skin":"res/gameScene/CarryIn.png","name":"btn_12","label":"BankerListNotify","height":66}},{"type":"Button","props":{"y":131,"x":102,"width":80,"var":"btn_13","skin":"res/gameScene/CarryIn.png","name":"btn_13","label":"BankerNotify","height":66}},{"type":"Button","props":{"y":129,"x":197,"width":80,"var":"btn_14","skin":"res/gameScene/CarryIn.png","name":"btn_14","label":"Banker_caludat_Notify","height":66}}]};}
+		]);
+		return TestUI;
 	})(View)
 
 
@@ -53020,6 +53068,7 @@ var Laya=window.Laya=(function(window,document){
 			for (var i=0;i < 4;i++){
 				this["total_amount_"+i]["bg_ani"].index=i;
 			}
+			this.hide();
 			this._arrows.visible=false;
 			this.dragChip.visible=false;
 		}
@@ -53149,6 +53198,7 @@ var Laya=window.Laya=(function(window,document){
 				this["total_amount_"+i]["amount"].text="";
 				this["self_amount_"+i].visible=false;
 				this["self_amount_"+i]["amount"].text="";
+				this["Tips_"+i].alpha=0;
 			}
 			this._isPlayerbanker=false;
 		}
@@ -53168,6 +53218,13 @@ var Laya=window.Laya=(function(window,document){
 			this.dragChip.dataSource=chip.dataSource;
 		}
 
+		__proto.Error_tip=function(error_msg,po){
+			var frame=error_msg.length-2;
+			this["Tips_"+po]["Name_"+po].text=error_msg;
+			this["Tips_"+po]["Name_"+po].alpha=1;
+			Tween.to(this["Tips_"+po]["Name_"+po],{alpha:0 },3000,Ease.linearNone);
+		}
+
 		__proto.test=function(){}
 		return BetAreaView;
 	})(BetAreaViewUI)
@@ -53179,8 +53236,6 @@ var Laya=window.Laya=(function(window,document){
 	//class bull.view.room.BetBtnGroup extends ui.ui.room.BetBtnGroupUI
 	var BetBtnGroup=(function(_super){
 		function BetBtnGroup(){
-			this._samebet=false;
-			this._rebet=false;
 			this.grayscaleFilter=null;
 			BetBtnGroup.__super.call(this);
 		}
@@ -53197,37 +53252,24 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.disapear=function(){
-			this._samebet=false;
-			this._rebet=false;
+			this.visible=false;
 		}
 
-		__proto.samebet_rep=function(){
-			if(this._samebet==true){
-				this._samebet=false;
-				this.withdraw_pop();
+		__proto.appear=function(betrecode){
+			this.visible=true;
+			if (betrecode){
+				this.betBtn_cancel.disabled=true;
+				this.betBtn_same.disabled=false;
+			}
+			else{
+				this.betBtn_cancel.disabled=true;
+				this.betBtn_same.disabled=true;
 			}
 		}
 
 		__proto.rebet_popup=function(){
-			if(this._rebet==true)return;
-			this.withdraw_pop();
-		}
-
-		__proto.withdraw_pop=function(){
 			this.betBtn_cancel.disabled=false;
 			this.betBtn_same.disabled=true;
-			this._rebet=true;
-		}
-
-		__proto.initView=function(betrecode){
-			this.visible=true;
-			if(betrecode==false){
-				this.init();
-				return;
-			}
-			this.betBtn_same.disabled=false;
-			this.betBtn_cancel.disabled=true;
-			this._samebet=true;
 		}
 
 		__proto.onClick=function(e){
@@ -53235,20 +53277,6 @@ var Laya=window.Laya=(function(window,document){
 			var pattern=/betBtn_/;
 			sName=sName.replace(pattern,"");
 			this.event("item_click",sName);
-		}
-
-		__proto.btnSame_disapear=function(){
-			this.betBtn_same.disabled=true;
-		}
-
-		__proto.btncancel_disapear=function(){
-			this.betBtn_same.disabled=true;
-			this.betBtn_cancel.disabled=true;
-		}
-
-		__proto.init=function(){
-			this.betBtn_cancel.disabled=true;
-			this.betBtn_same.disabled=true;
 		}
 
 		return BetBtnGroup;
@@ -53363,6 +53391,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.bet=function(){
 			console.log("bet");
+			this.ViewBetGroup.appear(this._roomData.Has_bet);
 			this._roomData.Zone_self_bet=[0,0,0,0];
 			this._roomData.Zone_Total_bet=[0,0,0,0];
 			this.viewArea.set_fellow_coin(this.viewSelectClip["mcSelect_0"]);
@@ -53372,6 +53401,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.betCheck=function(){
 			console.log("betCheck");
+			this.ViewBetGroup.disapear();
 			this.viewBetTime.hide();
 			this.viewPoker.hide();
 			this.viewArea.disable_zone();
@@ -53511,7 +53541,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.setMoney=function(num){
-			this.txtMoney.text=GameUtil.formatMoney1(num);
+			this.txtMoney.text=num
 		}
 
 		__proto.setMoneyT=function(num){
@@ -54183,6 +54213,41 @@ var Laya=window.Laya=(function(window,document){
 	})(SelectClipViewUI)
 
 
+	//class bull.view.room.TestBoard extends ui.ui.room.TestUI
+	var TestBoard=(function(_super){
+		function TestBoard(){
+			TestBoard.__super.call(this);
+		}
+
+		__class(TestBoard,'bull.view.room.TestBoard',_super);
+		var __proto=TestBoard.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+			console.log("TestBoard Init");
+			for (var i=0;i < 15;i++){
+				this["btn_"+i].on("click",this,this.onTestClick);
+			}
+		}
+
+		__proto.onTestClick=function(e){
+			var sName=e.target.name;
+			var pattern=/btn_/;
+			sName=sName.replace(pattern,"");
+			this.event("item_click",parseInt(sName));
+		}
+
+		__proto.hide=function(){
+			console.log("TestBoard hide");
+		}
+
+		__proto.show=function(){
+			console.log("TestBoard show");
+		}
+
+		return TestBoard;
+	})(TestUI)
+
+
 	//class bull.view.room.WinLostEffect extends ui.ui.room.WinLostEffectUI
 	var WinLostEffect=(function(_super){
 		function WinLostEffect(){
@@ -54488,25 +54553,6 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -54523,6 +54569,25 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
 
 
 	/**
@@ -55570,108 +55635,93 @@ var Laya=window.Laya=(function(window,document){
 
 
 /*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:Loger.get This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:System.totalMemory This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (99):warning:LocalConnection This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (100):warning:LocalConnection This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:Loger.get This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:System.totalMemory This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:Loger.get This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:System.totalMemory This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (18):warning:internalHigh This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/RoomListCommand.as (57):warning:AlertPanel This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (131):warning:flg This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/HallData.as (29):warning:_already_in_roomid This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (60):warning:NewNewGameEvent.CancelMybet_Req This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (63):warning:NewNewGameEvent.Samebet_Req This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (111):warning:appMedel.BetRecode This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (112):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (115):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (117):warning:appMedel.roomParam.roomlimit This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (122):warning:appMedel.BetRecode This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (123):warning:appMedel.TotalMoney This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (202):warning:appMedel.sameBetinfo.length This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (204):warning:appMedel.sameBetinfo This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (213):warning:appMedel.roomParam.roomType This variable is not defined.
-27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (225):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (226):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (227):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (228):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (233):warning:appMedel.user_id This variable is not defined.
-32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (235):warning:appMedel.roomParam.roomType This variable is not defined.
-33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (237):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (239):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (246):warning:appMedel.user_id This variable is not defined.
-36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (248):warning:appMedel.roomParam.roomType This variable is not defined.
-37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (250):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (252):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (259):warning:appMedel.user_id This variable is not defined.
-40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (261):warning:appMedel.roomParam.roomType This variable is not defined.
-41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (263):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (265):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (272):warning:appMedel.user_id This variable is not defined.
-44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (274):warning:appMedel.roomParam.roomType This variable is not defined.
-45 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (276):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-46 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (278):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-47 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (282):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-48 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (286):warning:appMedel.user_id This variable is not defined.
-49 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (291):warning:appMedel.sameBetinfo.length This variable is not defined.
-50 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (293):warning:appMedel.sameBetinfo This variable is not defined.
-51 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (295):warning:appMedel.roomParam.roomType This variable is not defined.
-52 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (297):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-53 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (299):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-54 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (301):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-55 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (306):warning:appMedel.roomParam.roomlimit This variable is not defined.
-56 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (317):warning:appMedel.TablePlayerlist.length This variable is not defined.
-57 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (320):warning:appMedel.TablePlayerlist This variable is not defined.
-58 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (325):warning:appMedel.roomParam.roomType This variable is not defined.
-59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (328):warning:Int64.fromNumber This variable is not defined.
-60 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (346):warning:appMedel.TabPlayerList This variable is not defined.
-61 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (347):warning:appMedel.TabPlayerList This variable is not defined.
-62 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (355):warning:appMedel.where_is_lamp This variable is not defined.
-63 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (360):warning:appMedel.dataStartStatus.allBetClips This variable is not defined.
-64 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (367):warning:evt.dispatchEvent This variable is not defined.
-65 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (367):warning:OperateEvent This variable is not defined.
-66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (367):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
-67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (371):warning:appMedel.roomParam.roomType This variable is not defined.
-68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (376):warning:evt.dispatchEvent This variable is not defined.
-69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (376):warning:OperateEvent This variable is not defined.
-70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (376):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
-71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (385):warning:SBetReq This variable is not defined.
-72 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (389):warning:evt.dispatchEvent This variable is not defined.
-73 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (389):warning:SocketEvent This variable is not defined.
-74 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (389):warning:SocketEvent.SEND This variable is not defined.
-75 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (396):warning:SBetReq This variable is not defined.
-76 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (400):warning:appMedel.IsRepeat This variable is not defined.
-77 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (402):warning:evt.dispatchEvent This variable is not defined.
-78 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (402):warning:SocketEvent This variable is not defined.
-79 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (402):warning:SocketEvent.SEND This variable is not defined.
-80 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (251):warning:chipsVO This variable is not defined.
-81 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (313):warning:_bankerName This variable is not defined.
-82 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (314):warning:_bankerName This variable is not defined.
-83 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (451):warning:breq This variable is not defined.
-84 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (586):warning:e.info This variable is not defined.
-85 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (599):warning:game.viewArea.update_total This variable is not defined.
-86 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (601):warning:game.viewArea.update_other_total This variable is not defined.
-87 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (606):warning:game.viewArea.my_batch_bet This variable is not defined.
-88 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (624):warning:game.viewArea.my_batch_bet This variable is not defined.
-89 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (630):warning:game.viewArea.my_batch_bet This variable is not defined.
-90 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (640):warning:game.viewArea.other_bet_cancel This variable is not defined.
-91 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (642):warning:game.viewArea.update_other_total This variable is not defined.
-92 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (648):warning:game.viewArea.clear_allChip This variable is not defined.
-93 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (660):warning:game.viewArea.other_bet This variable is not defined.
-94 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (670):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
-95 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (688):warning:game.viewArea.other_bet This variable is not defined.
-96 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (694):warning:game.viewArea.set_zoneList This variable is not defined.
-97 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (696):warning:game.viewArea.update_limit This variable is not defined.
-98 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (696):warning:roomlimit This variable is not defined.
-99 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (698):warning:game.viewArea.update_lamp This variable is not defined.
-100 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (699):warning:LightAssetManager.getInstance This variable is not defined.
-101 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (699):warning:SoundNameManager.getInstance This variable is not defined.
-102 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
-103 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (220):warning:hide This variable is not defined.
-104 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (73):warning:Coin_5.filters This variable is not defined.
+1 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:Loger.get This variable is not defined.
+2 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:System.totalMemory This variable is not defined.
+3 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (99):warning:LocalConnection This variable is not defined.
+4 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (100):warning:LocalConnection This variable is not defined.
+5 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:Loger.get This variable is not defined.
+6 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:System.totalMemory This variable is not defined.
+7 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:Loger.get This variable is not defined.
+8 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:System.totalMemory This variable is not defined.
+9 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (18):warning:internalHigh This variable is not defined.
+10 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
+11 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
+12 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
+13 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/command/RoomListCommand.as (57):warning:AlertPanel This variable is not defined.
+14 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (131):warning:flg This variable is not defined.
+15 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/model/data/HallData.as (29):warning:_already_in_roomid This variable is not defined.
+16 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (106):warning:appMedel.roomParam.roomlimit This variable is not defined.
+17 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (112):warning:appMedel.TotalMoney This variable is not defined.
+18 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (188):warning:appMedel.sameBetinfo.length This variable is not defined.
+19 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (190):warning:appMedel.sameBetinfo This variable is not defined.
+20 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (199):warning:appMedel.roomParam.roomType This variable is not defined.
+21 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (211):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+22 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (212):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+23 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (213):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+24 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (214):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+25 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (219):warning:appMedel.user_id This variable is not defined.
+26 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (221):warning:appMedel.roomParam.roomType This variable is not defined.
+27 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (223):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+28 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (225):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+29 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (232):warning:appMedel.user_id This variable is not defined.
+30 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (234):warning:appMedel.roomParam.roomType This variable is not defined.
+31 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (236):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+32 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (238):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+33 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (245):warning:appMedel.user_id This variable is not defined.
+34 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (247):warning:appMedel.roomParam.roomType This variable is not defined.
+35 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (249):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+36 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (251):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+37 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (258):warning:appMedel.user_id This variable is not defined.
+38 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (260):warning:appMedel.roomParam.roomType This variable is not defined.
+39 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (262):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+40 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (264):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+41 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (268):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+42 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (272):warning:appMedel.user_id This variable is not defined.
+43 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (277):warning:appMedel.sameBetinfo.length This variable is not defined.
+44 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (279):warning:appMedel.sameBetinfo This variable is not defined.
+45 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (281):warning:appMedel.roomParam.roomType This variable is not defined.
+46 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (283):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+47 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (285):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+48 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (287):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+49 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (292):warning:appMedel.roomParam.roomlimit This variable is not defined.
+50 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (303):warning:appMedel.TablePlayerlist.length This variable is not defined.
+51 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (306):warning:appMedel.TablePlayerlist This variable is not defined.
+52 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (311):warning:appMedel.roomParam.roomType This variable is not defined.
+53 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (314):warning:Int64.fromNumber This variable is not defined.
+54 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (332):warning:appMedel.TabPlayerList This variable is not defined.
+55 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (333):warning:appMedel.TabPlayerList This variable is not defined.
+56 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (341):warning:appMedel.where_is_lamp This variable is not defined.
+57 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (346):warning:appMedel.dataStartStatus.allBetClips This variable is not defined.
+58 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (353):warning:evt.dispatchEvent This variable is not defined.
+59 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (353):warning:OperateEvent This variable is not defined.
+60 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (353):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
+61 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (357):warning:appMedel.roomParam.roomType This variable is not defined.
+62 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (362):warning:evt.dispatchEvent This variable is not defined.
+63 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (362):warning:OperateEvent This variable is not defined.
+64 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (362):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
+65 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (245):warning:chipsVO This variable is not defined.
+66 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (306):warning:_bankerName This variable is not defined.
+67 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (307):warning:_bankerName This variable is not defined.
+68 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (453):warning:breq This variable is not defined.
+69 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (618):warning:e.info This variable is not defined.
+70 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (631):warning:game.viewArea.update_total This variable is not defined.
+71 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (633):warning:game.viewArea.update_other_total This variable is not defined.
+72 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (638):warning:game.viewArea.my_batch_bet This variable is not defined.
+73 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (656):warning:game.viewArea.my_batch_bet This variable is not defined.
+74 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (662):warning:game.viewArea.my_batch_bet This variable is not defined.
+75 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (672):warning:game.viewArea.other_bet_cancel This variable is not defined.
+76 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (674):warning:game.viewArea.update_other_total This variable is not defined.
+77 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (680):warning:game.viewArea.clear_allChip This variable is not defined.
+78 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (692):warning:game.viewArea.other_bet This variable is not defined.
+79 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (702):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
+80 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (720):warning:game.viewArea.other_bet This variable is not defined.
+81 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (726):warning:game.viewArea.set_zoneList This variable is not defined.
+82 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (728):warning:game.viewArea.update_limit This variable is not defined.
+83 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (728):warning:roomlimit This variable is not defined.
+84 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (730):warning:game.viewArea.update_lamp This variable is not defined.
+85 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (731):warning:LightAssetManager.getInstance This variable is not defined.
+86 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (731):warning:SoundNameManager.getInstance This variable is not defined.
+87 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
+88 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/ResultPanel.as (220):warning:hide This variable is not defined.
+89 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/SelectClipView.as (73):warning:Coin_5.filters This variable is not defined.
 */

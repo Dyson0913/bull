@@ -112,6 +112,9 @@ package bull.view.room
 		public function bet():void
 		{
 			trace("bet");
+			
+			ViewBetGroup.appear(_roomData.Has_bet);
+			
 			_roomData.Zone_self_bet = [0, 0, 0, 0];
 			_roomData.Zone_Total_bet = [0, 0, 0, 0];
 			
@@ -128,6 +131,8 @@ package bull.view.room
 		public function betCheck():void
 		{
 			trace("betCheck");
+			
+			ViewBetGroup.disapear();
 			
 			//中途進入元件處理
 			viewBetTime.hide();
