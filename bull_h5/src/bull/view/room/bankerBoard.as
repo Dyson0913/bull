@@ -34,8 +34,19 @@ package bull.view.room
 			btnBanker.on(Event.MOUSE_OUT, this, onOut);
 			btndeBanker.on(Event.MOUSE_OUT, this, onOut);
 			
-			mcHintBoard.visible = false;
+			
+			hide();
+			
 			update_list([],-1);
+		}
+		
+		public function hide():void
+		{
+			BankerTimes.text = "";
+			textFix_text_0.text = "";
+			Point.text = "";
+			txtname.text = "";
+			mcHintBoard.visible = false;
 		}
 		
 		private function onOver(e:Event):void
@@ -49,46 +60,39 @@ package bull.view.room
 		}
 		
 		private function onClick(e:Event):void
-		{					
-			e.target			
-			
-			if ( e.target == btnBanker)
-			{
-				trace("bankerapply");
-			}
-			else if ( e.target == btndeBanker)
-			{
-				trace("deapply");
-			}
-			
-			
-			//TODO 
-			//event(LightEvent.ITEM_CLICK,parseInt(s));			
+		{			
+			event(LightEvent.ITEM_CLICK,e.target.name);			
 		}
 		
 		public function set_bankerlist(data:Array):void
 		{				
 			update_list(data[0],data[2]);			
 			mcHintBoard.title.text = data[1];
-		}
+		}		
 		
-		public function loadingpic(cmp:Handler):void
+		public function bankerinfo_update(data:Array):void
 		{			
+			txtname.text = data[0];
+			BankerTimes.text = data[1];			
+			Point.text = data[2];		
+			
+			//系統坐庄,""坐庄字樣不顥示
+			if ( BankerTimes.text == "")
+			{
+				textFix_text_0.visible = false;
+			}
+			else textFix_text_0.visible = true;
 			
 		}
 		
-		public function newBanker(data:Array):void
+		public function newBanker(name:String):void
 		{
 			mc_bankerAni.mcHead.loadImage("http://statics.kgame63.com/common/images/avatars/1.png", 0, 0, 143, 139);			
-			
-			txtname.text = data[0];
-			BankerTimes.text = data[1];
-			Point.text = data[2];
 			
 			mc_bankerAni.visible = true;
 			mc_bankerAni.alpha = 0;			
 			
-			mc_bankerAni["Name"].text = txtname.text;
+			mc_bankerAni["Name"].text = name;
 			Tween.to(mc_bankerAni, { x:212, y:150, alpha:1, scaleX:1 , scaleY:1 }, 1000, Ease.cubicOut, Handler.create(this, ani_mid));
 		}
 		
@@ -116,6 +120,7 @@ package bull.view.room
 				mcHintBoard.NextPoint.visible = false;
 				mcHintBoard.Page.y = 126;				
 				mcHintBoard.bg.height = 168;
+				mcHintBoard.limitHint.y = 156;
 				
 				for (var i:int = 0; i < 10; i++)
 				{
@@ -144,8 +149,15 @@ package bull.view.room
 			//底版高度動態拉伸
 			mcHintBoard.bg.height = 168 + (playerCnt - 2) * 28;
 			mcHintBoard.Page.y = 126 + (playerCnt - 2) * 28;	
+			mcHintBoard.limitHint = 156 + (playerCnt - 2) * 28;
 		}
 		
+		
+		public function apply_banker(value:Boolean):void
+		{
+			btnBanker.visible = value;
+			btndeBanker.visible = !value;
+		}
 		
 		private function test():void
 		{			

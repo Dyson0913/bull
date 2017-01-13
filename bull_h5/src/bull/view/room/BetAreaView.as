@@ -251,13 +251,19 @@ package bull.view.room
 		
 		public function Error_tip(error_msg:String,po:int):void			
 		{				
-			trace("error_msg ="+error_msg + "  po " + po);		
-			this["Tips_" + po].alpha = 1;
+			trace("error_msg ="+error_msg + "  po " + po);			
 			
-			this["Name_" + po].text = error_msg;			
+			//動態加長 4 -> 115 + 22
+			this["Tips_" + po].width = 115 + (error_msg.length -4) * 22;
+			
+			this["Name_" + po].text = error_msg;
+			this["Name_" + po].alpha = 1;
 			this["Tips_" + po].alpha = 1;
 			Tween.to(this["Tips_" + po], { alpha:0 }, 3000, Ease.linearNone );
 			Tween.to(this["Name_" + po], { alpha:0 }, 3000, Ease.linearNone );
+			
+			
+			
 		}
 		
 		private function test():void

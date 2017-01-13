@@ -31113,6 +31113,10 @@ var Laya=window.Laya=(function(window,document){
 			return (this.Cash_Type !=2)==true ? money / 100 :money;
 		}
 
+		__proto.appearMoney=function(num){
+			return (this.Cash_Type !=2)==true ? ("¥"+num.toFixed(2)):num.toString();
+		}
+
 		/**
 		*初始化选择筹码配置
 		*/
@@ -31147,10 +31151,6 @@ var Laya=window.Laya=(function(window,document){
 					return dataSelectClip;
 			}
 			return null;
-		}
-
-		RoomData.appearMoney=function(num){
-			return (this.Cash_Type !=2)==true ? ("¥"+num.toFixed(2)):num.toString();
 		}
 
 		RoomData.NAME="roomData";
@@ -32260,7 +32260,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.cashViewHandler=function(){
-			this.view.viewHead.setMoney(RoomData.appearMoney(this.roomData.Total_money));
+			this.view.viewHead.setMoney(this.roomData.appearMoney(this.roomData.Total_money));
 		}
 
 		//view.viewHead.setMoneyT(Common.isCoin?2:1);
@@ -32422,12 +32422,12 @@ var Laya=window.Laya=(function(window,document){
 			if(this.roomData.State==3){
 				this.view.ViewBetGroup.rebet_popup();
 			}
-			this.view.viewHead.setMoney(RoomData.appearMoney(this.roomData.Total_money));
+			this.view.viewHead.setMoney(this.roomData.appearMoney(this.roomData.Total_money));
 		}
 
 		__proto.cnacelOkHandler=function(){
 			this.view.flySelfChipBack();
-			this.view.viewHead.setMoney(RoomData.appearMoney(this.roomData.Total_money));
+			this.view.viewHead.setMoney(this.roomData.appearMoney(this.roomData.Total_money));
 		}
 
 		__proto.sameFailHandler=function(){
@@ -32504,11 +32504,9 @@ var Laya=window.Laya=(function(window,document){
 				}
 			}
 			for (var i=0;i < 4;i++){
-				console.log("=====================roomData.Zone_self_bet[i]"+this.roomData.Zone_self_bet[i]);
 				this.view.viewArea.update_total(i,this.roomData.Zone_Total_bet[i]);
 				this.view.viewArea.update_self(i,this.roomData.Zone_self_bet[i]);
 			}
-			console.log("=====================bet notity over");
 			return;
 			var data=/*no*/this.e.info;
 			var position=data[0];
@@ -32644,14 +32642,15 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onUIShow=function(){
-			this.view.roomData=this.roomData;
-			this.roomData.initClipConfig();
-			this.view.initSelectClip(this.hallData.join_room_idx);
-			this.onCoinSelect(0);
 			if (this.hallData.join_room_idx <=2){
 				this.roomData.Cash_Type=2;
 			}
 			else this.roomData.Cash_Type=1;
+			console.log("============roomData = "+this.roomData.Cash_Type);
+			this.view.roomData=this.roomData;
+			this.roomData.initClipConfig();
+			this.view.initSelectClip(this.hallData.join_room_idx);
+			this.onCoinSelect(0);
 		}
 
 		__proto.onUIHide=function(){
@@ -50862,7 +50861,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BetAreaViewUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"}},{"type":"Image","props":{"y":2,"x":252,"var":"zone_1","skin":"res/gameScene/闲家下注区3.png","name":"zone_1"}},{"type":"Image","props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"}},{"type":"Image","props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"}},{"type":"Bet_Total","props":{"y":4,"x":23,"var":"total_amount_0","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":264,"var":"total_amount_1","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":507,"var":"total_amount_2","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":750,"var":"total_amount_3","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"var":"self_amount_0","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"var":"self_amount_1","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"var":"self_amount_2","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"var":"self_amount_3","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"BetLImit","props":{"y":-117,"x":379,"visible":false,"var":"BetLimit","runtime":"ui.ui.room.BetLImitUI"}},{"type":"RankPanel","props":{"y":18,"x":161,"visible":false,"var":"Rankp_0","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":416,"visible":false,"var":"Rankp_1","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":659,"visible":false,"var":"Rankp_2","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":18,"x":904,"visible":false,"var":"Rankp_3","runtime":"ui.ui.room.RankPanelUI"}},{"type":"Image","props":{"y":232,"x":232,"var":"_arrows","skin":"res/gameScene/牛牛指向箭头.png"}},{"type":"Image","props":{"y":59.00000000000005,"x":624,"var":"Tips_3","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_3","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":59.00000000000005,"x":662,"var":"Tips_2","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_2","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":58.000000000000036,"x":415.00000000000006,"var":"Tips_1","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":148,"var":"Name_1","text":"天涯歌女爱与仇","height":21,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":54.99999999999998,"x":163,"var":"Tips_0","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":155,"var":"Name_0","text":"天涯歌女爱与仇","height":32,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":1,"x":0,"var":"Scene_0","skin":"res/gameScene/闲家下注区4.png","name":"Scene_0","alpha":0}},{"type":"Image","props":{"y":2,"x":253,"var":"Scene_1","skin":"res/gameScene/闲家下注区3.png","name":"Scene_1","alpha":0}},{"type":"Image","props":{"y":2,"x":501,"var":"Scene_2","skin":"res/gameScene/闲家下注区2.png","name":"Scene_2","alpha":0}},{"type":"Image","props":{"y":0,"x":747,"var":"Scene_3","skin":"res/gameScene/闲家下注区1.png","name":"Scene_3","alpha":0}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1000,"height":200},"child":[{"type":"Image","props":{"y":3,"x":2,"var":"zone_0","skin":"res/gameScene/闲家下注区4.png","name":"zone_0"}},{"type":"Image","props":{"y":2,"x":252,"var":"zone_1","skin":"res/gameScene/闲家下注区3.png","name":"zone_1"}},{"type":"Image","props":{"y":3,"x":503,"var":"zone_2","skin":"res/gameScene/闲家下注区2.png","name":"zone_2"}},{"type":"Image","props":{"y":3,"x":747,"var":"zone_3","skin":"res/gameScene/闲家下注区1.png","name":"zone_3"}},{"type":"Bet_Total","props":{"y":4,"x":23,"var":"total_amount_0","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":3,"x":264,"var":"total_amount_1","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":4,"x":507,"var":"total_amount_2","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_Total","props":{"y":6,"x":750,"var":"total_amount_3","runtime":"ui.ui.room.Bet_TotalUI"}},{"type":"Bet_self","props":{"y":157,"x":45,"var":"self_amount_0","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":297,"var":"self_amount_1","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":548,"var":"self_amount_2","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"Bet_self","props":{"y":157,"x":806,"var":"self_amount_3","runtime":"ui.ui.room.Bet_selfUI"}},{"type":"BetLImit","props":{"y":-117,"x":379,"visible":false,"var":"BetLimit","runtime":"ui.ui.room.BetLImitUI"}},{"type":"RankPanel","props":{"y":18,"x":161,"visible":false,"var":"Rankp_0","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":416,"visible":false,"var":"Rankp_1","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":17,"x":659,"visible":false,"var":"Rankp_2","runtime":"ui.ui.room.RankPanelUI"}},{"type":"RankPanel","props":{"y":18,"x":904,"visible":false,"var":"Rankp_3","runtime":"ui.ui.room.RankPanelUI"}},{"type":"Image","props":{"y":232,"x":232,"var":"_arrows","skin":"res/gameScene/牛牛指向箭头.png"}},{"type":"Image","props":{"y":59.00000000000005,"x":624,"var":"Tips_3","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":327,"var":"Name_3","text":"天涯歌女爱与仇","height":31,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":59.00000000000005,"x":662,"var":"Tips_2","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":300,"var":"Name_2","text":"天涯歌女爱与仇","height":32,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":58.000000000000036,"x":415.00000000000006,"var":"Tips_1","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":19,"width":316,"var":"Name_1","text":"天涯歌女爱与仇","height":29,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":55,"x":163,"width":115,"var":"Tips_0","skin":"res/gameScene/tips小底板.png","height":78,"sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":17,"x":13,"width":293,"var":"Name_0","text":"涯歌女爱","height":32,"fontSize":22,"color":"#f8f0ef","align":"left"}}]},{"type":"Image","props":{"y":1,"x":0,"var":"Scene_0","skin":"res/gameScene/闲家下注区4.png","name":"Scene_0","alpha":0}},{"type":"Image","props":{"y":2,"x":253,"var":"Scene_1","skin":"res/gameScene/闲家下注区3.png","name":"Scene_1","alpha":0}},{"type":"Image","props":{"y":2,"x":501,"var":"Scene_2","skin":"res/gameScene/闲家下注区2.png","name":"Scene_2","alpha":0}},{"type":"Image","props":{"y":0,"x":747,"var":"Scene_3","skin":"res/gameScene/闲家下注区1.png","name":"Scene_3","alpha":0}}]};}
 		]);
 		return BetAreaViewUI;
 	})(View)
@@ -51481,6 +51480,7 @@ var Laya=window.Laya=(function(window,document){
 			this.player_7=null;
 			this.player_8=null;
 			this.player_9=null;
+			this.limitHint=null;
 			BankerListHintUI.__super.call(this);
 		}
 
@@ -51492,7 +51492,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BankerListHintUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":310,"height":400},"child":[{"type":"Image","props":{"y":0,"x":0,"width":310,"var":"bg","skin":"res/gameScene/特殊tips底板.png","height":392,"sizeGrid":"44,22,51,20"}},{"type":"Label","props":{"y":8,"x":91,"width":140,"text":"等待坐庄队列","height":23,"fontSize":20,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":40,"x":116,"width":57,"var":"BankerLimit","text":"9999","scaleY":1.7,"scaleX":1.7,"height":15,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":41,"x":202,"width":94,"text":" 可申请]","height":28,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":41,"x":21,"width":85,"var":"title","text":"[现金达到","height":25,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Image","props":{"y":69,"x":15,"var":"NextPoint","skin":"res/gameScene/next.png"}},{"type":"Label","props":{"y":80,"x":43,"width":141,"var":"NoPlayer","text":"暂时没有等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"center"}},{"type":"Label","props":{"y":350,"x":116,"width":97,"var":"Page","text":"1/10","height":30,"fontSize":20,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":66,"x":87,"width":210,"var":"player_0","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":95,"x":88,"width":210,"var":"player_1","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":123,"x":87,"width":210,"var":"player_2","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":152,"x":87,"width":210,"var":"player_3","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":180,"x":87,"width":210,"var":"player_4","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":209,"x":87,"width":210,"var":"player_5","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":237,"x":88,"width":210,"var":"player_6","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":266,"x":88,"width":210,"var":"player_7","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":294,"x":88,"width":210,"var":"player_8","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":323,"x":88,"width":210,"var":"player_9","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":310,"height":400},"child":[{"type":"Image","props":{"y":0,"x":0,"width":310,"var":"bg","skin":"res/gameScene/特殊tips底板.png","height":392,"sizeGrid":"44,22,51,20"}},{"type":"Label","props":{"y":8,"x":91,"width":140,"text":"等待坐庄队列","height":23,"fontSize":20,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":40,"x":116,"width":57,"var":"BankerLimit","text":"9999","scaleY":1.7,"scaleX":1.7,"height":15,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":41,"x":202,"width":94,"text":" 可申请]","height":28,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":41,"x":21,"width":85,"var":"title","text":"[现金达到","height":25,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Image","props":{"y":69,"x":15,"var":"NextPoint","skin":"res/gameScene/next.png"}},{"type":"Label","props":{"y":80,"x":43,"width":141,"var":"NoPlayer","text":"暂时没有等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"center"}},{"type":"Label","props":{"y":350,"x":116,"width":97,"var":"Page","text":"1/10","height":30,"fontSize":20,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":66,"x":87,"width":210,"var":"player_0","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":95,"x":88,"width":210,"var":"player_1","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":123,"x":87,"width":210,"var":"player_2","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":152,"x":87,"width":210,"var":"player_3","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":180,"x":87,"width":210,"var":"player_4","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":209,"x":87,"width":210,"var":"player_5","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":237,"x":88,"width":210,"var":"player_6","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":266,"x":88,"width":210,"var":"player_7","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":294,"x":88,"width":210,"var":"player_8","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":323,"x":88,"width":210,"var":"player_9","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Image","props":{"y":380,"x":-149,"width":623,"var":"limitHint","skin":"res/gameScene/tips小底板.png","height":78,"sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":20,"x":11,"width":601,"text":"玩家带入金余额必须大于等于本牌桌限红的11倍，才可以进入等待坐庄队列","height":25,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}}]}]};}
 		]);
 		return BankerListHintUI;
 	})(View)
@@ -53025,6 +53025,7 @@ var Laya=window.Laya=(function(window,document){
 				this.mcHintBoard.NextPoint.visible=false;
 				this.mcHintBoard.Page.y=126;
 				this.mcHintBoard.bg.height=168;
+				this.mcHintBoard.limitHint.y=156;
 				for (var i=0;i < 10;i++){
 					this.mcHintBoard["player_"+i].text="";
 				}
@@ -53041,6 +53042,7 @@ var Laya=window.Laya=(function(window,document){
 			if (playerCnt <=2)return;
 			this.mcHintBoard.bg.height=168+(playerCnt-2)*28;
 			this.mcHintBoard.Page.y=126+(playerCnt-2)*28;
+			this.mcHintBoard.limitHint=156+(playerCnt-2)*28;
 		}
 
 		__proto.test=function(){}
@@ -53223,8 +53225,9 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.Error_tip=function(error_msg,po){
 			console.log("error_msg ="+error_msg+"  po "+po);
-			this["Tips_"+po].alpha=1;
+			this["Tips_"+po].width=115+(error_msg.length-4)*22;
 			this["Name_"+po].text=error_msg;
+			this["Name_"+po].alpha=1;
 			this["Tips_"+po].alpha=1;
 			Tween.to(this["Tips_"+po],{alpha:0 },3000,Ease.linearNone);
 			Tween.to(this["Name_"+po],{alpha:0 },3000,Ease.linearNone);
@@ -55670,25 +55673,25 @@ var Laya=window.Laya=(function(window,document){
 63 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (246):warning:chipsVO This variable is not defined.
 64 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (307):warning:_bankerName This variable is not defined.
 65 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (308):warning:_bankerName This variable is not defined.
-66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (454):warning:breq This variable is not defined.
-67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (621):warning:e.info This variable is not defined.
-68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (634):warning:game.viewArea.update_total This variable is not defined.
-69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (636):warning:game.viewArea.update_other_total This variable is not defined.
-70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (641):warning:game.viewArea.my_batch_bet This variable is not defined.
-71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (659):warning:game.viewArea.my_batch_bet This variable is not defined.
-72 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (665):warning:game.viewArea.my_batch_bet This variable is not defined.
-73 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (675):warning:game.viewArea.other_bet_cancel This variable is not defined.
-74 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (677):warning:game.viewArea.update_other_total This variable is not defined.
-75 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (683):warning:game.viewArea.clear_allChip This variable is not defined.
-76 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (695):warning:game.viewArea.other_bet This variable is not defined.
-77 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (705):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
-78 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (723):warning:game.viewArea.other_bet This variable is not defined.
-79 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (729):warning:game.viewArea.set_zoneList This variable is not defined.
-80 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (731):warning:game.viewArea.update_limit This variable is not defined.
-81 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (731):warning:roomlimit This variable is not defined.
-82 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (733):warning:game.viewArea.update_lamp This variable is not defined.
-83 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (734):warning:LightAssetManager.getInstance This variable is not defined.
-84 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (734):warning:SoundNameManager.getInstance This variable is not defined.
+66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (452):warning:breq This variable is not defined.
+67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (616):warning:e.info This variable is not defined.
+68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (629):warning:game.viewArea.update_total This variable is not defined.
+69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (631):warning:game.viewArea.update_other_total This variable is not defined.
+70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (636):warning:game.viewArea.my_batch_bet This variable is not defined.
+71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (654):warning:game.viewArea.my_batch_bet This variable is not defined.
+72 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (660):warning:game.viewArea.my_batch_bet This variable is not defined.
+73 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (670):warning:game.viewArea.other_bet_cancel This variable is not defined.
+74 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (672):warning:game.viewArea.update_other_total This variable is not defined.
+75 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (678):warning:game.viewArea.clear_allChip This variable is not defined.
+76 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (690):warning:game.viewArea.other_bet This variable is not defined.
+77 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (700):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
+78 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (718):warning:game.viewArea.other_bet This variable is not defined.
+79 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (724):warning:game.viewArea.set_zoneList This variable is not defined.
+80 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (726):warning:game.viewArea.update_limit This variable is not defined.
+81 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (726):warning:roomlimit This variable is not defined.
+82 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (728):warning:game.viewArea.update_lamp This variable is not defined.
+83 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (729):warning:LightAssetManager.getInstance This variable is not defined.
+84 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (729):warning:SoundNameManager.getInstance This variable is not defined.
 85 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
 86 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (220):warning:hide This variable is not defined.
 87 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/SelectClipView.as (73):warning:Coin_5.filters This variable is not defined.

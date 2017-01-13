@@ -74,6 +74,8 @@ package bull.modules.common.model.data
 		//banker_info
 		public var banker_num:int;
 		public var bankerlist:Array;
+		public var banker_id:Long;
+		public var apply_type:int;
 		
 		public var newBaner_info:SBankerNotify;
 		public var Banker_calcu_info:SBankerCalculateNotify;		
@@ -105,6 +107,7 @@ package bull.modules.common.model.data
 			sameBetinfo = [];
 			
 			Has_bet = false;
+			banker_id = Long.fromNumber( -1);
 			
 			Banker_calcu_info = new SBankerCalculateNotify();
 		}
@@ -114,7 +117,7 @@ package bull.modules.common.model.data
 			return (Cash_Type != ENMoneyType.MONEY_TYPE_COIN) == true ? money / 100 : money;
 		}
 		
-		public static function appearMoney(num:Number):String
+		public function appearMoney(num:Number):String
 		{
 			return (Cash_Type != ENMoneyType.MONEY_TYPE_COIN) == true ? ("¥"+num.toFixed(2)) : num.toString();
 		}

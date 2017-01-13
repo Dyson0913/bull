@@ -12,6 +12,7 @@ package bull.modules.room.mediator
 	import com.lightUI.components.alert.Alert;
 	import com.lightUI.core.Light;	
 	import com.lightUI.events.ScenceManagerEvent;
+	import conf.ENBankerType;
 	import conf.ENMoneyType;
 	import conf.SBullMoney;
 	import conf.SUserInfo;
@@ -134,6 +135,7 @@ package bull.modules.room.mediator
 			addNotifiction(BullNotification.BANKER_LIST);
 			addNotifiction(BullNotification.NEW_BANKER);
 			addNotifiction(BullNotification.BANKER_CALCU);
+			addNotifiction(BullNotification.BANKER_ACTION_RESULT);
 			
 			//bet
 			addNotifiction(BullNotification.BET_RSP);		
@@ -155,6 +157,7 @@ package bull.modules.room.mediator
 			view.ViewBetGroup.on(LightEvent.ITEM_CLICK,this, onBetAction);
 			view.viewSelectClip.on(LightEvent.ITEM_CLICK, this, onCoinSelect);
 			view.viewResult.on(LightEvent.ITEM_CLICK, this, runEnd_recycle);
+			view.viewBankerPanel.on(LightEvent.ITEM_CLICK, this, BankerPanelAction);
 			
 			//廣播訊息			
 			addNotifiction(BullNotification.Change_to_Lobby);
@@ -165,20 +168,32 @@ package bull.modules.room.mediator
 			roomData.bet_idx = select;
 		}
 		
-		private function onBetAction(name:String):void
+		private function BankerPanelAction(name:String):void
 		{
-			trace("onBetAction "+name);
+			if ( name == "btnBanker")
+			{
+				roomData.apply_type = 1;
+				sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(),1);
+			}
+			else (name == "btndeBanker")
+			{
+				
+			}
+			trace("name = " + name);
+			
+		}
+		
+		private function onBetAction(name:String):void
+		{			
 			if (name == "same") sentNotification(BullNotification.BET_SAME);
 			else if (name =="cancel") sentNotification(BullNotification.BET_CANCEL);
 		}
 		
 		private function onBetzoneClick(idx:int):void
 		{
-			trace("onBetzoneClick = " + idx);
-			
+			trace("onBetzoneClick = " + idx);			
 			roomData.bet_zone = idx;
-			sentNotification(ENCSType.CS_TYPE_BET_REQ.toString());
-			
+			sentNotification(ENCSType.CS_TYPE_BET_REQ.toString());			
 			
 			//view.viewArea.tablelimit_updata(800);
 			
@@ -312,7 +327,7 @@ package bull.modules.room.mediator
 		
 		private function cashViewHandler():void
 		{			
-			view.viewHead.setMoney( RoomData.appearMoney(roomData.Total_money)); 
+			view.viewHead.setMoney( roomData.appearMoney(roomData.Total_money)); 
 			//view.viewHead.setMoneyT(Common.isCoin?2:1);					
 		}
 		
@@ -361,10 +376,86 @@ package bull.modules.room.mediator
 			//view.bnaklis.viewBankerPanel.set_list(appMedel.WaitBankList,appMedel.nick_name_64);
 		}
 		
+		private function bankerReplyHandler(data:Array):void			
+		{
+			var result:int =  data[0];			
+			var str:String = "";
+			if( result ==0)
+			{
+				if ( roomData.apply_type == ENBankerType.BANKER_TYPE_UP)
+				{
+					str = "申请上庄成功"; 
+					view.viewBankerPanel.apply_banker(false);
+				}				
+				else 
+				{
+					//需要二次確認,彈出
+					str = "申请下庄成功";					
+					view.viewBankerPanel.apply_banker(true);
+				}				
+			}
+			else if( result == 14)  str = "非坐庄时间 ,不得上庄";			
+			else if( result == 25)  str = "申请坐庄失败！ 已经在上庄列表";
+			else if( result == 26)  str = "坐庄等待玩家已满，稍后再试吧。";
+			else if( result == 22)  str = "金钱不足";
+			else if( result == 27)  str = "不在上庄列表";			
+			
+			
+			game.viewHintMsg.show(str);			
+		}	
+		
 		private function onbankerInfoHandler():void
 		{
 			//view.viewBankerPanel.loadingpic(bankerHandler);
-			view.viewBankerPanel.newBanker(["dyson",5,"7894"])
+			
+			//庄家下庄會在最後一局發牌發換庄,不處理
+			if ( roomData.State = RoomData.DEAL) return;
+			
+			//新庄上庄,才播動畫
+			var play_ani:Boolean = false;
+			if ( roomData.banker_id != roomData.newBaner_info.banker_id) play_ani = true;
+			
+			//TODO 頭像與名稱
+			var bankerTims:String = roomData.newBaner_info.banker_time +"/" + roomData.newBaner_info.max_time + "次";
+			if ( roomData.newBaner_info.banker_id == 0)
+			{
+				view.viewBankerPanel.bankerinfo_update(["系统坐庄", "",""]);
+			}
+			else view.viewBankerPanel.newBanker(["dyson", bankerTims, roomData.GetMoney(roomData.newBaner_info.hand_money.toNumber())]);
+			
+			//extra
+			//中途進入,自己是庄家,改成下庄按鈕
+			//if( appMedel.Banker_uid === appMedel.user_id)
+			//{
+				//game.viewBankerPanel.switch_to_debanker();	
+				//trace("---------- bankerState ="+ob["bankerState"]);
+				//
+				//
+				//提示連庄面版
+				//if( ob["bankerState"] == conf.ENBankerStatus.BANKER_STATUS_CONTINUE)
+				//{					
+					//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Continue_banker));
+				//}
+			//}
+			//else
+			//{
+				//連庄確認次數歸零
+				//appMedel.banker_default_ok = 0;
+			//}
+			//
+			//if(playAni == true)
+			//{
+				//phase_tip("轮庄中，请稍等…",1);
+				//
+				//上庄又是自己
+				//if( appMedel.Banker_uid === appMedel.user_id)	game.viewHintMsg.show("恭喜上庄成功，祝您好运。");
+			//}
+			//
+			//if( ob["bankerState"] == conf.ENBankerStatus.BANKER_STATUS_NO_MONEY)
+			//{
+				//game.viewHintMsg.show("对不起，您的带入金余额不足，无法连庄。");
+			//}
+			
 			
 		}
 		
@@ -403,9 +494,7 @@ package bull.modules.room.mediator
 				break;
 				
 				case view.PlayerListBtn:
-					view.btn_display(!view.btnBg.visible);
-					
-					
+					view.btn_display(!view.btnBg.visible);					
 					view.ViewPlayerList.show();
 				break;
 				
@@ -470,6 +559,10 @@ package bull.modules.room.mediator
 				case BullNotification.BANKER_LIST:
 					onbankerlist_upateHandler();
 				break;
+				case BullNotification.BANKER_ACTION_RESULT:
+					bankerReplyHandler(noti.getBody() as Array);
+				break;
+				
 				
 				
 				case BullNotification.CASH_TAKEIN_RESPONES:
@@ -529,14 +622,14 @@ package bull.modules.room.mediator
 			}
 			
 			//更新自己手中的錢
-			view.viewHead.setMoney( RoomData.appearMoney(roomData.Total_money)); 
+			view.viewHead.setMoney( roomData.appearMoney(roomData.Total_money)); 
 		}
 		
 		private function cnacelOkHandler():void
 		{				
 			//COIN 飛回
 			view.flySelfChipBack();
-			view.viewHead.setMoney( RoomData.appearMoney(roomData.Total_money)); 
+			view.viewHead.setMoney( roomData.appearMoney(roomData.Total_money)); 
 		}
 		
 		private function sameFailHandler():void
@@ -680,13 +773,10 @@ package bull.modules.room.mediator
 			
 			//總注區更新
 			for (var i:int = 0; i < 4; i++)
-			{
-				trace("=====================roomData.Zone_self_bet[i]" +roomData.Zone_self_bet[i]);
+			{				
 				view.viewArea.update_total(i, roomData.Zone_Total_bet[i]);
 				view.viewArea.update_self(i, roomData.Zone_self_bet[i]);
 			}			
-				
-			trace("=====================bet notity over");
 			
 			//view.viewArea.zone_light(3);
 			
@@ -903,23 +993,22 @@ package bull.modules.room.mediator
 			sentNotification(BullNotification.GET_USER_BALANCE);
 		}
 		
-		private function onUIShow():void {
-			
-			//view.viewSelectClip.set_data([100,500,1000,5000,10000,"max"]);
+		private function onUIShow():void {			
 			
 			//先别影藏 等数据请求回来再显示
-			view.roomData = roomData;
-			//view.userInfoData = userInfoData;
-			roomData.initClipConfig();
-			view.initSelectClip(hallData.join_room_idx);
-			
-			this.onCoinSelect(0);
-			//roomData.bet_idx = 0;
 			if ( hallData.join_room_idx <= 2)
 			{
 				roomData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN;
 			}
-			else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;
+			else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;			
+			
+			view.roomData = roomData;			
+			roomData.initClipConfig();
+			view.initSelectClip(hallData.join_room_idx);
+			
+			this.onCoinSelect(0);			
+			
+			
 			
 			
 			

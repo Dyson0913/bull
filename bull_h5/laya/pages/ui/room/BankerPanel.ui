@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":3,
+    "selecteID":5,
     "props":{"width":723,"sceneColor":"#000000","renderType":"mask","height":87},
     "nodeParent":-1,
     "label":"View",
@@ -43,7 +43,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":34,"x":120,"width":50,"var":"txtname","text":"吉胜游戏平台","height":18,"fontSize":20,"color":"#eee7e7"},
+            "props":{"y":34,"x":120,"width":125,"var":"txtname","text":"吉胜游戏平台","height":32,"fontSize":20,"color":"#eee7e7"},
             "nodeParent":1,
             "label":"Label(txtname)",
             "isDirectory":false,
@@ -64,7 +64,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":34,"x":427,"width":67,"var":"BankerTimes","text":"1/15次","height":24,"fontSize":20,"color":"#eee7e7"},
+            "props":{"y":34,"x":433,"width":68,"var":"BankerTimes","text":"1/15次","height":24,"fontSize":20,"color":"#eee7e7","align":"center"},
             "nodeParent":1,
             "label":"Label(BankerTimes)",
             "isDirectory":false,
@@ -85,7 +85,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":9,"x":527,"var":"btndeBanker","stateNum":"3","skin":"res/gameScene/deBanker.png"},
+            "props":{"y":9,"x":527,"var":"btndeBanker","stateNum":"3","skin":"res/gameScene/deBanker.png","name":"btndeBanker"},
             "nodeParent":1,
             "label":"Button(btndeBanker)",
             "isDirectory":false,
@@ -106,7 +106,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":8,"x":527,"var":"btnBanker","stateNum":"3","skin":"res/gameScene/applyBanker.png"},
+            "props":{"y":8,"x":527,"var":"btnBanker","stateNum":"3","skin":"res/gameScene/applyBanker.png","name":"btnBanker"},
             "nodeParent":1,
             "label":"Button(btnBanker)",
             "isDirectory":false,
@@ -164,7 +164,7 @@
             "compId":11,
             "child":[
                 ],
-            "$HIDDEN":false
+            "$HIDDEN":true
         },
         {
             "x":15,

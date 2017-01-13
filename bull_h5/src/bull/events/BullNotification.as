@@ -55,6 +55,7 @@ package bull.events
 		public static const BANKER_LIST:String = "bankerlist";
 		public static const NEW_BANKER:String = "newbanker";
 		public static const BANKER_CALCU:String = "Bankercalcu";
+		public static const BANKER_ACTION_RESULT:String = "banker_action_result";
 		
 		//bet
 		public static const BET_RSP:String = "bet_rsp";
