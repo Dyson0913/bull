@@ -661,8 +661,7 @@ package bull.modules.room.mediator
 					//他人下注					
 					if ( bet < 0)
 					{
-						//減注
-						trace("============other bet "+ bet);
+						//減注						
 						var chips:Array = [];
 						chips = get_coin_info(-bet, po, false);
 						sub_otherbet(chips);
