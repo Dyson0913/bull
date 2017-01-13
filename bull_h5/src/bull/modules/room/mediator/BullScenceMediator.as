@@ -179,9 +179,9 @@ package bull.modules.room.mediator
 			}
 			else if (name == "btndeBanker")
 			{
-				//下庄 需要二次確認,只針對己上庄玩家,排隊玩家不用				
+				//下庄 需要二次確認,只針對己上庄玩家,排隊玩家不用
 				if ( roomData.newBaner_info.banker_id.toNumber() == roomData.uid)
-				{
+				{					
 					Alert.show(Light.language.getSrting("alert_msg12"), "", AlertCancelPanel, null, Handler.create(this, no_more_banker));
 					return;
 				}
@@ -194,9 +194,9 @@ package bull.modules.room.mediator
 			//TODO sound
 		}
 		
-		private function no_more_banker():void{
+		private function no_more_banker(ata:int,flg:String):void{
 			if (flg == "ok_btn") 
-			{
+			{				
 				roomData.apply_type = 2;
 				sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(),2);
 			}			
@@ -418,7 +418,7 @@ package bull.modules.room.mediator
 			else if( result == 26)  str = "坐庄等待玩家已满，稍后再试吧。";
 			else if( result == 22)  str = "金钱不足";
 			else if( result == 27)  str = "不在上庄列表";			
-			
+			trace("=======================bankerReplyHandler "+ result);
 			Alert.show(str, "", AlertPanel);
 		}	
 		
@@ -428,10 +428,12 @@ package bull.modules.room.mediator
 			if ( roomData.State == RoomData.DEAL) return;
 			
 			//新庄上庄,才播動畫
-			var play_ani:Boolean = false;
-			trace("-------------------------------------roomData.banker_id ,"+roomData.banker_id);
-			trace("-------------------------------------roomData.newBaner_info.banker_id ,"+roomData.newBaner_info.banker_id);
-			if ( roomData.banker_id != roomData.newBaner_info.banker_id) play_ani = true;
+			var play_ani:Boolean = false;			
+			if ( roomData.banker_id.toNumber() != roomData.newBaner_info.banker_id.toNumber())
+			{
+				play_ani = true;				
+				roomData.banker_id = roomData.newBaner_info.banker_id;
+			}
 			
 			//TODO 頭像與名稱
 			var bankerTims:String = roomData.newBaner_info.banker_time +"/" + roomData.newBaner_info.max_time + "次";
@@ -972,12 +974,6 @@ package bull.modules.room.mediator
 			Text.registerBitmapFont(fontFileName, newFont);			
 		}
 		
-		private function getPlayerInfoCallback(param:Object):void
-		{
-			trace("getPlayerInfoCallback!!!!!!!!!!!!!!!!!!");
-			trace(param);
-		}
-		
 		public function sendHeartBeat():void{
 			startHeartCount();
 			sendMsg();
@@ -1025,7 +1021,7 @@ package bull.modules.room.mediator
 			{
 				roomData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN;
 			}
-			else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;			
+			else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;				
 			
 			view.roomData = roomData;			
 			roomData.initClipConfig();

@@ -105,7 +105,7 @@ package bull.modules.common.model.data
 			Zone_Total_bet = [0,0,0,0];
 			Zone_self_bet = [0,0,0,0];
 			sameBetinfo = [];
-			
+			uid = 0;
 			Has_bet = false;
 			banker_id = Long.fromNumber( -1);
 			

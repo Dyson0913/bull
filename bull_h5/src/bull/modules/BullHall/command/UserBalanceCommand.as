@@ -53,7 +53,7 @@ package bull.modules.BullHall.command
 		private function userBalanceCallback(param:Object):void{			
 			var hallData:HallData = getSingleton(HallData.NAME) as HallData;	
 			
-			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;	
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 			if( param !=undefined)  roomData.player_Money = param.info;
 			else
 			{

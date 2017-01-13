@@ -42,11 +42,11 @@ package bull.modules.common.command
 		private function hallConnectCompleteHandler():void{
 			trace("hallConnectCompleteHandler");
 			var param:WebParam = WebService.resolveBrowserParam();			
-			var bullData:Data = getSingleton(Data.NAME) as Data;
-			var roomData:RoomData = getSingleton(Data.NAME) as RoomData;
+			var bullData:Data = getSingleton(Data.NAME) as Data;			
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 			if(param.uid) {
 				bullData.uid = param.uid;
-				roomData.uid = param.uid;
+				roomData.uid = bullData.uid ;
 				ShareObjectMgr.get().init(param.uid.toString());
 			}
 			if (param.access_token) bullData.token = param.access_token;
