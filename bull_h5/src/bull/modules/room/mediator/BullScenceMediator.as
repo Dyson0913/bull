@@ -167,6 +167,7 @@ package bull.modules.room.mediator
 		
 		private function onBetAction(name:String):void
 		{
+			trace("onBetAction "+name);
 			if (name == "same") sentNotification(BullNotification.BET_SAME);
 			else if (name =="cancel") sentNotification(BullNotification.BET_CANCEL);
 		}
@@ -532,9 +533,10 @@ package bull.modules.room.mediator
 		}
 		
 		private function cnacelOkHandler():void
-		{	
+		{				
 			//COIN 飛回
 			view.flySelfChipBack();
+			view.viewHead.setMoney( RoomData.appearMoney(roomData.Total_money)); 
 		}
 		
 		private function sameFailHandler():void
@@ -637,6 +639,7 @@ package bull.modules.room.mediator
 				if (self)
 				{
 					//減注
+					
 					if ( bet < 0)
 					{
 						roomData.Zone_self_bet[0] = 0;
@@ -659,8 +662,9 @@ package bull.modules.room.mediator
 					if ( bet < 0)
 					{
 						//減注
+						trace("============other bet "+ bet);
 						var chips:Array = [];
-						chips = get_coin_info(bet, po, false);
+						chips = get_coin_info(-bet, po, false);
 						sub_otherbet(chips);
 					}
 					else

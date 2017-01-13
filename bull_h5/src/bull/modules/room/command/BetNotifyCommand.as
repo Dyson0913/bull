@@ -99,13 +99,15 @@ package bull.modules.room.command
 		{
 			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;	
 			
-			var rsp:SBetRsp = cs.bet_rsp;		
+			var rsp:SBetRsp = cs.bet_rsp;	
+			trace("=============================betResponse "+rsp.error_code)
 			switch(rsp.error_code)
 			{
 				case 0:
 					//下注位置    (11. 取消,  10. 同上一轮,  1~4. 下注位置)
 					if ( rsp.position ==  conf.ENBetPosition.BET_POSITION_CANCEL )
 					{						
+						trace("=============================cancel ")
 						roomData.Has_bet  = false;
 						//還回全部和自己的金額
 						for(var i:int =0;i<  roomData.Zone_self_bet.length;i++)
@@ -114,13 +116,13 @@ package bull.modules.room.command
 						}			
 						
 						//TODO
-						appMedel.roomParam.roomlimit += roomData.GetMoney(rsp.bet_money);
-						
+						//appMedel.roomParam.roomlimit += roomData.GetMoney(rsp.bet_money);
+						roomData.Total_money = roomData.GetMoney(rsp.hand_money.toNumber());						
 						sentNotification(BullNotification.BET_CANCEL_OK); 
 					}
 					else if (rsp.position == conf.ENBetPosition.BET_POSITION_REPEAT)
-					{
-						appMedel.TotalMoney = rsp.hand_money.toNumber();				
+					{						
+						roomData.Total_money = roomData.GetMoney(rsp.hand_money.toNumber());
 						sentNotification(BullNotification.BET_RSP);
 					}
 					else 
@@ -403,6 +405,7 @@ package bull.modules.room.command
 		
 		private function CancelRequest():void
 		{
+			trace("=============================CancelRequest ")
 			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
 			var out:CS = proto.msg_proto.getCS();
 			out.msg_type = ENCSType.CS_TYPE_BET_REQ;
@@ -411,6 +414,7 @@ package bull.modules.room.command
 			
 			var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
 			socket.sentMsg(out);
+			trace("=============================CancelRequest out")
 		}
 		
 		private function SameRequest():void

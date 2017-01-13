@@ -156,6 +156,8 @@ package bull
 			//下注
 			registerCommand(ENCSType.CS_TYPE_BET_REQ.toString(),BetNotifyCommand);
 			registerCommand(ENCSType.CS_TYPE_BET_RSP.toString(),BetNotifyCommand);
+			registerCommand(BullNotification.BET_SAME, BetNotifyCommand);
+			registerCommand(BullNotification.BET_CANCEL, BetNotifyCommand);
 			
 			registerCommand(BullNotification.TestOrder, TestCommand);
 		}

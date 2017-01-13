@@ -494,27 +494,6 @@
             "child":[
                 ],
             "$HIDDEN":false
-        },
-        {
-            "x":15,
-            "type":"UIView",
-            "source":"ui/room/Test.ui",
-            "props":{"y":595,"x":53,"var":"TestPanel","runtime":"bull.view.room.TestBoard"},
-            "nodeParent":1,
-            "label":"UIView(TestPanel)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":621,"x":328},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":39,
-            "child":[
-                ]
         }],
     "animations":[
         {

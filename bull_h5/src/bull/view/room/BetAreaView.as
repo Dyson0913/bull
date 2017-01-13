@@ -176,18 +176,25 @@ package bull.view.room
 				this["total_amount_" + idx].visible = true;
 				this["total_amount_" + idx]["amount"].text = amount.toString();
 			}
+			else
+			{
+				this["total_amount_" + idx]["title"].visible = false;
+				this["total_amount_" + idx].visible = false;
+			}
 		}
 		
 		public function update_self(idx:int, amount:Number ):void
 		{
 			if ( amount != 0)
 			{
-				//自己下注更新
-				trace("==========update_self  "+idx);
+				//自己下注更新				
 				this["self_amount_" + idx]["amount"].font = "mybetFont";
 				this["self_amount_" + idx].visible = true;
 				this["self_amount_" + idx]["amount"].text = amount.toString();
-				
+			}
+			else
+			{
+				this["self_amount_" + idx].visible = false;				
 			}
 		}
 		
@@ -244,11 +251,13 @@ package bull.view.room
 		
 		public function Error_tip(error_msg:String,po:int):void			
 		{				
-			var frame:int = error_msg.length -2;			
-			this["Tips_" + po]["Name_" + po].text = error_msg;
+			trace("error_msg ="+error_msg + "  po " + po);		
+			this["Tips_" + po].alpha = 1;
 			
-			this["Tips_" + po]["Name_" + po].alpha = 1;
-			Tween.to(this["Tips_" + po]["Name_" + po], { alpha:0 }, 3000, Ease.linearNone );
+			this["Name_" + po].text = error_msg;			
+			this["Tips_" + po].alpha = 1;
+			Tween.to(this["Tips_" + po], { alpha:0 }, 3000, Ease.linearNone );
+			Tween.to(this["Name_" + po], { alpha:0 }, 3000, Ease.linearNone );
 		}
 		
 		private function test():void
