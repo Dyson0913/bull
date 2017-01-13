@@ -40,6 +40,8 @@ package msg
 		public var banker_calc_notify:SBankerCalculateNotify = null;
 		public var push_notice_notify:PushNoticeNotify = null;
 		public var kick_player_notify:KickPlayerNotify = null;
+		public var get_player_info_req:GetPlayerInfoReq = null;
+		public var get_player_info_rsp:GetPlayerInfoRsp = null;
 		public function writeTo(value:*):void{
 		}
 	}

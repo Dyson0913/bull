@@ -311,6 +311,20 @@ package msg
 			var clazz:* = builder.build("msg")["KickPlayerNotify"];
 			return new clazz();
 		};
+		public function GetPlayerInfoReq_Builer():Builder{
+			return builder.build("msg")["GetPlayerInfoReq"];
+		};
+		public function getGetPlayerInfoReq():GetPlayerInfoReq{
+			var clazz:* = builder.build("msg")["GetPlayerInfoReq"];
+			return new clazz();
+		};
+		public function GetPlayerInfoRsp_Builer():Builder{
+			return builder.build("msg")["GetPlayerInfoRsp"];
+		};
+		public function getGetPlayerInfoRsp():GetPlayerInfoRsp{
+			var clazz:* = builder.build("msg")["GetPlayerInfoRsp"];
+			return new clazz();
+		};
 		public function ENCSType_Builer():Builder{
 			return builder.build("msg")["ENCSType"];
 		};

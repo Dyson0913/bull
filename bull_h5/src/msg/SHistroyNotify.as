@@ -1,8 +1,8 @@
 package msg
 {
 	import conf.SResultInfo;
-	import com.IProtobuf.Message;
 	import conf.SCountInfo;
+	import com.IProtobuf.Message;
 
 	public class SHistroyNotify extends Message
 	{

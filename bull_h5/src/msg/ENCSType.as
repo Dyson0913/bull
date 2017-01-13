@@ -36,5 +36,7 @@ package msg
 		public static const CS_TYPE_BANKER_CALCULATE_NOTIFY:int = 40;
 		public static const CS_TYPE_PUSH_NOTICE_NOTIFY:int = 138;
 		public static const CS_TYPE_KICK_PLAYER_NOTIFY:int = 143;
+		public static const CS_TYPE_GET_PLAYER_INFO_REQ:int = 201;
+		public static const CS_TYPE_GET_PLAYER_INFO_RSP:int = 202;
 	}
 }

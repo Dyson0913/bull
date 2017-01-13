@@ -1,7 +1,7 @@
 package conf
 {
-	import com.IProtobuf.Long;
 	import com.IProtobuf.Message;
+	import com.IProtobuf.Long;
 
 	public class SBullMoney extends Message
 	{

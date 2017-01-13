@@ -269,5 +269,12 @@ package conf
 			var clazz:* = builder.build("conf")["SCountInfo"];
 			return new clazz();
 		};
+		public function SAvatar_Builer():Builder{
+			return builder.build("conf")["SAvatar"];
+		};
+		public function getSAvatar():SAvatar{
+			var clazz:* = builder.build("conf")["SAvatar"];
+			return new clazz();
+		};
 	}
 }

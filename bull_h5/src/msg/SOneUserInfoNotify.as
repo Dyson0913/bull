@@ -1,7 +1,7 @@
 package msg
 {
-	import com.IProtobuf.Message;
 	import conf.SUserInfo;
+	import com.IProtobuf.Message;
 
 	public class SOneUserInfoNotify extends Message
 	{
