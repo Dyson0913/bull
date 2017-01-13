@@ -10,6 +10,7 @@ package bull.modules.common.model.data
 	import com.lightUI.events.LightEvent;
 	import conf.ENMoneyType;
 	import conf.SBankerCalcInfo;
+	import conf.SRoomConfig;
 	import conf.SUserInfo;
 	import msg.SBankerCalculateNotify;
 	import msg.SBankerNotify;
@@ -32,6 +33,7 @@ package bull.modules.common.model.data
 		public var id:int;//////////////////房间名字（id）
 		public var name:String = "";////////////////房间用来展示的名字
 		public var Cash_Type:ENMoneyType;
+		public var room_info:SRoomConfig;
 		
 		//
 		// player_Money.cash
@@ -85,6 +87,8 @@ package bull.modules.common.model.data
 		public var bet_zone:int;
 		public var bet_idx:int;
 		public var Has_bet:Boolean;
+		public var rest_betlimit:Number;
+		
 		//四區個人和他人下注
 		public var Zone_Total_bet:Array;
 		public var Zone_self_bet:Array;
@@ -120,6 +124,11 @@ package bull.modules.common.model.data
 		public function appearMoney(num:Number):String
 		{
 			return (Cash_Type != ENMoneyType.MONEY_TYPE_COIN) == true ? ("¥"+num.toFixed(2)) : num.toString();
+		}
+		
+		public function IsSysBanker():Boolean
+		{
+			return banker_id.toNumber() == 0 ? true: false;  
 		}
 		
 		/**

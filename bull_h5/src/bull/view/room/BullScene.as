@@ -84,11 +84,20 @@ package bull.view.room
 		
 		public function start():void
 		{
-			trace("start");
+			trace("start")
 			
+			viewBankerPanel.setRoundID(_roomData.RoundID);
 			
+			//其它玩家當庄,非系統
+			//TODO CHECK
+			if( _roomData.banker_id.toNumber() != 0 &&  (_roomData.banker_id.toNumber() != _roomData.uid))
+			{
+				phase_tip("等待玩家连庄",1);
+			}
 			
-			//中途進入元件處理			
+			//中途進入元件處理
+			ViewWinLostEffect.hide();
+			ViewBetGroup.disapear();
 			viewBetTime.hide();
 			viewPoker.hide();
 			viewArea.hide();
@@ -100,9 +109,11 @@ package bull.view.room
 			trace("banker");
 			
 			//下注區閃櫟
-			viewArea.set_ready(true, 20000);
+			viewArea.set_ready();
 			
 			//中途進入元件處理
+			ViewWinLostEffect.hide();
+			ViewBetGroup.disapear();
 			viewBetTime.hide();
 			viewPoker.hide();
 			viewArea.hide();
@@ -112,18 +123,49 @@ package bull.view.room
 		public function bet():void
 		{
 			trace("bet");
-			
-			ViewBetGroup.appear(_roomData.Has_bet);
-			
 			_roomData.Zone_self_bet = [0, 0, 0, 0];
 			_roomData.Zone_Total_bet = [0, 0, 0, 0];
 			
+			//自己坐庄 
+			if( roomData.banker_id.toNumber() == roomData.uid)
+			{
+				phase_tip("等待其他玩家下注！",1);
+				
+				//上庄玩家注區不能下注,COIN 灰掉
+				viewSelectClip.set_gray(true);
+			}	
+			else if ( roomData.Total_money == 0)
+			{
+				//觀局模式,不能下注
+				viewSelectClip.set_gray(true);				
+			}
+			else
+			{
+				//選第一個COIN
+				viewArea.set_fellow_coin(viewSelectClip["mcSelect_0"]);	
+				viewArea.openbet( _roomData.IsSysBanker() , _roomData.appearMoney(_roomData.GetMoney(_roomData.room_info.room_limit)));
+				
+				//TODO 放在按鈕後,看不到
+				//if( !roomData.Has_bet) 	phase_tip("請选择下注筹码",1);
+				//else  phase_tip("請选择下注筹码",1);
+				
+				viewSelectClip.set_gray(false);
+				
+				ViewBetGroup.appear(_roomData.Has_bet);
+			}			
 			
-			
-			viewArea.set_fellow_coin(viewSelectClip["mcSelect_0"]);			
+			//開始倒數
 			viewBetTime.set_data([_roomData.LeftTime]);
 			
+			//本局限額
+			roomData.rest_betlimit = _roomData.GetMoney(_roomData.room_info.room_limit);
+			
+			viewArea.tablelimit_updata(roomData.rest_betlimit / _roomData.GetMoney(_roomData.room_info.room_limit) ,_roomData.appearMoney(roomData.rest_betlimit) );
+			
+			//TODO sound .player_action
+			
 			//中途進入元件處理
+			ViewWinLostEffect.hide();
 			viewPoker.hide();
 			
 		}
@@ -161,6 +203,27 @@ package bull.view.room
 		private function onReturnClick(e:Event):void
 		{			
 			
+		}
+		
+		private function phase_tip(msg:String,sec:Number = 0.5):void			
+		{
+			Hint.alpha = 0;
+			Hint.text = msg;
+			if( sec !=0)
+			{								
+				Tween.to(Hint,{alpha:1},500,Ease.backIn,Handler.create(this,tip_apear));
+			}
+			else
+			{
+				Hint.alpha = 1;
+				Hint.text = msg;
+			}
+			
+		}
+		
+		private function tip_apear():void		
+		{
+			Tween.to(Hint,{alpha:0},500,Ease.backIn);			
 		}
 		
 		/**
@@ -277,15 +340,6 @@ package bull.view.room
 		public function set roomData(value:RoomData):void
 		{
 			_roomData = value;
-			//_roomData.on(RoomData.START_BET,this,onStartBet);
-			//_roomData.on(RoomData.END_BET,this,onEndBet);
-			//_roomData.on(RoomData.LOTTERY_DRAW,this, onLotteryDraw);
-			//
-			//_roomData.on(RoomData.UPDATA,this,onUpData);
-			//_roomData.on(RoomData.ADD_BET,this, onAddBet);
-			//_roomData.on(RoomData.REMOVE_BET,this, onRemoveBet);
-			//_roomData.on(RoomData.CANCEL_BET_SELF, this, onCancelBetSelf);
-			//_roomData.on(RoomData.ADD_BET_SELF, this, onAddBetSelf);
 		}
 		
 		public function clear():void {

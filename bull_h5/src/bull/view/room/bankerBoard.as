@@ -164,6 +164,10 @@ package bull.view.room
 			btndeBanker.visible = !value;
 		}
 		
+		public function setRoundID(id:String):void
+		{
+			txt_RoundID.text = id;
+		}
 		private function test():void
 		{			
 			//view.viewBankerPanel.set_bankerlist([["player1","player2","player3","player4","player5","player6","player7","player8","player9","player10"],"[G币达到",3]);		

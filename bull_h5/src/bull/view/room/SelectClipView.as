@@ -72,9 +72,22 @@ package bull.view.room
 			}
 		}
 		
-		public function set_gray():void
+		public function set_gray(value:Boolean):void
 		{
-			Coin_5.filters = [grayscaleFilter];
+			for (var i:int = 0; i < 6; i++)
+			{
+				if ( value ) 
+				{
+					mcSelect_0.disabled = true;
+					this["mcSelect_" + i].disabled = true;
+					//this["mcSelect_" + i].filters = [grayscaleFilter];
+				}
+				else 
+				{
+					this["mcSelect_" + i].disabled = false;
+					//this["mcSelect_" + i].filters = [];
+				}
+			}
 		}
 		
 		private function test():void

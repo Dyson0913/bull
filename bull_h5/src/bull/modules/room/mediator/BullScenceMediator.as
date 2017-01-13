@@ -15,6 +15,7 @@ package bull.modules.room.mediator
 	import conf.ENBankerType;
 	import conf.ENMoneyType;
 	import conf.SBullMoney;
+	import conf.SRoomInfo;
 	import conf.SUserInfo;
 	import laya.ui.Image;
 	import msg.CS;
@@ -214,7 +215,7 @@ package bull.modules.room.mediator
 			roomData.bet_zone = idx;
 			sentNotification(ENCSType.CS_TYPE_BET_REQ.toString());			
 			
-			//view.viewArea.tablelimit_updata(800);
+			
 			
 		}
 		
@@ -425,7 +426,12 @@ package bull.modules.room.mediator
 		private function onbankerInfoHandler():void
 		{						
 			//庄家下庄會在最後一局發牌發換庄,不處理
-			if ( roomData.State == RoomData.DEAL) return;
+			if ( roomData.State == RoomData.DEAL)
+			{
+				//TODO CHECK 由庄家變回玩家,還原申請上庄按鈕
+				view.viewBankerPanel.apply_banker(true);
+				return;
+			}
 			
 			//新庄上庄,才播動畫
 			var play_ani:Boolean = false;			
@@ -433,6 +439,7 @@ package bull.modules.room.mediator
 			{
 				play_ani = true;				
 				roomData.banker_id = roomData.newBaner_info.banker_id;
+				
 			}
 			
 			//TODO 頭像與名稱
@@ -1021,7 +1028,7 @@ package bull.modules.room.mediator
 			{
 				roomData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN;
 			}
-			else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;				
+			else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;
 			
 			view.roomData = roomData;			
 			roomData.initClipConfig();

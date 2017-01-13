@@ -15,8 +15,6 @@ package bull.view.room
 	public class BetAreaView extends BetAreaViewUI
 	{		
 		private var zone_flash_times:int = 0;
-		private var _isPlayerbanker:Boolean;
-		private var _tableLimit:Number;
 		
 		public var dragChip:Chip = new Chip();
 		
@@ -102,11 +100,9 @@ package bull.view.room
 			this.off(Event.MOUSE_MOVE,this, dragChipHandler);
 		}
 		
-		public function set_ready(isPlayerbanker:Boolean,limit:Number):void
+		public function set_ready():void
 		{			
 			hide();
-			_isPlayerbanker = isPlayerbanker;
-			_tableLimit = limit;
 			
 			this.visible = true;
 			zone_flash_times = 0;
@@ -121,8 +117,6 @@ package bull.view.room
 			
 		}
 		
-		
-		
 		public function timerHandler():void
 		{
 			zone_flash_times++;
@@ -130,17 +124,7 @@ package bull.view.room
 			{
 				//閃爍結束
 				Laya.timer.clear(this, timerHandler);
-				for (var i:int = 0; i < 4; i++)
-				{					
-					this["Scene_" + i].on(Event.MOUSE_DOWN, this, onScenedown);
-					this["Scene_" + i].on(Event.MOUSE_UP, this, onSceneup);	
-					this["Scene_" + i].on(Event.MOUSE_MOVE, this, onSceneOver);	
-					this["Scene_" + i].on(Event.MOUSE_OUT, this, onSceneOut);	
-				}	
-				BetLimit.visible = _isPlayerbanker;
-				BetLimit.amount.font = "LimitFont";
-				//TODO 幣值符號
-				BetLimit.amount.text  = _tableLimit;
+				
 			}
 			
 			for (var i:int = 0; i < 4; i++)
@@ -148,13 +132,27 @@ package bull.view.room
 				this["zone_" + i].visible = !this["zone_" + i].visible;
 			}	
 		}
-				
-		public function tablelimit_updata(rest:Number):void
+		
+		public function openbet(isPlayerbanker:Boolean,limit:String):void
+		{
+			for (var i:int = 0; i < 4; i++)
+			{					
+				this["Scene_" + i].on(Event.MOUSE_DOWN, this, onScenedown);
+				this["Scene_" + i].on(Event.MOUSE_UP, this, onSceneup);	
+				this["Scene_" + i].on(Event.MOUSE_MOVE, this, onSceneOver);	
+				this["Scene_" + i].on(Event.MOUSE_OUT, this, onSceneOut);	
+			}
+			
+			BetLimit.visible = isPlayerbanker;
+			BetLimit.amount.font = "LimitFont";
+			BetLimit.amount.text  = limit;
+		}
+		
+		public function tablelimit_updata(percent:Number,rest:String):void
 		{
 			if ( BetLimit.visible)
 			{
-				BetLimit.amount.text = rest.toString();
-				var percent:Number = rest / _tableLimit ;
+				BetLimit.amount.text = rest;
 				if ( percent > 0.5) 
 				{
 					BetLimit.Green.width = 146 * percent;
@@ -225,7 +223,7 @@ package bull.view.room
 				this["Tips_" + i].alpha = 0;
 				
 			}	
-			_isPlayerbanker = false;
+			
 		}
 		
 		public function disable_zone():void

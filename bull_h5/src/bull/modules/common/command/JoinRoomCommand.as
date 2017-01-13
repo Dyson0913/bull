@@ -75,7 +75,8 @@ package bull.modules.common.command
 					var roominfo:SRoomInfo = hallData.roomList[hallData.join_room_idx] as SRoomInfo;					
 					var config:SRoomConfig = roominfo.config;
 					
-					var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;	
+					var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
+					roomData.room_info = config;
 					
 					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL,[config,roomData]);	
 				}
