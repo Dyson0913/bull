@@ -37,7 +37,7 @@ package bull.modules.common.model.data
 		// player_Money.cash
 		// player_Money.coin
 		// player_Money.nm	
-		
+		public var uid:Number;
 		public var player_Money:Object;
 		
 		

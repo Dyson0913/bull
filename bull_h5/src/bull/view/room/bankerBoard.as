@@ -106,7 +106,9 @@ package bull.view.room
 			mc_bankerAni.visible = false;
 			mc_bankerAni.x = 563;
 			mc_bankerAni.y = 5;					
-			mc_bankerAni.alpha = 0;		
+			mc_bankerAni.alpha = 0;
+			
+			Head.source = mc_bankerAni.mcHead.source;
 		}
 		
 		private function update_list(playerlist:Array,self_po:int):void
@@ -149,7 +151,7 @@ package bull.view.room
 			//底版高度動態拉伸
 			mcHintBoard.bg.height = 168 + (playerCnt - 2) * 28;
 			mcHintBoard.Page.y = 126 + (playerCnt - 2) * 28;	
-			mcHintBoard.limitHint = 156 + (playerCnt - 2) * 28;
+			mcHintBoard.limitHint.y = 156 + (playerCnt - 2) * 28;
 		}
 		
 		

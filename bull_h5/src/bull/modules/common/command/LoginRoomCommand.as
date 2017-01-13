@@ -83,7 +83,7 @@ package bull.modules.common.command
 			}			
 			
 			//TODO
-			//(getMediator(BullScenceMediator.NAME) as BullScenceMediator).sendHeartBeat();
+			(getMediator(BullScenceMediator.NAME) as BullScenceMediator).sendHeartBeat();
 			
 			//請求房間
 			sentNotification(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString());						

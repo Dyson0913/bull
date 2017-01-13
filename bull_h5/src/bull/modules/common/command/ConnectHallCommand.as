@@ -1,5 +1,6 @@
 package bull.modules.common.command
 {
+	import bull.modules.common.model.data.RoomData;
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
@@ -42,8 +43,10 @@ package bull.modules.common.command
 			trace("hallConnectCompleteHandler");
 			var param:WebParam = WebService.resolveBrowserParam();			
 			var bullData:Data = getSingleton(Data.NAME) as Data;
+			var roomData:RoomData = getSingleton(Data.NAME) as RoomData;
 			if(param.uid) {
 				bullData.uid = param.uid;
+				roomData.uid = param.uid;
 				ShareObjectMgr.get().init(param.uid.toString());
 			}
 			if (param.access_token) bullData.token = param.access_token;

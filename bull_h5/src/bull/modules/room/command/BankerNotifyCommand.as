@@ -77,29 +77,19 @@ package bull.modules.room.command
 			var out:CS = proto.msg_proto.getCS();			
 			out.msg_type = ENCSType.CS_TYPE_BANKER_REQ;
 			out.banker_req = proto.msg_proto.getSBankerReq();
-			out.banker_req.type =  join == ENBankerType.BANKER_TYPE_UP ? ENBankerType.BANKER_TYPE_UP : ENBankerType.BANKER_TYPE_DOWN
-			
+			out.banker_req.type =  (join == ENBankerType.BANKER_TYPE_UP) ? ENBankerType.BANKER_TYPE_UP : ENBankerType.BANKER_TYPE_DOWN			
 			var roomService:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;			
 			roomService.sentMsg(out);			
 			
-			//appMedel.apply_type = req.type;			
+				
 		}
 		
 		private function banker_rsp(cs:CS):void
 		{
+			
 			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 			var Rsp:SBankerRsp = cs.banker_rsp;			
-			sentNotification(BullNotification.BANKER_ACTION_RESULT,[Rsp.error_code,roomData.apply_type]);
-			
-			//if( appMedel.apply_type  ==conf.ENBankerType.BANKER_TYPE_UP)
-			//{
-				//appMedel.applybanker_success =true;	
-			//}
-			//else
-			//{
-				//appMedel.applydebanker_success = true;
-			//}
-			
+			sentNotification(BullNotification.BANKER_ACTION_RESULT,[Rsp.error_code,roomData.apply_type]);			
 		}
 		
 	}

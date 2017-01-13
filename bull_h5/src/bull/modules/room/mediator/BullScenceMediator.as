@@ -35,20 +35,20 @@ package bull.modules.room.mediator
 	import bull.events.BullNotification;
 	import light.car.events.CarSceneEvent;
 	import bull.modules.common.mediator.MusicSetMediator;
-	import bull.modules.common.mediator.RuleMediator;
-	import light.car.modules.common.model.data.CarData;
-	import light.car.modules.common.model.data.MoneyType;
+	import bull.modules.common.mediator.RuleMediator;		
 	import bull.modules.common.model.data.RoomData;
-	import bull.modules.common.model.data.UserInfoData;
-	import light.car.modules.common.model.param.BetParam;
+	import bull.modules.common.model.data.UserInfoData;	
 	import bull.modules.perload.services.PreLoadService;
-	import bull.modules.room.services.RoomSocketService;
-	import light.car.utils.AlertTextUtil;
+	import bull.modules.room.services.RoomSocketService;	
 	import bull.view.alert.AlertCancelPanel;
 	import bull.view.room.BullScene;
 	
 	import bull.modules.common.model.data.Data;
 	import bull.modules.common.model.data.HallData;
+	
+	import com.lightUI.core.Light;
+	import com.lightUI.components.alert.Alert;
+	import bull.view.alert.AlertPanel;
 	
 	import bull.utils.BetAreaUtil;
 	import bull.modules.common.model.data.vo.ChipVO;
@@ -170,17 +170,36 @@ package bull.modules.room.mediator
 		
 		private function BankerPanelAction(name:String):void
 		{
+			trace("BankerPanelAction = " + name);			
 			if ( name == "btnBanker")
 			{
 				roomData.apply_type = 1;
-				sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(),1);
+				sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(), 1);
+				return;
 			}
-			else (name == "btndeBanker")
+			else if (name == "btndeBanker")
 			{
+				//下庄 需要二次確認,只針對己上庄玩家,排隊玩家不用				
+				if ( roomData.newBaner_info.banker_id.toNumber() == roomData.uid)
+				{
+					Alert.show(Light.language.getSrting("alert_msg12"), "", AlertCancelPanel, null, Handler.create(this, no_more_banker));
+					return;
+				}
 				
-			}
-			trace("name = " + name);
+			}			
 			
+			roomData.apply_type = 2;
+			sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(),2);
+			
+			//TODO sound
+		}
+		
+		private function no_more_banker():void{
+			if (flg == "ok_btn") 
+			{
+				roomData.apply_type = 2;
+				sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(),2);
+			}			
 		}
 		
 		private function onBetAction(name:String):void
@@ -400,28 +419,34 @@ package bull.modules.room.mediator
 			else if( result == 22)  str = "金钱不足";
 			else if( result == 27)  str = "不在上庄列表";			
 			
-			
-			game.viewHintMsg.show(str);			
+			Alert.show(str, "", AlertPanel);
 		}	
 		
 		private function onbankerInfoHandler():void
-		{
-			//view.viewBankerPanel.loadingpic(bankerHandler);
-			
+		{						
 			//庄家下庄會在最後一局發牌發換庄,不處理
-			if ( roomData.State = RoomData.DEAL) return;
+			if ( roomData.State == RoomData.DEAL) return;
 			
 			//新庄上庄,才播動畫
 			var play_ani:Boolean = false;
+			trace("-------------------------------------roomData.banker_id ,"+roomData.banker_id);
+			trace("-------------------------------------roomData.newBaner_info.banker_id ,"+roomData.newBaner_info.banker_id);
 			if ( roomData.banker_id != roomData.newBaner_info.banker_id) play_ani = true;
 			
 			//TODO 頭像與名稱
 			var bankerTims:String = roomData.newBaner_info.banker_time +"/" + roomData.newBaner_info.max_time + "次";
 			if ( roomData.newBaner_info.banker_id == 0)
 			{
-				view.viewBankerPanel.bankerinfo_update(["系统坐庄", "",""]);
+				trace("-------------------------------------系统坐庄 ,動畫"+play_ani);
+				view.viewBankerPanel.bankerinfo_update(["系统坐庄", "", ""]);
+				if( play_ani) view.viewBankerPanel.newBanker("系统坐庄");
 			}
-			else view.viewBankerPanel.newBanker(["dyson", bankerTims, roomData.GetMoney(roomData.newBaner_info.hand_money.toNumber())]);
+			else
+			{
+				trace("-------------------------------------玩家坐庄 ,動畫"+play_ani);
+				view.viewBankerPanel.bankerinfo_update(["dyson", bankerTims, roomData.GetMoney(roomData.newBaner_info.hand_money.toNumber())]);
+				if( play_ani) view.viewBankerPanel.newBanker("dyson");
+			}
 			
 			//extra
 			//中途進入,自己是庄家,改成下庄按鈕
