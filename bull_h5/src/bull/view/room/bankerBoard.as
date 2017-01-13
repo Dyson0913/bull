@@ -108,8 +108,11 @@ package bull.view.room
 			mc_bankerAni.y = 5;					
 			mc_bankerAni.alpha = 0;
 			
-			Head.source = mc_bankerAni.mcHead.source;
+			//source 指定沒用
+			Head.loadImage("http://statics.kgame63.com/common/images/avatars/1.png", 0, 0, 60, 60);
 		}
+		
+		
 		
 		private function update_list(playerlist:Array,self_po:int):void
 		{

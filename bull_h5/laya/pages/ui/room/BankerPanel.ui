@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":5,
+    "selecteID":13,
     "props":{"width":723,"sceneColor":"#000000","renderType":"mask","height":87},
     "nodeParent":-1,
     "label":"View",
@@ -164,7 +164,7 @@
             "compId":11,
             "child":[
                 ],
-            "$HIDDEN":true
+            "$HIDDEN":false
         },
         {
             "x":15,
@@ -223,8 +223,10 @@
                             "compId":15,
                             "child":[
                                 ]
-                        }]
-                }]
+                        }],
+                    "$HIDDEN":true
+                }],
+            "$HIDDEN":false
         },
         {
             "x":15,

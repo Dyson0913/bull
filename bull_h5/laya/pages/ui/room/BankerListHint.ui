@@ -395,7 +395,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":380,"x":-149,"width":623,"var":"limitHint","skin":"res/gameScene/tips小底板.png","height":78},
+            "props":{"y":379,"x":-149,"width":623,"var":"limitHint","skin":"res/gameScene/tips小底板.png","height":78},
             "nodeParent":1,
             "label":"Image(limitHint)",
             "isOpen":true,

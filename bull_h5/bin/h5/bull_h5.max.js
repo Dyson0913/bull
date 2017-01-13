@@ -53199,7 +53199,7 @@ var Laya=window.Laya=(function(window,document){
 			this.mc_bankerAni.x=563;
 			this.mc_bankerAni.y=5;
 			this.mc_bankerAni.alpha=0;
-			this.Head.source=this.mc_bankerAni.mcHead.source;
+			this.Head.loadImage("http://statics.kgame63.com/common/images/avatars/1.png",0,0,60,60);
 		}
 
 		__proto.update_list=function(playerlist,self_po){
