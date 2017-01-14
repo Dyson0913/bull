@@ -33,7 +33,7 @@ package bull.view.room
 		
 		public function update_data(data:Array):void
 		{
-			list.array = data;	
+			list.array = data;
 		}
 		
 		private function test():void

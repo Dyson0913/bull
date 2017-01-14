@@ -141,8 +141,8 @@ package bull
 			//notify
 			registerCommand(ENCSType.CS_TYPE_TIMER_NOTIFY.toString(), StateCommand);
 			//registerCommand(ENCSType.CS_TYPE_GET_HISTORY_NOTIFY.toString(), HistoryCommand);
-			//registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
-			//registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
+			registerCommand(ENCSType.CS_TYPE_ALL_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
+			registerCommand(ENCSType.CS_TYPE_ONE_USER_INFO_NOTIFY.toString(), UserNotifyCommand);
 			registerCommand(ENCSType.CS_TYPE_BET_NOTIFY.toString(), BetNotifyCommand);
 			registerCommand(ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString(),DealCardNotifyCommand);
 			registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyCommand);
@@ -160,6 +160,11 @@ package bull
 			registerCommand(ENCSType.CS_TYPE_BET_RSP.toString(),BetNotifyCommand);
 			registerCommand(BullNotification.BET_SAME, BetNotifyCommand);
 			registerCommand(BullNotification.BET_CANCEL, BetNotifyCommand);
+			
+			//取用戶訊息 TODO 目前向SERVER取 以後跟平台拿
+			
+			registerCommand(ENCSType.CS_TYPE_GET_PLAYER_INFO_REQ.toString(),UserNotifyCommand);
+			registerCommand(ENCSType.CS_TYPE_GET_PLAYER_INFO_RSP.toString(),UserNotifyCommand);
 			
 			registerCommand(BullNotification.TestOrder, TestCommand);
 		}

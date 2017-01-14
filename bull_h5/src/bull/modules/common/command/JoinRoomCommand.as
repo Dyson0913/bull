@@ -61,7 +61,10 @@ package bull.modules.common.command
 			if (e.enter_table_rsp.error_code  == ENError.ERROR_OK) {
 				
 				var hallData:HallData = getSingleton(HallData.NAME) as HallData;				
+				var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 				
+				//更新用戶訊息
+				sentNotification(ENCSType.CS_TYPE_GET_PLAYER_INFO_REQ.toString(), [roomData.uid]);
 				
 				//己在遊戲內不帶入
 				if ( e.enter_table_rsp.user_info != null && e.enter_table_rsp.user_info.money != null)
@@ -74,12 +77,11 @@ package bull.modules.common.command
 					sentNotification(BullNotification.VIEW_INIT);
 				}
 				else 
-				{
-					var hallData:HallData = getSingleton(HallData.NAME) as HallData;			
+				{				
 					var roominfo:SRoomInfo = hallData.roomList[hallData.join_room_idx] as SRoomInfo;					
 					var config:SRoomConfig = roominfo.config;
 					
-					var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
+					//存一份房間config,不用每次用idx 去取
 					roomData.room_info = config;
 					
 					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL,[config,roomData]);	

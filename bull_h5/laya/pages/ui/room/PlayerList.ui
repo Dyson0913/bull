@@ -225,7 +225,7 @@
                         {
                             "x":45,
                             "type":"Label",
-                            "props":{"y":7,"x":49,"width":148,"visible":true,"var":"Name","text":"天涯歌女爱与仇","name":"Name","height":21,"color":"#f8f0ef","align":"left"},
+                            "props":{"y":7,"x":49,"width":155,"visible":true,"var":"Name","text":"天涯歌女爱与仇","name":"Name","height":21,"fontSize":18,"color":"#f8f0ef","align":"left"},
                             "nodeParent":8,
                             "label":"Label(Name)",
                             "isDirectory":false,
@@ -246,7 +246,7 @@
                         {
                             "x":45,
                             "type":"Label",
-                            "props":{"y":28,"x":46,"width":80,"visible":true,"var":"Money","text":"+999999999","name":"Money","height":19,"color":"#e0e814","align":"left"},
+                            "props":{"y":30,"x":46,"width":95,"visible":true,"var":"Money","text":"+999999999","name":"Money","height":19,"fontSize":15,"color":"#e0e814","align":"left"},
                             "nodeParent":8,
                             "label":"Label(Money)",
                             "isDirectory":false,

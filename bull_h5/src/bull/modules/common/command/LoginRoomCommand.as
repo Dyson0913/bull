@@ -85,7 +85,7 @@ package bull.modules.common.command
 			//TODO
 			(getMediator(BullScenceMediator.NAME) as BullScenceMediator).sendHeartBeat();
 			
-			//請求房間
+			//請求加入房間
 			sentNotification(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString());						
 			return;
 			

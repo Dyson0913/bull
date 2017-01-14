@@ -34,13 +34,15 @@ package bull.modules.common.model.data
 		public var name:String = "";////////////////房间用来展示的名字
 		public var Cash_Type:ENMoneyType;
 		public var room_info:SRoomConfig;
+		public var user_info_callback:Function;
 		
-		//
+		
 		// player_Money.cash
 		// player_Money.coin
 		// player_Money.nm	
 		public var uid:Number;
 		public var player_Money:Object;
+		
 		
 		
 		public var State:int;			//桌子状态 
@@ -60,9 +62,8 @@ package bull.modules.common.model.data
 		public var history_lost_info:Array;
 		public var history_result_info:Array;
 		
-		//playerlist
-		public var player_num:int;
-		public var playerList:Array;
+		//playerlist		
+		public var player_List_ob:Array;
 		
 		//card_info
 		public var card_info:Array;
@@ -103,10 +104,14 @@ package bull.modules.common.model.data
 		
 		public function RoomData()
 		{
+			user_info_callback = null;
 			history_Win_info = [];
 			history_lost_info = [];
 			history_result_info = [];
-			playerList = [];
+			
+			player_List_ob = [];			
+			
+			
 			card_info = [];
 			
 			each_zone_win = [];
@@ -152,6 +157,26 @@ package bull.modules.common.model.data
 			}
 			
 			return total;
+		}		
+		
+		//資料由 info 轉移到 roomData.player_List_ob
+		public function attch_to_player_List_ob(info:Object):void
+		{
+			//msg =uid = 1014461
+			//msg =username = dy***3
+			// msg =nickname = 
+			// msg =avatar = http://statics.kgame63.com/common/images/avatars/1.png		
+			
+			for (var j:int = 0; j < player_List_ob.length; j++)
+			{
+				var ob:Object = player_List_ob[j];				
+				if ( ob.uid.toNumber() == info.uid)
+				{
+					ob["username"] = info.username;
+					ob["nickname"] = info.nickname;
+					ob["avatar"] = info.avatar;						
+				}
+			}
 		}
 		
 		/**

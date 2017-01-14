@@ -36,6 +36,7 @@ package bull.modules.room.command
 			//留2秒動畫時間
 			if (cs.timer_notify.status == RoomData.END) roomData.LeftTime -= 2;
 			
+			//deal 13
 			trace("===================================狀態 " + roomData.State + " 秒數 " + roomData.LeftTime);			
 			
 			

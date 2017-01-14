@@ -23,8 +23,6 @@ package bull.view.room
 		
 		private var _Vip:Image;
 		
-		public var index:int;
-		
 		public function PlayerListRender()
 		{
 			super();
@@ -59,24 +57,19 @@ package bull.view.room
 						
 			if (value == null) return;
 			
-			var data:SUserInfo = value;			
-			_bg.index = index;
-			index  = (index + 1 % 2);	
+			//var playerList
+			var data:Object = value;			
+			_bg.index = (data.idx + 1 % 2);
 			
-			trace("data.is_light = "+data.is_light);
-			_light.visible = data.is_light;
-			_Money.text = data.win_money;
 			
-			//TODO name
-			//_Name.text = 
+			_light.visible = data["is_light"];
+			_Money.text = data["win_money"];
+			
+			_Name.text = data["username"];
 			_Head.visible = true;
 			
-			//TODO head
-			//_Head.loadImage(
-			//_Vip
-			
-			
-			
+			_Head.loadImage(data["avatar"], 0, 0, 45, 45);
+			//_Vip			
 		}
 		
 	}

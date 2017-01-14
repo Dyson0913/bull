@@ -212,13 +212,9 @@ package bull.modules.room.mediator
 		}
 		
 		private function onBetzoneClick(idx:int):void
-		{
-			trace("onBetzoneClick = " + idx);			
+		{				
 			roomData.bet_zone = idx;
 			sentNotification(ENCSType.CS_TYPE_BET_REQ.toString());			
-			
-			
-			
 		}
 		
 		private function get_coin_info(amount:Number,zone:int,is_my:Boolean):Array
@@ -703,7 +699,7 @@ package bull.modules.room.mediator
 		
 		private function onPlayerListUpdateHandler():void
 		{
-			view.ViewPlayerList.update_data(roomData.playerList);
+			view.ViewPlayerList.update_data(roomData.player_List_ob);
 		}
 		
 		private function onDealDataHandler():void
