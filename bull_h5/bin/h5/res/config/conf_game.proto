@@ -373,3 +373,12 @@ message SCountInfo
     optional int32 _3 = 3;
     optional int32 _4 = 4;
 }
+
+// 玩家用户名  头像信息
+message SAvatar
+{
+    optional int32 uid = 1;
+    optional string username = 2;
+    optional string nickname = 3;
+    optional string avatar = 4;
+}

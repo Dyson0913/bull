@@ -66,7 +66,11 @@ package bull.modules.common.command
 				//己在遊戲內不帶入
 				if ( e.enter_table_rsp.user_info != null && e.enter_table_rsp.user_info.money != null)
 				{
-					//TODO更新HEAD money
+					//TODO 金額處理
+					//更新個人金額
+					sentNotification(BullNotification.CASH_TAKEIN_RESPONES);
+				
+					//介面滑入				
 					sentNotification(BullNotification.VIEW_INIT);
 				}
 				else 

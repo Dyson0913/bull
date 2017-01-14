@@ -17,6 +17,10 @@ package bull.view.room
 	import laya.utils.Ease;
 	import laya.utils.Handler;	
 	
+	
+	import laya.media.SoundManager;
+	import bull.core.SoundPath;
+	
 	import bull.utils.BetAreaUtil;
 	import ui.ui.room.BullSceneUI;
 	
@@ -96,11 +100,11 @@ package bull.view.room
 			}
 			
 			//中途進入元件處理
-			ViewWinLostEffect.hide();
-			ViewBetGroup.disapear();
+			ViewWinLostEffect.hide();			
 			viewBetTime.hide();
 			viewPoker.hide();
-			viewArea.hide();
+			viewArea.hide();			
+			ViewBetGroup.disapear();
 			DisplayUtil.removeAllChildren(_betsBox);
 		}
 		
@@ -174,12 +178,28 @@ package bull.view.room
 		{
 			trace("betCheck");
 			
+			
+			
 			ViewBetGroup.disapear();
 			
 			//中途進入元件處理
+			ViewWinLostEffect.hide();
 			viewBetTime.hide();
 			viewPoker.hide();
 			viewArea.disable_zone();
+			ViewBetGroup.disapear();
+			
+			
+			//斷線重連 元件還原			
+			phase_tip("等待发牌", 1);
+			//TODO ...
+			//game.viewArea.comfirming(appMedel.dataCurTime);
+			
+			
+			//TODO檢查是否彈出離開窗
+			//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Game_BetCheck_forclose));
+						
+			
 		}
 		
 		public function deal():void
@@ -187,17 +207,25 @@ package bull.view.room
 			trace("deal");			
 			
 			//中途進入元件處理
+			ViewWinLostEffect.hide();
 			viewBetTime.hide();
+			viewPoker.hide();			
 			viewArea.disable_zone();
+			ViewBetGroup.disapear();
+			
+			//TODO ... over
 		}
 		
 		public function end():void
 		{
 			trace("end");
 			
+			phase_tip("本局结束，即将开始下一局！",0);
+			
 			//中途進入元件處理
-			viewBetTime.hide();
+			viewBetTime.hide();			
 			viewArea.disable_zone();
+			
 		}
 		
 		private function onReturnClick(e:Event):void
@@ -205,7 +233,7 @@ package bull.view.room
 			
 		}
 		
-		private function phase_tip(msg:String,sec:Number = 0.5):void			
+		public function phase_tip(msg:String,sec:Number = 0.5):void			
 		{
 			Hint.alpha = 0;
 			Hint.text = msg;
@@ -256,7 +284,7 @@ package bull.view.room
 			//_betsBox.addChildAt(chip,getChildIndex(viewArea));
 			Tween.to(chip,{x:viewArea.x + pos.x,y:viewArea.y+pos.y},500,Ease.cubicOut,Handler.create(this,onFlySelfCompleteHandler,[chip]));
 			
-			//SoundManager.playSound(SoundPath.Sound_sound_jetton);
+			SoundManager.playSound(SoundPath.Coin);			
 		}
 		
 		private function onFlySelfCompleteHandler(chip:Chip):void {
@@ -281,7 +309,7 @@ package bull.view.room
 			{
 				chip = _selfChips[i];
 				Tween.to(chip,{x:637,y:923},500,Ease.cubicOut,Handler.create(this,onFlySelfBackCompleteHandler,[chip]));
-				//SoundManager.playSound(SoundPath.Sound_sound_jetton);
+				SoundManager.playSound(SoundPath.Coin);
 			}
 		}
 		
@@ -298,7 +326,7 @@ package bull.view.room
 			chip.y = 194;
 			_betsBox.addChild(chip);
 			Tween.to(chip, { x:viewArea.x + pos.x, y:viewArea.y + pos.y }, 500, Ease.cubicOut, Handler.create(this, onFlyOtherCompleteHandler, [chip]));
-			//SoundManager.playSound(SoundPath.Sound_sound_jetton);
+			SoundManager.playSound(SoundPath.Coin);
 			return;		
 		}
 		

@@ -23426,22 +23426,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Message)
 
 
-	//class msg.SHistroyNotify extends com.IProtobuf.Message
-	var SHistroyNotify=(function(_super){
-		function SHistroyNotify(){
-			this.win_info=null;
-			this.lose_info=null;
-			this.result_info=null;
-			SHistroyNotify.__super.call(this);
-		}
-
-		__class(SHistroyNotify,'msg.SHistroyNotify',_super);
-		var __proto=SHistroyNotify.prototype;
-		__proto.writeTo=function(value){}
-		return SHistroyNotify;
-	})(Message)
-
-
 	/**
 	*<code>Resource</code> 资源存取类。
 	*/
@@ -23674,6 +23658,22 @@ var Laya=window.Laya=(function(window,document){
 		Resource._isLoadedResourcesSorted=false;
 		return Resource;
 	})(EventDispatcher1)
+
+
+	//class msg.SHistroyNotify extends com.IProtobuf.Message
+	var SHistroyNotify=(function(_super){
+		function SHistroyNotify(){
+			this.win_info=null;
+			this.lose_info=null;
+			this.result_info=null;
+			SHistroyNotify.__super.call(this);
+		}
+
+		__class(SHistroyNotify,'msg.SHistroyNotify',_super);
+		var __proto=SHistroyNotify.prototype;
+		__proto.writeTo=function(value){}
+		return SHistroyNotify;
+	})(Message)
 
 
 	//class msg.SOneUserInfoNotify extends com.IProtobuf.Message
@@ -30198,6 +30198,49 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			var roomData=this.getSingleton("roomData");
+			if(param.uid){
+				bullData.uid=param.uid;
+				roomData.uid=bullData.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if (param.access_token)bullData.token=param.access_token;
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
+
+
 	/**
 	*这里处理大厅的socket连接
 	*@author light-k
@@ -30303,49 +30346,6 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
-
-
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			var roomData=this.getSingleton("roomData");
-			if(param.uid){
-				bullData.uid=param.uid;
-				roomData.uid=bullData.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if (param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -30461,6 +30461,7 @@ var Laya=window.Laya=(function(window,document){
 			if (e.enter_table_rsp.error_code==0){
 				var hallData=this.getSingleton("hallData");
 				if (e.enter_table_rsp.user_info !=null && e.enter_table_rsp.user_info.money !=null){
+					this.sentNotification("CASH_TAKEIN_RESPONES");
 					this.sentNotification("view_init");
 				}
 				else{
@@ -30926,6 +30927,8 @@ var Laya=window.Laya=(function(window,document){
 				console.log("ok_btn");
 				var ws=this.getModel("WebService");
 				ws.recharge(new Handler(this,this.GotoRechargeCallback));
+				this.sentNotification("CASH_TAKEIN_RESPONES");
+				this.sentNotification("view_init");
 			}
 			else{
 				this.sentNotification("view_init");
@@ -31021,6 +31024,42 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._already_in_msg=null;
+			this._already_in_room_idx=0;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+			/*no*/this._already_in_roomid=-1;
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
+
+
 	/**
 	*规则面板
 	*/
@@ -31088,42 +31127,6 @@ var Laya=window.Laya=(function(window,document){
 		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
 		return RuleMediator;
 	})(Mediator)
-
-
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._already_in_msg=null;
-			this._already_in_room_idx=0;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-			/*no*/this._already_in_roomid=-1;
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
 
 
 	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
@@ -31211,6 +31214,19 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.IsSysBanker=function(){
 			return this.banker_id.toNumber()==0 ? true:false;
+		}
+
+		__proto.IsSelfBanker=function(){
+			return this.banker_id.toNumber()==this.uid ? true:false;
+		}
+
+		__proto.GetTotalBet=function(){
+			var total=0;
+			for (var i=0;i < 4;i++){
+				if (this.banker_id.toNumber()==this.uid)total+=this.Zone_Total_bet[i];
+				else total+=this.Zone_self_bet[i];
+			}
+			return total;
 		}
 
 		/**
@@ -31855,35 +31871,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Command)
 
 
-	//class bull.modules.room.command.DealCardNotifyCommand extends com.lightMVC.parrerns.Command
-	var DealCardNotifyCommand=(function(_super){
-		function DealCardNotifyCommand(){
-			DealCardNotifyCommand.__super.call(this);
-		}
-
-		__class(DealCardNotifyCommand,'bull.modules.room.command.DealCardNotifyCommand',_super);
-		var __proto=DealCardNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString()){
-				this.deal(notification.getBody());
-			}
-		}
-
-		__proto.deal=function(cs){
-			var bullData=this.getSingleton("Data");
-			bullData.roomData.card_info.push(cs.deal_card_notify.banker);
-			bullData.roomData.card_info.push(cs.deal_card_notify._1);
-			bullData.roomData.card_info.push(cs.deal_card_notify._2);
-			bullData.roomData.card_info.push(cs.deal_card_notify._3);
-			bullData.roomData.card_info.push(cs.deal_card_notify._4);
-			this.sentNotification("cardnotify");
-		}
-
-		return DealCardNotifyCommand;
-	})(Command)
-
-
 	//class bull.modules.perload.services.PreLoadService extends com.lightMVC.parrerns.Model
 	var PreLoadService=(function(_super){
 		function PreLoadService(proxyName){
@@ -32036,6 +32023,35 @@ var Laya=window.Laya=(function(window,document){
 		PreLoadService.NAME="perLoadService";
 		return PreLoadService;
 	})(Model)
+
+
+	//class bull.modules.room.command.DealCardNotifyCommand extends com.lightMVC.parrerns.Command
+	var DealCardNotifyCommand=(function(_super){
+		function DealCardNotifyCommand(){
+			DealCardNotifyCommand.__super.call(this);
+		}
+
+		__class(DealCardNotifyCommand,'bull.modules.room.command.DealCardNotifyCommand',_super);
+		var __proto=DealCardNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString()){
+				this.deal(notification.getBody());
+			}
+		}
+
+		__proto.deal=function(cs){
+			var bullData=this.getSingleton("Data");
+			bullData.roomData.card_info.push(cs.deal_card_notify.banker);
+			bullData.roomData.card_info.push(cs.deal_card_notify._1);
+			bullData.roomData.card_info.push(cs.deal_card_notify._2);
+			bullData.roomData.card_info.push(cs.deal_card_notify._3);
+			bullData.roomData.card_info.push(cs.deal_card_notify._4);
+			this.sentNotification("cardnotify");
+		}
+
+		return DealCardNotifyCommand;
+	})(Command)
 
 
 	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
@@ -32267,7 +32283,6 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.BankerPanelAction=function(name){
-			console.log("BankerPanelAction = "+name);
 			if (name=="btnBanker"){
 				this.roomData.apply_type=1;
 				this.sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(),1);
@@ -32283,7 +32298,7 @@ var Laya=window.Laya=(function(window,document){
 			this.sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(),2);
 		}
 
-		//TODO sound
+		//SoundManager.playSound(SoundPath.press);
 		__proto.no_more_banker=function(ata,flg){
 			if (flg=="ok_btn"){
 				this.roomData.apply_type=2;
@@ -32408,11 +32423,11 @@ var Laya=window.Laya=(function(window,document){
 
 		//view.viewHead.setMoneyT(Common.isCoin?2:1);
 		__proto.onSettleUpdateHandler=function(){
-			this.appMedel.Banker_uid="10";
-			this.appMedel.user_id="1";
-			this.appMedel.nick_name_64="Dyson";
-			this.appMedel.first_threePlayer=[ {"rank":0,"ligt":true,"name":"dyson1","money":999 },{"rank":1,"ligt":true,"name":"dyson2","money":999 },{"rank":2,"ligt":true,"name":"dyson3","money":999 }];{
-				var isbaner=this.appMedel.Banker_uid===this.appMedel.user_id;
+			if(this.roomData.LeftTime <2){
+				this.runEnd_recycle();
+			}
+			else{
+				var isbaner=this.roomData.IsSelfBanker();
 				if(this._isSys)/*no*/this._bankerName="吉胜游戏平台";
 				this.view.viewResult.initView(this.appMedel.nick_name_64,this.roomData.settle_hand_money,this.roomData.LeftTime,this.roomData.settle_win_money,this.roomData.settle_User_info,isbaner,/*no*/this._bankerName);
 				this.view.viewResult.show();
@@ -32649,11 +32664,17 @@ var Laya=window.Laya=(function(window,document){
 				this.view.viewPoker.play();
 			}
 			else{
-				console.log("deal poker in ");
+				console.log("======================deal poker in ");
+			};
+			var total=this.roomData.GetTotalBet();
+			if (total==0){
+				if (this.roomData.IsSelfBanker())this.view.phase_tip("本局无人下注。",0);
+				else this.view.phase_tip("您没有参与本局下注",0);
 			}
+			else this.view.phase_tip("总下注 "+this.roomData.appearMoney(this.roomData.GetMoney(total))+"，祝吉星高照！",0);
 		}
 
-		//LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().dealpoker,0,1);
+		//SoundManager.playSound(SoundPath.dealpoker);
 		__proto.bet_otherHandler=function(data){
 			var myuid=data[0];
 			var divid_100=data[1];
@@ -34486,6 +34507,31 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
+	/*
+	*@author light
+	*上午9:07:24
+	*/
+	//class com.lightUI.events.LightEvent extends com.iflash.events.Event
+	var LightEvent=(function(_super){
+		function LightEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			LightEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(LightEvent,'com.lightUI.events.LightEvent',_super);
+		LightEvent.CLOSE="close";
+		LightEvent.ITEM_CLICK="item_click";
+		LightEvent.CREATCOMPLETE="creatComplete";
+		LightEvent.CHANGE="change";
+		LightEvent.COMPLETE="complete";
+		LightEvent.TIME_OUT="timeOut";
+		return LightEvent;
+	})(Event)
+
+
 	/**
 	*@private
 	*<code>Bitmap</code> 是图片资源类。
@@ -34535,48 +34581,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return Bitmap;
 	})(Resource)
-
-
-	/*
-	*@author light
-	*上午9:07:24
-	*/
-	//class com.lightUI.events.LightEvent extends com.iflash.events.Event
-	var LightEvent=(function(_super){
-		function LightEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			LightEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(LightEvent,'com.lightUI.events.LightEvent',_super);
-		LightEvent.CLOSE="close";
-		LightEvent.ITEM_CLICK="item_click";
-		LightEvent.CREATCOMPLETE="creatComplete";
-		LightEvent.CHANGE="change";
-		LightEvent.COMPLETE="complete";
-		LightEvent.TIME_OUT="timeOut";
-		return LightEvent;
-	})(Event)
-
-
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
 
 
 	/**
@@ -34779,6 +34783,23 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
+
+
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -35919,6 +35940,32 @@ var Laya=window.Laya=(function(window,document){
 		RenderTarget2D.POOL=[];
 		return RenderTarget2D;
 	})(Texture)
+
+
+	//class com.iflash.net.Socket extends laya.net.Socket
+	var Socket1=(function(_super){
+		function Socket(host,port,byteClass){
+			this._outPut=null;
+			(port===void 0)&& (port=0);
+			byteClass=byteClass?byteClass:com.iflash.ByteArray;
+			Socket.__super.call(this,host,port,byteClass);
+		}
+
+		__class(Socket,'com.iflash.net.Socket',_super,'Socket1');
+		var __proto=Socket.prototype;
+		__proto.connectByUrl=function(url){
+			_super.prototype.connectByUrl.call(this,url);
+			this._outPut=this.output;
+		}
+
+		__proto.writeBytes=function(bytes,offset,length){
+			(offset===void 0)&& (offset=0);
+			(length===void 0)&& (length=0);
+			this._outPut.writeBytes(bytes,offset,length);
+		}
+
+		return Socket;
+	})(Socket)
 
 
 	//class laya.webgl.shader.d2.fillTexture.FillTextureSV extends laya.webgl.shader.d2.value.Value2D
@@ -53558,10 +53605,10 @@ var Laya=window.Laya=(function(window,document){
 				this.phase_tip("等待玩家连庄",1);
 			}
 			this.ViewWinLostEffect.hide();
-			this.ViewBetGroup.disapear();
 			this.viewBetTime.hide();
 			this.viewPoker.hide();
 			this.viewArea.hide();
+			this.ViewBetGroup.disapear();
 			DisplayUtil.removeAllChildren(this._betsBox);
 		}
 
@@ -53603,19 +53650,28 @@ var Laya=window.Laya=(function(window,document){
 		__proto.betCheck=function(){
 			console.log("betCheck");
 			this.ViewBetGroup.disapear();
+			this.ViewWinLostEffect.hide();
 			this.viewBetTime.hide();
 			this.viewPoker.hide();
 			this.viewArea.disable_zone();
+			this.ViewBetGroup.disapear();
+			this.phase_tip("等待发牌",1);
 		}
 
+		//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Game_BetCheck_forclose));
 		__proto.deal=function(){
 			console.log("deal");
+			this.ViewWinLostEffect.hide();
 			this.viewBetTime.hide();
+			this.viewPoker.hide();
 			this.viewArea.disable_zone();
+			this.ViewBetGroup.disapear();
 		}
 
+		//TODO ... over
 		__proto.end=function(){
 			console.log("end");
+			this.phase_tip("本局结束，即将开始下一局！",0);
 			this.viewBetTime.hide();
 			this.viewArea.disable_zone();
 		}
@@ -53659,9 +53715,9 @@ var Laya=window.Laya=(function(window,document){
 			chip.y=647;
 			this._betsBox.addChild(chip);
 			Tween.to(chip,{x:this.viewArea.x+pos.x,y:this.viewArea.y+pos.y},500,Ease.cubicOut,Handler.create(this,this.onFlySelfCompleteHandler,[chip]));
+			SoundManager.playSound(SoundPath.Coin);
 		}
 
-		//SoundManager.playSound(SoundPath.Sound_sound_jetton);
 		__proto.onFlySelfCompleteHandler=function(chip){
 			console.log("onFlySelfCompleteHandler ");
 			this.addChip(chip);
@@ -53678,10 +53734,10 @@ var Laya=window.Laya=(function(window,document){
 			for (var i=0;i < this._selfChips.length;i++){
 				chip=this._selfChips[i];
 				Tween.to(chip,{x:637,y:923},500,Ease.cubicOut,Handler.create(this,this.onFlySelfBackCompleteHandler,[chip]));
+				SoundManager.playSound(SoundPath.Coin);
 			}
 		}
 
-		//SoundManager.playSound(SoundPath.Sound_sound_jetton);
 		__proto.onFlySelfBackCompleteHandler=function(chip){
 			if(chip.parent)chip.parent.removeChild(chip);
 			this._selfChips=[];
@@ -53693,6 +53749,7 @@ var Laya=window.Laya=(function(window,document){
 			chip.y=194;
 			this._betsBox.addChild(chip);
 			Tween.to(chip,{x:this.viewArea.x+pos.x,y:this.viewArea.y+pos.y },500,Ease.cubicOut,Handler.create(this,this.onFlyOtherCompleteHandler,[chip]));
+			SoundManager.playSound(SoundPath.Coin);
 			return;
 		}
 
@@ -54744,25 +54801,6 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -54779,6 +54817,25 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
 
 
 	/**
@@ -55826,90 +55883,90 @@ var Laya=window.Laya=(function(window,document){
 
 
 /*
-1 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:Loger.get This variable is not defined.
-2 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:System.totalMemory This variable is not defined.
-3 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (99):warning:LocalConnection This variable is not defined.
-4 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (100):warning:LocalConnection This variable is not defined.
-5 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:Loger.get This variable is not defined.
-6 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:System.totalMemory This variable is not defined.
-7 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:Loger.get This variable is not defined.
-8 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:System.totalMemory This variable is not defined.
-9 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (18):warning:internalHigh This variable is not defined.
-10 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
-11 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
-12 file:///E:/game_dev/laya/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
-13 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/command/RoomListCommand.as (57):warning:AlertPanel This variable is not defined.
-14 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (131):warning:flg This variable is not defined.
-15 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/common/model/data/HallData.as (29):warning:_already_in_roomid This variable is not defined.
-16 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (189):warning:appMedel.sameBetinfo.length This variable is not defined.
-17 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (191):warning:appMedel.sameBetinfo This variable is not defined.
-18 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (200):warning:appMedel.roomParam.roomType This variable is not defined.
-19 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (212):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-20 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (213):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-21 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (214):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-22 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (215):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-23 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (220):warning:appMedel.user_id This variable is not defined.
-24 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (222):warning:appMedel.roomParam.roomType This variable is not defined.
-25 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (224):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-26 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (226):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-27 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (233):warning:appMedel.user_id This variable is not defined.
-28 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (235):warning:appMedel.roomParam.roomType This variable is not defined.
-29 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (237):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-30 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (239):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-31 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (246):warning:appMedel.user_id This variable is not defined.
-32 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (248):warning:appMedel.roomParam.roomType This variable is not defined.
-33 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (250):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-34 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (252):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-35 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (259):warning:appMedel.user_id This variable is not defined.
-36 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (261):warning:appMedel.roomParam.roomType This variable is not defined.
-37 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (263):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-38 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (265):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-39 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (269):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-40 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (273):warning:appMedel.user_id This variable is not defined.
-41 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (278):warning:appMedel.sameBetinfo.length This variable is not defined.
-42 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (280):warning:appMedel.sameBetinfo This variable is not defined.
-43 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (282):warning:appMedel.roomParam.roomType This variable is not defined.
-44 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (284):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-45 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (286):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-46 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (288):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-47 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (293):warning:appMedel.roomParam.roomlimit This variable is not defined.
-48 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (304):warning:appMedel.TablePlayerlist.length This variable is not defined.
-49 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (307):warning:appMedel.TablePlayerlist This variable is not defined.
-50 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (312):warning:appMedel.roomParam.roomType This variable is not defined.
-51 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (315):warning:Int64.fromNumber This variable is not defined.
-52 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (333):warning:appMedel.TabPlayerList This variable is not defined.
-53 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (334):warning:appMedel.TabPlayerList This variable is not defined.
-54 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (342):warning:appMedel.where_is_lamp This variable is not defined.
-55 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (347):warning:appMedel.dataStartStatus.allBetClips This variable is not defined.
-56 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (354):warning:evt.dispatchEvent This variable is not defined.
-57 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (354):warning:OperateEvent This variable is not defined.
-58 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (354):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
-59 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (358):warning:appMedel.roomParam.roomType This variable is not defined.
-60 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (363):warning:evt.dispatchEvent This variable is not defined.
-61 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (363):warning:OperateEvent This variable is not defined.
-62 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (363):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
-63 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (280):warning:chipsVO This variable is not defined.
-64 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (341):warning:_bankerName This variable is not defined.
-65 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (342):warning:_bankerName This variable is not defined.
-66 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (544):warning:breq This variable is not defined.
-67 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (708):warning:e.info This variable is not defined.
-68 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (721):warning:game.viewArea.update_total This variable is not defined.
-69 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (723):warning:game.viewArea.update_other_total This variable is not defined.
-70 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (728):warning:game.viewArea.my_batch_bet This variable is not defined.
-71 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (746):warning:game.viewArea.my_batch_bet This variable is not defined.
-72 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (752):warning:game.viewArea.my_batch_bet This variable is not defined.
-73 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (762):warning:game.viewArea.other_bet_cancel This variable is not defined.
-74 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (764):warning:game.viewArea.update_other_total This variable is not defined.
-75 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (770):warning:game.viewArea.clear_allChip This variable is not defined.
-76 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (782):warning:game.viewArea.other_bet This variable is not defined.
-77 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (792):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
-78 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (810):warning:game.viewArea.other_bet This variable is not defined.
-79 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (816):warning:game.viewArea.set_zoneList This variable is not defined.
-80 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (818):warning:game.viewArea.update_limit This variable is not defined.
-81 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (818):warning:roomlimit This variable is not defined.
-82 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (820):warning:game.viewArea.update_lamp This variable is not defined.
-83 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (821):warning:LightAssetManager.getInstance This variable is not defined.
-84 file:///E:/game_dev/laya/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (821):warning:SoundNameManager.getInstance This variable is not defined.
-85 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
-86 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/ResultPanel.as (220):warning:hide This variable is not defined.
+1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:Loger.get This variable is not defined.
+2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (98):warning:System.totalMemory This variable is not defined.
+3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (99):warning:LocalConnection This variable is not defined.
+4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (100):warning:LocalConnection This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:Loger.get This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (101):warning:System.totalMemory This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:Loger.get This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/GameUtil.as (103):warning:System.totalMemory This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (18):warning:internalHigh This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
+11 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
+12 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
+13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/RoomListCommand.as (57):warning:AlertPanel This variable is not defined.
+14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (131):warning:flg This variable is not defined.
+15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/HallData.as (29):warning:_already_in_roomid This variable is not defined.
+16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (189):warning:appMedel.sameBetinfo.length This variable is not defined.
+17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (191):warning:appMedel.sameBetinfo This variable is not defined.
+18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (200):warning:appMedel.roomParam.roomType This variable is not defined.
+19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (212):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (213):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (214):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (215):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (220):warning:appMedel.user_id This variable is not defined.
+24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (222):warning:appMedel.roomParam.roomType This variable is not defined.
+25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (224):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (226):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (233):warning:appMedel.user_id This variable is not defined.
+28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (235):warning:appMedel.roomParam.roomType This variable is not defined.
+29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (237):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (239):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (246):warning:appMedel.user_id This variable is not defined.
+32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (248):warning:appMedel.roomParam.roomType This variable is not defined.
+33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (250):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (252):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (259):warning:appMedel.user_id This variable is not defined.
+36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (261):warning:appMedel.roomParam.roomType This variable is not defined.
+37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (263):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (265):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (269):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (273):warning:appMedel.user_id This variable is not defined.
+41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (278):warning:appMedel.sameBetinfo.length This variable is not defined.
+42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (280):warning:appMedel.sameBetinfo This variable is not defined.
+43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (282):warning:appMedel.roomParam.roomType This variable is not defined.
+44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (284):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+45 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (286):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+46 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (288):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
+47 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (293):warning:appMedel.roomParam.roomlimit This variable is not defined.
+48 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (304):warning:appMedel.TablePlayerlist.length This variable is not defined.
+49 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (307):warning:appMedel.TablePlayerlist This variable is not defined.
+50 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (312):warning:appMedel.roomParam.roomType This variable is not defined.
+51 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (315):warning:Int64.fromNumber This variable is not defined.
+52 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (333):warning:appMedel.TabPlayerList This variable is not defined.
+53 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (334):warning:appMedel.TabPlayerList This variable is not defined.
+54 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (342):warning:appMedel.where_is_lamp This variable is not defined.
+55 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (347):warning:appMedel.dataStartStatus.allBetClips This variable is not defined.
+56 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (354):warning:evt.dispatchEvent This variable is not defined.
+57 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (354):warning:OperateEvent This variable is not defined.
+58 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (354):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
+59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (358):warning:appMedel.roomParam.roomType This variable is not defined.
+60 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (363):warning:evt.dispatchEvent This variable is not defined.
+61 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (363):warning:OperateEvent This variable is not defined.
+62 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (363):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
+63 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (281):warning:chipsVO This variable is not defined.
+64 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (341):warning:_bankerName This variable is not defined.
+65 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (342):warning:_bankerName This variable is not defined.
+66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (544):warning:breq This variable is not defined.
+67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (717):warning:e.info This variable is not defined.
+68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (730):warning:game.viewArea.update_total This variable is not defined.
+69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (732):warning:game.viewArea.update_other_total This variable is not defined.
+70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (737):warning:game.viewArea.my_batch_bet This variable is not defined.
+71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (755):warning:game.viewArea.my_batch_bet This variable is not defined.
+72 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (761):warning:game.viewArea.my_batch_bet This variable is not defined.
+73 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (771):warning:game.viewArea.other_bet_cancel This variable is not defined.
+74 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (773):warning:game.viewArea.update_other_total This variable is not defined.
+75 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (779):warning:game.viewArea.clear_allChip This variable is not defined.
+76 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (791):warning:game.viewArea.other_bet This variable is not defined.
+77 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (801):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
+78 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (819):warning:game.viewArea.other_bet This variable is not defined.
+79 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (825):warning:game.viewArea.set_zoneList This variable is not defined.
+80 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (827):warning:game.viewArea.update_limit This variable is not defined.
+81 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (827):warning:roomlimit This variable is not defined.
+82 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (829):warning:game.viewArea.update_lamp This variable is not defined.
+83 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (830):warning:LightAssetManager.getInstance This variable is not defined.
+84 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (830):warning:SoundNameManager.getInstance This variable is not defined.
+85 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
+86 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/ResultPanel.as (220):warning:hide This variable is not defined.
 */

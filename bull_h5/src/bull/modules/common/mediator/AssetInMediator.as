@@ -149,10 +149,17 @@ package bull.modules.common.mediator
 				//TODO 去充值頁面
 				var ws:WebService = getModel(WebService.NAME) as WebService;
 				ws.recharge(new Handler(this, GotoRechargeCallback));
+				
+				//TODO 去充值介面怎麼處理
+				//更新個人金額
+				sentNotification(BullNotification.CASH_TAKEIN_RESPONES);
+				
+				//介面滑入
+				sentNotification(BullNotification.VIEW_INIT);
 			}
 			else
 			{
-				//TODO更新HEAD money
+				//TODO更新 實際 HEAD money
 				sentNotification(BullNotification.VIEW_INIT);
 			}
 		}

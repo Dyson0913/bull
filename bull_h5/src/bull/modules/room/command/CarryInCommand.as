@@ -74,8 +74,10 @@ package bull.modules.room.command
 				}				
 				trace("carryIn rsp: gb =" + rsp.money.gb + " cash = " +rsp.money.cash + " nm = " + rsp.money.nm);
 				
-				//TODO 更新個人金額
+				//更新個人金額
 				sentNotification(BullNotification.CASH_TAKEIN_RESPONES);
+				
+				//介面滑入
 				sentNotification(BullNotification.VIEW_INIT);
 			}else{
 				//提示错误

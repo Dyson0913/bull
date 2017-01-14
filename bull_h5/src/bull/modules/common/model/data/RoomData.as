@@ -131,6 +131,23 @@ package bull.modules.common.model.data
 			return banker_id.toNumber() == 0 ? true: false;  
 		}
 		
+		public function IsSelfBanker():Boolean
+		{
+			return banker_id.toNumber() == uid ? true: false;  
+		}
+		
+		public function GetTotalBet():Number
+		{
+			var total:Number = 0;
+			for (var i:int = 0; i < 4; i++)
+			{
+				if (banker_id.toNumber() == uid) total += Zone_Total_bet[i];
+				else total += Zone_self_bet[i];
+			}
+			
+			return total;
+		}
+		
 		/**
 		 * 初始化选择筹码配置 
 		 */		

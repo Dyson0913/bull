@@ -1,8 +1,7 @@
 package bull.modules.room.mediator
 {
 	import bull.modules.common.model.BullProtoModel;
-	import bull.modules.common.model.data.AppMedel;
-	import bull.modules.common.model.data.appmodel;
+	import bull.modules.common.model.data.AppMedel;	
 	import bull.view.room.Chip;
 	import com.iflash.utils.BindMethod;
 	import com.IProtobuf.Long;
@@ -33,8 +32,7 @@ package bull.modules.room.mediator
 	import laya.utils.Handler;
 	import laya.utils.Timer;	
 	
-	import bull.events.BullNotification;
-	import light.car.events.CarSceneEvent;
+	import bull.events.BullNotification;	
 	import bull.modules.common.mediator.MusicSetMediator;
 	import bull.modules.common.mediator.RuleMediator;		
 	import bull.modules.common.model.data.RoomData;
@@ -47,9 +45,13 @@ package bull.modules.room.mediator
 	import bull.modules.common.model.data.Data;
 	import bull.modules.common.model.data.HallData;
 	
+	import laya.media.SoundManager;
+	import bull.core.SoundPath;
+	
 	import com.lightUI.core.Light;
 	import com.lightUI.components.alert.Alert;
 	import bull.view.alert.AlertPanel;
+	
 	
 	import bull.utils.BetAreaUtil;
 	import bull.modules.common.model.data.vo.ChipVO;
@@ -170,8 +172,7 @@ package bull.modules.room.mediator
 		}
 		
 		private function BankerPanelAction(name:String):void
-		{
-			trace("BankerPanelAction = " + name);			
+		{			
 			if ( name == "btnBanker")
 			{
 				roomData.apply_type = 1;
@@ -193,6 +194,7 @@ package bull.modules.room.mediator
 			sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(),2);
 			
 			//TODO sound
+			//SoundManager.playSound(SoundPath.press);
 		}
 		
 		private function no_more_banker(ata:int,flg:String):void{
@@ -353,21 +355,16 @@ package bull.modules.room.mediator
 		
 		private function onSettleUpdateHandler():void
 		{
-			appMedel.Banker_uid = "10";
-			appMedel.user_id = "1";
-			appMedel.nick_name_64 = "Dyson";
-			appMedel.first_threePlayer = [ { "rank":0, "ligt":true, "name":"dyson1", "money":999 }, { "rank":1, "ligt":true, "name":"dyson2", "money":999 }, { "rank":2, "ligt":true, "name":"dyson3", "money":999 } ];
 			
 			//無人下注,跳過結算面版
-			//if( appMedel.Settle_Time <2)
-			//{
-				//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.RUN_ResultOver));				
-			//}
-			//else
-			{				
-			    //本局庄資訊
-				
-				var isbaner:Boolean = appMedel.Banker_uid === appMedel.user_id;
+			if( roomData.LeftTime <2)
+			{
+				runEnd_recycle();
+			}
+			else
+			{	//TODO 頭像,名稱
+			    //本局庄資訊				
+				var isbaner:Boolean = roomData.IsSelfBanker();
 				if( _isSys ) _bankerName = "吉胜游戏平台";
 				view.viewResult.initView(appMedel.nick_name_64,roomData.settle_hand_money,roomData.LeftTime,roomData.settle_win_money,roomData.settle_User_info,isbaner,_bankerName);
 				view.viewResult.show();
@@ -715,38 +712,22 @@ package bull.modules.room.mediator
 			}
 			else
 			{
-				trace("deal poker in ");
+				trace("======================deal poker in ");
 			}
 			
 			//提示
-			//var total:Number =0;
-			//自己為庄家
-			//if( appMedel.Banker_uid === appMedel.user_id)
-			//{
-				//var allbet:Array = appMedel.dataStartStatus.allBetClips;
-				//for(var k:int =0;k<  allbet.length;k++)
-				//{											
-					//total += Number(appMedel.dataStartStatus.allBetClips[k]);					
-				//}				
-				//
-				//if( total ==0) 	phase_tip("本局无人下注。",0);
-				//else  phase_tip("总下注 " +GameUtil.formatMoney(total) +"，祝吉星高照！",0);
-				//
-			//}
-			//else
-			//{
-				//沒下注
-				//var mybet:Array = appMedel.dataStartStatus.myBetClips;
-				//for(var i:int =0;i<  mybet.length;i++)
-				//{						
-					//total += Number(appMedel.dataStartStatus.myBetClips[i] );
-				//}				
-				//沒下注
-				//if( total ==0) 	phase_tip("您没有参与本局下注",0);
-				//else  phase_tip("总下注 " +GameUtil.formatMoney(total)  +"，祝吉星高照！",0);
-			//}			
-			//
-			//LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().dealpoker, 0,1);
+			var total:Number = roomData.GetTotalBet();
+			if ( total == 0) 
+			{
+				if ( roomData.IsSelfBanker()) view.phase_tip("本局无人下注。", 0);
+				else view.phase_tip("您没有参与本局下注", 0);
+			}
+			else view.phase_tip("总下注 " +roomData.appearMoney(roomData.GetMoney(total)) +"，祝吉星高照！",0);
+			//TODO 還需要? 中途進入元件處理
+			
+			
+			//TODO sound.dealpoker
+			//SoundManager.playSound(SoundPath.dealpoker);
 		}
 		
 		

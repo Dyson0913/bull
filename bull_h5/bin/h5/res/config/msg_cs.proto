@@ -388,6 +388,35 @@ message KickPlayerNotify
     optional ENKickReason reason = 1;
 }
 
+// 获取玩家信息
+message GetPlayerInfoReq
+{
+    optional string uid_s = 1;     // 1001001,1213212,3123142
+}
+
+// 获取玩家信息
+message GetPlayerInfoRsp
+{
+    optional string json_result = 1;
+}
+// {
+//   "code": 0,
+//   "result": {
+//     "1000011": {
+//       "uid": 1000011,
+//       "username": "samuel1231",
+//       "nickname": "又长又粗",
+//       "avatar": "http://statics.kgamedev.com/common/images/avatars/2.png"
+//     },
+//     "1001867": {
+//       "uid": 1001867,
+//       "username": "erwer23",
+//       "nickname": "",
+//       "avatar": "http://statics.kgamedev.com/v4/kgame/uploadfile/5.jpg"
+//     }
+//   }
+// }
+
 /////////////////////////////////////////////////////////////
 // client to server messages
 enum ENCSType
@@ -435,6 +464,9 @@ enum ENCSType
 
     CS_TYPE_PUSH_NOTICE_NOTIFY = 138;
     CS_TYPE_KICK_PLAYER_NOTIFY = 143;
+
+    CS_TYPE_GET_PLAYER_INFO_REQ = 201;
+    CS_TYPE_GET_PLAYER_INFO_RSP = 202;
 }
 
 message CS
@@ -485,6 +517,9 @@ message CS
     // common message
     optional PushNoticeNotify   push_notice_notify = 138;
     optional KickPlayerNotify   kick_player_notify = 143;   // CS_TYPE_KICK_PLAYER_NOTIFY
+
+    optional GetPlayerInfoReq       get_player_info_req = 201;  // CS_TYPE_GET_PLAYER_INFO_REQ
+    optional GetPlayerInfoRsp       get_player_info_rsp = 202;  // CS_TYPE_GET_PLAYER_INFO_RSP
 }
 
 // vim:ts=4:sw=4:et:ft=proto:
