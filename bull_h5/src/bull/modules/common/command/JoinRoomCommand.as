@@ -79,10 +79,7 @@ package bull.modules.common.command
 				else 
 				{				
 					var roominfo:SRoomInfo = hallData.roomList[hallData.join_room_idx] as SRoomInfo;					
-					var config:SRoomConfig = roominfo.config;
-					
-					//存一份房間config,不用每次用idx 去取
-					roomData.room_info = config;
+					var config:SRoomConfig = roominfo.config;					
 					
 					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL,[config,roomData]);	
 				}

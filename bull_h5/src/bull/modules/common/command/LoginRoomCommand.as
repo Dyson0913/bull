@@ -1,10 +1,14 @@
 package bull.modules.common.command
 {
+	import bull.modules.common.model.data.HallData;
+	import bull.modules.common.model.data.RoomData;
 	import com.IProtobuf.Long;
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
 	import com.lightUI.components.alert.Alert;	
+	import conf.SRoomConfig;
+	import conf.SRoomInfo;
 	
 	import com.lightUI.core.Light;
 	import laya.utils.Handler;
@@ -75,12 +79,19 @@ package bull.modules.common.command
 			
 			trace("room onLoginRoomRsp" + cs);								
 			
-			var bullData:Data = getSingleton(Data.NAME) as Data;			
-			if ( bullData.hallData.ViewIn != "game")
+			var hallData:HallData = getSingleton(HallData.NAME) as HallData;
+			if ( hallData.ViewIn != "game")
 			{
 				trace("room 目前在大廳 return");
 				return;
 			}			
+			
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
+			var roominfo:SRoomInfo = hallData.roomList[hallData.join_room_idx] as SRoomInfo;					
+			var config:SRoomConfig = roominfo.config;
+					
+			//存一份房間config,不用每次用idx 去取
+			roomData.room_info = config;
 			
 			//TODO
 			(getMediator(BullScenceMediator.NAME) as BullScenceMediator).sendHeartBeat();

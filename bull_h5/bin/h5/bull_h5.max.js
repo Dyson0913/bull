@@ -30473,7 +30473,6 @@ var Laya=window.Laya=(function(window,document){
 				else{
 					var roominfo=hallData.roomList [hallData.join_room_idx];
 					var config=roominfo.config;
-					roomData.room_info=config;
 					this.sentNotification("showCarryInPanel",[config,roomData]);
 				}
 				}else{
@@ -30595,11 +30594,15 @@ var Laya=window.Laya=(function(window,document){
 		//roomData.login=true;
 		__proto.onLoginRoomRsp=function(cs){
 			console.log("room onLoginRoomRsp"+cs);
-			var bullData=this.getSingleton("Data");
-			if (bullData.hallData.ViewIn !="game"){
+			var hallData=this.getSingleton("hallData");
+			if (hallData.ViewIn !="game"){
 				console.log("room 目前在大廳 return");
 				return;
-			}
+			};
+			var roomData=this.getSingleton("roomData");
+			var roominfo=hallData.roomList [hallData.join_room_idx];
+			var config=roominfo.config;
+			roomData.room_info=config;
 			(this.getMediator("BullScenceMediator")).sendHeartBeat();
 			this.sentNotification(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString());
 			return;
@@ -32272,7 +32275,7 @@ var Laya=window.Laya=(function(window,document){
 			}
 			else{
 				win_str="0";
-				color="##f3ebea";
+				color="#f3ebea";
 			};
 			var ob={"idx":i,"uid":data.uid,"is_light":data.is_light,"win_money":win_str,"color":color };
 			return ob;

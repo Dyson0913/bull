@@ -107,7 +107,7 @@ package bull.modules.room.command
 			else
 			{
 				win_str = "0";
-				color = "##f3ebea";
+				color = "#f3ebea";
 			}
 			
 			var ob:Object = { "idx":i, "uid":data.uid, "is_light":data.is_light, "win_money":win_str, "color":color };
