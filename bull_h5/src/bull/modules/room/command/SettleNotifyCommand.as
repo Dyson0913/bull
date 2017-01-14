@@ -1,5 +1,6 @@
 package bull.modules.room.command
 {
+	import bull.modules.common.model.data.RoomData;
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
@@ -26,13 +27,15 @@ package bull.modules.room.command
 		}
 		
 		private function settle(cs:CS):void
-		{			
-			var bullData:Data = getSingleton(Data.NAME) as Data;			
+		{	
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;			
 			
-			bullData.roomData.settle_banker_id = cs.calculate_notify.banker_id;
-			bullData.roomData.settle_win_money = cs.calculate_notify.win_money;
-			bullData.roomData.settle_hand_money = cs.calculate_notify.hand_money;
-			bullData.roomData.settle_User_info = cs.calculate_notify.user_info_s;			
+			roomData.settle_banker_id = cs.calculate_notify.banker_id;
+			roomData.settle_win_money = cs.calculate_notify.win_money;
+			roomData.settle_hand_money = cs.calculate_notify.hand_money;
+			roomData.settle_User_info = cs.calculate_notify.user_info_s;
+			
+			roomData.Total_money = roomData.settle_hand_money;
 			
 			sentNotification(BullNotification.SETTLE_NOTIFY);
 			

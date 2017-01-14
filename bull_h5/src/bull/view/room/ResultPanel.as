@@ -106,24 +106,27 @@ package bull.view.room
 			}
 			
 			isBanker.visible = false;
+			
 		}		
 		
-		public function initView(playerName:String,myMony:Long,restTime:int,MyWin:Long,data:Array,Isbanker:Boolean,bankername:String):void
+		public function initView(playerName:String,myMony:String,restTime:int,MyWin:Long,MywinDisplay:String,data:Array,Isbanker:Boolean,bankername:String):void
 		{
 			this.visible = true;
 			reset();
 			
-			if( Isbanker)
+			if ( Isbanker)
 			{
-				isBanker.visible = true;				
+				isBanker.visible = Isbanker;
+				platform_name.visible = false;
+				
 			}
-			else isBanker.visible = false;
+			else isBanker.visible = Isbanker;
 			
-			platform_name.text = bankername;
+			
 			
 			
 			self_name.text = playerName;
-			self_money.text = GameUtil.formatMoney(myMony.toNumber()); 
+			self_money.text = myMony;
 			
 			_rest_Time = restTime;
 			rest_time.text = _rest_Time.toString();
@@ -133,13 +136,13 @@ package bull.view.room
 			
 			if( MyWin.toNumber()>=0) 
 			{			
-				win_bitmap.text = "+" + GameUtil.formatMoneyBet(MyWin.toNumber());				
+				win_bitmap.text = MywinDisplay;			
 				lost_bitmap.text = "";
 				SoundManager.playSound(SoundPath.settle_win);
 			}
 			else 
 			{
-				lost_bitmap.text = GameUtil.formatMoneyBet(MyWin.toNumber());				
+				lost_bitmap.text = MywinDisplay;
 				win_bitmap.text = "";
 				SoundManager.playSound(SoundPath.settle_lose);
 			}
@@ -147,15 +150,8 @@ package bull.view.room
 			var n:int = data.length;
 			
 			//沒有人贏,顥示 本局无人赢钱
-			if ( n==0)
-			{				
-				Text_NoOne_bet.text =  "本局无人赢钱";// MessageCodeMgr.getInstance().getMessage("10");					
-			}
-			else
-			{
-				Text_NoOne_bet.text = "";
-			}
-			
+			if ( n==0) Text_NoOne_bet.text =  "本局无人赢钱";// MessageCodeMgr.getInstance().getMessage("10");
+			else Text_NoOne_bet.text = "";
 			
 			var item:*;
 			var txtitem:Label;

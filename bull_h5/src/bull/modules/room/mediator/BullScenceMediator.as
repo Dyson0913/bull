@@ -364,10 +364,25 @@ package bull.modules.room.mediator
 			}
 			else
 			{	//TODO 頭像,名稱
-			    //本局庄資訊				
-				var isbaner:Boolean = roomData.IsSelfBanker();
-				if( _isSys ) _bankerName = "吉胜游戏平台";
-				view.viewResult.initView(appMedel.nick_name_64,roomData.settle_hand_money,roomData.LeftTime,roomData.settle_win_money,roomData.settle_User_info,isbaner,_bankerName);
+			    //本局庄資訊
+				var 
+				var isSelfbaner:Boolean = roomData.IsSelfBanker();
+				if ( isSelfbaner) _bankerName = roomData.user_name;
+				
+				if ( roomData.IsSysBanker() ) _bankerName = "吉胜游戏平台";
+				
+				var mymoney:String = roomData.appearMoney( roomData.GetMoney(roomData.settle_hand_money));
+				var mywin:String
+				if ( roomData.settle_win_money.toNumber() >= 0)
+				{
+					mywin = "+" +roomData.appearMoney(roomData.GetMoney(roomData.settle_win_money.toNumber()));					
+				}
+				else if ( roomData.settle_win_money.toNumber() < 0)
+				{
+					mywin = "-" +roomData.appearMoney(roomData.GetMoney(-roomData.settle_win_money.toNumber()));	
+				}
+				
+				view.viewResult.initView(roomData.user_name,mymoney,roomData.LeftTime,roomData.settle_win_money,mywin,roomData.settle_User_info,isSelfbaner,_bankerName);
 				view.viewResult.show();
 				
 				sentNotification(BullNotification.CASH_TAKEIN_RESPONES);
