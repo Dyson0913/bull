@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":39,
+    "selecteID":34,
     "props":{"width":1400,"sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -387,6 +387,28 @@
         {
             "x":15,
             "type":"UIView",
+            "source":"ui/room/BetBtnGroup.ui",
+            "props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"},
+            "nodeParent":1,
+            "label":"UIView(ViewBetGroup)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":977,"x":1058},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":36,
+            "child":[
+                ],
+            "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"UIView",
             "source":"ui/room/HeadView.ui",
             "props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"},
             "nodeParent":1,
@@ -448,28 +470,6 @@
             "child":[
                 ],
             "$HIDDEN":false
-        },
-        {
-            "x":15,
-            "type":"UIView",
-            "source":"ui/room/BetBtnGroup.ui",
-            "props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"},
-            "nodeParent":1,
-            "label":"UIView(ViewBetGroup)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":977,"x":1058},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":36,
-            "child":[
-                ],
-            "$HIDDEN":true
         },
         {
             "x":15,

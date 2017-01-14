@@ -365,14 +365,24 @@ package bull.modules.room.mediator
 			else
 			{	//TODO 頭像,名稱
 			    //本局庄資訊
-				var 
+				var _bankerName:String;
+				var _bankerHead:String;
 				var isSelfbaner:Boolean = roomData.IsSelfBanker();
-				if ( isSelfbaner) _bankerName = roomData.user_name;
+				if ( roomData.IsSysBanker() ) 
+				{
+					_bankerName = "";
+					_bankerHead = "res/gameScene/HeadIcon.jpg";
+				}
+				else
+				{
+					_bankerName = roomData.find_banker("username");
+					_bankerHead = roomData.find_banker("avatar");
+				}
 				
-				if ( roomData.IsSysBanker() ) _bankerName = "吉胜游戏平台";
+				var self_head:String = roomData.find_self("avatar");
 				
 				var mymoney:String = roomData.appearMoney( roomData.GetMoney(roomData.settle_hand_money));
-				var mywin:String
+				var mywin:String;
 				if ( roomData.settle_win_money.toNumber() >= 0)
 				{
 					mywin = "+" +roomData.appearMoney(roomData.GetMoney(roomData.settle_win_money.toNumber()));					
@@ -382,7 +392,7 @@ package bull.modules.room.mediator
 					mywin = "-" +roomData.appearMoney(roomData.GetMoney(-roomData.settle_win_money.toNumber()));	
 				}
 				
-				view.viewResult.initView(roomData.user_name,mymoney,roomData.LeftTime,roomData.settle_win_money,mywin,roomData.settle_User_info,isSelfbaner,_bankerName);
+				view.viewResult.initView(roomData.user_name,mymoney,roomData.LeftTime,roomData.settle_win_money,mywin,roomData.settle_User_info,isSelfbaner,_bankerName,_bankerHead,self_head);
 				view.viewResult.show();
 				
 				sentNotification(BullNotification.CASH_TAKEIN_RESPONES);
@@ -455,19 +465,21 @@ package bull.modules.room.mediator
 				
 			}
 			
-			//TODO 頭像與名稱
+			var banker_name:String = roomData.find_banker("username");
+			var banker_head:String = roomData.find_banker("avatar");
+			
 			var bankerTims:String = roomData.newBaner_info.banker_time +"/" + roomData.newBaner_info.max_time + "次";
-			if ( roomData.newBaner_info.banker_id == 0)
+			if ( roomData.IsSysBanker() == 0)
 			{
-				trace("-------------------------------------系统坐庄 ,動畫"+play_ani);
+				trace("-------------------------------------系统坐庄 ");
 				view.viewBankerPanel.bankerinfo_update(["系统坐庄", "", ""]);
-				if( play_ani) view.viewBankerPanel.newBanker("系统坐庄");
+				if( play_ani) view.viewBankerPanel.newBanker("系统坐庄",banker_head);
 			}
 			else
 			{
-				trace("-------------------------------------玩家坐庄 ,動畫"+play_ani);
-				view.viewBankerPanel.bankerinfo_update(["dyson", bankerTims, roomData.GetMoney(roomData.newBaner_info.hand_money.toNumber())]);
-				if( play_ani) view.viewBankerPanel.newBanker("dyson");
+				trace("-------------------------------------玩家坐庄 ");
+				view.viewBankerPanel.bankerinfo_update([banker_name, bankerTims, roomData.GetMoney(roomData.newBaner_info.hand_money.toNumber())]);
+				if( play_ani) view.viewBankerPanel.newBanker(banker_name,banker_head);
 			}
 			
 			//extra
@@ -590,7 +602,6 @@ package bull.modules.room.mediator
 				case BullNotification.BET_INFO_UPDATE:
 					bet_otherHandler();
 				break;	
-				
 				
 				case BullNotification.SETTLE_NOTIFY:
 					onSettleUpdateHandler();

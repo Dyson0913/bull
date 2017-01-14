@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":51,
+    "selecteID":34,
     "props":{"width":679,"sceneColor":"#000000","height":416},
     "nodeParent":-1,
     "label":"View",
@@ -400,7 +400,8 @@
                     "compId":48,
                     "child":[
                         ]
-                }]
+                }],
+            "$HIDDEN":false
         },
         {
             "x":15,
@@ -700,6 +701,26 @@
                     "__InPool":false
                 }],
             "compId":51,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":296,"x":27,"width":80,"var":"BankerName","text":"+999999999","scaleY":1.8,"scaleX":1.8,"height":16,"color":"#dbcb17","align":"center"},
+            "nodeParent":1,
+            "label":"Label(BankerName)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":52,
             "child":[
                 ]
         }],

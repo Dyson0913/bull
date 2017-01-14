@@ -85,6 +85,7 @@ package bull.modules.common.model.data
 		public var banker_id:Long;
 		public var apply_type:int;
 		
+		
 		public var newBaner_info:SBankerNotify;
 		public var Banker_calcu_info:SBankerCalculateNotify;		
 		
@@ -133,6 +134,8 @@ package bull.modules.common.model.data
 			Has_bet = false;
 			banker_id = Long.fromNumber( -1);
 			
+			settle_User_info = [];
+			
 			Banker_calcu_info = new SBankerCalculateNotify();
 		}
 		
@@ -172,6 +175,47 @@ package bull.modules.common.model.data
 			
 			return total;
 		}		
+		
+		public function find_banker(type:String):String
+		{
+			for (var j:int = 0; j < player_List_ob.length; j++)
+			{
+				var ob:Object = player_List_ob[j];				
+				if ( ob.uid.toNumber() == banker_id.toNumber())
+				{
+					return ob[type];
+				}
+			}
+			
+			//找不到,為系統當庄
+			return "res/gameScene/HeadIcon.jpg";
+		}
+		
+		public function find_self(type:String):String
+		{
+			for (var j:int = 0; j < player_List_ob.length; j++)
+			{
+				var ob:Object = player_List_ob[j];				
+				if ( ob.uid.toNumber() == uid.toNumber())
+				{
+					return ob[type];
+				}
+			}
+			return null;
+		}
+		
+		public function find_player(type:String,id:Number):String
+		{
+			for (var j:int = 0; j < player_List_ob.length; j++)
+			{
+				var ob:Object = player_List_ob[j];				
+				if ( ob.uid.toNumber() == id)
+				{
+					return ob[type];
+				}
+			}
+			return null;
+		}
 		
 		//資料由 info 轉移到 roomData.player_List_ob
 		public function attch_to_player_List_ob(info:Object):void

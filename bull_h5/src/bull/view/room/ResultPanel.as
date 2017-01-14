@@ -1,6 +1,6 @@
 package bull.view.room
 {
-	
+	import com.lightUI.core.Light;
 	import com.IProtobuf.Long;
 	import conf.SUserInfo;
 	import laya.events.Event;
@@ -67,9 +67,6 @@ package bull.view.room
 			HeadPic.push(headPic_1);
 			HeadPic.push(headPic_2);			
 			
-			
-			
-			
 			btnClose.on(Event.CLICK,this,onClick);
 			btnok.on(Event.CLICK,this, onClick);
 			
@@ -106,27 +103,27 @@ package bull.view.room
 			}
 			
 			isBanker.visible = false;
-			
+			BankerHead.source = Light.loader.getRes("res/gameScene/HeadIcon.jpg");
 		}		
 		
-		public function initView(playerName:String,myMony:String,restTime:int,MyWin:Long,MywinDisplay:String,data:Array,Isbanker:Boolean,bankername:String):void
+		public function initView(playerName:String,myMony:String,restTime:int,MyWin:Long,MywinDisplay:String,data:Array,isSelfbaner:Boolean,banker_name:String,banker_Head:String,sef_head:String):void
 		{
 			this.visible = true;
 			reset();
 			
-			if ( Isbanker)
-			{
-				isBanker.visible = Isbanker;
-				platform_name.visible = false;
-				
-			}
-			else isBanker.visible = Isbanker;
+			isBanker.visible = isSelfbaner;
+			if ( banker_name.length == 0) platform_name.visible = true;
+			else platform_name.visible = false;
 			
+			//玩家或其它玩家坐庄
+			BankerName.text = banker_name;
+			BankerHead.loadImage(banker_Head, 0, 0, 68, 67);
 			
-			
-			
+			//自己的資訊
 			self_name.text = playerName;
 			self_money.text = myMony;
+			mcHead.loadImage(sef_head, 0, 0, 68, 67); 
+			
 			
 			_rest_Time = restTime;
 			rest_time.text = _rest_Time.toString();
@@ -157,7 +154,7 @@ package bull.view.room
 			var txtitem:Label;
 			for(var i:int =0;i< n;i++)
 			{
-				var _data:SUserInfo = data[i];
+				var _data:Object = data[i];
 				
 				item = mcRank[i];
 				item.index = i;
@@ -169,13 +166,11 @@ package bull.view.room
 				txtitem.text = _data["name"];
 				
 				txtitem = txtMoneys[i]				
-				txtitem.text = GameUtil.formatMoney(_data.win_money.toNumber());
+				txtitem.text = _data["money"];
 				
 				item = HeadPic[i];
-				item.visible = true;				
-				//if( i ==0) item["mcHead_0"].loadImage(_data["Head"]);
-				//if( i ==1) item["mcHead_1"].loadImage(_data["Head"]);
-				//if( i ==2) item["mcHead_2"].loadImage(_data["Head"]);
+				item.visible = true;
+				item.loadImage(sef_head, 0, 0, 34, 34); 
 			}			
 			
 		}
@@ -205,28 +200,5 @@ package bull.view.room
 			
 		}
 		
-		public function get rest_Time():int
-		{
-			return _rest_Time;
-		}
-		
-		public function set rest_Time(value:int):void
-		{
-			if( value != _rest_Time )
-			{
-				_rest_Time = value;
-				rest_time.label = value.toString() +"S";		
-			}
-		}
-		
-		private function timeOut() : void
-		{			
-			hide();
-			//dispatchEvent(new NewNewGameEvent(NewNewGameEvent.RUN_ResultOver));
-		
-		}
-		
-	
-	
 	}
 }
