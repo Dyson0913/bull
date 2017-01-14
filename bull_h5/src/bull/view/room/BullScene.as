@@ -149,9 +149,7 @@ package bull.view.room
 				viewArea.set_fellow_coin(viewSelectClip["mcSelect_0"]);	
 				viewArea.openbet( _roomData.IsSysBanker() , _roomData.appearMoney(_roomData.GetMoney(_roomData.room_info.room_limit)));
 				
-				//TODO 放在按鈕後,看不到
-				//if( !roomData.Has_bet) 	phase_tip("請选择下注筹码",1);
-				//else  phase_tip("請选择下注筹码",1);
+				phase_tip("",0);
 				
 				viewSelectClip.set_gray(false);
 				

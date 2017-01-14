@@ -113,21 +113,22 @@ package bull.modules.room.command
 						for(var i:int =0;i<  roomData.Zone_self_bet.length;i++)
 						{						
 							roomData.Zone_self_bet[i] = 0;
-						}			
+						}
 						
-						//TODO
-						//appMedel.roomParam.roomlimit += roomData.GetMoney(rsp.bet_money);
+						//桌限紅加回
+						roomData.rest_betlimit += roomData.GetMoney(rsp.bet_money);
+						
 						roomData.Total_money = roomData.GetMoney(rsp.hand_money.toNumber());						
 						sentNotification(BullNotification.BET_CANCEL_OK); 
-					}
-					else if (rsp.position == conf.ENBetPosition.BET_POSITION_REPEAT)
-					{						
-						roomData.Total_money = roomData.GetMoney(rsp.hand_money.toNumber());
-						sentNotification(BullNotification.BET_RSP);
-					}
+					}					
 					else 
 					{
-						roomData.Has_bet = true;	
+						// conf.ENBetPosition.BET_POSITION_REPEAT;一樣處理
+						roomData.Has_bet = true;
+						
+						//桌限紅扣掉
+						roomData.rest_betlimit -= roomData.GetMoney(rsp.bet_money);
+						
 						//更新自己手中的錢
 						roomData.Total_money = roomData.GetMoney(rsp.hand_money.toNumber());
 						sentNotification(BullNotification.BET_RSP);		
@@ -404,8 +405,7 @@ package bull.modules.room.command
 		
 		
 		private function CancelRequest():void
-		{
-			trace("=============================CancelRequest ")
+		{			
 			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
 			var out:CS = proto.msg_proto.getCS();
 			out.msg_type = ENCSType.CS_TYPE_BET_REQ;
@@ -414,7 +414,6 @@ package bull.modules.room.command
 			
 			var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
 			socket.sentMsg(out);
-			trace("=============================CancelRequest out")
 		}
 		
 		private function SameRequest():void

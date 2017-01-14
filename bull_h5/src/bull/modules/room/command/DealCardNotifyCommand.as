@@ -1,12 +1,13 @@
 package bull.modules.room.command
 {
+	import bull.modules.common.model.data.RoomData;
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
+	import conf.SDealInfo;
 	
 	import bull.events.BullNotification;	
-	import bull.modules.perload.services.PreLoadService;
-	import bull.modules.common.model.data.Data;
+	import bull.modules.perload.services.PreLoadService;	
 	
 	import msg.CS;
 	import msg.ENCSType;
@@ -27,13 +28,26 @@ package bull.modules.room.command
 		
 		private function deal(cs:CS):void
 		{			
-			var bullData:Data = getSingleton(Data.NAME) as Data;			
+			trace("============================發牌資訊");
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 			
-			bullData.roomData.card_info.push(cs.deal_card_notify.banker);
-			bullData.roomData.card_info.push(cs.deal_card_notify._1);
-			bullData.roomData.card_info.push(cs.deal_card_notify._2);
-			bullData.roomData.card_info.push(cs.deal_card_notify._3);
-			bullData.roomData.card_info.push(cs.deal_card_notify._4);
+			roomData.card_info.length = 0;
+			roomData.card_info.push(cs.deal_card_notify.banker);
+			roomData.card_info.push(cs.deal_card_notify._1);
+			roomData.card_info.push(cs.deal_card_notify._2);
+			roomData.card_info.push(cs.deal_card_notify._3);
+			roomData.card_info.push(cs.deal_card_notify._4);
+			
+			roomData.each_zone_win.length = 0;
+			roomData.each_zone_display.length = 0;
+			for ( var i:int = 1; i < roomData.card_info.length; i++)
+			{
+				var deal:SDealInfo = roomData.card_info[i];
+				roomData.each_zone_display.push( roomData.appearMoney(roomData.GetMoney(deal.player_win)));
+				roomData.each_zone_win.push(deal.player_win);				
+			}
+			//trace("============================發牌資訊"+roomData.each_zone_display);
+			//trace("============================發牌資訊"+roomData.each_zone_win);
 			
 			sentNotification(BullNotification.CARD_NOTIFY);
 			

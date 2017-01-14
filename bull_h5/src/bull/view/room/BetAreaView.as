@@ -133,7 +133,7 @@ package bull.view.room
 			}	
 		}
 		
-		public function openbet(isPlayerbanker:Boolean,limit:String):void
+		public function openbet(isSysbanker:Boolean,limit:String):void
 		{
 			for (var i:int = 0; i < 4; i++)
 			{					
@@ -143,7 +143,8 @@ package bull.view.room
 				this["Scene_" + i].on(Event.MOUSE_OUT, this, onSceneOut);	
 			}
 			
-			BetLimit.visible = isPlayerbanker;
+			//玩家當庄才顥示
+			BetLimit.visible = !isSysbanker;
 			BetLimit.amount.font = "LimitFont";
 			BetLimit.amount.text  = limit;
 		}
@@ -243,7 +244,7 @@ package bull.view.room
 		
 		public function set_fellow_coin(chip:Image):void
 		{
-			dragChip.dataSource = chip.dataSource;
+			dragChip.source = chip.source;
 		}
 		
 		

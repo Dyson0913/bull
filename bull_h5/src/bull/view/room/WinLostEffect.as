@@ -1,5 +1,6 @@
 package bull.view.room 
 {
+	import com.IProtobuf.Long;
 	import com.lightUI.events.LightEvent;
 	import conf.SDealInfo;
 	import laya.ui.Label;
@@ -15,6 +16,8 @@ package bull.view.room
 	
 	public class WinLostEffect extends WinLostEffectUI
 	{
+		private var _winlose_data:Array = [];
+		private var _winlose_display:Array = [];
 		
 		public function WinLostEffect() 
 		{
@@ -27,16 +30,23 @@ package bull.view.room
 			this.hide();
 		}
 		
-		public function set_data(data:Array):void
+		public function set_(display_data:Array,data:Array):void
+		{
+			_winlose_display = display_data;
+			_winlose_data = data;
+		}
+		
+		public function play():void
 		{
 			this.hide();
 			
 			for (var i:int = 0; i < 4; i++)
 			{
-				var info:SDealInfo = data[i];
+				var win_amount:Long = _winlose_data[i];
+				var display_amount:String = _winlose_display[i];
 				
 				var win:Number = 0;
-				if ( info.player_win != null) win = info.player_win.toNumber();
+				if ( win_amount.toNumber() != null) win = win_amount.toNumber();
 				
 				if ( win == 0) continue;
 				
@@ -44,17 +54,16 @@ package bull.view.room
 				var str:String;
 				
 				
-				//TODO 幣值符號
 				if ( win >= 0) 
 				{
 					lableItem = this["Win_" + i];
-					str = "+" + win.toString();
+					str = "+" + display_amount;
 					lableItem.font = "bubbleWin";
 				}
 				else
 				{
 					lableItem = this["Lost_" + i];
-					str = win.toString();
+					str = display_amount;
 					lableItem.font = "bubbleLost";
 				}				
 				lableItem.visible = true;

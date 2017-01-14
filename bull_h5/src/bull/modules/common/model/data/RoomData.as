@@ -66,6 +66,8 @@ package bull.modules.common.model.data
 		
 		//card_info
 		public var card_info:Array;
+		public var each_zone_win:Array;
+		public var each_zone_display:Array;
 		
 		//settle_info		
 		public var settle_banker_id:Long;
@@ -106,6 +108,10 @@ package bull.modules.common.model.data
 			history_result_info = [];
 			playerList = [];
 			card_info = [];
+			
+			each_zone_win = [];
+			each_zone_display = [];
+			
 			Zone_Total_bet = [0,0,0,0];
 			Zone_self_bet = [0,0,0,0];
 			sameBetinfo = [];

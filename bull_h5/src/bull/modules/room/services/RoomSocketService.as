@@ -106,8 +106,8 @@ package bull.modules.room.services
 		private function onMessageReveived(e:SocketConnectEvent):void{
 			var msgbyte:Byte = e.data as Byte;
 			var input:CS = bullProtoModel.msg_proto.CS_Builer().decode(msgbyte.buffer);
-			if(input.msg_type != ENCSType.CS_TYPE_HEART_BEAT_RSP)
-				trace("房间服务端返回消息 type：",input.msg_type," msg:"+input);
+			if (input.msg_type != ENCSType.CS_TYPE_HEART_BEAT_RSP);
+				//trace("房间服务端返回消息 type：",input.msg_type," msg:"+input);
 			else
 				trace("房间心跳返回消息 type：",input.msg_type," msg:"+input);
 				

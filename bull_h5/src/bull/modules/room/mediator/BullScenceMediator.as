@@ -653,14 +653,17 @@ package bull.modules.room.mediator
 			}
 			
 			//更新自己手中的錢
-			view.viewHead.setMoney( roomData.appearMoney(roomData.Total_money)); 
+			cashViewHandler(); 
 		}
 		
 		private function cnacelOkHandler():void
 		{				
 			//COIN 飛回
 			view.flySelfChipBack();
-			view.viewHead.setMoney( roomData.appearMoney(roomData.Total_money)); 
+			cashViewHandler();
+			
+			//取消下注成功,返回最初狀態
+			view.ViewBetGroup.appear(false);
 		}
 		
 		private function sameFailHandler():void
@@ -707,7 +710,7 @@ package bull.modules.room.mediator
 		{
 			if( roomData.State == AppMedel.DEAL)
 			{
-				view.viewPoker.set_data(roomData.card_info,view.PokerTypePanel,view.ViewWinLostEffect);
+				view.viewPoker.set_data(roomData.card_info,view.PokerTypePanel,view.ViewWinLostEffect,roomData.each_zone_display,roomData.each_zone_win);
 				view.viewPoker.play();
 			}
 			else
@@ -722,9 +725,7 @@ package bull.modules.room.mediator
 				if ( roomData.IsSelfBanker()) view.phase_tip("本局无人下注。", 0);
 				else view.phase_tip("您没有参与本局下注", 0);
 			}
-			else view.phase_tip("总下注 " +roomData.appearMoney(roomData.GetMoney(total)) +"，祝吉星高照！",0);
-			//TODO 還需要? 中途進入元件處理
-			
+			else view.phase_tip("总下注 " +roomData.appearMoney(roomData.GetMoney(total)) +"，祝吉星高照！",0);			
 			
 			//TODO sound.dealpoker
 			//SoundManager.playSound(SoundPath.dealpoker);

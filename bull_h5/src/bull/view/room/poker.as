@@ -13,8 +13,7 @@ package bull.view.room
 	public class Poker extends PokerUI
 	{
 		private var _pokerdata:Array = [];
-		private var _PokerType:PokerTypeBoard;
-		
+		private var _PokerType:PokerTypeBoard;		
 		
 		//莊,閒1~~閒4
 		private var _po:Array = [ [[609, 92, -2], [636, 92, -2], [663, 92, -1], [690, 92, 0], [718, 92, 1]],
@@ -36,12 +35,14 @@ package bull.view.room
 			
 		}
 		
-		public function set_data(data:Array,pokertype:PokerTypeBoard,Wineffect:WinLostEffect):void
+		public function set_data(data:Array,pokertype:PokerTypeBoard,Wineffect:WinLostEffect,win_diplay:Array,winlose_data:Array):void
 		{
 			_pokerdata = data;
 			_PokerType = pokertype;
 			_PokerType.hide();						
 			_PokerType.set_winlost(Wineffect);
+			Wineffect.set_(win_diplay,winlose_data);
+			
 			
 			for (var i:int = 0; i < 5; i++)
 			{
@@ -110,7 +111,7 @@ package bull.view.room
 		
 		private function ani_ok(idx_i:int, idx_j:int ):void 
 		{
-			//TODO上移牌型
+			//上移牌型
 			if ( idx_j == 4)
 			{
 				var info:SDealInfo = _pokerdata[idx_i];

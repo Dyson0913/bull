@@ -4,11 +4,9 @@ package bull.modules.room.command
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
 	
-	import bull.events.BullNotification;
-	import light.car.modules.common.model.data.HallData;
+	import bull.events.BullNotification;	
 	import bull.modules.common.model.data.RoomData;
-	import bull.modules.perload.services.PreLoadService;
-	import bull.modules.common.model.data.Data;
+	import bull.modules.perload.services.PreLoadService;	
 	
 	import msg.CS;
 	import msg.ENCSType;
@@ -28,15 +26,18 @@ package bull.modules.room.command
 		}
 		
 		private function State(cs:CS):void
-		{			
-			var bullData:Data = getSingleton(Data.NAME) as Data;			
-			bullData.roomData.State = cs.timer_notify.status;
-			bullData.roomData.RoundID = cs.timer_notify.order_id;			
-			bullData.roomData.LeftTime = cs.timer_notify.timeLeft;
+		{	
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;			
+			roomData.State = cs.timer_notify.status;
+			roomData.RoundID = cs.timer_notify.order_id;
+			roomData.LeftTime = cs.timer_notify.timeLeft;
 			
 			
 			//留2秒動畫時間
-			if (cs.timer_notify.status == RoomData.END) bullData.roomData.LeftTime -= 2;
+			if (cs.timer_notify.status == RoomData.END) roomData.LeftTime -= 2;
+			
+			trace("===================================狀態 " + roomData.State + " 秒數 " + roomData.LeftTime);			
+			
 			
 			sentNotification(BullNotification.STATE_CHANGE);
 			
