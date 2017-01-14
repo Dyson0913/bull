@@ -159,11 +159,6 @@ package bull.view.room
 			//開始倒數
 			viewBetTime.set_data([_roomData.LeftTime]);
 			
-			//本局限額
-			roomData.rest_betlimit = _roomData.GetMoney(_roomData.room_info.room_limit);
-			
-			viewArea.tablelimit_updata(roomData.rest_betlimit / _roomData.GetMoney(_roomData.room_info.room_limit) ,_roomData.appearMoney(roomData.rest_betlimit) );
-			
 			//TODO sound .player_action
 			
 			//中途進入元件處理

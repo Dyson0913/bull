@@ -156,6 +156,7 @@ package bull.modules.room.mediator
 			addNotifiction(BullNotification.ExitRoomEvent);
 			
 			//元件點擊事件
+			view.viewHead.on(LightEvent.ITEM_CLICK,this, onCarryClick);
 			view.viewArea.on(LightEvent.ITEM_CLICK,this, onBetzoneClick);
 			view.ViewBetGroup.on(LightEvent.ITEM_CLICK,this, onBetAction);
 			view.viewSelectClip.on(LightEvent.ITEM_CLICK, this, onCoinSelect);
@@ -164,6 +165,11 @@ package bull.modules.room.mediator
 			
 			//廣播訊息			
 			addNotifiction(BullNotification.Change_to_Lobby);
+		}
+		
+		private function onCarryClick():void
+		{
+			
 		}
 		
 		private function onCoinSelect(select:int):void
@@ -345,8 +351,7 @@ package bull.modules.room.mediator
 		
 		private function cashViewHandler():void
 		{			
-			view.viewHead.setMoney( roomData.appearMoney(roomData.Total_money)); 
-			//view.viewHead.setMoneyT(Common.isCoin?2:1);					
+			view.viewHead.setMoney( roomData.appearMoney(roomData.Total_money)); 			
 		}
 		
 		private function onSettleUpdateHandler():void
@@ -568,7 +573,7 @@ package bull.modules.room.mediator
 					betErrorHandler(noti.getBody() as Object);
 				break;	
 				case BullNotification.BET_INFO_UPDATE:
-					bet_otherHandler(noti.getBody() as Array);
+					bet_otherHandler();
 				break;	
 				
 				
@@ -637,6 +642,10 @@ package bull.modules.room.mediator
 		{
 			//帶入再滑入
 			view.showme();
+			
+			view.viewHead.setName(roomData.user_name);
+			view.viewHead.setMoneyT(roomData.IsMoney());
+			view.viewHead.setHead(roomData.user_head);
 		}
 		
 		private function betRepHandler():void
@@ -728,38 +737,29 @@ package bull.modules.room.mediator
 		}
 		
 		
-		public function bet_otherHandler(data:Array):void		
+		public function bet_otherHandler():void		
 		{
-			var myuid = data[0];
-			var divid_100:Boolean = data[1];
-			var bet_info:Array = data[2];
+			var myuid:Number = roomData.uid;			
+			var bet_info:Array = roomData.sameBetinfo;
 			var betinfo:SBetNotify_Bet;
 			
 			for (var i:int = 0; i < bet_info.length; i++)
 			{
 				betinfo = bet_info[i];
-				var self:Boolean = betinfo.uid == myuid;
-				var bet:Number = divid_100 == true? betinfo.value / 100 : betinfo.value;
+				var self:Boolean = betinfo.uid.toNumber() == myuid;
+				var bet:Number = roomData.GetMoney(betinfo.value);
 				var po:int = betinfo.position - 1;		
 				if (self)
 				{
-					//減注
-					
-					if ( bet < 0)
-					{
-						roomData.Zone_self_bet[0] = 0;
-						roomData.Zone_self_bet[1] = 0;
-						roomData.Zone_self_bet[2] = 0;
-						roomData.Zone_self_bet[3] = 0;
-					}
-					else
-					{
+					//減注 不用處理 BET_POSITION_CANCEL己處理
+					if ( bet > 0)
+					{		
 						//下注
 						var chips:Array = [];
 						chips = get_coin_info(bet, po, self);
 						add_selfbet(chips);
 						roomData.Zone_self_bet[po] += bet;
-					}					
+					}
 				}
 				else
 				{
@@ -790,7 +790,20 @@ package bull.modules.room.mediator
 				view.viewArea.update_self(i, roomData.Zone_self_bet[i]);
 			}			
 			
-			//view.viewArea.zone_light(3);
+			//前三名名單更新
+			//game.viewArea.set_zoneList(appMedel.TabPlayerList);
+			
+			//限額更新
+			//本局限額
+			roomData.rest_betlimit = roomData.GetMoney(roomData.room_info.room_limit);			
+			view.viewArea.tablelimit_updata(roomData.rest_betlimit / roomData.GetMoney(roomData.room_info.room_limit) , roomData.appearMoney(roomData.rest_betlimit) );
+			
+			
+			//明燈更新
+			view.viewArea.zone_light(roomData.light_po);						
+			
+			//TODO sound.dealpoker
+			//SoundManager.playSound(SoundPath.Coin);
 			
 			//num,idx
 			//自己下注  //折分coin
@@ -934,15 +947,7 @@ package bull.modules.room.mediator
 				}
 			}
 			
-			//前三名名單更新
-			game.viewArea.set_zoneList(appMedel.TabPlayerList);
 			
-			//限額更新
-			game.viewArea.update_limit(appMedel.roomParam.roomlimit,roomlimit);
-			
-			//明燈更新
-			game.viewArea.update_lamp(appMedel.where_is_lamp);
-			LightAssetManager.getInstance().playSound(SoundNameManager.getInstance().Coin, 0,1);
 		}
 		
 		private function regFont(fontFileName:String,path:String):void

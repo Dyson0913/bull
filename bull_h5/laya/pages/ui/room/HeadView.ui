@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":6,
+    "selecteID":11,
     "props":{"width":300,"sceneColor":"#000000","height":100},
     "nodeParent":-1,
     "label":"View",
@@ -183,7 +183,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":41,"x":86,"var":"mcMoneyIcon","skin":"res/gameScene/底板人民币.png"},
+            "props":{"y":38,"x":89,"var":"mcMoneyIcon","skin":"res/gameScene/底板人民币.png"},
             "nodeParent":1,
             "label":"Image(mcMoneyIcon)",
             "isDirectory":false,
@@ -198,7 +198,48 @@
                 }],
             "compId":9,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":25,"x":283,"width":120,"visible":false,"var":"carry_tips","skin":"res/gameScene/tips小底板.png","height":64},
+            "nodeParent":1,
+            "label":"Image(carry_tips)",
+            "isOpen":true,
+            "isDirectory":true,
+            "isAniNode":true,
+            "hasChild":true,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":143,"x":119,"skin":"res/gameScene/tips小底板.png"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":11,
+            "child":[
+                {
+                    "x":30,
+                    "type":"Label",
+                    "props":{"y":12,"x":17,"width":91,"text":"补充资金","height":30,"fontSize":20,"color":"#e8dfdf","bold":true},
+                    "nodeParent":11,
+                    "label":"Label",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "frames":[
+                        {
+                            "type":1,
+                            "props":{"text":"label"},
+                            "frame":0,
+                            "__InPool":false
+                        }],
+                    "compId":12,
+                    "child":[
+                        ]
+                }]
         }],
     "animations":[
         {

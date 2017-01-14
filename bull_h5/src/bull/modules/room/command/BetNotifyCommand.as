@@ -86,10 +86,7 @@ package bull.modules.room.command
 				if( roomData.Cash_Type != ENMoneyType.MONEY_TYPE_COIN ) bet_add_value = bet_add_value*100;
 			}
 			
-			out.bet_req.bet_money  = bet_add_value;
-			//if( bet_add_value ==-1) appMedel.IsBetMax = true;
-			//else appMedel.IsBetMax =  false;
-			//
+			out.bet_req.bet_money  = bet_add_value;			
 			
 			var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
 			socket.sentMsg(out);
@@ -166,31 +163,27 @@ package bull.modules.room.command
 		{			
 			var data:SBetNotify = cs.bet_notify;
 			
-			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
-			
-			var divi_100:Boolean = false;
-			if ( roomData.Cash_Type != ENMoneyType.MONEY_TYPE_COIN ) divi_100 = true;
-			
-			var bullData:Data = getSingleton(Data.NAME) as Data;
-			var myuid:Number =  bullData.uid;
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;			
 			
 			var m1:SBetInfo = data.m1;
 			var m2:SBetInfo = data.m2;
 			var m3:SBetInfo = data.m3;
 			var m4:SBetInfo = data.m4;
 			
+			
 			//總下注更新
-			roomData.Zone_Total_bet[0] = divi_100 == true ? m1.money.toNumber() / 100 : m1.money.toNumber();
-			roomData.Zone_Total_bet[1] = divi_100 == true ? m2.money.toNumber() / 100 : m2.money.toNumber();
-			roomData.Zone_Total_bet[2] = divi_100 == true ? m3.money.toNumber() / 100 : m3.money.toNumber();
-			roomData.Zone_Total_bet[3] = divi_100 == true ? m4.money.toNumber() / 100 : m4.money.toNumber();
+			roomData.Zone_Total_bet[0] = roomData.GetMoney(m1.money.toNumber());
+			roomData.Zone_Total_bet[1] = roomData.GetMoney(m2.money.toNumber());
+			roomData.Zone_Total_bet[2] = roomData.GetMoney(m3.money.toNumber());
+			roomData.Zone_Total_bet[3] = roomData.GetMoney(m4.money.toNumber());
 			
 			//下注資訊更新
 			roomData.sameBetinfo = [];
-			roomData.sameBetinfo = data.bets;		
+			roomData.sameBetinfo = data.bets;
+			roomData.light_po = data.light_pos - 1;			
 			
 			
-			sentNotification(BullNotification.BET_INFO_UPDATE,[myuid,divi_100,roomData.sameBetinfo]);			
+			sentNotification(BullNotification.BET_INFO_UPDATE);			
 			return;
 						
 			var m1:SBetInfo = data.m1;

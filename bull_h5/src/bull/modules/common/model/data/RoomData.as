@@ -12,6 +12,7 @@ package bull.modules.common.model.data
 	import conf.SBankerCalcInfo;
 	import conf.SRoomConfig;
 	import conf.SUserInfo;
+	import laya.utils.Handler;
 	import msg.SBankerCalculateNotify;
 	import msg.SBankerNotify;
 	
@@ -33,15 +34,17 @@ package bull.modules.common.model.data
 		public var id:int;//////////////////房间名字（id）
 		public var name:String = "";////////////////房间用来展示的名字
 		public var Cash_Type:ENMoneyType;
-		public var room_info:SRoomConfig;
-		public var user_info_callback:Function;
+		public var room_info:SRoomConfig;		
 		
 		
 		// player_Money.cash
 		// player_Money.coin
 		// player_Money.nm	
 		public var uid:Number;
+		public var user_name:String;
+		public var user_head:String;
 		public var player_Money:Object;
+		
 		
 		
 		
@@ -91,6 +94,7 @@ package bull.modules.common.model.data
 		public var bet_idx:int;
 		public var Has_bet:Boolean;
 		public var rest_betlimit:Number;
+		public var light_po:int;
 		
 		//四區個人和他人下注
 		public var Zone_Total_bet:Array;
@@ -103,8 +107,11 @@ package bull.modules.common.model.data
 		public var chipTool:BetSplit = new BetSplit();
 		
 		public function RoomData()
-		{
-			user_info_callback = null;
+		{			
+			
+			user_name = "";
+			user_head = "";
+			
 			history_Win_info = [];
 			history_lost_info = [];
 			history_result_info = [];
@@ -120,11 +127,18 @@ package bull.modules.common.model.data
 			Zone_Total_bet = [0,0,0,0];
 			Zone_self_bet = [0,0,0,0];
 			sameBetinfo = [];
+			light_po = -1;
+			
 			uid = 0;
 			Has_bet = false;
 			banker_id = Long.fromNumber( -1);
 			
 			Banker_calcu_info = new SBankerCalculateNotify();
+		}
+		
+		public function IsMoney(money:Number):Boolean
+		{
+			return (Cash_Type != ENMoneyType.MONEY_TYPE_COIN) == true ? true : false;
 		}
 		
 		public function GetMoney(money:Number):Number
@@ -177,7 +191,16 @@ package bull.modules.common.model.data
 					ob["avatar"] = info.avatar;						
 				}
 			}
+			
+			//是自己的就存起來			
+			if (info.uid == uid) 
+			{
+				user_name = info.username;
+				user_head = info.avatar;
+			}
 		}
+		
+		
 		
 		/**
 		 * 初始化选择筹码配置 

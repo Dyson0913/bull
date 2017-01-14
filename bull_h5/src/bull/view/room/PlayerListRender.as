@@ -64,6 +64,7 @@ package bull.view.room
 			
 			_light.visible = data["is_light"];
 			_Money.text = data["win_money"];
+			_Money.color = data["color"];
 			
 			_Name.text = data["username"];
 			_Head.visible = true;

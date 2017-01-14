@@ -6,9 +6,7 @@ package bull.view.room
 	import ui.ui.room.HeadViewUI
 	
 	public class HeadView extends HeadViewUI
-	{						
-		private var _CarryInClickHandler:Handler;
-		
+	{
 		public function HeadView()
 		{
 			super();
@@ -26,16 +24,18 @@ package bull.view.room
 			
 			bp_vip.label = "";			
 			btnAdd.on(Event.CLICK, this, onClick);
+			btnAdd.on(Event.MOUSE_OVER, this, onOver);
+			btnAdd.on(Event.MOUSE_OUT, this, onOut);
 		}
 		
-		protected function onClick(event:Event):void
+		protected function onOver(event:Event):void
 		{
-			if( _CarryInClickHandler )
-			{
-				_CarryInClickHandler.method.apply(_CarryInClickHandler.args);
-				
-			}
-			
+			carry_tips.visible = true;			
+		}		
+		
+		protected function onOut(event:Event):void
+		{
+			carry_tips.visible = false;
 		}		
 		
 		public function setName(str:String):void
@@ -46,9 +46,9 @@ package bull.view.room
 		{
 			txtMoney.text = num
 		}
-		public function setMoneyT(num:uint):void
+		public function setMoneyT(value:Boolean):void
 		{
-			mcMoneyIcon.visible = true;
+			mcMoneyIcon.visible = value;
 		}
 		
 		public function setVip(vipLevel:int):void
@@ -63,13 +63,7 @@ package bull.view.room
 		
 		public function setHead(str:String):void
 		{			
-			mcHead.source = str;			
-			
-		}
-		
-		public function addCarryClick( ClickHandler:Handler ):void
-		{
-			_CarryInClickHandler = ClickHandler;
-		}
+			mcHead.loadImage(str, 0, 0, 68, 67);
+		}		
 	}
 }

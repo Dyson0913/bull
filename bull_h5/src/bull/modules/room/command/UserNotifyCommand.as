@@ -53,15 +53,8 @@ package bull.modules.room.command
 			roomData.player_List_ob.length = 0;
 			for ( var i:int = 0; i < cs.all_user_info_notify.user_info_s.length; i++)
 			{
-				var data:SUserInfo = cs.all_user_info_notify.user_info_s[i];
-				
-				var win_str:String = "";
-				if ( data.win_money.toNumber() > 0) win_str = "赢" + roomData.appearMoney(roomData.GetMoney(data.win_money));
-				else if( data.win_money.toNumber() < 0) win_str = "输" + roomData.appearMoney(roomData.GetMoney(data.win_money));
-				else win_str = "0";
-				
-				var ob:Object = { "idx":i,"uid":data.uid,"is_light":data.is_light, "win_money":win_str};
-				roomData.player_List_ob.push(ob);				
+				var data:SUserInfo = cs.all_user_info_notify.user_info_s[i];				
+				roomData.player_List_ob.push(this.player_ob(i, data));		
 			}			
 			
 			//取回頭像資訊
@@ -85,27 +78,40 @@ package bull.modules.room.command
 		{	
 			trace("-------------------------------新的玩家進入");
 			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;			
+			var data:SUserInfo = cs.one_user_info_notify.user_info;
 			
+			roomData.player_List_ob.push(this.player_ob(roomData.player_List_ob.length, data));
 			
-			var data:SUserInfo = cs.one_user_info_notify.user_info;				
-			var win_str:String = "";
-			if ( data.win_money.toNumber() > 0) win_str = "赢" + roomData.appearMoney(roomData.GetMoney(data.win_money));
-			else if( data.win_money.toNumber() < 0) win_str = "输" + roomData.appearMoney(roomData.GetMoney(data.win_money));
-			else win_str = "0";
+			//更新用戶訊息			
+			sentNotification(ENCSType.CS_TYPE_GET_PLAYER_INFO_REQ.toString(), [data.uid.toNumber()]);
 			
-			var ob:Object = { "idx":i,"uid":data.uid,"is_light":data.is_light, "win_money":win_str};
-			roomData.player_List_ob.push(ob);
-			
-			//更新用戶訊息
-			roomData.user_info_callback = this.get_info_ok;
-			sentNotification(ENCSType.CS_TYPE_GET_PLAYER_INFO_REQ.toString(), [data.uid.toNumber()]);			
+			//等一下再發送更新,確保玩家資訊都取回
+			Tween.to(this, {}, 50,Ease.cubicOut,Handler.create(this,infoHandler));
 		}
 		
-		private function get_info_ok():void
-		{			
-			//調用完變回null
-			user_info_callback = null;
-			sentNotification(BullNotification.USER_NOTIFY);
+		private function player_ob(i:int,data:SUserInfo):Object
+		{
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
+			
+			var win_str:String = "";
+			var color:String;
+			if ( data.win_money.toNumber() > 0) {
+				color = "#e0e814";
+				win_str = "赢" + roomData.appearMoney(roomData.GetMoney(data.win_money));
+			}
+			else if ( data.win_money.toNumber() < 0)
+			{
+				win_str = "输" + roomData.appearMoney(roomData.GetMoney(-data.win_money));
+				color = "#e81c13";
+			}
+			else
+			{
+				win_str = "0";
+				color = "##f3ebea";
+			}
+			
+			var ob:Object = { "idx":i, "uid":data.uid, "is_light":data.is_light, "win_money":win_str, "color":color };
+			return ob;
 		}
 		
 		private function userinfo_req(uid_and_callback:Array):void
@@ -138,11 +144,11 @@ package bull.modules.room.command
 				}
 				
 				var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
-				roomData.attch_to_player_List_ob(info);					
+				roomData.attch_to_player_List_ob(info);				
 				
 				if (roomData.user_info_callback != null)
 				{
-					roomData.user_info_callback.apply();
+					roomData.user_info_callback.method.apply(roomData.user_info_callback.args);					
 				}
 			}
 		}
