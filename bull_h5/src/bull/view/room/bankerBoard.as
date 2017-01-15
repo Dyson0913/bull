@@ -65,8 +65,10 @@ package bull.view.room
 		
 		public function set_bankerlist(data:Array):void
 		{				
-			update_list(data[0],data[2]);			
+			update_list(data[0],data[2]);
 			mcHintBoard.title.text = data[1];
+			mcHintBoard.BankerLimit.text = data[3];
+			
 		}		
 		
 		public function bankerinfo_update(data:Array):void
@@ -142,6 +144,9 @@ package bull.view.room
 				if ( i == self_po )
 				{					
 					mcHintBoard["player_" + i].color = "#b6c325";
+				}
+				else {
+					mcHintBoard["player_" + i].color = "#7d7d7a";
 				}
 			}
 			

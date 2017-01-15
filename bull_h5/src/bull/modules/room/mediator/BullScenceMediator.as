@@ -416,8 +416,7 @@ package bull.modules.room.mediator
 		
 		private function onbankerlist_upateHandler():void
 		{			
-			view.viewBankerPanel.set_bankerlist([["player1","player2","player3","player4","player5","player6","player7","player8","player9","player10"],"[G币达到",3]);
-			//view.bnaklis.viewBankerPanel.set_list(appMedel.WaitBankList,appMedel.nick_name_64);
+			view.viewBankerPanel.set_bankerlist(roomData.bankerlist);
 		}
 		
 		private function bankerReplyHandler(data:Array):void			

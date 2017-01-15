@@ -121,6 +121,7 @@ package bull.modules.common.model.data
 			
 			player_List_ob = [];			
 			
+			bankerlist = [];
 			
 			card_info = [];
 			
@@ -142,7 +143,7 @@ package bull.modules.common.model.data
 			Banker_calcu_info = new SBankerCalculateNotify();
 		}
 		
-		public function IsMoney(money:Number):Boolean
+		public function IsMoney():Boolean
 		{
 			return (Cash_Type != ENMoneyType.MONEY_TYPE_COIN) == true ? true : false;
 		}

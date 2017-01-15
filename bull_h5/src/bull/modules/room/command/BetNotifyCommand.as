@@ -194,11 +194,6 @@ package bull.modules.room.command
 			sentNotification(BullNotification.BET_INFO_UPDATE);			
 			return;
 						
-			var m1:SBetInfo = data.m1;
-			var m2:SBetInfo = data.m2;
-			var m3:SBetInfo = data.m3;
-			var m4:SBetInfo = data.m4;
-			
 			//if ( m1 == null) return;
 			
 			
@@ -323,48 +318,7 @@ package bull.modules.room.command
 			//下注與退注更新
 			appMedel.roomParam.roomlimit -= Total_batch_bet;
 			
-			// 前三名data
-			var list:Array = [m1,m2,m3,m4];
-			var tip_list:Array =[];			
-			//uid 取得對應
-			for( var j:int =0 ;j< list.length;j++)
-			{
-				var n:int = list[j].user_info_s.length;		
-				var zone_list:Array =[];
-				for (var i:int =0;i< n;i++)
-				{
-					var info:SUserInfo =  list[j].user_info_s[i];
-					var playerLen:int = appMedel.TablePlayerlist.length;			
-					for (var k:int =0;k< playerLen;k++)
-					{
-						var playerinfo:Array = appMedel.TablePlayerlist[k];	
-						
-						if( playerinfo[0] == info.uid.toString())
-						{		
-							var mon:Int64;
-							if( appMedel.roomParam.roomType != conf.ENRoomType.ROOM_TYPE_COIN )
-							{
-								var nu:Number = info.betMoney.toNumber() /100;
-								mon = Int64.fromNumber(nu);
-							}
-							else mon = info.betMoney;
-								
-							
-							var one:Object = {"name":playerinfo[3],
-								                             "light":info.isLight == true ? 1: 2,
-															 "money":mon,
-															 "vip":0
-							                                };
-							
-							zone_list.push(one);							
-						}
-					}
-				}
-				
-				tip_list.push(zone_list);				
-			}
-			appMedel.TabPlayerList = [];
-			appMedel.TabPlayerList = tip_list;
+		
 			
 			//明燈位置
 			var light_po:int =-1;

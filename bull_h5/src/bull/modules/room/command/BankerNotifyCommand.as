@@ -7,6 +7,7 @@ package bull.modules.room.command
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
 	import conf.ENBankerType;
+	import conf.SUserInfo;
 	import msg.SBankerRsp;
 	
 	import bull.events.BullNotification;	
@@ -45,10 +46,26 @@ package bull.modules.room.command
 		
 		private function bankerlist(cs:CS):void
 		{			
-			var bullData:Data = getSingleton(Data.NAME) as Data;			
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;			
+			roomData.banker_num = cs.banker_list_notify.player_count;			
 			
-			bullData.roomData.banker_num = cs.banker_list_notify.player_count;
-			bullData.roomData.bankerlist = cs.banker_list_notify.user_info_s;
+			
+			roomData.bankerlist.length = 0
+			var myidx:int = -1;
+			var list:Array = [];
+			for (var i:int = 0; i < cs.banker_list_notify.user_info_s.length; i++)
+			{
+				var data:SUserInfo = cs.banker_list_notify.user_info_s[i];				
+				var name:String = roomData.find_player("username", data.uid);				
+				if ( data.uid.toNumber() == roomData.uid) myidx = i;
+				list.push(name);
+			}	
+			var title:String = roomData.IsMoney() == true ? "[现金达到":"[G币达到";
+			var limit:String = roomData.appearMoney(roomData.GetMoney(roomData.room_info.banker_limit));
+			roomData.bankerlist.push(list);
+			roomData.bankerlist.push(title);
+			roomData.bankerlist.push(myidx);
+			roomData.bankerlist.push(limit);
 			
 			sentNotification(BullNotification.BANKER_LIST);
 			
@@ -56,17 +73,17 @@ package bull.modules.room.command
 		
 		private function newbaner(cs:CS):void
 		{			
-			var bullData:Data = getSingleton(Data.NAME) as Data;			
-			bullData.roomData.newBaner_info = cs.banker_notify;			
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;	
+			roomData.newBaner_info = cs.banker_notify;
 			
 			sentNotification(BullNotification.NEW_BANKER);			
 		}
 		
 		private function banker_calcu(cs:CS):void
 		{
-			var bullData:Data = getSingleton(Data.NAME) as Data;			
-			bullData.roomData.Banker_calcu_info.banker_calc_info_s = cs.banker_calc_notify.banker_calc_info_s;
-			bullData.roomData.Banker_calcu_info.total_win_money =  cs.banker_calc_notify.total_win_money;
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;				
+			roomData.Banker_calcu_info.banker_calc_info_s = cs.banker_calc_notify.banker_calc_info_s;
+			roomData.Banker_calcu_info.total_win_money =  cs.banker_calc_notify.total_win_money;
 			
 			sentNotification(BullNotification.BANKER_CALCU);			
 		}
