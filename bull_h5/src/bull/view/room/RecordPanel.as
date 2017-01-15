@@ -31,12 +31,16 @@ package bull.view.room
 		{		
 			Showing_Recode.visible = false;
 			Hidding_Recode.visible = true;
+			
+			viewNetState.y = 50;
 		}
 		
 		private function onHide(e:Event):void
 		{		
 			Showing_Recode.visible = true;
 			Hidding_Recode.visible = false;
+			
+			viewNetState.y = 424;
 		}
 		
 		public function histroy_notify(win:Array,lost:Array,result:Array):void

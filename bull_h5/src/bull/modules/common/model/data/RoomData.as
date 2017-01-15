@@ -181,7 +181,7 @@ package bull.modules.common.model.data
 			for (var j:int = 0; j < player_List_ob.length; j++)
 			{
 				var ob:Object = player_List_ob[j];				
-				if ( ob.uid.toNumber() == banker_id.toNumber())
+				if ( ob.uid == banker_id)
 				{
 					return ob[type];
 				}
@@ -196,7 +196,7 @@ package bull.modules.common.model.data
 			for (var j:int = 0; j < player_List_ob.length; j++)
 			{
 				var ob:Object = player_List_ob[j];				
-				if ( ob.uid.toNumber() == uid.toNumber())
+				if ( ob.uid == uid)
 				{
 					return ob[type];
 				}
@@ -209,7 +209,7 @@ package bull.modules.common.model.data
 			for (var j:int = 0; j < player_List_ob.length; j++)
 			{
 				var ob:Object = player_List_ob[j];				
-				if ( ob.uid.toNumber() == id)
+				if ( ob.uid == id)
 				{
 					return ob[type];
 				}

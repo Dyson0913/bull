@@ -61,7 +61,9 @@ package bull.view.room
 			//向上滑入
 			Tween.to(viewHead, { y:720 }, 1000, Ease.backIn);												
 			Tween.to(ViewBetGroup, { y:709 }, 1000, Ease.backIn);
-			Tween.to(viewSelectClip, { y:665 }, 1000, Ease.backIn);			
+			Tween.to(viewSelectClip, { y:665 }, 1000, Ease.backIn);
+			Tween.to(bg_board, { y:703 }, 1000, Ease.backIn);
+			
 			//向下滑入
 			Tween.to(viewBankerPanel, { y:-5 }, 1000, Ease.backIn);			
 		
@@ -78,6 +80,7 @@ package bull.view.room
 			viewBankerPanel.y = -81;
 			ViewBetGroup.y = 805;
 			viewSelectClip.y = 803;
+			bg_board.y = 800;
 		}
 		
 		public function btn_display(show:Boolean):void

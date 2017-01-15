@@ -8,6 +8,7 @@ package bull.view.room
 	import laya.utils.Tween;
 	import laya.events.Event;
 	import laya.utils.Ease;
+	import laya.utils.Handler;
 	
 	import ui.ui.room.BetAreaViewUI
 	
@@ -15,6 +16,7 @@ package bull.view.room
 	public class BetAreaView extends BetAreaViewUI
 	{		
 		private var zone_flash_times:int = 0;
+		private var _moveIn_zone_idx:int;
 		
 		public var dragChip:Chip = new Chip();
 		
@@ -45,13 +47,20 @@ package bull.view.room
 			var pattern:RegExp = /Scene_/;
 			sName = sName.replace(pattern, "");	
 			var idx:int = parseInt(sName);
-			trace("onSceneClick = " + idx);
+			
 			
 			//閃一下
 			this["zone_" + idx].visible = true;
 			
-			//TODO 下注
+			Tween.to(this["zone_" + idx], {  },50, Ease.linearNone,Handler.create(this,up,[idx]));
+			
+			//下注
 			event(LightEvent.ITEM_CLICK,idx);
+		}
+		
+		private function up(idx:int):void
+		{
+			this["zone_" + idx].visible = false;
 		}
 		
 		private function onSceneup(e:Event):void
@@ -69,6 +78,19 @@ package bull.view.room
 		
 		private function onSceneOver(e:Event):void
 		{			
+			
+			var sName:String = e.target.name;
+			trace("in sName = "+sName);
+			var pattern:RegExp = /Scene_/;
+			sName = sName.replace(pattern, "");	
+			var idx:int = parseInt(sName);
+			
+			//前三名面牌
+			//Tween.to(this["Rankp_" + idx], {  }, 500, Ease.linearNone, Handler.create(this, fistThree, [idx]));
+			this["Rankp_" + idx].visible = true;	
+			_moveIn_zone_idx = idx;
+			
+			//跟隨ocin
 			dragChip.visible = true;
 			_arrows.visible = true;
 			
@@ -82,8 +104,13 @@ package bull.view.room
 		}
 		
 		private function onSceneOut(e:Event):void
-		{
+		{			
+			//trace("out idx"+ _moveIn_zone_idx);
+			
+			this["Rankp_" + _moveIn_zone_idx].visible = false;
+			
 			stopDragChip();
+			
 		}
 		
 		
@@ -138,7 +165,6 @@ package bull.view.room
 			for (var i:int = 0; i < 4; i++)
 			{					
 				this["Scene_" + i].on(Event.MOUSE_DOWN, this, onScenedown);
-				this["Scene_" + i].on(Event.MOUSE_UP, this, onSceneup);	
 				this["Scene_" + i].on(Event.MOUSE_MOVE, this, onSceneOver);	
 				this["Scene_" + i].on(Event.MOUSE_OUT, this, onSceneOut);	
 			}
@@ -210,8 +236,9 @@ package bull.view.room
 		{
 			for (var i:int = 0; i < 4; i++)
 			{												
-				this["Scene_" + i].off(Event.MOUSE_DOWN, this, onScenedown);
-				this["Scene_" + i].off(Event.MOUSE_UP, this, onSceneup);				
+				this["Scene_" + i].off(Event.MOUSE_DOWN, this, onScenedown);				
+				this["Scene_" + i].off(Event.MOUSE_MOVE, this, onSceneOver);	
+				this["Scene_" + i].off(Event.MOUSE_OUT, this, onSceneOut);
 				
 				//總數
 				this["total_amount_" + i]["title"].visible = false;
@@ -232,7 +259,10 @@ package bull.view.room
 			for (var i:int = 0; i < 4; i++)
 			{												
 				this["Scene_" + i].off(Event.MOUSE_DOWN, this, onScenedown);
-				this["Scene_" + i].off(Event.MOUSE_UP, this, onSceneup);
+				this["Scene_" + i].off(Event.MOUSE_MOVE, this, onSceneOver);	
+				this["Scene_" + i].off(Event.MOUSE_OUT, this, onSceneOut);
+				
+				this["Rankp_" + i].visible = false;
 				
 			}	
 		}
