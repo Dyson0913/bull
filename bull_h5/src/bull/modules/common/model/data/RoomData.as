@@ -181,6 +181,9 @@ package bull.modules.common.model.data
 			for (var j:int = 0; j < player_List_ob.length; j++)
 			{
 				var ob:Object = player_List_ob[j];				
+				trace("ob.uid = "+ob.uid);
+				trace("banker_id = "+banker_id);
+				trace("ob.uid = "+ob.uid.toNumber() == banker_id.toNumber());
 				if ( ob.uid.toNumber() == banker_id.toNumber())
 				{
 					return ob[type];

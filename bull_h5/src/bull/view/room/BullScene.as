@@ -97,7 +97,7 @@ package bull.view.room
 			
 			//其它玩家當庄,非系統
 			//TODO CHECK
-			if( _roomData.banker_id.toNumber() != 0 &&  (_roomData.banker_id.toNumber() != _roomData.uid))
+			if( !_roomData.IsSysBanker() &&  (_roomData.banker_id.toNumber() != _roomData.uid))
 			{
 				phase_tip("等待玩家连庄",1);
 			}
@@ -134,6 +134,7 @@ package bull.view.room
 			_roomData.Zone_Total_bet = [0, 0, 0, 0];
 			
 			//自己坐庄 
+			trace("roomData.banker_id.toNumber() == roomData.uid = "+roomData.banker_id.toNumber() == roomData.uid);
 			if( roomData.banker_id.toNumber() == roomData.uid)
 			{
 				phase_tip("等待其他玩家下注！",1);
@@ -144,10 +145,12 @@ package bull.view.room
 			else if ( roomData.Total_money == 0)
 			{
 				//觀局模式,不能下注
+				trace("觀局模式");
 				viewSelectClip.set_gray(true);				
 			}
 			else
 			{
+				trace("玩家正常下注模式");
 				//選第一個COIN
 				viewArea.set_fellow_coin(viewSelectClip["mcSelect_0"]);	
 				viewArea.openbet( _roomData.IsSysBanker() , _roomData.appearMoney(_roomData.GetMoney(_roomData.room_info.room_limit)));

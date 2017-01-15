@@ -457,6 +457,7 @@ package bull.modules.room.mediator
 			}
 			
 			//新庄上庄,才播動畫
+			
 			var play_ani:Boolean = false;			
 			if ( roomData.banker_id.toNumber() != roomData.newBaner_info.banker_id.toNumber())
 			{
@@ -464,6 +465,8 @@ package bull.modules.room.mediator
 				roomData.banker_id = roomData.newBaner_info.banker_id;
 				
 			}
+			trace("-------------------------------------roomData.banker_id "+roomData.banker_id);
+			trace("-------------------------------------roomData.banker_id "+roomData.newBaner_info.banker_id);
 			
 			var banker_name:String = roomData.find_banker("username");
 			var banker_head:String = roomData.find_banker("avatar");
