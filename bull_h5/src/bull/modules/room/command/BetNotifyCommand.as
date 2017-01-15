@@ -104,26 +104,21 @@ package bull.modules.room.command
 					//下注位置    (11. 取消,  10. 同上一轮,  1~4. 下注位置)
 					if ( rsp.position ==  conf.ENBetPosition.BET_POSITION_CANCEL )
 					{						
-						roomData.Has_bet  = false;						
-						
-						//桌限紅加回
-						roomData.rest_betlimit += roomData.GetMoney(rsp.bet_money);
-						
-						roomData.Total_money = roomData.GetMoney(rsp.hand_money.toNumber());						
+						roomData.Has_bet  = false;
+						//更新自己手中的錢
+						roomData.Total_money = roomData.GetMoney(rsp.hand_money.toNumber());
 						sentNotification(BullNotification.BET_CANCEL_OK); 
 					}					
 					else 
 					{
 						// conf.ENBetPosition.BET_POSITION_REPEAT;一樣處理
-						roomData.Has_bet = true;
-						
-						//桌限紅扣掉
-						roomData.rest_betlimit -= roomData.GetMoney(rsp.bet_money);
-						
-						//更新自己手中的錢
+						roomData.Has_bet = true;			
 						roomData.Total_money = roomData.GetMoney(rsp.hand_money.toNumber());
-						sentNotification(BullNotification.BET_RSP);		
+						sentNotification(BullNotification.BET_RSP); 
 					}
+					
+					
+					
 				break;
 				
 				default:				
@@ -176,6 +171,25 @@ package bull.modules.room.command
 			roomData.sameBetinfo = data.bets;
 			roomData.light_po = data.light_pos - 1;			
 			
+			//各區前三名資訊
+			roomData.first_three_info.length = 0;
+			var list:Array = [m1, m2, m3, m4];
+			var tip_list:Array =[];	
+			for (var i:int = 0; i < list.length; i++)
+			{
+				var n:int = list[i].user_info_s.length;
+				var zone_list:Array =[];
+				for (var j:int =0;j< n;j++)
+				{
+					var info:SUserInfo =  list[i].user_info_s[j];
+					var name:String = roomData.find_player("username", info.uid);
+					var money:String  = roomData.appearMoney(roomData.GetMoney(info.bet_money.toNumber()));
+					var one:Object = { "name":name, "light":info.is_light, "money":money};
+					zone_list.push(one);
+				}
+				tip_list.push(zone_list);			
+			}
+			roomData.first_three_info = tip_list;
 			
 			sentNotification(BullNotification.BET_INFO_UPDATE);			
 			return;

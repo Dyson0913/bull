@@ -103,12 +103,13 @@ package bull.view.room
 			}
 			
 			isBanker.visible = false;
-			BankerHead.source = Light.loader.getRes("res/gameScene/HeadIcon.jpg");
+			//BankerHead.source = Light.loader.getRes("res/gameScene/HeadIcon.jpg");
 		}		
 		
 		public function initView(playerName:String,myMony:String,restTime:int,MyWin:Long,MywinDisplay:String,data:Array,isSelfbaner:Boolean,banker_name:String,banker_Head:String,sef_head:String):void
 		{
 			this.visible = true;
+			
 			reset();
 			
 			isBanker.visible = isSelfbaner;

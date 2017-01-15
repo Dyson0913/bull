@@ -40,7 +40,7 @@ package bull.modules.room.command
 			{
 				var data:SUserInfo = cs.calculate_notify.user_info_s[i];
 				
-				var name:String = roomData.find_player("username", data.uid);				
+				var name:String = roomData.find_player("username", data.uid);
 				var money:String  = roomData.appearMoney(roomData.GetMoney(data.win_money.toNumber()));
 				var head:String = roomData.find_player("avatar", data.uid);
 				var ob:Object = {  "name":name, "is_light":data.is_light, "money":money, "head":head };				

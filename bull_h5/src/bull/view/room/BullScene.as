@@ -137,7 +137,7 @@ package bull.view.room
 			trace("roomData.banker_id.toNumber() == roomData.uid = "+roomData.banker_id.toNumber() == roomData.uid);
 			if( roomData.banker_id.toNumber() == roomData.uid)
 			{
-				phase_tip("等待其他玩家下注！",1);
+				phase_tip("等待其他玩家下注！",0);
 				
 				//上庄玩家注區不能下注,COIN 灰掉
 				viewSelectClip.set_gray(true);
@@ -164,6 +164,9 @@ package bull.view.room
 			
 			//開始倒數
 			viewBetTime.set_data([_roomData.LeftTime]);
+			
+			//本局限額
+			roomData.rest_betlimit = roomData.GetMoney(roomData.room_info.room_limit);
 			
 			//TODO sound .player_action
 			
@@ -238,7 +241,7 @@ package bull.view.room
 			Hint.text = msg;
 			if( sec !=0)
 			{								
-				Tween.to(Hint,{alpha:1},500,Ease.backIn,Handler.create(this,tip_apear));
+				Tween.to(Hint, { alpha:1 }, sec * 1000, Ease.backIn, Handler.create(this, tip_apear));				
 			}
 			else
 			{

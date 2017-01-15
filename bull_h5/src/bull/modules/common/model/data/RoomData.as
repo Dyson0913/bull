@@ -96,6 +96,8 @@ package bull.modules.common.model.data
 		public var Has_bet:Boolean;
 		public var rest_betlimit:Number;
 		public var light_po:int;
+		public var first_three_info:Array;
+		
 		
 		//四區個人和他人下注
 		public var Zone_Total_bet:Array;
@@ -129,6 +131,7 @@ package bull.modules.common.model.data
 			Zone_self_bet = [0,0,0,0];
 			sameBetinfo = [];
 			light_po = -1;
+			first_three_info = [];
 			
 			uid = 0;
 			Has_bet = false;
@@ -181,9 +184,9 @@ package bull.modules.common.model.data
 			for (var j:int = 0; j < player_List_ob.length; j++)
 			{
 				var ob:Object = player_List_ob[j];				
-				trace("ob.uid = "+ob.uid);
-				trace("banker_id = "+banker_id);
-				trace("ob.uid = "+ob.uid.toNumber() == banker_id.toNumber());
+				//trace("ob.uid = "+ob.uid);
+				//trace("banker_id = "+banker_id);
+				//trace("ob.uid = "+ob.uid.toNumber() == banker_id.toNumber());
 				if ( ob.uid.toNumber() == banker_id.toNumber())
 				{
 					return ob[type];
@@ -199,6 +202,9 @@ package bull.modules.common.model.data
 			for (var j:int = 0; j < player_List_ob.length; j++)
 			{
 				var ob:Object = player_List_ob[j];				
+				//trace("find_self ob.uid.toNumber() " + ob.uid.toNumber());
+				//trace("find_self ob.uid.toNumber() " + uid);
+				//trace("find_self ob.uid.toNumber() "+ob.uid.toNumber() == uid)
 				if ( ob.uid.toNumber() == uid)
 				{
 					return ob[type];
@@ -212,6 +218,7 @@ package bull.modules.common.model.data
 			for (var j:int = 0; j < player_List_ob.length; j++)
 			{
 				var ob:Object = player_List_ob[j];				
+				
 				if ( ob.uid.toNumber() == id)
 				{
 					return ob[type];

@@ -376,10 +376,11 @@ package bull.modules.room.mediator
 				else
 				{
 					_bankerName = roomData.find_banker("username");
-					_bankerHead = roomData.find_banker("avatar");
+					_bankerHead = roomData.find_banker("avatar");					
 				}
 				
 				var self_head:String = roomData.find_self("avatar");
+				trace("self head ="+self_head);
 				
 				var mymoney:String = roomData.appearMoney( roomData.GetMoney(roomData.settle_hand_money));
 				var mywin:String;
@@ -794,9 +795,15 @@ package bull.modules.room.mediator
 						{						
 							roomData.Zone_self_bet[i] = 0;
 						}
+						
+						//桌限紅加回
+						roomData.rest_betlimit += bet;
 					}
-					else
-					{		
+					else					
+					{	
+						//桌限紅扣掉
+						roomData.rest_betlimit -= bet;
+						
 						//下注
 						var chips:Array = [];
 						chips = get_coin_info(bet, po, self);
@@ -809,6 +816,9 @@ package bull.modules.room.mediator
 					//他人下注					
 					if ( bet < 0)
 					{
+						//桌限紅加回
+						roomData.rest_betlimit += bet;
+						
 						//減注						
 						var chips:Array = [];
 						chips = get_coin_info(-bet, po, false);
@@ -816,6 +826,9 @@ package bull.modules.room.mediator
 					}
 					else
 					{
+						//桌限紅扣掉
+						roomData.rest_betlimit -= bet;
+						
 						//下注
 						var chips:Array = [];
 						chips = get_coin_info(bet, po, false);
@@ -833,12 +846,14 @@ package bull.modules.room.mediator
 				view.viewArea.update_self(i, roomData.Zone_self_bet[i]);
 			}			
 			
-			//前三名名單更新
-			//game.viewArea.set_zoneList(appMedel.TabPlayerList);
+			//前三名名單更新 
+			view.viewArea.set_zoneTopThree(roomData.first_three_info);
 			
-			//限額更新
-			//本局限額
-			roomData.rest_betlimit = roomData.GetMoney(roomData.room_info.room_limit);			
+			//限額更新			
+			trace("限紅 = " + roomData.rest_betlimit);
+			trace("剩餘限紅 = " + roomData.rest_betlimit );
+			trace("剩餘限紅 顥示 = " + roomData.appearMoney(roomData.rest_betlimit) );
+			
 			view.viewArea.tablelimit_updata(roomData.rest_betlimit / roomData.GetMoney(roomData.room_info.room_limit) , roomData.appearMoney(roomData.rest_betlimit) );
 			
 			

@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":7,
+    "selecteID":8,
     "props":{"width":460,"sceneColor":"#ead1d1","height":160},
     "nodeParent":-1,
     "label":"View",
@@ -99,6 +99,26 @@
                     "__InPool":false
                 }],
             "compId":7,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":64,"x":119,"width":225,"var":"Text_NoOne_bet","text":"无人下注，请下注。","height":35,"fontSize":22,"color":"#f4e6e6"},
+            "nodeParent":1,
+            "label":"Label(Text_NoOne_bet)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":8,
             "child":[
                 ]
         }],

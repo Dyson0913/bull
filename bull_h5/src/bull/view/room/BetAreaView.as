@@ -17,6 +17,7 @@ package bull.view.room
 	{		
 		private var zone_flash_times:int = 0;
 		private var _moveIn_zone_idx:int;
+		private var _zone_topthree:Array = [];
 		
 		public var dragChip:Chip = new Chip();
 		
@@ -72,19 +73,20 @@ package bull.view.room
 			var idx:int = parseInt(sName);
 			
 			//前三名面牌
-			this["Rankp_" + idx].visible = true;	
+			this["Rankp_" + idx].visible = true;
+			//updata_topThree(idx);
 			_moveIn_zone_idx = idx;
 			
 			//跟隨ocin
-			dragChip.visible = true;
-			_arrows.visible = true;
-			
-			
-			_arrows.x = this.mouseX;
-			_arrows.y = this.mouseY;
-			dragChip.x = _arrows.x +20;
-			dragChip.y = _arrows.x +30;
-			this.on(Event.MOUSE_MOVE,this, dragChipHandler);
+			//dragChip.visible = true;
+			//_arrows.visible = true;
+			//
+			//
+			//_arrows.x = this.mouseX;
+			//_arrows.y = this.mouseY;
+			//dragChip.x = _arrows.x +20;
+			//dragChip.y = _arrows.x +30;
+			//this.on(Event.MOUSE_MOVE,this, dragChipHandler);
 			
 		}
 		
@@ -165,13 +167,21 @@ package bull.view.room
 				if ( percent > 0.5) 
 				{
 					BetLimit.Green.width = 146 * percent;
+					BetLimit.Hint.visible = false;
 				}
 				else
 				{
 					BetLimit.Green.visible = false;
-					BetLimit.Red.width = 73 * (percent*2);
+					BetLimit.Red.width = 73 * (percent * 2);					
+					BetLimit.Hint.visible = true;
+					Tween.to(BetLimit.Hint, {  },50, Ease.linearNone,Handler.create(this,shine));
 				}
 			}
+		}
+		
+		private function shine():void
+		{
+			BetLimit.Hint.visible = false;
 		}
 		
 		public function update_total(idx:int,amount:Number ):void
@@ -232,7 +242,11 @@ package bull.view.room
 				this["self_amount_" + i]["amount"].text = "";
 				this["Tips_" + i].alpha = 0;
 				
+				this["Rankp_" + i]["rank_info_" + 0].visible = false;
+				this["Rankp_" + i]["rank_info_" + 1].visible = false;
+				this["Rankp_" + i]["rank_info_" + 2].visible = false;
 			}	
+			BetLimit.visible = false;
 			
 		}
 		
@@ -247,6 +261,9 @@ package bull.view.room
 				this["Rankp_" + i].visible = false;
 				
 			}	
+			
+			BetLimit.visible = false;
+			stopDragChip();
 		}
 		
 		public function get_zone(i:int):Image
@@ -271,11 +288,48 @@ package bull.view.room
 			this["Name_" + po].alpha = 1;
 			this["Tips_" + po].alpha = 1;
 			Tween.to(this["Tips_" + po], { alpha:0 }, 3000, Ease.linearNone );
-			Tween.to(this["Name_" + po], { alpha:0 }, 3000, Ease.linearNone );
+			Tween.to(this["Name_" + po], { alpha:0 }, 3000, Ease.linearNone );			
+		}
+		
+		public function set_zoneTopThree(data:Array):void
+		{
+			_zone_topthree = data;
+		}
+		
+		private function updata_topThree(idx:int):void
+		{
+			if ( _zone_topthree.length == 0) 
+			{
+				this["Rankp_" + idx]["Text_NoOne_bet"] = "无人下注，请下注。";				
+				return;
+			}
 			
+			var data:Array  = _zone_topthree[idx];
 			
+			//提示字消失
+			if (data.length != 0) this["Rankp_" + idx]["Text_NoOne_bet"] = "";
+			
+			for (var i:int = 0; i < data.length; i++)
+			{
+				//沒資料hide
+				if ( i >= data.length)
+				{
+					this["Rankp_" + idx]["rank_info_" + i].visible = false;
+				}
+				else
+				{
+					var ob:Object = data[i];
+					this["Rankp_" + idx]["rank_info_" + i].visible = true;
+					this["Rankp_" + idx]["rank_info_" + i]["rank"].index = i;
+					this["Rankp_" + idx]["rank_info_" + i]["Vip"].visible = false;
+					this["Rankp_" + idx]["rank_info_" + i]["Name"].text = ob["name"];
+					this["Rankp_" + idx]["rank_info_" + i]["Light"].visible = ob["light"];
+					this["Rankp_" + idx]["rank_info_" + i]["Money"].text = ob["money"];					
+				}
+			}
 			
 		}
+		
 		
 		private function test():void
 		{
