@@ -468,8 +468,10 @@ package bull.modules.room.mediator
 			var banker_name:String = roomData.find_banker("username");
 			var banker_head:String = roomData.find_banker("avatar");
 			
+			
+			
 			var bankerTims:String = roomData.newBaner_info.banker_time +"/" + roomData.newBaner_info.max_time + "次";
-			if ( roomData.IsSysBanker() == 0)
+			if ( roomData.IsSysBanker())
 			{
 				trace("-------------------------------------系统坐庄 ");
 				view.viewBankerPanel.bankerinfo_update(["系统坐庄", "", ""]);
@@ -478,6 +480,10 @@ package bull.modules.room.mediator
 			else
 			{
 				trace("-------------------------------------玩家坐庄 ");
+				
+				trace("banker_name = "+banker_name);
+				trace("banker_head = "+banker_head);
+				
 				view.viewBankerPanel.bankerinfo_update([banker_name, bankerTims, roomData.GetMoney(roomData.newBaner_info.hand_money.toNumber())]);
 				if( play_ani) view.viewBankerPanel.newBanker(banker_name,banker_head);
 			}
@@ -777,8 +783,16 @@ package bull.modules.room.mediator
 				var po:int = betinfo.position - 1;		
 				if (self)
 				{
-					//減注 不用處理 BET_POSITION_CANCEL己處理
-					if ( bet > 0)
+					//減注
+					if ( bet < 0)
+					{
+						//還回全部和自己的金額
+						for(var i:int =0;i<  roomData.Zone_self_bet.length;i++)
+						{						
+							roomData.Zone_self_bet[i] = 0;
+						}
+					}
+					else
 					{		
 						//下注
 						var chips:Array = [];

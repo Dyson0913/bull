@@ -63,30 +63,15 @@ package bull.view.room
 			this["zone_" + idx].visible = false;
 		}
 		
-		private function onSceneup(e:Event):void
-		{
-			var sName:String = e.target.name;
-			var pattern:RegExp = /Scene_/;
-			sName = sName.replace(pattern, "");	
-			var idx:int = parseInt(sName);
-			
-			//閃一下			
-			this["zone_" + idx].visible = false;
-			
-			
-		}
-		
 		private function onSceneOver(e:Event):void
 		{			
 			
-			var sName:String = e.target.name;
-			trace("in sName = "+sName);
+			var sName:String = e.target.name;			
 			var pattern:RegExp = /Scene_/;
 			sName = sName.replace(pattern, "");	
 			var idx:int = parseInt(sName);
 			
 			//前三名面牌
-			//Tween.to(this["Rankp_" + idx], {  }, 500, Ease.linearNone, Handler.create(this, fistThree, [idx]));
 			this["Rankp_" + idx].visible = true;	
 			_moveIn_zone_idx = idx;
 			
@@ -104,11 +89,8 @@ package bull.view.room
 		}
 		
 		private function onSceneOut(e:Event):void
-		{			
-			//trace("out idx"+ _moveIn_zone_idx);
-			
-			this["Rankp_" + _moveIn_zone_idx].visible = false;
-			
+		{									
+			this["Rankp_" + _moveIn_zone_idx].visible = false;			
 			stopDragChip();
 			
 		}

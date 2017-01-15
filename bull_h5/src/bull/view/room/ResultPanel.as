@@ -144,8 +144,7 @@ package bull.view.room
 				SoundManager.playSound(SoundPath.settle_lose);
 			}
 			
-			var n:int = data.length;
-			
+			var n:int = data.length;			
 			//沒有人贏,顥示 本局无人赢钱
 			if ( n==0) Text_NoOne_bet.text =  "本局无人赢钱";// MessageCodeMgr.getInstance().getMessage("10");
 			else Text_NoOne_bet.text = "";
@@ -155,9 +154,10 @@ package bull.view.room
 			for(var i:int =0;i< n;i++)
 			{
 				var _data:Object = data[i];
-				
+				trace
 				item = mcRank[i];
-				item.index = i;
+				item.visible = true;
+				item.index = i;				
 				
 				item = mclight[i];
 				item.visible = _data.is_light;
@@ -170,7 +170,8 @@ package bull.view.room
 				
 				item = HeadPic[i];
 				item.visible = true;
-				item.loadImage(sef_head, 0, 0, 34, 34); 
+				this["mcHead_" + i].loadImage(sef_head, 0, 0, 34, 34); 
+				
 			}			
 			
 		}

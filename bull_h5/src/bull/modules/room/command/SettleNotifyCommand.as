@@ -28,7 +28,7 @@ package bull.modules.room.command
 		}
 		
 		private function settle(cs:CS):void
-		{	
+		{				
 			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;			
 			
 			roomData.settle_banker_id = cs.calculate_notify.banker_id;
@@ -36,14 +36,14 @@ package bull.modules.room.command
 			roomData.settle_hand_money = cs.calculate_notify.hand_money;
 			
 			roomData.settle_User_info.length = 0;
-			for (var i:int = 0; i < cs.calculate_notify.user_info_s; i++)
+			for (var i:int = 0; i < cs.calculate_notify.user_info_s.length; i++)
 			{
 				var data:SUserInfo = cs.calculate_notify.user_info_s[i];
 				
-				var name:String = roomData.find_player("username", data.uid);
+				var name:String = roomData.find_player("username", data.uid);				
 				var money:String  = roomData.appearMoney(roomData.GetMoney(data.win_money.toNumber()));
 				var head:String = roomData.find_player("avatar", data.uid);
-				var ob:Object = {  "name":name, "is_light":data.is_light, "money":money, "head":head };
+				var ob:Object = {  "name":name, "is_light":data.is_light, "money":money, "head":head };				
 				roomData.settle_User_info.push(ob);
 			}			
 			

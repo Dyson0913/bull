@@ -104,13 +104,7 @@ package bull.modules.room.command
 					//下注位置    (11. 取消,  10. 同上一轮,  1~4. 下注位置)
 					if ( rsp.position ==  conf.ENBetPosition.BET_POSITION_CANCEL )
 					{						
-						trace("=============================cancel ")
-						roomData.Has_bet  = false;
-						//還回全部和自己的金額
-						for(var i:int =0;i<  roomData.Zone_self_bet.length;i++)
-						{						
-							roomData.Zone_self_bet[i] = 0;
-						}
+						roomData.Has_bet  = false;						
 						
 						//桌限紅加回
 						roomData.rest_betlimit += roomData.GetMoney(rsp.bet_money);
