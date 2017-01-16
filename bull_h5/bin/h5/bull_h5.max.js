@@ -32359,7 +32359,8 @@ var Laya=window.Laya=(function(window,document){
 			this.appMedel=null;
 			this.num=0;
 			this.timer=null;
-			this._isSys=true;
+			this.net_speed=[];
+			this.avg_time_diff=[];
 			this.chipTool=new BetSplit();
 			(mediatorName===void 0)&& (mediatorName="");
 			BullScenceMediator.__super.call(this,"BullScenceMediator",viewComponent);
@@ -32996,6 +32997,7 @@ var Laya=window.Laya=(function(window,document){
 				return;
 			}
 			this.num++;
+			this.net_speed.push(Browser.now());
 			this.sentNotification("roomHeartBeat");
 		}
 
@@ -33015,6 +33017,18 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.receiveHeartBeat=function(){
 			this.num=0;
+			var start_time=this.net_speed.shift();
+			var time_diff=Browser.now()-start_time;
+			this.avg_time_diff.push(time_diff);
+			if (this.avg_time_diff.length >=5)this.avg_time_diff.shift();
+			var avg_speed=0;
+			var n=this.avg_time_diff.length;
+			for (var i=0;i < n;i++){
+				avg_speed+=this.avg_time_diff[i];
+			}
+			avg_speed=avg_speed / n;
+			avg_speed=800;
+			this.view.viewRecord.net_seed(avg_speed);
 		}
 
 		__proto.onCarryInClick=function(){
@@ -51401,6 +51415,7 @@ var Laya=window.Laya=(function(window,document){
 		function NetStatusPanelUI(){
 			this.Name=null;
 			this.tip_bg=null;
+			this.tip_board=null;
 			this.txt_Tip=null;
 			this.mcStatus=null;
 			this.State_0=null;
@@ -51418,7 +51433,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(NetStatusPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":200,"height":100},"child":[{"type":"Label","props":{"y":0,"x":0,"width":50,"text":"网路:","height":22,"fontSize":20,"color":"#f8f0ef"}},{"type":"Label","props":{"y":0,"x":54,"width":45,"var":"Name","text":"流暢","height":26,"fontSize":20,"color":"#49c11b"}},{"type":"Box","props":{"y":29,"x":5,"var":"tip_bg"},"child":[{"type":"Image","props":{"y":0,"x":-5,"width":256,"skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22","height":78}},{"type":"Label","props":{"y":18,"x":11,"width":226,"var":"txt_Tip","text":"网路:","height":31,"fontSize":20,"color":"#f8f0ef","align":"center"}}]},{"type":"Box","props":{"y":2,"x":103,"var":"mcStatus"},"child":[{"type":"Box","props":{"y":1.7763568394002505e-15,"x":1.9999999999999858,"var":"State_0"},"child":[{"type":"Image","props":{"y":-7.105427357601002e-15,"x":-0.9999999999999716,"skin":"res/gameScene/网络状态条绿.png"}},{"type":"Image","props":{"y":-7.105427357601002e-15,"x":9.000000000000028,"skin":"res/gameScene/网络状态条绿.png"}},{"type":"Image","props":{"y":-7.105427357601002e-15,"x":19.00000000000003,"skin":"res/gameScene/网络状态条绿.png"}},{"type":"Image","props":{"y":-7.105427357601002e-15,"x":29.00000000000003,"skin":"res/gameScene/网络状态条绿.png"}}]},{"type":"Box","props":{"y":1.0000000000000027,"x":1.9999999999999858,"var":"State_1"},"child":[{"type":"Image","props":{"y":-1.021405182655144e-14,"x":-0.9999999999999432,"width":10,"skin":"res/gameScene/网络状态条黄.png","height":20}},{"type":"Image","props":{"y":-1.021405182655144e-14,"x":9.000000000000057,"skin":"res/gameScene/网络状态条黄.png"}},{"type":"Image","props":{"y":-1.021405182655144e-14,"x":19.000000000000057,"skin":"res/gameScene/网络状态条黄.png"}}]},{"type":"Box","props":{"y":1.0000000000000027,"x":1.9999999999999858,"var":"State_2"},"child":[{"type":"Image","props":{"y":-1.0000000000000102,"x":9.000000000000114,"skin":"res/gameScene/网络状态条橙.png"}},{"type":"Image","props":{"y":-1.0000000000000102,"x":-0.9999999999998863,"skin":"res/gameScene/网络状态条橙.png"}}]},{"type":"Image","props":{"y":1.7763568394002505e-15,"x":1,"var":"State_3","skin":"res/gameScene/网络状态条红.png"}}]}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":200,"height":100},"child":[{"type":"Label","props":{"y":0,"x":0,"width":50,"text":"网路:","height":22,"fontSize":20,"color":"#f8f0ef"}},{"type":"Label","props":{"y":0,"x":54,"width":45,"var":"Name","text":"流暢","height":26,"fontSize":20,"color":"#49c11b"}},{"type":"Box","props":{"y":29,"x":5,"var":"tip_bg"},"child":[{"type":"Image","props":{"y":0,"x":-5,"width":405,"var":"tip_board","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22","height":85}},{"type":"Label","props":{"y":12,"x":6,"width":384,"var":"txt_Tip","text":"当前延迟0.00ms, 网络状况普通","height":51,"fontSize":20,"color":"#f8f0ef","align":"center"}}]},{"type":"Box","props":{"y":2,"x":103,"var":"mcStatus"},"child":[{"type":"Box","props":{"y":1.7763568394002505e-15,"x":1.9999999999999858,"var":"State_0"},"child":[{"type":"Image","props":{"y":-7.105427357601002e-15,"x":-0.9999999999999716,"skin":"res/gameScene/网络状态条绿.png"}},{"type":"Image","props":{"y":-7.105427357601002e-15,"x":9.000000000000028,"skin":"res/gameScene/网络状态条绿.png"}},{"type":"Image","props":{"y":-7.105427357601002e-15,"x":19.00000000000003,"skin":"res/gameScene/网络状态条绿.png"}},{"type":"Image","props":{"y":-7.105427357601002e-15,"x":29.00000000000003,"skin":"res/gameScene/网络状态条绿.png"}}]},{"type":"Box","props":{"y":1.0000000000000027,"x":1.9999999999999858,"var":"State_1"},"child":[{"type":"Image","props":{"y":-1.021405182655144e-14,"x":-0.9999999999999432,"width":10,"skin":"res/gameScene/网络状态条黄.png","height":20}},{"type":"Image","props":{"y":-1.021405182655144e-14,"x":9.000000000000057,"skin":"res/gameScene/网络状态条黄.png"}},{"type":"Image","props":{"y":-1.021405182655144e-14,"x":19.000000000000057,"skin":"res/gameScene/网络状态条黄.png"}}]},{"type":"Box","props":{"y":1.0000000000000027,"x":1.9999999999999858,"var":"State_2"},"child":[{"type":"Image","props":{"y":-1.0000000000000102,"x":9.000000000000114,"skin":"res/gameScene/网络状态条橙.png"}},{"type":"Image","props":{"y":-1.0000000000000102,"x":-0.9999999999998863,"skin":"res/gameScene/网络状态条橙.png"}}]},{"type":"Image","props":{"y":1.7763568394002505e-15,"x":1,"var":"State_3","skin":"res/gameScene/网络状态条红.png"}}]}]};}
 		]);
 		return NetStatusPanelUI;
 	})(View)
@@ -53434,7 +53449,7 @@ var Laya=window.Laya=(function(window,document){
 					this.mcHintBoard["player_"+i].color="#b6c325";
 				}
 				else {
-					this.mcHintBoard["player_"+i].color="##7d7d7a";
+					this.mcHintBoard["player_"+i].color="#7d7d7a";
 				}
 			}
 			if (playerCnt <=2)return;
@@ -54155,10 +54170,12 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.showTxt=function(){
 			if(this._status < this._statuTxts.length){
-				this.tip_bg["txt_Tip"].text="当前延迟"+this._ms.toFixed(2)+"ms，网络状况"+this._statuTxts[this._status];
+				this.txt_Tip.text="当前延迟"+this._ms.toFixed(2)+"ms，网络状况"+this._statuTxts[this._status];
+				this.tip_board.height=60;
 			}
 			else{
-				this.tip_bg["txt_Tip"].text="你的网路状态不佳,可能因为延造成投注损失建议检查网路後再进行游戏";
+				this.txt_Tip.text="你的网路状态不佳,可能因为延迟\n造成投注损失建议检查网路後再进行游戏";
+				this.txt_Tip.height=85;
 			}
 		}
 
@@ -54169,34 +54186,35 @@ var Laya=window.Laya=(function(window,document){
 		__proto.updateMs=function(ms){
 			this._ms=ms;
 			if (this._ms < 101){
-				this._status=1;
-				this.mcStatus["State_0"].visible=true;
-				this.mcStatus["State_1"].visible=false;
-				this.mcStatus["State_2"].visible=false;
-				this.mcStatus["State_3"].visible=false;
+				this._status=0;
+				this.State_0.visible=true;
+				this.State_1.visible=false;
+				this.State_2.visible=false;
+				this.State_3.visible=false;
 			}
 			else if (this._ms < 401){
-				this._status=2;
-				this.mcStatus["State_0"].visible=false;
-				this.mcStatus["State_1"].visible=true;
-				this.mcStatus["State_2"].visible=false;
-				this.mcStatus["State_3"].visible=false;
+				this._status=1;
+				this.State_0.visible=false;
+				this.State_1.visible=true;
+				this.State_2.visible=false;
+				this.State_3.visible=false;
 			}
 			else if (this._ms < 701){
-				this._status=3;
-				this.mcStatus["State_0"].visible=false;
-				this.mcStatus["State_1"].visible=false;
-				this.mcStatus["State_2"].visible=true;
-				this.mcStatus["State_3"].visible=false;
+				this._status=2;
+				this.State_0.visible=false;
+				this.State_1.visible=false;
+				this.State_2.visible=true;
+				this.State_3.visible=false;
 			}
 			else{
-				this._status=4;
-				this.mcStatus["State_0"].visible=false;
-				this.mcStatus["State_1"].visible=false;
-				this.mcStatus["State_2"].visible=false;
-				this.mcStatus["State_3"].visible=true;
+				this._status=3;
+				this.State_0.visible=false;
+				this.State_1.visible=false;
+				this.State_2.visible=false;
+				this.State_3.visible=true;
 			}
-			if(this._status==4){
+			this.Name=this._statuTxts[this._status]
+			if (this._status==3){
 				this._timer_idx=Light.timer.setInterval(this,this.tip_apear,1000,null);
 			}
 		}
@@ -54500,6 +54518,10 @@ var Laya=window.Laya=(function(window,document){
 				this["club_"+i].index=item[2]==false ? 0:1;
 				this["diamond_"+i].index=item[3]==false ? 0:1;
 			}
+		}
+
+		__proto.net_seed=function(speed){
+			this.viewNetState.updateMs(speed);
 		}
 
 		__proto.reset=function(){
@@ -56166,20 +56188,20 @@ var Laya=window.Laya=(function(window,document){
 54 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (325):warning:evt.dispatchEvent This variable is not defined.
 55 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (325):warning:OperateEvent This variable is not defined.
 56 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (325):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
-57 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (283):warning:chipsVO This variable is not defined.
-58 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (583):warning:breq This variable is not defined.
-59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (778):warning:e.info This variable is not defined.
-60 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (791):warning:game.viewArea.update_total This variable is not defined.
-61 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (793):warning:game.viewArea.update_other_total This variable is not defined.
-62 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (798):warning:game.viewArea.my_batch_bet This variable is not defined.
-63 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (816):warning:game.viewArea.my_batch_bet This variable is not defined.
-64 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (822):warning:game.viewArea.my_batch_bet This variable is not defined.
-65 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (832):warning:game.viewArea.other_bet_cancel This variable is not defined.
-66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (834):warning:game.viewArea.update_other_total This variable is not defined.
-67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (840):warning:game.viewArea.clear_allChip This variable is not defined.
-68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (852):warning:game.viewArea.other_bet This variable is not defined.
-69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (862):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
-70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (880):warning:game.viewArea.other_bet This variable is not defined.
+57 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (285):warning:chipsVO This variable is not defined.
+58 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (585):warning:breq This variable is not defined.
+59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (780):warning:e.info This variable is not defined.
+60 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (793):warning:game.viewArea.update_total This variable is not defined.
+61 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (795):warning:game.viewArea.update_other_total This variable is not defined.
+62 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (800):warning:game.viewArea.my_batch_bet This variable is not defined.
+63 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (818):warning:game.viewArea.my_batch_bet This variable is not defined.
+64 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (824):warning:game.viewArea.my_batch_bet This variable is not defined.
+65 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (834):warning:game.viewArea.other_bet_cancel This variable is not defined.
+66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (836):warning:game.viewArea.update_other_total This variable is not defined.
+67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (842):warning:game.viewArea.clear_allChip This variable is not defined.
+68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (854):warning:game.viewArea.other_bet This variable is not defined.
+69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (864):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
+70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (882):warning:game.viewArea.other_bet This variable is not defined.
 71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListRender.as (40):warning:index This variable is not defined.
 72 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/HeadView.as (25):warning:onClick This variable is not defined.
 73 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.

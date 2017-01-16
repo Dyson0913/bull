@@ -83,6 +83,11 @@ package bull.view.room
 			
 		}
 		
+		public function net_seed(speed:Number):void
+		{			
+			viewNetState.updateMs(speed);
+		}
+		
 		private function reset():void
 		{
 			spade_win.text = heart_win.text = club_win.text = diamond_win.text = "";			

@@ -64,7 +64,7 @@ package bull.events
 		public static const BET_CANCEL:String = "bet_cancel";                      //取消下注 resp -> BET_RSP
 		public static const BET_CANCEL_OK:String = "bet_cancel_ok";        //Tell view cancel ok
 		public static const BET_CANCEL_FAIL:String = "bet_cancel_fail";        //Tell view cancel fail
-		public static const BET_ERROR:String = "bet_error";
+		public static const BET_ERROR:String = "bet_error";		
 		
 		public static const SOCKET_CONNECT:String = "socketConnect";////////////////通知连接服务器 
 		public static const ONLOGIN:String = "onLogin";/////////////////////////////登录成功   发送房间列表

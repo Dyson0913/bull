@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":1,
-    "selecteID":32,
+    "selectedBox":30,
+    "selecteID":28,
     "props":{"width":200,"sceneColor":"#000000","height":100},
     "nodeParent":-1,
     "label":"View",
@@ -81,9 +81,9 @@
                 {
                     "x":30,
                     "type":"Image",
-                    "props":{"y":0,"x":-5,"width":256,"skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22","height":78},
+                    "props":{"y":0,"x":-5,"width":405,"var":"tip_board","skin":"res/gameScene/tips小底板.png","sizeGrid":"18,25,30,22","height":85},
                     "nodeParent":30,
-                    "label":"Image",
+                    "label":"Image(tip_board)",
                     "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
@@ -102,7 +102,7 @@
                 {
                     "x":30,
                     "type":"Label",
-                    "props":{"y":18,"x":11,"width":226,"var":"txt_Tip","text":"网路:","height":31,"fontSize":20,"color":"#f8f0ef","align":"center"},
+                    "props":{"y":12,"x":6,"width":384,"var":"txt_Tip","text":"当前延迟0.00ms, 网络状况普通","height":51,"fontSize":20,"color":"#f8f0ef","align":"center"},
                     "nodeParent":30,
                     "label":"Label(txt_Tip)",
                     "isDirectory":false,

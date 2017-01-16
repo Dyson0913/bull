@@ -17,6 +17,8 @@ package bull.modules.room.mediator
 	import conf.SRoomInfo;
 	import conf.SUserInfo;
 	import laya.ui.Image;
+	import laya.utils.Browser;
+	
 	import msg.CS;
 	import msg.SBetNotify_Bet;
 	import msg.SCalculateNotify;
@@ -41,6 +43,7 @@ package bull.modules.room.mediator
 	import bull.modules.room.services.RoomSocketService;	
 	import bull.view.alert.AlertCancelPanel;
 	import bull.view.room.BullScene;
+	
 	
 	import bull.modules.common.model.data.Data;
 	import bull.modules.common.model.data.HallData;
@@ -72,7 +75,8 @@ package bull.modules.room.mediator
 		public var appMedel:AppMedel;
 		private var num:int;
 		private var timer:Timer;
-		private var _isSys:Boolean = true;		
+		private var net_speed:Array = []; //每次心跳速度
+		private var avg_time_diff:Array = []; //每次心跳回來的時間差
 		
 		public var chipTool:BetSplit = new BetSplit();
 		
@@ -1034,6 +1038,11 @@ package bull.modules.room.mediator
 				return;
 			}
 			num++;
+			
+			//網速
+			net_speed.push( Browser.now());
+			
+			
 			sentNotification(BullNotification.ROOM_HEART_BEAT);
 		}
 		
@@ -1054,6 +1063,25 @@ package bull.modules.room.mediator
 		{
 			// TODO Auto Generated method stub
 			num = 0;
+			
+			//計算網速
+			var start_time:Number = net_speed.shift();
+			var time_diff:Number = Browser.now() - start_time;
+			avg_time_diff.push(time_diff);
+			if ( avg_time_diff.length >= 5) avg_time_diff.shift();
+			
+			var avg_speed:Number = 0;
+			var n:int = avg_time_diff.length;
+			for (var i:int = 0; i < n; i++)
+			{
+				avg_speed += avg_time_diff[i];
+			}
+			
+			avg_speed = avg_speed / n;
+			
+			
+			view.viewRecord.net_seed(avg_speed);
+			
 		}
 		
 		private function onCarryInClick():void
