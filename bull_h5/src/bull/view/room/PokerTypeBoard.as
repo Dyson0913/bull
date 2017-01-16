@@ -71,22 +71,38 @@ package bull.view.room
 				this["pokerType_" + i]["Type"].index = type_idx
 				
 				var de:int = i * 1500;				
-				Tween.to(this["pokerType_" + i], { x:this["pokerType_" + i].x+150}, 500, Ease.quintInOut,Handler.create(this,onCompleteHandler,[i,info.odds]),de);
+				Tween.to(this["pokerType_" + i], { x:this["pokerType_" + i].x+150}, 500, Ease.quintInOut,Handler.create(this,onCompleteHandler,[i,info.odds,info.bull_type]),de);
 			}
 			
 			
 		}
 		
-		private function onCompleteHandler(i:int,odd:int):void 
+		private function onCompleteHandler(i:int,odd:int,type:int):void 
 		{
+			var multi_x:int = 0;
+			var odd_x:int = 0;
+			if (type == 11 || type == 25)
+			{
+				multi_x = 136;
+				odd_x = 179;
+			}
+			else 
+			{
+				multi_x = 164;
+				odd_x = 207;
+			}
+			
 			this["pokerType_" + i].visible = true;
 			this["pokerType_" + i].filters = [];
+			
+			this["pokerType_" + i]["multi"].x = multi_x;
 			this["pokerType_" + i]["multi"].scaleX = 1.5;
 			this["pokerType_" + i]["multi"].scaleY = 1.5;
 			this["pokerType_" + i]["multi"].alpha = 0;
 			
 			Tween.to(this["pokerType_" + i]["multi"], { scaleX:1, scaleY:1, alpha:1 }, 500, Ease.cubicOut);	
 			
+			this["pokerType_" + i]["odds"].x = odd_x;
 			this["pokerType_" + i]["odds"].scaleX = 1.5;
 			this["pokerType_" + i]["odds"].scaleY = 1.5;
 			this["pokerType_" + i]["odds"].alpha = 0;
