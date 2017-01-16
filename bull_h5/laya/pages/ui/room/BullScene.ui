@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":40,
+    "selecteID":38,
     "props":{"width":1400,"sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -429,6 +429,28 @@
         {
             "x":15,
             "type":"UIView",
+            "source":"ui/room/SelectClipView.ui",
+            "props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"},
+            "nodeParent":1,
+            "label":"UIView(viewSelectClip)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"y":366,"x":458},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":16,
+            "child":[
+                ],
+            "$HIDDEN":false
+        },
+        {
+            "x":15,
+            "type":"UIView",
             "source":"ui/room/HeadView.ui",
             "props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"},
             "nodeParent":1,
@@ -467,28 +489,6 @@
                         ],
                     "$HIDDEN":false
                 }],
-            "$HIDDEN":false
-        },
-        {
-            "x":15,
-            "type":"UIView",
-            "source":"ui/room/SelectClipView.ui",
-            "props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"},
-            "nodeParent":1,
-            "label":"UIView(viewSelectClip)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":366,"x":458},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":16,
-            "child":[
-                ],
             "$HIDDEN":false
         },
         {

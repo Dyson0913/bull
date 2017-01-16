@@ -2,8 +2,8 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":17,
-    "props":{"width":300,"visible":true,"sceneColor":"#000000","height":50},
+    "selecteID":3,
+    "props":{"width":300,"visible":true,"sceneColor":"#e3bbba","height":50},
     "nodeParent":-1,
     "label":"View",
     "isOpen":true,
@@ -22,7 +22,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":3,"x":4,"skin":"res/gameScene/底板.png"},
+            "props":{"y":7,"x":4,"skin":"res/gameScene/底板.png"},
             "nodeParent":1,
             "label":"Image",
             "isDirectory":false,
@@ -37,7 +37,8 @@
                 }],
             "compId":8,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
@@ -57,12 +58,13 @@
                 }],
             "compId":9,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Animation",
-            "props":{"y":3,"x":44,"var":"Type","source":"res/gameScene/五牛.png,res/gameScene/牛一.png,res/gameScene/牛二.png,res/gameScene/牛三.png,res/gameScene/牛四.png,res/gameScene/牛五.png,res/gameScene/牛六.png,res/gameScene/牛七.png,res/gameScene/牛八.png,res/gameScene/牛九.png,res/gameScene/牛牛.png,res/gameScene/五花牛.png,res/gameScene/四炸.png,res/gameScene/五小牛.png"},
+            "props":{"y":3,"x":0,"var":"Type","source":"res/gameScene/五牛.png,res/gameScene/牛一.png,res/gameScene/牛二.png,res/gameScene/牛三.png,res/gameScene/牛四.png,res/gameScene/牛五.png,res/gameScene/牛六.png,res/gameScene/牛七.png,res/gameScene/牛八.png,res/gameScene/牛九.png,res/gameScene/牛牛.png,res/gameScene/五花牛.png,res/gameScene/四炸.png,res/gameScene/五小牛.png"},
             "nodeParent":1,
             "label":"Animation(Type)",
             "isDirectory":false,
@@ -77,12 +79,13 @@
                 }],
             "compId":2,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Image",
-            "props":{"y":12,"x":136,"var":"multi","skin":"res/gameScene/乘号.png"},
+            "props":{"y":15,"x":127,"var":"multi","skin":"res/gameScene/乘号.png"},
             "nodeParent":1,
             "label":"Image(multi)",
             "isDirectory":false,
@@ -97,12 +100,13 @@
                 }],
             "compId":3,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Label",
-            "props":{"y":0,"x":179,"width":79,"var":"odds","text":"10","height":60,"font":"settleWin","align":"center"},
+            "props":{"y":-1,"x":162,"width":79,"var":"odds","text":"10","height":60,"font":"settleWin","align":"left"},
             "nodeParent":1,
             "label":"Label(odds)",
             "isDirectory":false,

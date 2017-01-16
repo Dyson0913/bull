@@ -310,9 +310,9 @@ package bull.view.room
 			for (var i:int = 0; i < _selfChips.length; i++) 
 			{
 				chip = _selfChips[i];
-				Tween.to(chip,{x:637,y:923},500,Ease.cubicOut,Handler.create(this,onFlySelfBackCompleteHandler,[chip]));
-				SoundManager.playSound(SoundPath.Coin);
+				Tween.to(chip,{x:637,y:923},500,Ease.cubicOut,Handler.create(this,onFlySelfBackCompleteHandler,[chip]));				
 			}
+			SoundManager.playSound(SoundPath.Coin);
 		}
 		
 		private function onFlySelfBackCompleteHandler(chip:Chip):void{

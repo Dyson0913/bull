@@ -83,13 +83,18 @@ package bull.view.room
 			var odd_x:int = 0;
 			if (type == 11 || type == 25)
 			{
-				multi_x = 136;
-				odd_x = 179;
+				multi_x = 171;
+				odd_x = 202;
+			}
+			else if ( type >= 12 && type <= 24)
+			{
+				multi_x = 156;
+				odd_x = 191;
 			}
 			else 
 			{
-				multi_x = 164;
-				odd_x = 207;
+				multi_x = 127;
+				odd_x = 162;
 			}
 			
 			this["pokerType_" + i].visible = true;
@@ -102,7 +107,7 @@ package bull.view.room
 			
 			Tween.to(this["pokerType_" + i]["multi"], { scaleX:1, scaleY:1, alpha:1 }, 500, Ease.cubicOut);	
 			
-			this["pokerType_" + i]["odds"].x = odd_x;
+			//this["pokerType_" + i]["odds"].x = odd_x;
 			this["pokerType_" + i]["odds"].scaleX = 1.5;
 			this["pokerType_" + i]["odds"].scaleY = 1.5;
 			this["pokerType_" + i]["odds"].alpha = 0;

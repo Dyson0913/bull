@@ -51318,9 +51318,9 @@ var Laya=window.Laya=(function(window,document){
 			this.viewNetConnect=null;
 			this.bg_board=null;
 			this.ViewBetGroup=null;
+			this.viewSelectClip=null;
 			this.viewHead=null;
 			this.Hint=null;
-			this.viewSelectClip=null;
 			this.ViewPlayerList=null;
 			this.viewBankerPanel=null;
 			BullSceneUI.__super.call(this);
@@ -51339,8 +51339,8 @@ var Laya=window.Laya=(function(window,document){
 			View.regComponent("bull.view.room.BetAreaView",BetAreaView);
 			View.regComponent("bull.view.room.NetConnectView",NetConnectView);
 			View.regComponent("bull.view.room.BetBtnGroup",BetBtnGroup);
-			View.regComponent("bull.view.room.HeadView",HeadView);
 			View.regComponent("bull.view.room.SelectClipView",SelectClipView);
+			View.regComponent("bull.view.room.HeadView",HeadView);
 			View.regComponent("bull.view.room.PlayerListPanel",PlayerListPanel);
 			View.regComponent("bull.view.room.ResultPanel",ResultPanel);
 			laya.ui.Component.prototype.createChildren.call(this);
@@ -51348,7 +51348,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetAreaView","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"visible":true,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"Image","props":{"y":800,"x":96,"var":"bg_board","skin":"res/gameScene/InfoBoard.png"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"},"child":[{"type":"Label","props":{"y":14.000000000000114,"x":873.0000000000002,"width":322,"var":"Hint","height":29,"fontSize":22,"color":"#f8f0ef","align":"center"}}]},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetAreaView","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"visible":true,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"Image","props":{"y":800,"x":96,"var":"bg_board","skin":"res/gameScene/InfoBoard.png"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"},"child":[{"type":"Label","props":{"y":14.000000000000114,"x":873.0000000000002,"width":322,"var":"Hint","height":29,"fontSize":22,"color":"#f8f0ef","align":"center"}}]},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
@@ -51998,7 +51998,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(PokerEffectUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":300,"visible":true,"height":50},"child":[{"type":"Image","props":{"y":3,"x":4,"skin":"res/gameScene/底板.png"}},{"type":"Image","props":{"y":-89,"x":-23,"var":"shine","skin":"res/gameScene/闪光.png"}},{"type":"Animation","props":{"y":3,"x":44,"var":"Type","source":"res/gameScene/五牛.png,res/gameScene/牛一.png,res/gameScene/牛二.png,res/gameScene/牛三.png,res/gameScene/牛四.png,res/gameScene/牛五.png,res/gameScene/牛六.png,res/gameScene/牛七.png,res/gameScene/牛八.png,res/gameScene/牛九.png,res/gameScene/牛牛.png,res/gameScene/五花牛.png,res/gameScene/四炸.png,res/gameScene/五小牛.png"}},{"type":"Image","props":{"y":12,"x":136,"var":"multi","skin":"res/gameScene/乘号.png"}},{"type":"Label","props":{"y":0,"x":179,"width":79,"var":"odds","text":"10","height":60,"font":"settleWin","align":"center"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":300,"visible":true,"height":50},"child":[{"type":"Image","props":{"y":7,"x":4,"skin":"res/gameScene/底板.png"}},{"type":"Image","props":{"y":-89,"x":-23,"var":"shine","skin":"res/gameScene/闪光.png"}},{"type":"Animation","props":{"y":3,"x":0,"var":"Type","source":"res/gameScene/五牛.png,res/gameScene/牛一.png,res/gameScene/牛二.png,res/gameScene/牛三.png,res/gameScene/牛四.png,res/gameScene/牛五.png,res/gameScene/牛六.png,res/gameScene/牛七.png,res/gameScene/牛八.png,res/gameScene/牛九.png,res/gameScene/牛牛.png,res/gameScene/五花牛.png,res/gameScene/四炸.png,res/gameScene/五小牛.png"}},{"type":"Image","props":{"y":15,"x":127,"var":"multi","skin":"res/gameScene/乘号.png"}},{"type":"Label","props":{"y":-1,"x":162,"width":79,"var":"odds","text":"10","height":60,"font":"settleWin","align":"left"}}]};}
 		]);
 		return PokerEffectUI;
 	})(View)
@@ -53976,8 +53976,8 @@ var Laya=window.Laya=(function(window,document){
 			for (var i=0;i < this._selfChips.length;i++){
 				chip=this._selfChips[i];
 				Tween.to(chip,{x:637,y:923},500,Ease.cubicOut,Handler.create(this,this.onFlySelfBackCompleteHandler,[chip]));
-				SoundManager.playSound(SoundPath.Coin);
 			}
+			SoundManager.playSound(SoundPath.Coin);
 		}
 
 		__proto.onFlySelfBackCompleteHandler=function(chip){
@@ -54443,12 +54443,16 @@ var Laya=window.Laya=(function(window,document){
 			var multi_x=0;
 			var odd_x=0;
 			if (type==11 || type==25){
-				multi_x=136;
-				odd_x=179;
+				multi_x=171;
+				odd_x=202;
+			}
+			else if (type >=12 && type <=24){
+				multi_x=156;
+				odd_x=191;
 			}
 			else{
-				multi_x=164;
-				odd_x=207;
+				multi_x=127;
+				odd_x=162;
 			}
 			this["pokerType_"+i].visible=true;
 			this["pokerType_"+i].filters=[];
@@ -54457,7 +54461,6 @@ var Laya=window.Laya=(function(window,document){
 			this["pokerType_"+i]["multi"].scaleY=1.5;
 			this["pokerType_"+i]["multi"].alpha=0;
 			Tween.to(this["pokerType_"+i]["multi"],{scaleX:1,scaleY:1,alpha:1 },500,Ease.cubicOut);
-			this["pokerType_"+i]["odds"].x=odd_x;
 			this["pokerType_"+i]["odds"].scaleX=1.5;
 			this["pokerType_"+i]["odds"].scaleY=1.5;
 			this["pokerType_"+i]["odds"].alpha=0;
