@@ -42,7 +42,7 @@ package bull.view.room
 			}
 			else  win = totalAmount.toNumber() / 100;
 			
-			total_txt.text = GameUtil.formatMoney(win);			
+			//total_txt.text = GameUtil.formatMoney(win);			
 		}
 		
 		
