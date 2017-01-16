@@ -2,6 +2,7 @@ package bull.view.room
 {
 	import com.lightUI.events.LightEvent;
 	import conf.SDealInfo;
+	import laya.ui.Image;
 	
 	import laya.filters.BlurFilter;
 	
@@ -46,12 +47,30 @@ package bull.view.room
 			{
 				this["pokerType_" + i].filters = [blurFilter];
 				this["pokerType_" + i]["odds"].font = "SettleWin";
-				//TODO 牌型
+				
+				var type_idx:int = 0;
 				var info:SDealInfo = data[order[i]];
-				//this["pokerType_" + i]["Type"].index = 1;
-				var de:int = i * 1500;
+								
+				if ( info.bull_type >= 12 && info.bull_type <= 24 ) type_idx = 12;
+				if ( info.bull_type == 25 ) type_idx = 13;
+				else type_idx = info.bull_type;
 				
+				//牛牛以上有效果
+				if (type_idx >= 10) 
+				{
+					this["pokerType_" + i]["shine"].visible = true;
+					if (　i == 0 ) Laya.timer.frameLoop(1, this, animate_0);	
+					if (　i == 1 ) Laya.timer.frameLoop(1, this, animate_1);
+					if (　i == 2 ) Laya.timer.frameLoop(1, this, animate_2);
+					if (　i == 3 ) Laya.timer.frameLoop(1, this, animate_3);	
+					if (　i == 4 ) Laya.timer.frameLoop(1, this, animate_4);
+					
+					
+				}
 				
+				this["pokerType_" + i]["Type"].index = type_idx
+				
+				var de:int = i * 1500;				
 				Tween.to(this["pokerType_" + i], { x:this["pokerType_" + i].x+150}, 500, Ease.quintInOut,Handler.create(this,onCompleteHandler,[i,info.odds]),de);
 			}
 			
@@ -87,6 +106,30 @@ package bull.view.room
 		}
 		
 		
+		private function animate_0():void 
+		{
+			pokerType_0.shine.rotation += 2;			
+		}
+		
+		private function animate_1():void 
+		{
+			pokerType_1.shine.rotation += 2;			
+		}
+		
+		private function animate_2():void 
+		{
+			pokerType_2..shine.rotation += 2;			
+		}
+		
+		private function animate_3():void 
+		{
+			pokerType_3.shine.rotation += 2;			
+		}
+		
+		private function animate_4():void 
+		{
+			pokerType_4.shine.rotation += 2;
+		}
 		
 		public function hide():void
 		{			
@@ -95,7 +138,15 @@ package bull.view.room
 			{
 				this["pokerType_" + i].visible = false;
 				this["pokerType_" + i].x = init_po[i];
+				this["pokerType_" + i]["shine"].visible = false;
 			}
+			
+			//光效果關閉
+			timer.clear(this, animate_0);
+			timer.clear(this, animate_1);
+			timer.clear(this, animate_2);
+			timer.clear(this, animate_3);
+			timer.clear(this, animate_4);
 		}
 		
 		

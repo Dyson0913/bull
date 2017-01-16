@@ -33027,7 +33027,6 @@ var Laya=window.Laya=(function(window,document){
 				avg_speed+=this.avg_time_diff[i];
 			}
 			avg_speed=avg_speed / n;
-			avg_speed=800;
 			this.view.viewRecord.net_seed(avg_speed);
 		}
 
@@ -51989,6 +51988,7 @@ var Laya=window.Laya=(function(window,document){
 	//class ui.ui.room.PokerEffectUI extends laya.ui.View
 	var PokerEffectUI=(function(_super){
 		function PokerEffectUI(){
+			this.shine=null;
 			this.Type=null;
 			this.multi=null;
 			this.odds=null;
@@ -52003,7 +52003,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(PokerEffectUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":250,"visible":true,"height":100},"child":[{"type":"Animation","props":{"var":"Type","source":"res/gameScene/5小牛.png,res/gameScene/牛九.png"}},{"type":"Image","props":{"y":36,"x":137,"var":"multi","skin":"res/gameScene/乘号.png"}},{"type":"Label","props":{"y":25,"x":174,"width":79,"var":"odds","text":"10","height":60,"font":"settleWin","align":"center"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":300,"visible":true,"height":50},"child":[{"type":"Image","props":{"y":3,"x":4,"skin":"res/gameScene/底板.png"}},{"type":"Image","props":{"y":-89,"x":-23,"var":"shine","skin":"res/gameScene/闪光.png"}},{"type":"Animation","props":{"y":1,"x":39,"var":"Type","source":"res/gameScene/五牛.png,res/gameScene/牛一.png,res/gameScene/牛二.png,res/gameScene/牛三.png,res/gameScene/牛四.png,res/gameScene/牛五.png,res/gameScene/牛六.png,res/gameScene/牛七.png,res/gameScene/牛八.png,res/gameScene/牛九.png,res/gameScene/牛牛.png,res/gameScene/五花牛.png,res/gameScene/四炸.png,res/gameScene/五小牛.png"}},{"type":"Image","props":{"y":11,"x":164,"var":"multi","skin":"res/gameScene/乘号.png"}},{"type":"Label","props":{"y":0,"x":207,"width":79,"var":"odds","text":"10","height":60,"font":"settleWin","align":"center"}}]};}
 		]);
 		return PokerEffectUI;
 	})(View)
@@ -54425,7 +54425,20 @@ var Laya=window.Laya=(function(window,document){
 			for (var i=0;i < 5;i++){
 				this["pokerType_"+i].filters=[this.blurFilter];
 				this["pokerType_"+i]["odds"].font="SettleWin";
+				var type_idx=0;
 				var info=data[order[i]];
+				if (info.bull_type >=12 && info.bull_type <=24)type_idx=12;
+				if (info.bull_type==25)type_idx=13;
+				else type_idx=info.bull_type;
+				if (type_idx >=10){
+					this["pokerType_"+i]["shine"].visible=true;
+					if (/*no*/this.　i==0)Laya.timer.frameLoop(1,this,this.animate_0);
+					if (/*no*/this.　i==1)Laya.timer.frameLoop(1,this,this.animate_1);
+					if (/*no*/this.　i==2)Laya.timer.frameLoop(1,this,this.animate_2);
+					if (/*no*/this.　i==3)Laya.timer.frameLoop(1,this,this.animate_3);
+					if (/*no*/this.　i==4)Laya.timer.frameLoop(1,this,this.animate_4);
+				}
+				this["pokerType_"+i]["Type"].index=type_idx;
 				var de=i *1500;
 				Tween.to(this["pokerType_"+i],{x:this["pokerType_"+i].x+150},500,Ease.quintInOut,Handler.create(this,this.onCompleteHandler,[i,info.odds]),de);
 			}
@@ -54450,12 +54463,38 @@ var Laya=window.Laya=(function(window,document){
 			}
 		}
 
+		__proto.animate_0=function(){
+			this.pokerType_0.shine.rotation+=2;
+		}
+
+		__proto.animate_1=function(){
+			this.pokerType_1.shine.rotation+=2;
+		}
+
+		__proto.animate_2=function(){
+			this.pokerType_2.getAllChildByName('shine').rotation+=2;
+		}
+
+		__proto.animate_3=function(){
+			this.pokerType_3.shine.rotation+=2;
+		}
+
+		__proto.animate_4=function(){
+			this.pokerType_4.shine.rotation+=2;
+		}
+
 		__proto.hide=function(){
 			var init_po=[81,368,651,904,467];
 			for(var i=0;i< 5;i++){
 				this["pokerType_"+i].visible=false;
 				this["pokerType_"+i].x=init_po[i];
+				this["pokerType_"+i]["shine"].visible=false;
 			}
+			this.timer.clear(this,this.animate_0);
+			this.timer.clear(this,this.animate_1);
+			this.timer.clear(this,this.animate_2);
+			this.timer.clear(this,this.animate_3);
+			this.timer.clear(this,this.animate_4);
 		}
 
 		__proto.test=function(){}
@@ -56205,4 +56244,9 @@ var Laya=window.Laya=(function(window,document){
 71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListRender.as (40):warning:index This variable is not defined.
 72 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/HeadView.as (25):warning:onClick This variable is not defined.
 73 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
+74 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (60):warning:　i This variable is not defined.
+75 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (61):warning:　i This variable is not defined.
+76 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (62):warning:　i This variable is not defined.
+77 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (63):warning:　i This variable is not defined.
+78 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (64):warning:　i This variable is not defined.
 */
