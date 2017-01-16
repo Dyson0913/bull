@@ -81,6 +81,10 @@ package bull.modules.common.command
 					var roominfo:SRoomInfo = hallData.roomList[hallData.join_room_idx] as SRoomInfo;					
 					var config:SRoomConfig = roominfo.config;					
 					
+					//帶入前就指定;
+					roomData.Cash_Type = hallData.Cash_Type;
+					trace("===================joinroom = "+config.room_type);
+					
 					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL,[config,roomData]);	
 				}
 				

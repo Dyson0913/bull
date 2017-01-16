@@ -56,13 +56,12 @@ package bull.modules.room.command
 		}
 		
 		private function onCarryInResponse(cs:CS):void
-		{
-			trace("===========onCarryInResponse");
+		{			
 			//var userInfo:UserInfoData = getSingleton(UserInfoData.NAME) as UserInfoData;
 			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 			var rsp:SCarryInRsp = cs.carry_in_rsp;
 			if(rsp.error_code == ENError.ERROR_OK ){
-				//更新帶入金額
+				//更新帶入金額				
 				if ( roomData.Cash_Type == ENMoneyType.MONEY_TYPE_COIN)
 				{
 					roomData.Total_money = rsp.money.gb.toNumber();
@@ -70,9 +69,10 @@ package bull.modules.room.command
 				else
 				{
 					roomData.Total_money = rsp.money.cash.toNumber() + rsp.money.nm.toNumber();
-					roomData.Total_money /= 100;
+					roomData.Total_money /= 100;					
 				}				
 				trace("carryIn rsp: gb =" + rsp.money.gb + " cash = " +rsp.money.cash + " nm = " + rsp.money.nm);
+				trace("carryIn rsp: total money =" + roomData.Total_money);
 				
 				//更新個人金額
 				sentNotification(BullNotification.CASH_TAKEIN_RESPONES);

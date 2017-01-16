@@ -68,8 +68,7 @@ package bull.modules.common.mediator
 		}
 		
 		override public function handler(notification:INotification):void{
-			if(notification.getName() == BullNotification.SHOW_CARRY_IN_PANEL){
-				trace("SHOW_CARRY_IN_PANEL Handler");
+			if(notification.getName() == BullNotification.SHOW_CARRY_IN_PANEL){				
 				carryInPanelShow(notification.getBody() as Array);
 			}
 		}		
@@ -79,8 +78,8 @@ package bull.modules.common.mediator
 			
 			
 			//房間類型
-			var money_type:Number = config.room_type == ENRoomType.ROOM_TYPE_COIN ? CurrencyType.COIN : CurrencyType.CASH;
-			
+			var money_type:Number = config.room_type == ENRoomType.ROOM_TYPE_COIN ? CurrencyType.COIN : CurrencyType.CASHANDNM;
+			trace("==============money_type " + money_type);			
 			var betMin:Number;
 			var betMax:Number;
 			var nm:Number;
@@ -91,10 +90,10 @@ package bull.modules.common.mediator
 			   	betMin = config.min_bet * 10;
 				betMax = roomData.player_Money.coin;
 			}
-			else if( money_type == CurrencyType.COIN)
+			else if( money_type == CurrencyType.CASHANDNM)
 			{
 				betMin = (config.min_bet / 100) * 10;
-				betMax = (roomData.player_Money.cash + roomData.player_Money.nm) / 100;
+				betMax = (roomData.player_Money.cash) / 100;
 				
 				nm = 0;
 				hint = "玩家上庄桌，不允许带入拟码。";
@@ -119,7 +118,7 @@ package bull.modules.common.mediator
 			
 			//现金带入需要把步长设成0.01	
 			//getAssetsPanel().assetsIn(param.betMin, param.betMax, param.carrayType, param.betMin, param.cash, param.coin, param.nm, 0.01);
-			getAssetsPanel().assetsIn(betMin, betMax,money_type,betMin,roomData.player_Money.cash, roomData.player_Money.coin,roomData.player_Money.nm);
+			getAssetsPanel().assetsIn(betMin, betMax,money_type,betMin,roomData.player_Money.cash, roomData.player_Money.coin,nm);
 			
 		}
 		
@@ -146,7 +145,7 @@ package bull.modules.common.mediator
 			if (flg == "ok_btn")
 			{
 				trace("ok_btn");
-				//TODO 去充值頁面
+				//去充值頁面
 				var ws:WebService = getModel(WebService.NAME) as WebService;
 				ws.recharge(new Handler(this, GotoRechargeCallback));
 				

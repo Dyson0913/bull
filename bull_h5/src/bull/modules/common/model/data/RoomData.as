@@ -154,7 +154,7 @@ package bull.modules.common.model.data
 		}
 		
 		public function appearMoney(num:Number):String
-		{
+		{			
 			return (Cash_Type != ENMoneyType.MONEY_TYPE_COIN) == true ? ("¥"+num.toFixed(2)) : num.toString();
 		}
 		

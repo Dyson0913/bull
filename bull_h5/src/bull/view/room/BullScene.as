@@ -263,7 +263,7 @@ package bull.view.room
 		{			
 			_betSplitUtil = _roomData.chipTool;
 			var clipConfigs:Array = [];
-			//TODO join group
+			
 			var dataSelectClip:ClipConfigVo = roomData.getClipBets(join_group);
 			if(dataSelectClip){
 				for (var i:int = 0; i < dataSelectClip.selectClips.length; i++) 

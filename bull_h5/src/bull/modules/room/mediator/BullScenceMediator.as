@@ -230,10 +230,10 @@ package bull.modules.room.mediator
 		private function get_coin_info(amount:Number,zone:int,is_my:Boolean):Array
 		{
 			var bet:Number = amount;
-			bet = roomData.Cash_Type == ENMoneyType.MONEY_TYPE_COIN ? bet : bet / 100;			
-			var chip:BetInfoVO = chipTool.getChip(bet);
+			var chip:BetInfoVO = roomData.chipTool.getChip(bet);
+			bet = roomData.Cash_Type == ENMoneyType.MONEY_TYPE_COIN ? bet : bet / 100;							
 			var chips:Array = [];
-			var chipVO:ChipVO;				
+			var chipVO:ChipVO;						
 			if(!chip){
 				//找不倒 一个整的筹码  需要拆分				
 				var temp:BetSlipParam = roomData.chipTool.splitBet(bet);
@@ -248,6 +248,7 @@ package bull.modules.room.mediator
 				chipVO = new ChipVO(is_my,zone,chip.value);
 				chips.push(chipVO);
 			}
+			
 			//check number
 			//for ( var i:int = 0; i < chips.length; i++)
 			//{
@@ -266,7 +267,7 @@ package bull.modules.room.mediator
 			for (var i:int = 0; i < l; i++) 
 			{
 				chipVO = arr_chipsVO[i];
-				var betArea:Image = view.viewArea.get_zone(chipVO.type)	;				 
+				var betArea:Image = view.viewArea.get_zone(chipVO.type)	;					
 				var betInfo:BetInfoVO = roomData.chipTool.getChip(chipVO.value);
 				if(!betInfo){
 					var temp:BetSlipParam = roomData.chipTool.splitBet(chipVO.value);
@@ -367,7 +368,7 @@ package bull.modules.room.mediator
 				runEnd_recycle();
 			}
 			else
-			{	//TODO 頭像,名稱
+			{
 			    //本局庄資訊
 				var _bankerName:String;
 				var _bankerHead:String;
@@ -383,8 +384,7 @@ package bull.modules.room.mediator
 					_bankerHead = roomData.find_banker("avatar");					
 				}
 				
-				var self_head:String = roomData.find_self("avatar");
-				trace("self head ="+self_head);
+				var self_head:String = roomData.find_self("avatar");				
 				
 				var mymoney:String = roomData.appearMoney( roomData.GetMoney(roomData.settle_hand_money));
 				var mywin:String;
@@ -469,8 +469,8 @@ package bull.modules.room.mediator
 				roomData.banker_id = roomData.newBaner_info.banker_id;
 				
 			}
-			trace("-------------------------------------roomData.banker_id "+roomData.banker_id);
-			trace("-------------------------------------roomData.banker_id "+roomData.newBaner_info.banker_id);
+			//trace("-------------------------------------roomData.banker_id "+roomData.banker_id);
+			//trace("-------------------------------------roomData.banker_id "+roomData.newBaner_info.banker_id);
 			
 			var banker_name:String = roomData.find_banker("username");
 			var banker_head:String = roomData.find_banker("avatar");
@@ -491,7 +491,7 @@ package bull.modules.room.mediator
 				trace("banker_name = "+banker_name);
 				trace("banker_head = "+banker_head);
 				
-				view.viewBankerPanel.bankerinfo_update([banker_name, bankerTims, roomData.GetMoney(roomData.newBaner_info.hand_money.toNumber())]);
+				view.viewBankerPanel.bankerinfo_update([banker_name, bankerTims, roomData.appearMoney(roomData.GetMoney(roomData.newBaner_info.hand_money.toNumber()))]);
 				if( play_ani) view.viewBankerPanel.newBanker(banker_name,banker_head);
 			}
 			
@@ -769,7 +769,7 @@ package bull.modules.room.mediator
 				if ( roomData.IsSelfBanker()) view.phase_tip("本局无人下注。", 0);
 				else view.phase_tip("您没有参与本局下注", 0);
 			}
-			else view.phase_tip("总下注 " +roomData.appearMoney(roomData.GetMoney(total)) +"，祝吉星高照！",0);			
+			else view.phase_tip("总下注 " +roomData.appearMoney(total) +"，祝吉星高照！",0);			
 			
 			//TODO sound.dealpoker
 			//SoundManager.playSound(SoundPath.dealpoker);
@@ -787,7 +787,7 @@ package bull.modules.room.mediator
 				betinfo = bet_info[i];
 				var self:Boolean = betinfo.uid.toNumber() == myuid;
 				var bet:Number = roomData.GetMoney(betinfo.value);
-				var po:int = betinfo.position - 1;		
+				var po:int = betinfo.position - 1;				
 				if (self)
 				{
 					//減注
@@ -845,8 +845,8 @@ package bull.modules.room.mediator
 			//總注區更新
 			for (var i:int = 0; i < 4; i++)
 			{				
-				view.viewArea.update_total(i, roomData.Zone_Total_bet[i]);
-				view.viewArea.update_self(i, roomData.Zone_self_bet[i]);
+				view.viewArea.update_total(i, roomData.Zone_Total_bet[i], roomData.appearMoney(roomData.Zone_Total_bet[i]));				
+				view.viewArea.update_self(i, roomData.Zone_self_bet[i], roomData.appearMoney(roomData.Zone_self_bet[i]));				
 			}			
 			
 			//前三名名單更新 
@@ -1092,11 +1092,11 @@ package bull.modules.room.mediator
 		private function onUIShow():void {			
 			
 			//先别影藏 等数据请求回来再显示
-			if ( hallData.join_room_idx <= 2)
-			{
-				roomData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN;
-			}
-			else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;
+			//if ( hallData.join_room_idx <= 2)
+			//{
+				//roomData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN;
+			//}
+			//else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;
 			
 			view.roomData = roomData;			
 			roomData.initClipConfig();

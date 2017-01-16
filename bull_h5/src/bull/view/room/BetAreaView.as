@@ -184,14 +184,14 @@ package bull.view.room
 			BetLimit.Hint.visible = false;
 		}
 		
-		public function update_total(idx:int,amount:Number ):void
+		public function update_total(idx:int,amount:Number,display:String ):void
 		{
 			if ( amount != 0)
 			{
 				//總數更新
 				this["total_amount_" + idx]["title"].visible = true;
 				this["total_amount_" + idx].visible = true;
-				this["total_amount_" + idx]["amount"].text = amount.toString();
+				this["total_amount_" + idx]["amount"].text = display;
 			}
 			else
 			{
@@ -200,14 +200,14 @@ package bull.view.room
 			}
 		}
 		
-		public function update_self(idx:int, amount:Number ):void
+		public function update_self(idx:int, amount:Number,display:String ):void
 		{
 			if ( amount != 0)
 			{
 				//自己下注更新				
 				this["self_amount_" + idx]["amount"].font = "mybetFont";
 				this["self_amount_" + idx].visible = true;
-				this["self_amount_" + idx]["amount"].text = amount.toString();
+				this["self_amount_" + idx]["amount"].text = display;
 			}
 			else
 			{

@@ -119,7 +119,7 @@ package bull.modules.perload.services
 			Light.scence.addEventListener(ScenceManagerEvent.SCENCE_COMPLETE,this, onComplate,["room"]);
 			
 			Light.scence.addScence("room",["BullScene","AssetsInPanel"],Light.layer.scence,ScenceInfo.HIDE_PERSCENCE)
-				.regView("BullScene", BullScene)
+				.regView("BullScene", BullScene)			
 				.regView("AssetsInPanel",AssetsInPanel);
 			Light.scence.creat();
 		}
