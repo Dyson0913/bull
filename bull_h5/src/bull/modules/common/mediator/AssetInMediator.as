@@ -141,13 +141,18 @@ package bull.modules.common.mediator
 			getAssetsPanel().close();
 		}
 		
-		private function GotoRecharge():void{
+		private function GotoRecharge(data:int,flg:String):void{
 			if (flg == "ok_btn")
 			{
+				var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 				trace("ok_btn");
 				//去充值頁面
 				var ws:WebService = getModel(WebService.NAME) as WebService;
-				ws.recharge(new Handler(this, GotoRechargeCallback));
+				
+				var type:String = "";
+				if ( roomData.IsMoney() ) type = "cash";
+				else type = "coin";
+				ws.recharge(type,new Handler(this, GotoRechargeCallback));
 				
 				//TODO 去充值介面怎麼處理
 				//更新個人金額

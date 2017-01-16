@@ -11,8 +11,7 @@ package bull.modules.common.model.data
 		
 		public var hallData:HallData;
 		public var roomData:RoomData;
-		public var userInfoData:UserInfoData;
-		public var appMedel:AppMedel;
+		public var userInfoData:UserInfoData;		
 		//public var carConfigData:CarConfigData;
 		
 		public var uid:Number;
@@ -22,7 +21,7 @@ package bull.modules.common.model.data
 		public var hallHeartBeat:Boolean;
 		public var roomHeartBeat:Boolean;
 		
-		public var injector:Array = ["hallData","roomData","userInfoData",AppMedel.NAME];
+		public var injector:Array = ["hallData","roomData","userInfoData"];
 		
 		
 		

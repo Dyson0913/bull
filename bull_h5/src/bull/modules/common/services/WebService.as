@@ -55,9 +55,9 @@ package bull.modules.common.services
 			webApi.getPlayerGuideStatus(callback);			
 		}
 		
-		public function recharge(callback:Handler):void
+		public function recharge(type:String,callback:Handler):void
 		{
-			webApi.rechargeShow(callback);
+			webApi.rechargeShow(type,callback);
 		}
 		
 		static public function resolveBrowserParam():WebParam {

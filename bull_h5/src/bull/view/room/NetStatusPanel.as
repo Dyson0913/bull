@@ -6,9 +6,7 @@ package bull.view.room
 	import ui.ui.room.NetStatusPanelUI
 	
 	public class NetStatusPanel extends NetStatusPanelUI
-	{				
-		
-		public var mcStatus:MovieClip;
+	{		
 		
 		private var _ms:Number = 0;
 		private var _status:uint = 0;
@@ -53,7 +51,7 @@ package bull.view.room
 			}
 		}
 		
-		private function onRollOut(e:MouseEvent):void
+		private function onRollOut(e:Event):void
 		{		
 			tip_bg.visible = false;
 		}

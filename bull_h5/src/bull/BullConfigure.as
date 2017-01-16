@@ -184,8 +184,7 @@ package bull
 			asSingleton(HallData.NAME,HallData);
 			asSingleton(RoomData.NAME,RoomData);
 			asSingleton(UserInfoData.NAME,UserInfoData);
-			asSingleton(ConfigData.NAME, ConfigData);
-			asSingleton(AppMedel.NAME,AppMedel);
+			asSingleton(ConfigData.NAME, ConfigData);			
 		}
 		
 		private function initMediator():void{

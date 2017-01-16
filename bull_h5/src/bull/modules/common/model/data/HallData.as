@@ -28,7 +28,7 @@ package bull.modules.common.model.data
 		public function HallData()
 		{
 			super();
-			_already_in_roomid = -1;
+			_already_in_room_idx = -1;
 		}
 		
 		public function get roomList():Array

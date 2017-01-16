@@ -46,7 +46,7 @@ package bull.modules.room.command
 		
 		private function bankerlist(cs:CS):void
 		{			
-			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;			
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 			roomData.banker_num = cs.banker_list_notify.player_count;			
 			
 			
@@ -56,7 +56,7 @@ package bull.modules.room.command
 			for (var i:int = 0; i < cs.banker_list_notify.user_info_s.length; i++)
 			{
 				var data:SUserInfo = cs.banker_list_notify.user_info_s[i];				
-				var name:String = roomData.find_player("username", data.uid);				
+				var name:String = roomData.find_player("username", data.uid as Number);
 				if ( data.uid.toNumber() == roomData.uid) myidx = i;
 				list.push(name);
 			}	

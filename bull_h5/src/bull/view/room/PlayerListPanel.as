@@ -53,7 +53,7 @@ package bull.view.room
 						   { "uid":1000, "money":100, "is_light":true, "win_money":4000,"name":"dyson13" }
 						   ];
 						   
-			view.ViewPlayerList.show(data);
+			//view.ViewPlayerList.show(data);
 					
 		}
 		

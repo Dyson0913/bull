@@ -22,11 +22,16 @@ package bull.view.room
 			mcMoneyIcon.visible = false;
 			mcVip.visible = false;
 			
-			bp_vip.label = "";			
+			bp_vip.text = "";			
 			btnAdd.on(Event.CLICK, this, onClick);
 			btnAdd.on(Event.MOUSE_OVER, this, onOver);
 			btnAdd.on(Event.MOUSE_OUT, this, onOut);
 		}
+		
+		protected function onClick(event:Event):void
+		{
+			
+		}		
 		
 		protected function onOver(event:Event):void
 		{

@@ -73,7 +73,7 @@ package bull.view.room
 			Text_NoOne_bet.text = "";
 		}
 		
-		protected function onClick(event:MouseEvent):void
+		protected function onClick(event:Event):void
 		{
 			this.visible = false;
 			//this.event(NewNewGameEvent.Banker_Settle_pop);
@@ -83,7 +83,7 @@ package bull.view.room
 		private function reset():void			
 		{
 			var item:*;
-			var txtitem:TextField;
+			var txtitem:*;
 			for(var i:int =0;i< 3;i++)
 			{			
 				item = mcRank[i];

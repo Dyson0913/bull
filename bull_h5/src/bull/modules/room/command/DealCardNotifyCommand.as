@@ -43,8 +43,8 @@ package bull.modules.room.command
 			for ( var i:int = 1; i < roomData.card_info.length; i++)
 			{
 				var deal:SDealInfo = roomData.card_info[i];
-				roomData.each_zone_display.push( roomData.appearMoney(roomData.GetMoney(deal.player_win)));
-				roomData.each_zone_win.push(deal.player_win);				
+				roomData.each_zone_display.push( roomData.appearMoney(roomData.GetMoney(deal.player_win.toNumber())));
+				roomData.each_zone_win.push(deal.player_win);
 			}
 			//trace("============================發牌資訊"+roomData.each_zone_display);
 			//trace("============================發牌資訊"+roomData.each_zone_win);

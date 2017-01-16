@@ -74,8 +74,7 @@ package bull.events
 		public static const JOIN_ROOM_RQS:String = "joinRoomRqs";///////////////////请求加入房间
 		public static const JOIN_ROOM_RSP:String = "joinRoomRsp";
 		public static const ENTER_ROOM:String = "enterRoom";//////////////////////////加入房间   打开房间窗体
-		public static const LOAD_DATA_MESSAGE:String= "loadDataMessage";//////////////////////////加载进度事件
-		public static const SHOW_CARRY_IN_PANEL:String ="showCarryInPanel";//////////////////////////显示带入面板事件
+		public static const LOAD_DATA_MESSAGE:String= "loadDataMessage";//////////////////////////加载进度事件		
 		public static const SHOW_ALERT_PANEL:String ="showAlertPanel";//////////////////////////显示提示面板事件
 		public static const GET_USER_BALANCE:String ="getUserBalance";//////////////////////////获取用户余额信息
 		public static const ROUND_COMMIT_RSP:String="roundCommitRsp";/////////////////////////确认局下注返回消息

@@ -953,7 +953,6 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.JOIN_ROOM_RSP="joinRoomRsp";
 		BullNotification.ENTER_ROOM="enterRoom";
 		BullNotification.LOAD_DATA_MESSAGE="loadDataMessage";
-		BullNotification.SHOW_CARRY_IN_PANEL="showCarryInPanel";
 		BullNotification.SHOW_ALERT_PANEL="showAlertPanel";
 		BullNotification.GET_USER_BALANCE="getUserBalance";
 		BullNotification.ROUND_COMMIT_RSP="roundCommitRsp";
@@ -1142,141 +1141,6 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
-	//class bull.modules.common.model.data.AppMedel
-	var AppMedel=(function(){
-		function AppMedel(){
-			this.app_id="";
-			this.user_id="";
-			this._nick_name_64="";
-			this._nick_name="";
-			this.uin=0;
-			this.access_token=null;
-			this.timestamp=null;
-			this.extra=null;
-			this.userHeadIcon="";
-			this.takeinTimeOut=0;
-			this.soundbg=null;
-			this.soundbg_channel=null;
-			this.Server_version=null;
-			this.gameState=0;
-			this.RoundID=null;
-			this.TotalMoney=NaN;
-			this.Bet_money=0;
-			this.chipVo=null;
-			this.myBetClip=NaN;
-			this.IsBetMax=false;
-			this.IsRepeat=false;
-			this.Is_Inside_take=false;
-			this.where_is_lamp=0;
-			this.Current_chipValue=null;
-			this.roomParam=null;
-			this.dataStartStatus=null;
-			this.dataResult=null;
-			this.sameBetinfo=null;
-			this.popWin=false;
-			this.pop_windows=null;
-			this.pop_Banker_continue_windows=null;
-			this.banker_default_ok=0;
-			this.Totalplayer_in_table=0;
-			this.TablePlayerlist=null;
-			this.TabPlayerList=null;
-			this.apply_type=0;
-			this.applybanker_success=false;
-			this.applydebanker_success=false;
-			this.WaitBankList=null;
-			this.Banker_uid=null;
-			this.banker_settle_show=false;
-			this.dataRecord=null;
-			this.pokerdata=null;
-			this.Winlost_zone=null;
-			this.first_threePlayer=null;
-			this.self_settle_win=null;
-			this.Settle_Time=0;
-			this.Banker_settle=null;
-			this.Banker_Total_settle=null;
-			this.half_in_update=false;
-			this.half_in_bet=NaN;
-			this.dataLastCarStopPosition=0;
-			this.dataCurTime=0;
-			this.viewTakeMoney=null;
-			this.alertOpenedDic=null;
-			this.xmlClipConfig=null;
-			this.BetRecode=false;
-			this.dataStartStatus=new StartStatusVo();
-			this.dataResult=new ShowResultVo();
-			this.dataRecord=new RecordVo();
-			this.dataLastCarStopPosition=0;
-			this.dataCurTime=0;
-			this.pokerdata=[];
-			this.TablePlayerlist=[];
-			this.first_threePlayer=[];
-			this.TabPlayerList=[];
-			this.WaitBankList=[];
-			this.Banker_settle=[];
-			this.Winlost_zone=[];
-			this.Current_chipValue=[];
-			this.sameBetinfo=[];
-			this.TotalMoney=0;
-			this.Banker_uid="0";
-			this.banker_settle_show=false;
-			this.BetRecode=false;
-			this.Is_Inside_take=false;
-			this.myBetClip=0;
-			this.applybanker_success=false;
-			this.applydebanker_success=false;
-			this.popWin=false;
-			this.half_in_update=false;
-			this.alertOpenedDic=new Dictionary(true);
-		}
-
-		__class(AppMedel,'bull.modules.common.model.data.AppMedel');
-		var __proto=AppMedel.prototype;
-		__proto.restart=function(){}
-		//nick_name=Base64.decode(value);
-		__proto.getClipBets=function(clipType){
-			if(this.xmlClipConfig==null)
-				return null;
-			var items=this.xmlClipConfig.Item;
-			var result=[];
-			var item;
-			for(var $each_item in items){
-				item=items[$each_item];
-				if(clipType==int(item.type)){
-					result=String(item.value).split("、");
-					break ;
-				}
-			}
-			if(result.length==0)
-				return null;
-			for (var i=0;i < result.length;i++){
-				result[i]=Number(result[i]);
-			}
-			return result;
-		}
-
-		__getset(0,__proto,'nick_name',function(){
-			return this._nick_name;
-			},function(value){
-			this._nick_name=value;
-		});
-
-		__getset(0,__proto,'nick_name_64',function(){
-			return this._nick_name_64;
-			},function(value){
-			this._nick_name_64=value;
-		});
-
-		AppMedel.NAME="appMedel";
-		AppMedel.START=1;
-		AppMedel.BANKER=2;
-		AppMedel.BET=3;
-		AppMedel.BET_CHECK=4;
-		AppMedel.DEAL=5;
-		AppMedel.END=6;
-		return AppMedel;
-	})()
-
-
 	//class bull.modules.common.model.data.ConfigData
 	var ConfigData=(function(){
 		function ConfigData(){
@@ -1301,109 +1165,6 @@ var Laya=window.Laya=(function(window,document){
 
 		ConfigData.NAME="ConfigData";
 		return ConfigData;
-	})()
-
-
-	/**
-	*历史记录数据
-	*/
-	//class bull.modules.common.model.data.RecordVo
-	var RecordVo=(function(){
-		function RecordVo(){
-			this.Win=null;
-			this.Lost=null;
-			this.Spade_Recode=null;
-			this.Heart_Recode=null;
-			this.Club_Recode=null;
-			this.Diamond_Recode=null;
-			this.Win=[];
-			this.Lost=[];
-			this.Spade_Recode=[];
-			this.Heart_Recode=[];
-			this.Club_Recode=[];
-			this.Diamond_Recode=[];
-		}
-
-		__class(RecordVo,'bull.modules.common.model.data.RecordVo');
-		return RecordVo;
-	})()
-
-
-	//class bull.modules.common.model.data.ShowResultVo
-	var ShowResultVo=(function(){
-		function ShowResultVo(){
-			this._runIndex=0;
-			this._winIndex=0;
-			this._myMoney=NaN;
-			this._myWinClip=NaN;
-			this._list=null;
-		}
-
-		__class(ShowResultVo,'bull.modules.common.model.data.ShowResultVo');
-		var __proto=ShowResultVo.prototype;
-		__getset(0,__proto,'winIndex',function(){
-			return this._winIndex;
-			},function(value){
-			this._winIndex=value;
-		});
-
-		__getset(0,__proto,'runIndex',function(){
-			return this._runIndex;
-			},function(value){
-			this._runIndex=value;
-		});
-
-		__getset(0,__proto,'myWinClip',function(){
-			return this._myWinClip;
-			},function(value){
-			this._myWinClip=value;
-		});
-
-		__getset(0,__proto,'myMoney',function(){
-			return this._myMoney;
-			},function(value){
-			this._myMoney=value;
-		});
-
-		__getset(0,__proto,'list',function(){
-			return this._list;
-			},function(value){
-			this._list=value;
-		});
-
-		return ShowResultVo;
-	})()
-
-
-	/**
-	*玩家第一次进入游戏，保存玩家初始化数据
-	*/
-	//class bull.modules.common.model.data.StartStatusVo
-	var StartStatusVo=(function(){
-		function StartStatusVo(){
-			this._myBetClips=[0,0,0,0];
-			this._allBetClips=[0,0,0,0];
-		}
-
-		__class(StartStatusVo,'bull.modules.common.model.data.StartStatusVo');
-		var __proto=StartStatusVo.prototype;
-		__getset(0,__proto,'allBetClips',function(){
-			return this._allBetClips;
-			},function(value){
-			this._allBetClips=value;
-		});
-
-		/**
-		*@private
-		*/
-		/**断线重连记录我的下注 */
-		__getset(0,__proto,'myBetClips',function(){
-			return this._myBetClips;
-			},function(value){
-			this._myBetClips=value;
-		});
-
-		return StartStatusVo;
 	})()
 
 
@@ -14992,51 +14753,6 @@ var Laya=window.Laya=(function(window,document){
 
 
 	/**
-	*<code>Log</code> 类用于在界面内显示日志记录信息。
-	*/
-	//class laya.utils.Log
-	var Log=(function(){
-		function Log(){};
-		__class(Log,'laya.utils.Log');
-		Log.enable=function(){
-			if (!Log._logdiv){
-				Log._logdiv=Browser.window.document.createElement('div');
-				Browser.window.document.body.appendChild(Log._logdiv);
-				Log._logdiv.style.cssText="pointer-events:none;border:white;overflow:hidden;z-index:1000000;background:rgba(100,100,100,0.6);color:white;position: absolute;left:0px;top:0px;width:50%;height:50%;";
-			}
-		}
-
-		Log.toggle=function(){
-			var style=Log._logdiv.style;
-			if (style.width=="1px"){
-				style.width=style.height="50%";
-				}else {
-				style.width=style.height="1px";
-			}
-		}
-
-		Log.print=function(value){
-			if (Log._logdiv){
-				if (Log._count >=Log.maxCount)Log.clear();
-				Log._count++;
-				Log._logdiv.innerText+=value+"\n";
-				Log._logdiv.scrollTop=Log._logdiv.scrollHeight;
-			}
-		}
-
-		Log.clear=function(){
-			Log._logdiv.innerText="";
-			Log._count=0;
-		}
-
-		Log._logdiv=null
-		Log._count=0;
-		Log.maxCount=20;
-		return Log;
-	})()
-
-
-	/**
 	*<code>Pool</code> 是对象池类，用于对象的存贮、重复使用。
 	*/
 	//class laya.utils.Pool
@@ -21274,76 +20990,6 @@ var Laya=window.Laya=(function(window,document){
 	})()
 
 
-	//class com.netease.protobuf.Binary64
-	var Binary641=(function(){
-		function Binary64(param1,param2){
-			this.low=0;
-			this.internalHigh=0;
-			(param1===void 0)&& (param1=0);
-			(param2===void 0)&& (param2=0);
-			this.low=param1;
-			this.internalHigh=param2;
-			return;
-		}
-
-		__class(Binary64,'com.netease.protobuf.Binary64',null,'Binary641');
-		var __proto=Binary64.prototype;
-		// end function
-		__proto.div=function(param1){
-			var _loc_2=0;
-			_loc_2=this.internalHigh % param1;
-			var _loc_3=(this.low % param1+_loc_2 *6)% param1;
-			this.internalHigh=this.internalHigh / param1;
-			var _loc_4=(_loc_2 *4294967296+this.low)/ param1;
-			this.internalHigh=this.internalHigh+uint(_loc_4 / 4294967296);
-			this.low=_loc_4;
-			return _loc_3;
-		}
-
-		// end function
-		__proto.mul=function(param1){
-			var _loc_2=Number(this.low)*param1;
-			this.internalHigh=this.internalHigh *param1;
-			this.internalHigh=this.internalHigh+uint(_loc_2 / 4294967296);
-			this.low=this.low *param1;
-			return;
-		}
-
-		// end function
-		__proto.add=function(param1){
-			var _loc_2=Number(this.low)+param1;
-			this.internalHigh=this.internalHigh+uint(_loc_2 / 4294967296);
-			this.low=_loc_2;
-			return;
-		}
-
-		// end function
-		__proto.bitwiseNot=function(){
-			this.low=~this.low;
-			this.internalHigh=~this.internalHigh;
-			return;
-		}
-
-		__static(Binary64,
-		['CHAR_CODE_0',function(){return this.CHAR_CODE_0="0".charCodeAt();},'CHAR_CODE_9',function(){return this.CHAR_CODE_9="9".charCodeAt();},'CHAR_CODE_A',function(){return this.CHAR_CODE_A="a".charCodeAt();},'CHAR_CODE_Z',function(){return this.CHAR_CODE_Z="z".charCodeAt();}
-		]);
-		return Binary64;
-	})()
-
-
-	//class com.netease.protobuf.ArgumentError extends Error
-	var ArgumentError1=(function(_super){
-		function ArgumentError(message,id){
-			(message===void 0)&& (message="");
-			(id===void 0)&& (id=0);
-			ArgumentError.__super.call(this,message,id);
-		}
-
-		__class(ArgumentError,'com.netease.protobuf.ArgumentError',Error);
-		return ArgumentError;
-	})(Error)
-
-
 	//class com.lightMVC.parrerns.Configure extends com.lightMVC.core.Node
 	var Configure=(function(_super){
 		function Configure(){
@@ -21859,13 +21505,12 @@ var Laya=window.Laya=(function(window,document){
 			this.hallData=null;
 			this.roomData=null;
 			this.userInfoData=null;
-			this.appMedel=null;
 			this.uid=NaN;
 			this.token=null;
 			this.truthLogin=false;
 			this.hallHeartBeat=false;
 			this.roomHeartBeat=false;
-			this.injector=["hallData","roomData","userInfoData","appMedel"];
+			this.injector=["hallData","roomData","userInfoData"];
 			Data.__super.call(this);
 		}
 
@@ -23365,6 +23010,37 @@ var Laya=window.Laya=(function(window,document){
 	})(Message)
 
 
+	//class msg.STryEnterTableReq extends com.IProtobuf.Message
+	var STryEnterTableReq=(function(_super){
+		function STryEnterTableReq(){
+			this.room_id=2;
+			STryEnterTableReq.__super.call(this);
+		}
+
+		__class(STryEnterTableReq,'msg.STryEnterTableReq',_super);
+		var __proto=STryEnterTableReq.prototype;
+		__proto.writeTo=function(value){}
+		return STryEnterTableReq;
+	})(Message)
+
+
+	//class msg.STryEnterTableRsp extends com.IProtobuf.Message
+	var STryEnterTableRsp=(function(_super){
+		function STryEnterTableRsp(){
+			this.error_code=1;
+			this.room_id=3;
+			this.net_address=null;
+			this.token=null;
+			STryEnterTableRsp.__super.call(this);
+		}
+
+		__class(STryEnterTableRsp,'msg.STryEnterTableRsp',_super);
+		var __proto=STryEnterTableRsp.prototype;
+		__proto.writeTo=function(value){}
+		return STryEnterTableRsp;
+	})(Message)
+
+
 	/**
 	*<code>Resource</code> 资源存取类。
 	*/
@@ -23597,37 +23273,6 @@ var Laya=window.Laya=(function(window,document){
 		Resource._isLoadedResourcesSorted=false;
 		return Resource;
 	})(EventDispatcher1)
-
-
-	//class msg.STryEnterTableReq extends com.IProtobuf.Message
-	var STryEnterTableReq=(function(_super){
-		function STryEnterTableReq(){
-			this.room_id=2;
-			STryEnterTableReq.__super.call(this);
-		}
-
-		__class(STryEnterTableReq,'msg.STryEnterTableReq',_super);
-		var __proto=STryEnterTableReq.prototype;
-		__proto.writeTo=function(value){}
-		return STryEnterTableReq;
-	})(Message)
-
-
-	//class msg.STryEnterTableRsp extends com.IProtobuf.Message
-	var STryEnterTableRsp=(function(_super){
-		function STryEnterTableRsp(){
-			this.error_code=1;
-			this.room_id=3;
-			this.net_address=null;
-			this.token=null;
-			STryEnterTableRsp.__super.call(this);
-		}
-
-		__class(STryEnterTableRsp,'msg.STryEnterTableRsp',_super);
-		var __proto=STryEnterTableRsp.prototype;
-		__proto.writeTo=function(value){}
-		return STryEnterTableRsp;
-	})(Message)
 
 
 	//class msg.TimeSyncReq extends com.IProtobuf.Message
@@ -29412,247 +29057,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Submit)
 
 
-	//class com.netease.protobuf.Int64 extends com.netease.protobuf.Binary64
-	var Int641=(function(_super){
-		function Int64(param1,param2){
-			(param1===void 0)&& (param1=0);
-			(param2===void 0)&& (param2=0);
-			Int64.__super.call(this,param1,param2);
-			return;
-		}
-
-		__class(Int64,'com.netease.protobuf.Int64',_super,'Int641');
-		var __proto=Int64.prototype;
-		// end function
-		__proto.toNumber=function(){
-			return this.high *4294967296+this.low;
-		}
-
-		// end function
-		__proto.toString=function(param1){
-			(param1===void 0)&& (param1=10);
-			var _loc_4=0;
-			if (param1 >=2){
-			}
-			if (param1 > 36){
-				throw new ArgumentError1();
-			}
-			switch(this.high){
-				case 0:{
-						return this.low.toString(param1);
-					}
-				case-1:{
-						if ((this.low & 2147483648)==0){
-							return (int(this.low | 2147483648)-2147483648).toString(param1);
-						}
-						return int(this.low).toString(param1);
-					}
-				default :{
-						break ;
-						break ;
-					}
-				}
-			if (this.low==0){
-			}
-			if (this.high==0){
-				return "0";
-			};
-			var _loc_2=[];
-			var _loc_3=new UInt641(this.low,this.high);
-			if (this.high < 0){
-				_loc_3.bitwiseNot();
-				_loc_3.add(1);
-			}
-			do{
-				_loc_4=_loc_3.div(param1);
-				if (_loc_4 < 10){
-					_loc_2.push(_loc_4+Binary641.CHAR_CODE_0);
-					continue ;
-				}
-				_loc_2.push(_loc_4-10+Binary641.CHAR_CODE_A);
-			}while (_loc_3.high !=0)
-			if (this.high < 0){
-				return "-"+_loc_3.low.toString(param1)+String.fromCharCode.apply(String,_loc_2.reverse());
-			}
-			return _loc_3.low.toString(param1)+String.fromCharCode.apply(String,_loc_2.reverse());
-		}
-
-		// end function
-		// end function
-		__getset(0,__proto,'high',function(){
-			return /*no*/this.internalHigh;
-			},function(param1){
-			/*no*/this.internalHigh=param1;
-			return;
-		});
-
-		Int64.fromNumber=function(param1){
-			return new Int64(param1,Math.floor(param1 / 4294967296));
-		}
-
-		Int64.parseInt64=function(param1,param2){
-			(param2===void 0)&& (param2=0);
-			var _loc_6=0;
-			var _loc_3=param1.search(/^\-""^\-/)==0;
-			var _loc_4=_loc_3 ? (1):(0);
-			if (param2==0){
-				if (param1.search(/^\-?0x""^\-?0x/)==0){
-					param2=16;
-					_loc_4=_loc_4+2;
-				}
-				else{
-					param2=10;
-				}
-			}
-			if (param2 >=2){
-			}
-			if (param2 > 36){
-				throw new ArgumentError1();
-			}
-			param1=param1.toLowerCase();
-			var _loc_5=new Int64;
-			while (_loc_4 < param1.length){
-				_loc_6=param1.charCodeAt(_loc_4);
-				if (_loc_6 >=Binary641.CHAR_CODE_0){
-				}
-				if (_loc_6 <=Binary641.CHAR_CODE_9){
-					_loc_6=_loc_6-Binary641.CHAR_CODE_0;
-				}
-				else{
-					if (_loc_6 >=Binary641.CHAR_CODE_A){
-					}
-					if (_loc_6 <=Binary641.CHAR_CODE_Z){
-						_loc_6=_loc_6-Binary641.CHAR_CODE_A;
-						_loc_6=_loc_6+10;
-					}
-					else{
-						throw new ArgumentError1();
-					}
-				}
-				if (_loc_6 >=param2){
-					throw new ArgumentError1();
-				}
-				_loc_5.mul(param2);
-				_loc_5.add(_loc_6);
-				_loc_4=_loc_4+1;
-			}
-			if (_loc_3){
-				_loc_5.bitwiseNot();
-				_loc_5.add(1);
-			}
-			return _loc_5;
-		}
-
-		return Int64;
-	})(Binary641)
-
-
-	//class com.netease.protobuf.UInt64 extends com.netease.protobuf.Binary64
-	var UInt641=(function(_super){
-		function UInt64(param1,param2){
-			(param1===void 0)&& (param1=0);
-			(param2===void 0)&& (param2=0);
-			UInt64.__super.call(this,param1,param2);
-			return;
-		}
-
-		__class(UInt64,'com.netease.protobuf.UInt64',_super,'UInt641');
-		var __proto=UInt64.prototype;
-		// end function
-		__proto.toNumber=function(){
-			return this.high *4294967296+this.low;
-		}
-
-		// end function
-		__proto.toString=function(param1){
-			(param1===void 0)&& (param1=10);
-			var _loc_4=0;
-			if (param1 >=2){
-			}
-			if (param1 > 36){
-				throw new ArgumentError1();
-			}
-			if (this.high==0){
-				return this.low.toString(param1);
-			};
-			var _loc_2=[];
-			var _loc_3=new UInt64(this.low,this.high);
-			do{
-				_loc_4=_loc_3.div(param1);
-				if (_loc_4 < 10){
-					_loc_2.push(_loc_4+Binary641.CHAR_CODE_0);
-					continue ;
-				}
-				_loc_2.push(_loc_4-10+Binary641.CHAR_CODE_A);
-			}while (_loc_3.high !=0)
-			return _loc_3.low.toString(param1)+String.fromCharCode.apply(String,_loc_2.reverse());
-		}
-
-		// end function
-		// end function
-		__getset(0,__proto,'high',function(){
-			return /*no*/this.internalHigh;
-			},function(param1){
-			/*no*/this.internalHigh=param1;
-			return;
-		});
-
-		UInt64.fromNumber=function(param1){
-			return new UInt64(param1,Math.floor(param1 / 4294967296));
-		}
-
-		UInt64.parseUInt64=function(param1,param2){
-			(param2===void 0)&& (param2=0);
-			var _loc_5=0;
-			var _loc_3=0;
-			if (param2==0){
-				if (param1.search(/^0x""^0x/)==0){
-					param2=16;
-					_loc_3=2;
-				}
-				else{
-					param2=10;
-				}
-			}
-			if (param2 >=2){
-			}
-			if (param2 > 36){
-				throw new ArgumentError1();
-			}
-			param1=param1.toLowerCase();
-			var _loc_4=new UInt64;
-			while (_loc_3 < param1.length){
-				_loc_5=param1.charCodeAt(_loc_3);
-				if (_loc_5 >=Binary641.CHAR_CODE_0){
-				}
-				if (_loc_5 <=Binary641.CHAR_CODE_9){
-					_loc_5=_loc_5-Binary641.CHAR_CODE_0;
-				}
-				else{
-					if (_loc_5 >=Binary641.CHAR_CODE_A){
-					}
-					if (_loc_5 <=Binary641.CHAR_CODE_Z){
-						_loc_5=_loc_5-Binary641.CHAR_CODE_A;
-						_loc_5=_loc_5+10;
-					}
-					else{
-						throw new ArgumentError1();
-					}
-				}
-				if (_loc_5 >=param2){
-					throw new ArgumentError1();
-				}
-				_loc_4.mul(param2);
-				_loc_4.add(_loc_5);
-				_loc_3=_loc_3+1;
-			}
-			return _loc_4;
-		}
-
-		return UInt64;
-	})(Binary641)
-
-
 	//class bull.BullConfigure extends com.lightMVC.parrerns.Configure
 	var BullConfigure=(function(_super){
 		function BullConfigure(){
@@ -29725,7 +29129,6 @@ var Laya=window.Laya=(function(window,document){
 			this.asSingleton("roomData",RoomData);
 			this.asSingleton("userInfoData",UserInfoData);
 			this.asSingleton("ConfigData",ConfigData);
-			this.asSingleton("appMedel",AppMedel);
 		}
 
 		__proto.initMediator=function(){
@@ -30090,6 +29493,49 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			var roomData=this.getSingleton("roomData");
+			if(param.uid){
+				bullData.uid=param.uid;
+				roomData.uid=bullData.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if (param.access_token)bullData.token=param.access_token;
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
+
+
 	/**
 	*这里处理大厅的socket连接
 	*@author light-k
@@ -30195,49 +29641,6 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
-
-
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			var roomData=this.getSingleton("roomData");
-			if(param.uid){
-				bullData.uid=param.uid;
-				roomData.uid=bullData.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if (param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -30363,7 +29766,7 @@ var Laya=window.Laya=(function(window,document){
 					var config=roominfo.config;
 					roomData.Cash_Type=hallData.Cash_Type;
 					console.log("===================joinroom = "+config.room_type);
-					this.sentNotification("showCarryInPanel",[config,roomData]);
+					this.sentNotification("show_carry_in_panel",[config,roomData]);
 				}
 				}else{
 				console.log("error code: "+e.enter_table_rsp.error_code);
@@ -30765,13 +30168,13 @@ var Laya=window.Laya=(function(window,document){
 			this.viewComponent=viewComponent;
 			this.getAssetsPanel().visible=false;
 			Light.layer.top.addChild(this.getAssetsPanel());
-			this.addNotifiction("showCarryInPanel");
+			this.addNotifiction("show_carry_in_panel");
 			this.getAssetsPanel().on("ok",this,this.onCommitCarryIn);
 			this.getAssetsPanel().on("cancel",this,this.onCancelCarryIn);
 		}
 
 		__proto.handler=function(notification){
-			if(notification.getName()=="showCarryInPanel"){
+			if(notification.getName()=="show_carry_in_panel"){
 				this.carryInPanelShow(notification.getBody());
 			}
 		}
@@ -30819,11 +30222,15 @@ var Laya=window.Laya=(function(window,document){
 			this.getAssetsPanel().close();
 		}
 
-		__proto.GotoRecharge=function(){
-			if (/*no*/this.flg=="ok_btn"){
+		__proto.GotoRecharge=function(data,flg){
+			if (flg=="ok_btn"){
+				var roomData=/*no*/this.getSingleton("roomData");
 				console.log("ok_btn");
 				var ws=this.getModel("WebService");
-				ws.recharge(new Handler(this,this.GotoRechargeCallback));
+				var type="";
+				if (roomData.IsMoney())type="cash";
+				else type="coin";
+				ws.recharge(type,new Handler(this,this.GotoRechargeCallback));
 				this.sentNotification("CASH_TAKEIN_RESPONES");
 				this.sentNotification("view_init");
 			}
@@ -30839,6 +30246,42 @@ var Laya=window.Laya=(function(window,document){
 		AssetInMediator.NAME="assetInMediator";
 		return AssetInMediator;
 	})(Mediator)
+
+
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._already_in_msg=null;
+			this._already_in_room_idx=0;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+			this._already_in_room_idx=-1;
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
 
 
 	/**
@@ -30921,42 +30364,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._already_in_msg=null;
-			this._already_in_room_idx=0;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-			/*no*/this._already_in_roomid=-1;
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
 	/**
 	*规则面板
 	*/
@@ -31023,26 +30430,6 @@ var Laya=window.Laya=(function(window,document){
 		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
 		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
 		return RuleMediator;
-	})(Mediator)
-
-
-	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
-	var SmallLoadingMediator=(function(_super){
-		function SmallLoadingMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
-		}
-
-		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
-		var __proto=SmallLoadingMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.loadingMask.lodingMask=viewComponent;
-		}
-
-		SmallLoadingMediator.NAME="smallLoadingMediator";
-		return SmallLoadingMediator;
 	})(Mediator)
 
 
@@ -31236,32 +30623,24 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
-	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
-	var BullProtoModel=(function(_super){
-		function BullProtoModel(modelName,data){
-			this.msg_proto=null;
-			this.conf_proto=null;
-			this._callBack=null;
-			BullProtoModel.__super.call(this,modelName,data);
-			this.msg_proto=new msg_cs();
-			this.conf_proto=new conf_game();
+	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
+	var SmallLoadingMediator=(function(_super){
+		function SmallLoadingMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
 		}
 
-		__class(BullProtoModel,'bull.modules.common.model.BullProtoModel',_super);
-		var __proto=BullProtoModel.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
-		__proto.loadProtoFile=function(callBack){
-			console.log("msg_proto",this.msg_proto,this.conf_proto,this)
-			this._callBack=callBack;
-			this.msg_proto.loadProtoFile(Light.loader.URLM.getURL("msg_proto"));
-			this.conf_proto.loadProtoFile(Light.loader.URLM.getURL("conf_proto"));
-			this._callBack.run();
-			this.sentNotification("protoCreat");
+		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
+		var __proto=SmallLoadingMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.loadingMask.lodingMask=viewComponent;
 		}
 
-		BullProtoModel.NAME="bullProtoModel";
-		return BullProtoModel;
-	})(Model)
+		SmallLoadingMediator.NAME="smallLoadingMediator";
+		return SmallLoadingMediator;
+	})(Mediator)
 
 
 	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
@@ -31318,6 +30697,81 @@ var Laya=window.Laya=(function(window,document){
 		UserInfoData.NAME="userInfoData";
 		return UserInfoData;
 	})(EventDispatcher)
+
+
+	//class bull.modules.common.model.BullProtoModel extends com.lightMVC.parrerns.Model
+	var BullProtoModel=(function(_super){
+		function BullProtoModel(modelName,data){
+			this.msg_proto=null;
+			this.conf_proto=null;
+			this._callBack=null;
+			BullProtoModel.__super.call(this,modelName,data);
+			this.msg_proto=new msg_cs();
+			this.conf_proto=new conf_game();
+		}
+
+		__class(BullProtoModel,'bull.modules.common.model.BullProtoModel',_super);
+		var __proto=BullProtoModel.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
+		__proto.loadProtoFile=function(callBack){
+			console.log("msg_proto",this.msg_proto,this.conf_proto,this)
+			this._callBack=callBack;
+			this.msg_proto.loadProtoFile(Light.loader.URLM.getURL("msg_proto"));
+			this.conf_proto.loadProtoFile(Light.loader.URLM.getURL("conf_proto"));
+			this._callBack.run();
+			this.sentNotification("protoCreat");
+		}
+
+		BullProtoModel.NAME="bullProtoModel";
+		return BullProtoModel;
+	})(Model)
+
+
+	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
+	var TipsLoadMediator=(function(_super){
+		function TipsLoadMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			TipsLoadMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(TipsLoadMediator,'bull.modules.perload.mediator.TipsLoadMediator',_super);
+		var __proto=TipsLoadMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			_super.prototype.setViewComponent.call(this,viewComponent);
+			this.addNotifiction("loadDataMessage");
+			console.log("TipsLoadMediator setViewComponent");
+			var objData=Light.loader.getRes("tipText");
+			var tips=[];
+			for (var id in objData){
+				var value=objData[id];
+				console.log
+				tips.push(value.cn);
+			}
+			this.view.showTips(tips);
+		}
+
+		__proto.handler=function(noti){
+			if(noti.getName()=="loadDataMessage"){
+				this.view.show(noti.getBody().value);
+			}
+		}
+
+		__proto.onShowProgress=function(value){
+			console.log("this tips progress --- "+value);
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.viewComponent;
+		});
+
+		TipsLoadMediator.NAME="tipsLoadMediator";
+		return TipsLoadMediator;
+	})(Mediator)
 
 
 	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
@@ -31399,53 +30853,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return BankerNotifyCommand;
 	})(Command)
-
-
-	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
-	var TipsLoadMediator=(function(_super){
-		function TipsLoadMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			TipsLoadMediator.__super.call(this,mediatorName,viewComponent);
-		}
-
-		__class(TipsLoadMediator,'bull.modules.perload.mediator.TipsLoadMediator',_super);
-		var __proto=TipsLoadMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.getInjector=function(){
-			return [];
-		}
-
-		__proto.setViewComponent=function(viewComponent){
-			_super.prototype.setViewComponent.call(this,viewComponent);
-			this.addNotifiction("loadDataMessage");
-			console.log("TipsLoadMediator setViewComponent");
-			var objData=Light.loader.getRes("tipText");
-			var tips=[];
-			for (var id in objData){
-				var value=objData[id];
-				console.log
-				tips.push(value.cn);
-			}
-			this.view.showTips(tips);
-		}
-
-		__proto.handler=function(noti){
-			if(noti.getName()=="loadDataMessage"){
-				this.view.show(noti.getBody().value);
-			}
-		}
-
-		__proto.onShowProgress=function(value){
-			console.log("this tips progress --- "+value);
-		}
-
-		__getset(0,__proto,'view',function(){
-			return this.viewComponent;
-		});
-
-		TipsLoadMediator.NAME="tipsLoadMediator";
-		return TipsLoadMediator;
-	})(Mediator)
 
 
 	//class bull.modules.room.command.BetNotifyCommand extends com.lightMVC.parrerns.Command
@@ -31567,100 +30974,6 @@ var Laya=window.Laya=(function(window,document){
 			}
 			roomData.first_three_info=tip_list;
 			this.sentNotification("bet_info_update");
-			return;
-			var Total_batch_bet=0;
-			var bet=null;
-			for(var i=0;i< /*no*/this.appMedel.sameBetinfo.length;i++){
-				bet=/*no*/this.appMedel.sameBetinfo[i];
-				Total_batch_bet+=bet.value;
-			}
-			if(bet==null){
-				Total_batch_bet=m1.money+m2.money+m3.money+m4.money;
-			}
-			if(/*no*/this.appMedel.roomParam.roomType !=1){
-				Total_batch_bet /=100;
-			};
-			var isMybet=false;
-			var IsSub=false;
-			var Total_self=0;
-			if(bet==null){
-				/*no*/this.appMedel.dataStartStatus.myBetClips[0]=0;
-				/*no*/this.appMedel.dataStartStatus.myBetClips[1]=0;
-				/*no*/this.appMedel.dataStartStatus.myBetClips[2]=0;
-				/*no*/this.appMedel.dataStartStatus.myBetClips[3]=0;
-				for(var i=0;i< m1.user_info_s.length;i++){
-					var person=m1.user_info_s[i];
-					if(person.uid.toString()==/*no*/this.appMedel.user_id){
-						if(/*no*/this.appMedel.roomParam.roomType !=1){
-							/*no*/this.appMedel.dataStartStatus.myBetClips[0]+=person.betMoney.toNumber()/100;
-						}
-						else /*no*/this.appMedel.dataStartStatus.myBetClips[0]+=person.betMoney.toNumber();
-					}
-				}
-				for(var i=0;i< m2.user_info_s.length;i++){
-					var person2=m2.user_info_s[i];
-					if(person2.uid.toString()==/*no*/this.appMedel.user_id){
-						if(/*no*/this.appMedel.roomParam.roomType !=1){
-							/*no*/this.appMedel.dataStartStatus.myBetClips[1]+=person2.betMoney.toNumber()/100;
-						}
-						else /*no*/this.appMedel.dataStartStatus.myBetClips[1]+=person2.betMoney.toNumber();
-					}
-				}
-				for(var i=0;i< m3.user_info_s.length;i++){
-					var person3=m3.user_info_s[i];
-					if(person3.uid.toString()==/*no*/this.appMedel.user_id){
-						if(/*no*/this.appMedel.roomParam.roomType !=1){
-							/*no*/this.appMedel.dataStartStatus.myBetClips[2]+=person3.betMoney.toNumber()/100;
-						}
-						else /*no*/this.appMedel.dataStartStatus.myBetClips[2]+=person3.betMoney.toNumber();
-					}
-				}
-				for(var i=0;i< m4.user_info_s.length;i++){
-					var person4=m4.user_info_s[i];
-					if(person4.uid.toString()==/*no*/this.appMedel.user_id){
-						if(/*no*/this.appMedel.roomParam.roomType !=1){
-							/*no*/this.appMedel.dataStartStatus.myBetClips[3]+=person4.betMoney.toNumber()/100;
-						}
-						else /*no*/this.appMedel.dataStartStatus.myBetClips[3]+=person4.betMoney.toNumber();
-					}
-				}
-				Total_self=/*no*/this.appMedel.dataStartStatus.myBetClips[3];
-			}
-			else{
-				isMybet=bet.uid.toString()==/*no*/this.appMedel.user_id;
-				IsSub=Total_batch_bet > 0 ? false :true;
-				if(isMybet){
-					for(var k=0;k< /*no*/this.appMedel.sameBetinfo.length;k++){
-						bet=/*no*/this.appMedel.sameBetinfo[k];
-						if(/*no*/this.appMedel.roomParam.roomType !=1){
-							/*no*/this.appMedel.dataStartStatus.myBetClips[bet.position-1]+=bet.value/100;
-						}
-						else /*no*/this.appMedel.dataStartStatus.myBetClips[bet.position-1]+=bet.value;
-						Total_self=/*no*/this.appMedel.dataStartStatus.myBetClips[bet.position-1];
-					}
-				}
-			}
-			/*no*/this.appMedel.roomParam.roomlimit-=Total_batch_bet;
-			var light_po=-1;
-			if (data.lightPos <=0 || data.lightPos >=5){
-				light_po=-1;
-			}
-			else light_po=data.lightPos-1;
-			/*no*/this.appMedel.where_is_lamp=light_po;
-			var Total=0;
-			if(bet==null);
-			else Total=/*no*/this.appMedel.dataStartStatus.allBetClips[bet.position-1];
-			var singlebet=0;
-			if(bet==null){
-				/*no*/this.evt.dispatchEvent(new /*no*/this.OperateEvent(/*no*/this.NewNewGameEvent.Bet_Clip_Otherbet,[0,singlebet,Total,isMybet,IsSub,Total_self,bet]));
-			}
-			else{
-				if(/*no*/this.appMedel.roomParam.roomType !=1){
-					singlebet=bet.value /100;
-				}
-				else singlebet=bet.value;
-				/*no*/this.evt.dispatchEvent(new /*no*/this.OperateEvent(/*no*/this.NewNewGameEvent.Bet_Clip_Otherbet,[bet.position-1,singlebet,Total,isMybet,IsSub,Total_self,bet]));
-			}
 		}
 
 		__proto.CancelRequest=function(){
@@ -31710,8 +31023,8 @@ var Laya=window.Laya=(function(window,document){
 			this.webApi.getPlayerGuideStatus(callback);
 		}
 
-		__proto.recharge=function(callback){
-			this.webApi.rechargeShow(callback);
+		__proto.recharge=function(type,callback){
+			this.webApi.rechargeShow(type,callback);
 		}
 
 		__proto.parseInfo=function(callback){
@@ -31995,7 +31308,7 @@ var Laya=window.Laya=(function(window,document){
 			roomData.each_zone_display.length=0;
 			for (var i=1;i < roomData.card_info.length;i++){
 				var deal=roomData.card_info[i];
-				roomData.each_zone_display.push(roomData.appearMoney(roomData.GetMoney(deal.player_win)));
+				roomData.each_zone_display.push(roomData.appearMoney(roomData.GetMoney(deal.player_win.toNumber())));
 				roomData.each_zone_win.push(deal.player_win);
 			}
 			this.sentNotification("cardnotify");
@@ -32094,7 +31407,7 @@ var Laya=window.Laya=(function(window,document){
 				var ob={"name":name,"is_light":data.is_light,"money":money,"head":head };
 				roomData.settle_User_info.push(ob);
 			}
-			roomData.Total_money=roomData.settle_hand_money;
+			roomData.Total_money=roomData.settle_hand_money.toNumber();
 			this.sentNotification("settlenotify");
 		}
 
@@ -32245,7 +31558,6 @@ var Laya=window.Laya=(function(window,document){
 			this.roomSocketService=null;
 			this.roomData=null;
 			this.userInfoData=null;
-			this.appMedel=null;
 			this.num=0;
 			this.timer=null;
 			this.net_speed=[];
@@ -32259,7 +31571,7 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=BullScenceMediator.prototype;
 		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
 		__proto.getInjector=function(){
-			return ["roomData","roomSocketService","perLoadService","userInfoData","appMedel","hallData"];
+			return ["roomData","roomSocketService","perLoadService","userInfoData","hallData"];
 		}
 
 		__proto.setViewComponent=function(viewComponent){
@@ -32644,7 +31956,7 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case "Change_to_Lobby":
 					this.real_exit_room();
-					/*no*/this.breq;
+					break ;
 				}
 		}
 
@@ -32782,85 +32094,9 @@ var Laya=window.Laya=(function(window,document){
 			console.log("剩餘限紅 顥示 = "+this.roomData.appearMoney(this.roomData.rest_betlimit));
 			this.view.viewArea.tablelimit_updata(this.roomData.rest_betlimit / this.roomData.GetMoney(this.roomData.room_info.room_limit),this.roomData.appearMoney(this.roomData.rest_betlimit));
 			this.view.viewArea.zone_light(this.roomData.light_po);
-			return;
-			var data=/*no*/this.e.info;
-			var position=data[0];
-			var value=data[1];
-			var zone_total=data[2];
-			var isMybet=data[3];
-			var IsSub=data[4];
-			var my_total=data[5];
-			var bet_info=data[6];
-			if (isMybet){
-				if (IsSub){
-					/*no*/this.game.viewArea.update_total(position,0);
-					/*no*/this.game.viewArea.update_other_total(this.appMedel.dataStartStatus.allBetClips);
-				}
-				else if(this.appMedel.IsBetMax){
-					/*no*/this.game.viewArea.my_batch_bet(value,position,my_total,zone_total);
-				}
-				else if(this.appMedel.IsRepeat){
-					var bet;
-					for(var k=0;k< this.appMedel.sameBetinfo.length;k++){
-						bet=this.appMedel.sameBetinfo[k];
-						var zone=this.appMedel.dataStartStatus.allBetClips[bet.position-1];
-						var my=this.appMedel.dataStartStatus.myBetClips[bet.position-1];
-						var singlebet=0;
-						if(this.appMedel.roomParam.roomType !=1){
-							singlebet=bet.value /100;
-						}
-						else singlebet=bet.value;
-						/*no*/this.game.viewArea.my_batch_bet(singlebet,bet.position-1,my,zone);
-					}
-				}
-				else{
-					/*no*/this.game.viewArea.my_batch_bet(value,position,my_total,zone_total);
-				}
-			}
-			else{
-				if (IsSub){
-					value=-value;
-					/*no*/this.game.viewArea.other_bet_cancel(value,position,zone_total);
-					/*no*/this.game.viewArea.update_other_total(this.appMedel.dataStartStatus.allBetClips);
-				}
-				else{
-					if(bet_info==null){
-						/*no*/this.game.viewArea.clear_allChip();
-						for(var i=0;i< 4;i++){
-							var zonet=this.appMedel.dataStartStatus.allBetClips[i];
-							var singlebet=0;
-							if(this.appMedel.roomParam.roomType !=1){
-								singlebet=zonet /100;
-							}
-							else singlebet=zonet;
-							/*no*/this.game.viewArea.other_bet(i,singlebet ,zonet,isMybet);
-							var my_half=this.appMedel.dataStartStatus.myBetClips[i];
-							var mytotal=0;
-							if(this.appMedel.roomParam.roomType !=1){
-								mytotal=my_half /100;
-							}
-							else mytotal=my_half;
-							/*no*/this.game.viewArea.half_in_update_self_bet_hint(mytotal,i);
-						}
-					}
-					else{
-						var betb;
-						for(var i=0;i< this.appMedel.sameBetinfo.length;i++){
-							betb=this.appMedel.sameBetinfo[i];
-							var zonet=this.appMedel.dataStartStatus.allBetClips[betb.position-1];
-							var singlebet=0;
-							if(this.appMedel.roomParam.roomType !=1){
-								singlebet=betb.value /100;
-							}
-							else singlebet=betb.value;
-							/*no*/this.game.viewArea.other_bet(betb.position-1,singlebet ,zonet,isMybet);
-						}
-					}
-				}
-			}
 		}
 
-		//game.viewArea.other_bet(position,value,zone_total,isMybet);
+		//sub_otherbet(chips);
 		__proto.regFont=function(fontFileName,path){
 			var newFont=new BitmapFont();
 			var fnt=Light.loader.getRes(fontFileName);
@@ -34501,6 +33737,57 @@ var Laya=window.Laya=(function(window,document){
 	})(LoaderManager)
 
 
+	/**
+	*@private
+	*<code>Bitmap</code> 是图片资源类。
+	*/
+	//class laya.resource.Bitmap extends laya.resource.Resource
+	var Bitmap=(function(_super){
+		function Bitmap(){
+			//this._source=null;
+			//this._w=NaN;
+			//this._h=NaN;
+			this.useNum=0;
+			Bitmap.__super.call(this);
+			this._w=0;
+			this._h=0;
+		}
+
+		__class(Bitmap,'laya.resource.Bitmap',_super);
+		var __proto=Bitmap.prototype;
+		/**
+		*彻底清理资源。
+		*/
+		__proto.dispose=function(){
+			this._resourceManager.removeResource(this);
+			_super.prototype.dispose.call(this);
+		}
+
+		/***
+		*宽度。
+		*/
+		__getset(0,__proto,'width',function(){
+			return this._w;
+		});
+
+		/***
+		*高度。
+		*/
+		__getset(0,__proto,'height',function(){
+			return this._h;
+		});
+
+		/***
+		*HTML Image 或 HTML Canvas 或 WebGL Texture 。
+		*/
+		__getset(0,__proto,'source',function(){
+			return this._source;
+		});
+
+		return Bitmap;
+	})(Resource)
+
+
 	//class com.lightUI.manager.LayerMask extends com.iflash.events.EventDispatcher
 	var LayerMask=(function(_super){
 		function LayerMask(){
@@ -34575,57 +33862,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return LayerMask;
 	})(EventDispatcher)
-
-
-	/**
-	*@private
-	*<code>Bitmap</code> 是图片资源类。
-	*/
-	//class laya.resource.Bitmap extends laya.resource.Resource
-	var Bitmap=(function(_super){
-		function Bitmap(){
-			//this._source=null;
-			//this._w=NaN;
-			//this._h=NaN;
-			this.useNum=0;
-			Bitmap.__super.call(this);
-			this._w=0;
-			this._h=0;
-		}
-
-		__class(Bitmap,'laya.resource.Bitmap',_super);
-		var __proto=Bitmap.prototype;
-		/**
-		*彻底清理资源。
-		*/
-		__proto.dispose=function(){
-			this._resourceManager.removeResource(this);
-			_super.prototype.dispose.call(this);
-		}
-
-		/***
-		*宽度。
-		*/
-		__getset(0,__proto,'width',function(){
-			return this._w;
-		});
-
-		/***
-		*高度。
-		*/
-		__getset(0,__proto,'height',function(){
-			return this._h;
-		});
-
-		/***
-		*HTML Image 或 HTML Canvas 或 WebGL Texture 。
-		*/
-		__getset(0,__proto,'source',function(){
-			return this._source;
-		});
-
-		return Bitmap;
-	})(Resource)
 
 
 	/*
@@ -53928,12 +53164,13 @@ var Laya=window.Laya=(function(window,document){
 			this.txtMoney.text="";
 			this.mcMoneyIcon.visible=false;
 			this.mcVip.visible=false;
-			this.bp_vip.label="";
-			this.btnAdd.on("click",this,/*no*/this.onClick);
+			this.bp_vip.text="";
+			this.btnAdd.on("click",this,this.onClick);
 			this.btnAdd.on("mouseover",this,this.onOver);
 			this.btnAdd.on("mouseout",this,this.onOut);
 		}
 
+		__proto.onClick=function(event){}
 		__proto.onOver=function(event){
 			this.carry_tips.visible=true;
 		}
@@ -54027,7 +53264,6 @@ var Laya=window.Laya=(function(window,document){
 	//class bull.view.room.NetStatusPanel extends ui.ui.room.NetStatusPanelUI
 	var NetStatusPanel=(function(_super){
 		function NetStatusPanel(){
-			this.mcStatus=null;
 			this._ms=0;
 			this._status=0;
 			this._statuTxts=null;
@@ -54157,7 +53393,6 @@ var Laya=window.Laya=(function(window,document){
 			{"uid":1000,"money":100,"is_light":true,"win_money":4000,"name":"dyson11" },
 			{"uid":1000,"money":100,"is_light":true,"win_money":4000,"name":"dyson12" },
 			{"uid":1000,"money":100,"is_light":true,"win_money":4000,"name":"dyson13" }];
-			/*no*/this.view.ViewPlayerList.show(data);
 		}
 
 		return PlayerListPanel;
@@ -56068,75 +55303,14 @@ var Laya=window.Laya=(function(window,document){
 
 
 /*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (18):warning:internalHigh This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/Int64.as (13):warning:internalHigh This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (18):warning:internalHigh This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/libs/kgame/src/com/netease/protobuf/UInt64.as (13):warning:internalHigh This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/RoomListCommand.as (57):warning:AlertPanel This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (130):warning:flg This variable is not defined.
-7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/model/data/HallData.as (29):warning:_already_in_roomid This variable is not defined.
-8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (190):warning:appMedel.sameBetinfo.length This variable is not defined.
-9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (192):warning:appMedel.sameBetinfo This variable is not defined.
-10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (201):warning:appMedel.roomParam.roomType This variable is not defined.
-11 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (213):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-12 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (214):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-13 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (215):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-14 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (216):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-15 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (221):warning:appMedel.user_id This variable is not defined.
-16 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (223):warning:appMedel.roomParam.roomType This variable is not defined.
-17 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (225):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-18 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (227):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-19 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (234):warning:appMedel.user_id This variable is not defined.
-20 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (236):warning:appMedel.roomParam.roomType This variable is not defined.
-21 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (238):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-22 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (240):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-23 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (247):warning:appMedel.user_id This variable is not defined.
-24 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (249):warning:appMedel.roomParam.roomType This variable is not defined.
-25 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (251):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-26 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (253):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-27 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (260):warning:appMedel.user_id This variable is not defined.
-28 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (262):warning:appMedel.roomParam.roomType This variable is not defined.
-29 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (264):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-30 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (266):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-31 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (270):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-32 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (274):warning:appMedel.user_id This variable is not defined.
-33 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (279):warning:appMedel.sameBetinfo.length This variable is not defined.
-34 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (281):warning:appMedel.sameBetinfo This variable is not defined.
-35 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (283):warning:appMedel.roomParam.roomType This variable is not defined.
-36 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (285):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-37 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (287):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-38 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (289):warning:appMedel.dataStartStatus.myBetClips This variable is not defined.
-39 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (294):warning:appMedel.roomParam.roomlimit This variable is not defined.
-40 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (304):warning:appMedel.where_is_lamp This variable is not defined.
-41 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (309):warning:appMedel.dataStartStatus.allBetClips This variable is not defined.
-42 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (316):warning:evt.dispatchEvent This variable is not defined.
-43 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (316):warning:OperateEvent This variable is not defined.
-44 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (316):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
-45 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (320):warning:appMedel.roomParam.roomType This variable is not defined.
-46 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (325):warning:evt.dispatchEvent This variable is not defined.
-47 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (325):warning:OperateEvent This variable is not defined.
-48 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/command/BetNotifyCommand.as (325):warning:NewNewGameEvent.Bet_Clip_Otherbet This variable is not defined.
-49 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (286):warning:chipsVO This variable is not defined.
-50 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (584):warning:breq This variable is not defined.
-51 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (779):warning:e.info This variable is not defined.
-52 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (792):warning:game.viewArea.update_total This variable is not defined.
-53 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (794):warning:game.viewArea.update_other_total This variable is not defined.
-54 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (799):warning:game.viewArea.my_batch_bet This variable is not defined.
-55 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (817):warning:game.viewArea.my_batch_bet This variable is not defined.
-56 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (823):warning:game.viewArea.my_batch_bet This variable is not defined.
-57 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (833):warning:game.viewArea.other_bet_cancel This variable is not defined.
-58 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (835):warning:game.viewArea.update_other_total This variable is not defined.
-59 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (841):warning:game.viewArea.clear_allChip This variable is not defined.
-60 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (853):warning:game.viewArea.other_bet This variable is not defined.
-61 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (863):warning:game.viewArea.half_in_update_self_bet_hint This variable is not defined.
-62 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (881):warning:game.viewArea.other_bet This variable is not defined.
-63 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListRender.as (40):warning:index This variable is not defined.
-64 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/HeadView.as (25):warning:onClick This variable is not defined.
-65 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListPanel.as (55):warning:view.ViewPlayerList.show This variable is not defined.
-66 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (60):warning:　i This variable is not defined.
-67 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (61):warning:　i This variable is not defined.
-68 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (62):warning:　i This variable is not defined.
-69 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (63):warning:　i This variable is not defined.
-70 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (64):warning:　i This variable is not defined.
-71 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/XiaZhuangPanel.as (37):warning:Common.isCoin This variable is not defined.
+1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/command/RoomListCommand.as (57):warning:AlertPanel This variable is not defined.
+2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/common/mediator/AssetInMediator.as (132):warning:getSingleton This variable is not defined.
+3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/modules/room/mediator/BullScenceMediator.as (284):warning:chipsVO This variable is not defined.
+4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PlayerListRender.as (40):warning:index This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (60):warning:　i This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (61):warning:　i This variable is not defined.
+7 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (62):warning:　i This variable is not defined.
+8 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (63):warning:　i This variable is not defined.
+9 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (64):warning:　i This variable is not defined.
+10 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/XiaZhuangPanel.as (37):warning:Common.isCoin This variable is not defined.
 */

@@ -40,14 +40,14 @@ package bull.modules.room.command
 			{
 				var data:SUserInfo = cs.calculate_notify.user_info_s[i];
 				
-				var name:String = roomData.find_player("username", data.uid);
+				var name:String = roomData.find_player("username", data.uid as Number);
 				var money:String  = roomData.appearMoney(roomData.GetMoney(data.win_money.toNumber()));
-				var head:String = roomData.find_player("avatar", data.uid);
+				var head:String = roomData.find_player("avatar", data.uid as Number);
 				var ob:Object = {  "name":name, "is_light":data.is_light, "money":money, "head":head };				
 				roomData.settle_User_info.push(ob);
 			}			
 			
-			roomData.Total_money = roomData.settle_hand_money;
+			roomData.Total_money = roomData.settle_hand_money.toNumber();
 			
 			sentNotification(BullNotification.SETTLE_NOTIFY);
 			
