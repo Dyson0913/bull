@@ -65,7 +65,7 @@ package bull.view.room
 			var idx:int = data.idx;
 			var money:String = data.money;
 			var info:SBankerCalcInfo = data.info;
-			_bg.index = (index + 1 % 2);			
+			_bg.index = (idx + 1 % 2);			
 			
 			
 			index_txt.text = "第" + (idx + 1) +"局";			

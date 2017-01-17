@@ -59,8 +59,7 @@ package bull.modules.BullHall.mediator
 			
 			//資料更新通知	
 			hallData.addEventListener(LightEvent.CHANGE, this, onRoomListChange);			
-			view.backLobby.on(Event.CLICK, this, onReturnClick);
-			//view.list.on(LightEvent.ITEM_CLICK,this,onListItemClick);
+			view.backLobby.on(Event.CLICK, this, onReturnClick);			
 			
 			view.on(ScenceManagerEvent.UI_HIDE,this, onHideHandler);
 			view.on(ScenceManagerEvent.UI_SHOW,this, onShowHandler);
@@ -204,20 +203,6 @@ package bull.modules.BullHall.mediator
 		private function onRoomListChange(e:LightEvent):void {
 			trace("get room data")
 			view.showRoomList(hallData.roomList);
-		}
-		
-		private function onListItemClick(data:*):void{
-			trace("onListItemClick",data.id);
-			currentId = data.id;
-//			if(!roomSocketService) roomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
-			//sentNotification(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString());
-		}
-		
-		public function enterRoom():void{
-			//var vo:HallRoomVO = hallData.getHallRoomInfoById(currentId);
-			//userInfoData.moneyType = vo.chipsType;
-			//sentNotification(CarNotification.ENTER_ROOM, vo);
-			//currentId = -1;
 		}
 		
 		private var timer:Timer;

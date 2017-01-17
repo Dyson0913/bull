@@ -111,7 +111,7 @@ package bull.modules.common.mediator
 			//錢不夠最低帶入,直接提示
 			if ( betMax < betMin)
 			{
-				//TODO
+				
 				Alert.show(Light.language.getSrting("alert_msg7"), "", AlertCancelPanel, null, Handler.create(this, GotoRecharge));
 				return;				
 			}

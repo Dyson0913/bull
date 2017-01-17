@@ -29311,13 +29311,6 @@ var Laya=window.Laya=(function(window,document){
 			}
 			this.sentNotification("Close_BGM");
 			this.sentNotification("enterRoom");
-			return;
-		}
-
-		//}
-		__proto.gotoRecharge=function(data,flg){
-			if(flg=="ok_btn"){
-			}else{}
 		}
 
 		return UserBalanceCommand;
@@ -29460,13 +29453,6 @@ var Laya=window.Laya=(function(window,document){
 			this.view.showRoomList(this.hallData.roomList);
 		}
 
-		__proto.onListItemClick=function(data){
-			console.log("onListItemClick",data.id);
-			this.currentId=data.id;
-		}
-
-		//sentNotification(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString());
-		__proto.enterRoom=function(){}
 		__proto.sendHeartBeat=function(){
 			this.startHeartCount();
 			this.sendMsg();
@@ -29512,49 +29498,6 @@ var Laya=window.Laya=(function(window,document){
 		HallMediator.NAME="hallMediator";
 		return HallMediator;
 	})(Mediator)
-
-
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			var roomData=this.getSingleton("roomData");
-			if(param.uid){
-				bullData.uid=param.uid;
-				roomData.uid=bullData.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if (param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
 
 
 	/**
@@ -29662,6 +29605,49 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
+
+
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			var roomData=this.getSingleton("roomData");
+			if(param.uid){
+				bullData.uid=param.uid;
+				roomData.uid=bullData.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if (param.access_token)bullData.token=param.access_token;
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -30268,42 +30254,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._already_in_msg=null;
-			this._already_in_room_idx=0;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-			this._already_in_room_idx=-1;
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
 	/**
 	*设置声音面板
 	*/
@@ -30368,10 +30318,6 @@ var Laya=window.Laya=(function(window,document){
 		/**
 		*设置声音
 		*/
-		__proto.onChange=function(){
-			ShareObjectMgr.get().setMusic(!this.view.chkMusic.selected);
-		}
-
 		__proto.onChangeMusic=function(){
 			ShareObjectMgr.get().setMusic(!this.view.musicButton.selected);
 		}
@@ -30389,6 +30335,42 @@ var Laya=window.Laya=(function(window,document){
 		MusicSetMediator.HIDE_MUSIC_SET_PANEL="car.HIDE_MUSIC_SET_PANEL";
 		return MusicSetMediator;
 	})(Mediator)
+
+
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._already_in_msg=null;
+			this._already_in_room_idx=0;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+			this._already_in_room_idx=-1;
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
 
 
 	/**
@@ -30903,7 +30885,6 @@ var Laya=window.Laya=(function(window,document){
 			return [];
 		}
 
-		// ExternalInterface.addCallback("getUserBalanceCallBack",getUserBalanceCallBack);
 		__proto.getUserBalance=function(callback){
 			this.webApi.getUserBalance(callback);
 		}
@@ -30914,25 +30895,6 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.recharge=function(type,callback){
 			this.webApi.rechargeShow(type,callback);
-		}
-
-		__proto.parseInfo=function(callback){
-			var browserStr=Browser.document.location.href.toString();
-			var askIndex=browserStr.indexOf("?");
-			var paramAry=browserStr.substr(askIndex+1).split("&");
-			var param=new WebParam();
-			for (var i=0;i<paramAry.length;i++){
-				var ary=paramAry[i].split("=");
-				var key=ary[0];
-				var value=ary[1];
-				param[key]=value;
-				console.log("key: "+key+",  value: "+value);
-			}
-		}
-
-		//appModel.assess_token=param.access_token;
-		__proto.getUserBalanceCallBack=function(param){
-			var userMoneyNum=0;
 		}
 
 		WebService.resolveBrowserParam=function(){
@@ -31653,7 +31615,10 @@ var Laya=window.Laya=(function(window,document){
 			this.addNotifiction("Change_to_Lobby");
 		}
 
-		__proto.onCarryClick=function(){}
+		__proto.onCarryClick=function(){
+			SoundManager.playSound(SoundPath.press);
+		}
+
 		__proto.onCoinSelect=function(select){
 			this.roomData.bet_idx=select;
 		}
@@ -31672,9 +31637,9 @@ var Laya=window.Laya=(function(window,document){
 			}
 			this.roomData.apply_type=2;
 			this.sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(),2);
+			SoundManager.playSound(SoundPath.press);
 		}
 
-		//SoundManager.playSound(SoundPath.press);
 		__proto.no_more_banker=function(ata,flg){
 			if (flg=="ok_btn"){
 				this.roomData.apply_type=2;
@@ -31685,11 +31650,13 @@ var Laya=window.Laya=(function(window,document){
 		__proto.onBetAction=function(name){
 			if (name=="same")this.sentNotification("bet_same");
 			else if (name=="cancel")this.sentNotification("bet_cancel");
+			SoundManager.playSound(SoundPath.press);
 		}
 
 		__proto.onBetzoneClick=function(idx){
 			this.roomData.bet_zone=idx;
 			this.sentNotification(ENCSType.CS_TYPE_BET_REQ.toString());
+			SoundManager.playSound(SoundPath.press);
 		}
 
 		__proto.get_coin_info=function(amount,zone,is_my){
@@ -31905,6 +31872,7 @@ var Laya=window.Laya=(function(window,document){
 		*/
 		__proto.onClick=function(e){
 			console.log("onClick:"+e.target);
+			SoundManager.playSound(SoundPath.press);
 			switch(e.target){
 				case this.view.helpBtn:
 					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
@@ -32071,9 +32039,9 @@ var Laya=window.Laya=(function(window,document){
 				else this.view.phase_tip("您没有参与本局下注",0);
 			}
 			else this.view.phase_tip("总下注 "+this.roomData.appearMoney(total)+"，祝吉星高照！",0);
+			SoundManager.playSound(SoundPath.dealpoker);
 		}
 
-		//SoundManager.playSound(SoundPath.dealpoker);
 		__proto.bet_otherHandler=function(){
 			var myuid=this.roomData.uid;
 			var bet_info=this.roomData.sameBetinfo;
@@ -44275,7 +44243,7 @@ var Laya=window.Laya=(function(window,document){
 			var idx=data.idx;
 			var money=data.money;
 			var info=data.info;
-			this._bg.index=(/*no*/this.index+1 % 2);
+			this._bg.index=(idx+1 % 2);
 			this.index_txt.text="第"+(idx+1)+"局";
 			this._player0_txt.text=this.type_to_String(info._1_type);
 			this._player1_txt.text=this.type_to_String(info._2_type);
@@ -53000,6 +52968,11 @@ var Laya=window.Laya=(function(window,document){
 			this.viewArea.hide();
 			this.ViewBetGroup.disapear();
 			DisplayUtil.removeAllChildren(this._betsBox);
+			var total=0;
+			for (var i=0;i < this._roomData.Zone_Total_bet.length;i++){
+				total+=this._roomData.Zone_Total_bet[i];
+			}
+			if(total >0)SoundManager.playSound(SoundPath.Coin);
 		}
 
 		__proto.banker=function(){
@@ -53037,6 +53010,7 @@ var Laya=window.Laya=(function(window,document){
 			this.viewArea.bet_limit(this._roomData.IsSysBanker(),this._roomData.appearMoney(this._roomData.GetMoney(this._roomData.room_info.room_limit)));
 			this.viewBetTime.set_data([this._roomData.LeftTime]);
 			this.roomData.rest_betlimit=this.roomData.GetMoney(this.roomData.room_info.room_limit);
+			SoundManager.playSound(SoundPath.player_action);
 			this.ViewWinLostEffect.hide();
 			this.viewPoker.hide();
 		}
@@ -53621,10 +53595,51 @@ var Laya=window.Laya=(function(window,document){
 				this["pokerType_"+i]["odds"].text=odd.toString();;
 				Tween.to(this["pokerType_"+i]["odds"],{scaleX:1,scaleY:1,alpha:1 },500,Ease.cubicOut,null,2);
 			}
+			this.playsound_type(i==4,type)
 			if (i==4){
 				if (this._Wineffect !=null){
 					this._Wineffect.play();
 				}
+			}
+		}
+
+		__proto.playsound_type=function(banker,kind){
+			var playsound;
+			if(banker){
+				if (kind==0)playsound=SoundPath.Bull_g_None;
+				else if (kind==1)playsound=SoundPath.Bull_g_1;
+				else if (kind==2)playsound=SoundPath.Bull_g_2;
+				else if (kind==3)playsound=SoundPath.Bull_g_3;
+				else if (kind==4)playsound=SoundPath.Bull_g_4;
+				else if (kind==5)playsound=SoundPath.Bull_g_5;
+				else if (kind==6)playsound=SoundPath.Bull_g_6;
+				else if (kind==7)playsound=SoundPath.Bull_g_7;
+				else if (kind==8)playsound=SoundPath.Bull_g_8;
+				else if (kind==9)playsound=SoundPath.Bull_g_9;
+				else if (kind==10)playsound=SoundPath.Bull_g_10;
+				else if (kind==11)playsound=SoundPath.Bull_g_fiveDoll;
+				else if (kind >=12 && kind<=24)playsound=SoundPath.Bull_g_fourBomb;
+				else if (kind==25)playsound=SoundPath.Bull_b_fiveSmall;
+			}
+			else{
+				if (kind==0)playsound=SoundPath.Bull_b_None;
+				else if (kind==1)playsound=SoundPath.Bull_b_1;
+				else if (kind==2)playsound=SoundPath.Bull_b_2;
+				else if (kind==3)playsound=SoundPath.Bull_b_3;
+				else if (kind==4)playsound=SoundPath.Bull_b_4;
+				else if (kind==5)playsound=SoundPath.Bull_b_5;
+				else if (kind==6)playsound=SoundPath.Bull_b_6;
+				else if (kind==7)playsound=SoundPath.Bull_b_7;
+				else if (kind==8)playsound=SoundPath.Bull_b_8;
+				else if (kind==9)playsound=SoundPath.Bull_b_9;
+				else if (kind==10)playsound=SoundPath.Bull_b_10;
+				else if (kind==11)playsound=SoundPath.Bull_b_fiveDoll;
+				else if (kind >=12 && kind<=24)playsound=SoundPath.Bull_b_fourBomb;
+				else if (kind==25)playsound=SoundPath.Bull_b_fiveSmall;
+			}
+			SoundManager.playSound(playsound);
+			if(kind==10 || kind==11 || kind==25){
+				SoundManager.playSound(SoundPath.Bull_10_effect);
 			}
 		}
 
@@ -54249,6 +54264,25 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -54265,25 +54299,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
 
 
 	/**
@@ -54388,6 +54403,26 @@ var Laya=window.Laya=(function(window,document){
 		__proto.createChildren=function(){}
 		return NodeTool;
 	})(NodeToolUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
+	var NodeTreeSetting=(function(_super){
+		function NodeTreeSetting(){
+			NodeTreeSetting.__super.call(this);
+			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
+			this.createView(NodeTreeSettingUI.uiView);
+		}
+
+		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
+		var __proto=NodeTreeSetting.prototype;
+		//inits();
+		__proto.createChildren=function(){}
+		return NodeTreeSetting;
+	})(NodeTreeSettingUI)
 
 
 	/**
@@ -54631,26 +54666,6 @@ var Laya=window.Laya=(function(window,document){
 		]);
 		return NodeTree;
 	})(NodeTreeUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
-	//class laya.debug.view.nodeInfo.nodetree.NodeTreeSetting extends laya.debug.ui.debugui.NodeTreeSettingUI
-	var NodeTreeSetting=(function(_super){
-		function NodeTreeSetting(){
-			NodeTreeSetting.__super.call(this);
-			Base64AtlasManager.replaceRes(NodeTreeSettingUI.uiView);
-			this.createView(NodeTreeSettingUI.uiView);
-		}
-
-		__class(NodeTreeSetting,'laya.debug.view.nodeInfo.nodetree.NodeTreeSetting',_super);
-		var __proto=NodeTreeSetting.prototype;
-		//inits();
-		__proto.createChildren=function(){}
-		return NodeTreeSetting;
-	})(NodeTreeSettingUI)
 
 
 	/**
@@ -55331,10 +55346,9 @@ var Laya=window.Laya=(function(window,document){
 
 
 /*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/XiaZhuangListRender.as (67):warning:index This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (63):warning:　i This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (64):warning:　i This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (65):warning:　i This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (66):warning:　i This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (67):warning:　i This variable is not defined.
+1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (66):warning:　i This variable is not defined.
+2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (67):warning:　i This variable is not defined.
+3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (68):warning:　i This variable is not defined.
+4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (69):warning:　i This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (70):warning:　i This variable is not defined.
 */

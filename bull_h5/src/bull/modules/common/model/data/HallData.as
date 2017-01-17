@@ -13,7 +13,7 @@ package bull.modules.common.model.data
 		public static const NAME:String = "hallData";
 		
 		
-		private var _roomList:Array;////////////HallRoomVO
+		private var _roomList:Array;
 		public var _already_in_msg:String;
 		public var _already_in_room_idx:int;
 		

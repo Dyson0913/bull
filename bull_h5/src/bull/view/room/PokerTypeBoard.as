@@ -12,6 +12,9 @@ package bull.view.room
 	import laya.utils.Ease;
 	import laya.utils.Handler;
 	
+	import bull.core.SoundPath;
+	import laya.media.SoundManager;
+	
 	import ui.ui.room.PokerTypeUI
 	
 	public class PokerTypeBoard extends PokerTypeUI
@@ -124,6 +127,9 @@ package bull.view.room
 				Tween.to(this["pokerType_" + i]["odds"], { scaleX:1, scaleY:1, alpha:1 }, 500, Ease.cubicOut, null, 2);
 			}
 			
+			//報牌型
+			playsound_type(i==4,type)
+			
 			//庄家報完牌型			
 			if (i == 4)
 			{
@@ -135,6 +141,58 @@ package bull.view.room
 			}
 			
 		}
+		
+		private function playsound_type(banker:Boolean,kind:int):void
+		{
+			var playsound:String;
+			
+			// 10: 牛牛, 11:花牛,12~14:四炸,25:小牛
+			//庄家
+			if( banker)
+			{
+			    if (kind ==0) 	playsound = SoundPath.Bull_g_None;
+				else if (kind ==1) 	playsound = SoundPath.Bull_g_1;
+				else if (kind ==2) 	playsound = SoundPath.Bull_g_2;
+				else if (kind ==3) 	playsound = SoundPath.Bull_g_3;
+				else if (kind ==4) 	playsound = SoundPath.Bull_g_4;
+				else if (kind ==5) 	playsound = SoundPath.Bull_g_5;
+				else if (kind ==6) 	playsound = SoundPath.Bull_g_6;
+				else if (kind ==7) 	playsound = SoundPath.Bull_g_7;
+				else if (kind ==8) 	playsound = SoundPath.Bull_g_8;
+				else if (kind ==9) 	playsound = SoundPath.Bull_g_9;
+				else if (kind ==10) playsound = SoundPath.Bull_g_10;
+				else if (kind ==11) playsound = SoundPath.Bull_g_fiveDoll;
+				else if (kind >=12 && kind<=24 ) playsound = SoundPath.Bull_g_fourBomb;
+				else if (kind ==25 ) playsound = SoundPath.Bull_b_fiveSmall;
+			}
+			else
+			{
+				if (kind ==0) 		playsound = SoundPath.Bull_b_None;
+				else if (kind ==1) 	playsound = SoundPath.Bull_b_1;
+				else if (kind ==2) 	playsound = SoundPath.Bull_b_2;
+				else if (kind ==3) 	playsound = SoundPath.Bull_b_3;
+				else if (kind ==4) 	playsound = SoundPath.Bull_b_4;
+				else if (kind ==5) 	playsound = SoundPath.Bull_b_5;
+				else if (kind ==6) 	playsound = SoundPath.Bull_b_6;
+				else if (kind ==7) 	playsound = SoundPath.Bull_b_7;
+				else if (kind ==8) 	playsound = SoundPath.Bull_b_8;
+				else if (kind ==9) 	playsound = SoundPath.Bull_b_9;
+				else if (kind ==10) playsound = SoundPath.Bull_b_10;
+				else if (kind ==11) playsound = SoundPath.Bull_b_fiveDoll;
+				else if (kind >=12 && kind<=24 ) playsound = SoundPath.Bull_b_fourBomb;
+				else if (kind ==25 ) playsound =SoundPath.Bull_b_fiveSmall;
+			}
+			
+			SoundManager.playSound(playsound);
+			
+			//牛牛,五花,五小有額外另一音效
+			if( kind == 10 || kind == 11 || kind ==25)
+			{
+				SoundManager.playSound(SoundPath.Bull_10_effect);	
+			}
+			
+		}
+		
 		
 		
 		private function animate_0():void 

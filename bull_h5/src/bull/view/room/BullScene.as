@@ -110,6 +110,14 @@ package bull.view.room
 			viewArea.hide();			
 			ViewBetGroup.disapear();
 			DisplayUtil.removeAllChildren(_betsBox);
+			
+			//有人下注再播
+			var total:Number = 0;
+			for ( var i:int = 0; i < _roomData.Zone_Total_bet.length; i++)
+			{
+				total += _roomData.Zone_Total_bet[i];
+			}
+			if( total >0) SoundManager.playSound(SoundPath.Coin);
 		}
 		
 		public function banker():void
@@ -175,7 +183,7 @@ package bull.view.room
 			//本局限額
 			roomData.rest_betlimit = roomData.GetMoney(roomData.room_info.room_limit);
 			
-			//TODO sound .player_action
+			SoundManager.playSound(SoundPath.player_action);
 			
 			//中途進入元件處理
 			ViewWinLostEffect.hide();

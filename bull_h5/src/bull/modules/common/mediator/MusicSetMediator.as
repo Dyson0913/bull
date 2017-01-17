@@ -89,13 +89,7 @@ package bull.modules.common.mediator
 		
 		/**
 		 * 设置声音 
-		 */		
-		private function onChange():void
-		{
-			//trace("设置音乐音效：music:",view.musicButton.selected," sound:",view.soundButton.selected);
-			//ShareObjectMgr.get().setMusicSound(!view.musicButton.selected, !view.soundButton.selected);
-			ShareObjectMgr.get().setMusic(!view.chkMusic.selected);
-		}
+		 */	
 		
 		private function onChangeMusic():void
 		{

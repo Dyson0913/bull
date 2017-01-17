@@ -172,7 +172,7 @@ package bull.modules.room.mediator
 		
 		private function onCarryClick():void
 		{
-			
+			SoundManager.playSound(SoundPath.press);
 		}
 		
 		private function onCoinSelect(select:int):void
@@ -200,10 +200,9 @@ package bull.modules.room.mediator
 			}			
 			
 			roomData.apply_type = 2;
-			sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(),2);
+			sentNotification(ENCSType.CS_TYPE_BANKER_REQ.toString(), 2);
 			
-			//TODO sound
-			//SoundManager.playSound(SoundPath.press);
+			SoundManager.playSound(SoundPath.press);
 		}
 		
 		private function no_more_banker(ata:int,flg:String):void{
@@ -217,13 +216,15 @@ package bull.modules.room.mediator
 		private function onBetAction(name:String):void
 		{			
 			if (name == "same") sentNotification(BullNotification.BET_SAME);
-			else if (name =="cancel") sentNotification(BullNotification.BET_CANCEL);
+			else if (name == "cancel") sentNotification(BullNotification.BET_CANCEL);
+			SoundManager.playSound(SoundPath.press);
 		}
 		
 		private function onBetzoneClick(idx:int):void
 		{				
 			roomData.bet_zone = idx;
-			sentNotification(ENCSType.CS_TYPE_BET_REQ.toString());			
+			sentNotification(ENCSType.CS_TYPE_BET_REQ.toString());
+			SoundManager.playSound(SoundPath.press);
 		}
 		
 		private function get_coin_info(amount:Number,zone:int,is_my:Boolean):Array
@@ -550,7 +551,7 @@ package bull.modules.room.mediator
 		private function onClick(e:Event):void
 		{
 			trace("onClick:" + e.target);
-		
+			SoundManager.playSound(SoundPath.press);
 			switch(e.target)
 			{
 				case view.helpBtn:
@@ -772,8 +773,8 @@ package bull.modules.room.mediator
 			}
 			else view.phase_tip("总下注 " +roomData.appearMoney(total) +"，祝吉星高照！",0);			
 			
-			//TODO sound.dealpoker
-			//SoundManager.playSound(SoundPath.dealpoker);
+			
+			SoundManager.playSound(SoundPath.dealpoker);
 		}
 		
 		
@@ -864,8 +865,6 @@ package bull.modules.room.mediator
 			//明燈更新
 			view.viewArea.zone_light(roomData.light_po);						
 			
-			//TODO sound.dealpoker
-			//SoundManager.playSound(SoundPath.Coin);
 			
 			//num,idx
 			//自己下注  //折分coin

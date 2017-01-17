@@ -93,7 +93,6 @@ package bull.modules.common.command
 			//存一份房間config,不用每次用idx 去取
 			roomData.room_info = config;
 			
-			//TODO
 			(getMediator(BullScenceMediator.NAME) as BullScenceMediator).sendHeartBeat();
 			
 			//請求加入房間
