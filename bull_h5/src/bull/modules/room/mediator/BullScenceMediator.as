@@ -75,9 +75,9 @@ package bull.modules.room.mediator
 		private var num:int;
 		private var timer:Timer;
 		private var net_speed:Array = []; //每次心跳速度
-		private var avg_time_diff:Array = []; //每次心跳回來的時間差
+		private var avg_time_diff:Array = []; //每次心跳回來的時間差		
 		
-		public var chipTool:BetSplit = new BetSplit();
+		
 		
 		public static const NAME:String = "BullScenceMediator";
 		public function BullScenceMediator(mediatorName:String="", viewComponent:Object=null)
@@ -552,6 +552,9 @@ package bull.modules.room.mediator
 		{
 			trace("onClick:" + e.target);
 			SoundManager.playSound(SoundPath.press);
+			
+			
+			
 			switch(e.target)
 			{
 				case view.helpBtn:

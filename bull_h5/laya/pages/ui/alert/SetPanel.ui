@@ -2,7 +2,7 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":4,
+    "selecteID":12,
     "props":{"width":384,"sceneColor":"#000000","height":267},
     "nodeParent":-1,
     "label":"Dialog",
@@ -142,26 +142,6 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":50,"x":24,"width":108,"text":"版本号","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"},
-            "nodeParent":1,
-            "label":"Label",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"text":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":8,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Label",
             "props":{"y":206,"x":82,"width":80,"text":"开启音乐","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"},
             "nodeParent":1,
             "label":"Label",
@@ -196,6 +176,26 @@
                     "__InPool":false
                 }],
             "compId":11,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":47,"x":24,"width":108,"var":"txtName","text":"版本号","height":28,"fontSize":22,"color":"#eed6d6"},
+            "nodeParent":1,
+            "label":"Label(txtName)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":12,
             "child":[
                 ]
         }],

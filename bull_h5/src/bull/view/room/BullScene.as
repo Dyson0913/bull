@@ -37,6 +37,7 @@ package bull.view.room
 		private var _betsBox:Sprite;
 		
 		
+		
 		public function BullScene()
 		{
 			super();			
@@ -48,6 +49,8 @@ package bull.view.room
 			
 			_betsBox = new Sprite();
 			addChildAt(_betsBox, getChildIndex(viewArea));
+			
+			
 			
 			
 			
@@ -71,9 +74,9 @@ package bull.view.room
 		}
 		
 		public function hideme():void{
-			trace("hideme")
+			trace("===============================hideme")
 			
-			//clear();
+			clear();
 			btn_display(false);
 			
 			viewRecord.x = -173;
@@ -82,6 +85,13 @@ package bull.view.room
 			ViewBetGroup.y = 805;
 			viewSelectClip.y = 803;
 			bg_board.y = 800;
+			
+			
+			Laya.timer.clearAll(this);
+			SoundManager.stopAll();
+			Tween.clearAll(this);			
+			
+			
 		}
 		
 		public function btn_display(show:Boolean):void

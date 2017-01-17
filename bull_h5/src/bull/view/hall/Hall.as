@@ -4,6 +4,7 @@ package bull.view.hall
 	import conf.SRoomConfig;
 	import conf.SRoomInfo;
 	import conf.SRoomInfos;
+	import laya.display.Sprite;
 	import laya.events.Event;
 	import laya.ui.Image;
 	import laya.utils.Color;
@@ -23,7 +24,9 @@ package bull.view.hall
 	public class Hall extends hallUI
 	{
 		
-		var marqu_x:int = 612;
+		var marqu_x:int = 612;	
+		
+		public var sp:Sprite;
 		
 		public function Hall()
 		{
@@ -56,9 +59,10 @@ package bull.view.hall
 				}			
 			}
 			
-			
-			
-			
+			sp = new Sprite;
+			//mcpic.mask = sp;
+			//sp.graphics.drawPie(57, 56, 50, -90, -80);
+			//addChild(sp);
 		}
 		
 		private function onLowEnter(e:Event):void
@@ -74,12 +78,7 @@ package bull.view.hall
 			mqrqueue.x = marqu_x;
 			Tween.to(mqrqueue, { x:mqrqueue.x - 600 }, 15000,null, Handler.create(this,showmarque));
 		}
-		
-		
-		
-		private function callCarryInPanel(data:int,flg:String):void{
 			
-		}
 		
 		public function show_G():void
 		{
@@ -87,7 +86,7 @@ package bull.view.hall
 			MLowEnter.visible =	MHighEnter.visible = false;
 			init_box.source  = Light.loader.getRes("res/hall/img_Ginit.png");			
 			high_box.source = Light.loader.getRes("res/hall/img_GHigh.png");		
-			
+						
 		}
 		
 		public function show_M():void

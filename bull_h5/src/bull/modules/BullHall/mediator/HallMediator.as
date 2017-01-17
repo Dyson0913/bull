@@ -6,6 +6,7 @@ package bull.modules.BullHall.mediator
 	import com.lightUI.events.LightEvent;
 	import com.lightUI.events.ScenceManagerEvent;
 	import conf.ENMoneyType;
+	import laya.display.Sprite;
 	
 	import laya.utils.Handler;
 	import laya.events.Event;
@@ -35,6 +36,8 @@ package bull.modules.BullHall.mediator
 		public var hallSocketService:HallSocketService;
 		public var hallData:HallData;
 		public var userInfoData:UserInfoData;		
+		
+		var angel:int = -90;
 		
 		public function HallMediator(mediatorName:String=null, viewComponent:Object=null)
 		{
@@ -160,6 +163,14 @@ package bull.modules.BullHall.mediator
 		private function onClick(e:Event):void
 		{
 			trace("onClick:" + e.target);			
+			
+			angel += 10;
+			var sp:Sprite = view.mcpic.mask;
+			
+			trace("sp ="+sp);
+			
+			view.spp.graphics.drawPie(57, 56, 50, 50, 360);
+			trace("angel ="+angel);
 			
 			switch(e.target)
 			{

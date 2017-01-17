@@ -236,8 +236,9 @@ package bull.view.room
 			timer.clear(this, animate_2);
 			timer.clear(this, animate_3);
 			timer.clear(this, animate_4);
+			
+			Tween.clearAll(this);
 		}
-		
 		
 		private function test():void
 		{

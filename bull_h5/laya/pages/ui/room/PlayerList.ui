@@ -84,7 +84,7 @@
                     "props":{"y":-1,"x":1,"runtime":"bull.view.room.PlayerListRender","name":"render"},
                     "nodeParent":5,
                     "label":"Box(render)",
-                    "isOpen":true,
+                    "isOpen":false,
                     "isDirectory":true,
                     "isAniNode":false,
                     "hasChild":true,
@@ -98,7 +98,6 @@
                     "compId":8,
                     "child":[
                         {
-                            "x":45,
                             "type":"Animation",
                             "props":{"y":1,"x":-2,"visible":true,"var":"bg","source":"res/gameScene/玩家信息底板.png,res/gameScene/玩家信息底板02.png","name":"bg"},
                             "nodeParent":8,
@@ -120,7 +119,6 @@
                             "$HIDDEN":false
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "props":{"y":4,"x":207,"visible":true,"var":"light","skin":"res/share/Light.png","name":"light"},
                             "nodeParent":8,
@@ -141,7 +139,6 @@
                             "$HIDDEN":false
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "props":{"y":3,"x":-1,"width":45,"visible":true,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","name":"Head","height":45},
                             "nodeParent":8,
@@ -162,7 +159,6 @@
                             "$HIDDEN":false
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "props":{"y":6,"x":46,"visible":true,"var":"Vip","skin":"res/gameScene/miniVIP底板.png","name":"Vip"},
                             "nodeParent":8,
@@ -223,7 +219,6 @@
                             "$HIDDEN":false
                         },
                         {
-                            "x":45,
                             "type":"Label",
                             "props":{"y":7,"x":49,"width":155,"visible":true,"var":"Name","text":"天涯歌女爱与仇","name":"Name","height":21,"fontSize":18,"color":"#f8f0ef","align":"left"},
                             "nodeParent":8,
@@ -244,7 +239,6 @@
                             "$HIDDEN":false
                         },
                         {
-                            "x":45,
                             "type":"Label",
                             "props":{"y":30,"x":46,"width":95,"visible":true,"var":"Money","text":"+999999999","name":"Money","height":19,"fontSize":15,"color":"#f3ebea","align":"left"},
                             "nodeParent":8,
