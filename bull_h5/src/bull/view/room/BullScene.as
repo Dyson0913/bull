@@ -141,6 +141,8 @@ package bull.view.room
 				
 				//上庄玩家注區不能下注,COIN 灰掉
 				viewSelectClip.set_gray(true);
+				
+				
 			}	
 			else if ( roomData.Total_money == 0)
 			{
@@ -153,7 +155,7 @@ package bull.view.room
 				trace("玩家正常下注模式");
 				//選第一個COIN
 				viewArea.set_fellow_coin(viewSelectClip["mcSelect_0"]);	
-				viewArea.openbet( _roomData.IsSysBanker() , _roomData.appearMoney(_roomData.GetMoney(_roomData.room_info.room_limit)));
+				viewArea.openbet();
 				
 				phase_tip("",0);
 				
@@ -162,6 +164,10 @@ package bull.view.room
 				ViewBetGroup.appear(_roomData.Has_bet);
 			}			
 			
+			
+			//顥示限額
+			viewArea.bet_limit(_roomData.IsSysBanker(),_roomData.appearMoney(_roomData.GetMoney(_roomData.room_info.room_limit)));
+				
 			//開始倒數
 			viewBetTime.set_data([_roomData.LeftTime]);
 			

@@ -411,8 +411,10 @@ package bull.modules.room.mediator
 		
 		private function onBankerSettleUpdateHandler():void
 		{
-			//appMedel.banker_settle_show = true;			
-			view.bankerResultPanel.show(roomData.Banker_calcu_info.banker_calc_info_s,roomData.Banker_calcu_info.total_win_money);
+			//appMedel.banker_settle_show = true;
+			
+			
+			view.bankerResultPanel.show(roomData.banker_calcu_info,roomData.banker_calcu_total_win);
 			
 			//Pop_banker_settle();
 		}

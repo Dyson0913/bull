@@ -144,7 +144,7 @@ package bull.view.room
 			}	
 		}
 		
-		public function openbet(isSysbanker:Boolean,limit:String):void
+		public function openbet():void
 		{
 			for (var i:int = 0; i < 4; i++)
 			{					
@@ -152,7 +152,10 @@ package bull.view.room
 				this["Scene_" + i].on(Event.MOUSE_MOVE, this, onSceneOver);	
 				this["Scene_" + i].on(Event.MOUSE_OUT, this, onSceneOut);	
 			}
-			
+		}
+		
+		public function bet_limit(isSysbanker:Boolean,limit:String):void
+		{
 			//玩家當庄才顥示
 			BetLimit.visible = !isSysbanker;
 			BetLimit.amount.font = "LimitFont";

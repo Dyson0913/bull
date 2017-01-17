@@ -29,20 +29,11 @@ package bull.view.room
 			this.visible = false;
 		}		
 		
-		public function show(value:Array,totalAmount:Long):void
+		public function show(value:Array,totalAmount:String):void
 		{
 			this.visible = true;			
-			xiazhuang_list.array = value;			
-			
-			//TODO 幣值符號
-			var win:Number=0;
-			if( Common.isCoin )
-			{
-				win = totalAmount.toNumber();
-			}
-			else  win = totalAmount.toNumber() / 100;
-			
-			//total_txt.text = GameUtil.formatMoney(win);			
+			xiazhuang_list.array = value;
+			total_txt.text = totalAmount;
 		}
 		
 		

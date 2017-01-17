@@ -29107,6 +29107,7 @@ var Laya=window.Laya=(function(window,document){
 			this.registerCommand(ENCSType.CS_TYPE_CALCULATE_NOTIFY.toString(),SettleNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_BANKER_LIST_NOTIFY.toString(),BankerNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_BANKER_NOTIFY.toString(),BankerNotifyCommand);
+			this.registerCommand(ENCSType.CS_TYPE_BANKER_CALCULATE_NOTIFY.toString(),BankerNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_BANKER_REQ.toString(),BankerNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_BANKER_RSP.toString(),BankerNotifyCommand);
 			this.registerCommand(ENCSType.CS_TYPE_BET_REQ.toString(),BetNotifyCommand);
@@ -30482,7 +30483,8 @@ var Laya=window.Laya=(function(window,document){
 			this.banker_id=null;
 			this.apply_type=0;
 			this.newBaner_info=null;
-			this.Banker_calcu_info=null;
+			this.banker_calcu_info=null;
+			this.banker_calcu_total_win=null;
 			this.Total_money=NaN;
 			this.bet_zone=0;
 			this.bet_idx=0;
@@ -30515,7 +30517,7 @@ var Laya=window.Laya=(function(window,document){
 			this.Has_bet=false;
 			this.banker_id=Long.fromNumber(-1);
 			this.settle_User_info=[];
-			this.Banker_calcu_info=new SBankerCalculateNotify();
+			this.banker_calcu_info=[];
 		}
 
 		__class(RoomData,'bull.modules.common.model.data.RoomData',_super);
@@ -30782,8 +30784,14 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.banker_calcu=function(cs){
 			var roomData=this.getSingleton("roomData");
-			roomData.Banker_calcu_info.banker_calc_info_s=cs.banker_calc_notify.banker_calc_info_s;
-			roomData.Banker_calcu_info.total_win_money=cs.banker_calc_notify.total_win_money;
+			roomData.banker_calcu_total_win=roomData.appearMoney(roomData.GetMoney(cs.banker_calc_notify.total_win_money.toNumber()));
+			roomData.banker_calcu_info.length=0;
+			for (var i=0;i < cs.banker_calc_notify.banker_calc_info_s.length;i++){
+				var data=cs.banker_calc_notify.banker_calc_info_s[i];
+				var money=roomData.appearMoney(roomData.GetMoney(data.win_money.toNumber()));
+				var ob={"idx":i,"money":money,"info":data};
+				roomData.banker_calcu_info.push(ob);
+			}
 			this.sentNotification("Bankercalcu");
 		}
 
@@ -31798,7 +31806,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onBankerSettleUpdateHandler=function(){
-			this.view.bankerResultPanel.show(this.roomData.Banker_calcu_info.banker_calc_info_s,this.roomData.Banker_calcu_info.total_win_money);
+			this.view.bankerResultPanel.show(this.roomData.banker_calcu_info,this.roomData.banker_calcu_total_win);
 		}
 
 		//Pop_banker_settle();
@@ -44173,7 +44181,6 @@ var Laya=window.Laya=(function(window,document){
 			this._player3_txt=null;
 			this.amount_txt=null;
 			this.rundID_txt=null;
-			this.index=0;
 			XiaZhuangListRender.__super.call(this);
 			this.once("added",this,this._$5_onAdded);
 		}
@@ -44189,12 +44196,10 @@ var Laya=window.Laya=(function(window,document){
 			this._player3_txt=this.getChildByName("player3_txt");
 			this.amount_txt=this.getChildByName("amount_txt");
 			this.rundID_txt=this.getChildByName("rundID_txt");
-			this.index=0;
 			this.hideAllState();
 		}
 
 		__proto.hideAllState=function(){
-			this._bg.index=0;
 			this.index_txt.text="";
 			this._player0_txt.text="";
 			this._player1_txt.text="";
@@ -44239,16 +44244,17 @@ var Laya=window.Laya=(function(window,document){
 			if (value==null)return;
 			console.log("==============="+value);
 			var data=value;
-			this._bg.index=this.index;
-			this.index=(this.index+1 % 2);
-			data._4_type
-			this.index_txt.text="第"+this.index+"局";
-			this._player0_txt.text=this.type_to_String(data._1_type);
-			this._player1_txt.text=this.type_to_String(data._2_type);
-			this._player2_txt.text=this.type_to_String(data._3_type);
-			this._player3_txt.text=this.type_to_String(data._4_type);
-			this.amount_txt.text=String(data.win_money.toNumber());
-			this.rundID_txt.text=data.round_id;
+			var idx=data.idx;
+			var money=data.money;
+			var info=data.info;
+			this._bg.index=(/*no*/this.index+1 % 2);
+			this.index_txt.text="第"+(idx+1)+"局";
+			this._player0_txt.text=this.type_to_String(info._1_type);
+			this._player1_txt.text=this.type_to_String(info._2_type);
+			this._player2_txt.text=this.type_to_String(info._3_type);
+			this._player3_txt.text=this.type_to_String(info._4_type);
+			this.amount_txt.text=money;
+			this.rundID_txt.text=info.round_id;
 		});
 
 		return XiaZhuangListRender;
@@ -52669,12 +52675,15 @@ var Laya=window.Laya=(function(window,document){
 			}
 		}
 
-		__proto.openbet=function(isSysbanker,limit){
+		__proto.openbet=function(){
 			for (var i=0;i < 4;i++){
 				this["Scene_"+i].on("mousedown",this,this.onScenedown);
 				this["Scene_"+i].on("mousemove",this,this.onSceneOver);
 				this["Scene_"+i].on("mouseout",this,this.onSceneOut);
 			}
+		}
+
+		__proto.bet_limit=function(isSysbanker,limit){
 			this.BetLimit.visible=!isSysbanker;
 			this.BetLimit.amount.font="LimitFont";
 			this.BetLimit.amount.text=limit;
@@ -52994,11 +53003,12 @@ var Laya=window.Laya=(function(window,document){
 			else{
 				console.log("玩家正常下注模式");
 				this.viewArea.set_fellow_coin(this.viewSelectClip["mcSelect_0"]);
-				this.viewArea.openbet(this._roomData.IsSysBanker(),this._roomData.appearMoney(this._roomData.GetMoney(this._roomData.room_info.room_limit)));
+				this.viewArea.openbet();
 				this.phase_tip("",0);
 				this.viewSelectClip.set_gray(false);
 				this.ViewBetGroup.appear(this._roomData.Has_bet);
 			}
+			this.viewArea.bet_limit(this._roomData.IsSysBanker(),this._roomData.appearMoney(this._roomData.GetMoney(this._roomData.room_info.room_limit)));
 			this.viewBetTime.set_data([this._roomData.LeftTime]);
 			this.roomData.rest_betlimit=this.roomData.GetMoney(this.roomData.room_info.room_limit);
 			this.ViewWinLostEffect.hide();
@@ -53996,14 +54006,9 @@ var Laya=window.Laya=(function(window,document){
 		__proto.show=function(value,totalAmount){
 			this.visible=true;
 			this.xiazhuang_list.array=value;
-			var win=0;
-			if(/*no*/this.Common.isCoin){
-				win=totalAmount.toNumber();
-			}
-			else win=totalAmount.toNumber()/ 100;
+			this.total_txt.text=totalAmount;
 		}
 
-		//total_txt.text=GameUtil.formatMoney(win);
 		__proto.test=function(){}
 		return XiaZhuangPanel;
 	})(BankerSettleUI)
@@ -55300,10 +55305,10 @@ var Laya=window.Laya=(function(window,document){
 
 
 /*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (63):warning:　i This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (64):warning:　i This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (65):warning:　i This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (66):warning:　i This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (67):warning:　i This variable is not defined.
-6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/XiaZhuangPanel.as (37):warning:Common.isCoin This variable is not defined.
+1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/XiaZhuangListRender.as (67):warning:index This variable is not defined.
+2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (63):warning:　i This variable is not defined.
+3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (64):warning:　i This variable is not defined.
+4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (65):warning:　i This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (66):warning:　i This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (67):warning:　i This variable is not defined.
 */

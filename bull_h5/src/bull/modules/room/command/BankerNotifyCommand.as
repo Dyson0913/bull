@@ -7,6 +7,7 @@ package bull.modules.room.command
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
 	import conf.ENBankerType;
+	import conf.SBankerCalcInfo;
 	import conf.SUserInfo;
 	import msg.SBankerRsp;
 	
@@ -81,9 +82,19 @@ package bull.modules.room.command
 		
 		private function banker_calcu(cs:CS):void
 		{
-			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;				
-			roomData.Banker_calcu_info.banker_calc_info_s = cs.banker_calc_notify.banker_calc_info_s;
-			roomData.Banker_calcu_info.total_win_money =  cs.banker_calc_notify.total_win_money;
+			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;			
+			roomData.banker_calcu_total_win = roomData.appearMoney(roomData.GetMoney(cs.banker_calc_notify.total_win_money.toNumber()));
+			
+			
+			roomData.banker_calcu_info.length = 0;
+			for (var i:int = 0; i < cs.banker_calc_notify.banker_calc_info_s.length; i++)
+			{
+				var data:SBankerCalcInfo = cs.banker_calc_notify.banker_calc_info_s[i];				
+				var money:String  = roomData.appearMoney(roomData.GetMoney(data.win_money.toNumber()));				
+				var ob:Object = { "idx":i, "money":money, "info":data};
+				roomData.banker_calcu_info.push(ob);
+			}			
+			
 			
 			sentNotification(BullNotification.BANKER_CALCU);			
 		}

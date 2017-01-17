@@ -1,5 +1,6 @@
 package bull.modules.common.command
 {
+	import bull.modules.common.model.data.RoomData;
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
@@ -63,7 +64,17 @@ package bull.modules.common.command
 				hallData.port = e.try_enter_table_rsp.net_address.hport;
 				//hallData.Token = e.try_enter_table_rsp.token;
 				
-				sentNotification(BullNotification.GET_USER_BALANCE, true);
+				sentNotification(BullNotification.GET_USER_BALANCE, true);		
+				
+				//TEST
+				//var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;				
+				//roomData.player_Money = { "cash":10000, ",coin":10000, "nm":0 };					
+				//
+				//關閉大廳音樂
+				//sentNotification(BullNotification.Close_BGM);				
+				//sentNotification(BullNotification.ENTER_ROOM);
+				
+						
 				(getModel(HallSocketService.NAME) as HallSocketService).close();
 			}else{
 				trace("error code: " + e.try_enter_table_rsp.error_code);

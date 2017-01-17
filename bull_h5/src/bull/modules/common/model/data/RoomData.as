@@ -85,9 +85,10 @@ package bull.modules.common.model.data
 		public var banker_id:Long;
 		public var apply_type:int;
 		
-		
+		//banker settle
 		public var newBaner_info:SBankerNotify;
-		public var Banker_calcu_info:SBankerCalculateNotify;		
+		public var banker_calcu_info:Array;		
+		public var banker_calcu_total_win:String;		
 		
 		//bet info
 		public var Total_money:Number;
@@ -140,7 +141,7 @@ package bull.modules.common.model.data
 			
 			settle_User_info = [];
 			
-			Banker_calcu_info = new SBankerCalculateNotify();
+			banker_calcu_info = [];
 		}
 		
 		public function IsMoney():Boolean

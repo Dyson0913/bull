@@ -25,9 +25,7 @@ package bull.view.room
 		private var _player3_txt:Label;
 		
 		private var amount_txt:Label;
-		private var rundID_txt:Label;
-		
-		public var index:int;
+		private var rundID_txt:Label;		
 		
 		public function XiaZhuangListRender()
 		{
@@ -43,15 +41,12 @@ package bull.view.room
 			_player2_txt = getChildByName("player2_txt") as Label;
 			_player3_txt = getChildByName("player3_txt") as Label;		
 			amount_txt = getChildByName("amount_txt") as Label;
-			rundID_txt = getChildByName("rundID_txt") as Label;
-			
-			index = 0;
+			rundID_txt = getChildByName("rundID_txt") as Label;			
 			
 			hideAllState();
 		}
 		
-		private function hideAllState():void {	
-			_bg.index = 0;
+		private function hideAllState():void {				
 			index_txt.text = "";
 			_player0_txt.text = "";
 			_player1_txt.text = "";
@@ -66,20 +61,21 @@ package bull.view.room
 						
 			if (value == null) return;			
 			trace("==============="+value);
-			var data:SBankerCalcInfo = value;			
-			_bg.index = index;
-			index  = (index + 1 % 2);			
+			var data:Object = value;
+			var idx:int = data.idx;
+			var money:String = data.money;
+			var info:SBankerCalcInfo = data.info;
+			_bg.index = (index + 1 % 2);			
 			
-			data._4_type
-			index_txt.text = "第" + index +"局";
-			_player0_txt.text = type_to_String(data._1_type);
-			_player1_txt.text = type_to_String(data._2_type);
-			_player2_txt.text = type_to_String(data._3_type);
-			_player3_txt.text = type_to_String(data._4_type);
 			
-			//TODO 幣值符號
-			amount_txt.text = String(data.win_money.toNumber());
-			rundID_txt.text = data.round_id;
+			index_txt.text = "第" + (idx + 1) +"局";			
+			_player0_txt.text = type_to_String(info._1_type);
+			_player1_txt.text = type_to_String(info._2_type);
+			_player2_txt.text = type_to_String(info._3_type);
+			_player3_txt.text = type_to_String(info._4_type);
+			
+			amount_txt.text = money;
+			rundID_txt.text = info.round_id;
 			
 		}
 		
