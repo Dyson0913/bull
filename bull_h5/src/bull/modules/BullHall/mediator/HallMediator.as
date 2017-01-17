@@ -11,7 +11,7 @@ package bull.modules.BullHall.mediator
 	import laya.events.Event;
 	import laya.utils.Timer;
 	import laya.media.SoundManager;
-	
+	import bull.core.SoundPath;
 	
 	import com.lightUI.core.Light;
 	import com.lightUI.components.alert.Alert;
@@ -62,8 +62,8 @@ package bull.modules.BullHall.mediator
 			view.backLobby.on(Event.CLICK, this, onReturnClick);
 			//view.list.on(LightEvent.ITEM_CLICK,this,onListItemClick);
 			
-			//view.on(ScenceManagerEvent.UI_HIDE,this, onHideHandler);
-			//view.on(ScenceManagerEvent.UI_SHOW,this, onShowHandler);
+			view.on(ScenceManagerEvent.UI_HIDE,this, onHideHandler);
+			view.on(ScenceManagerEvent.UI_SHOW,this, onShowHandler);
 			
 			view.helpBtn.on(Event.CLICK,this, onClick);
 			view.setupBtn.on(Event.CLICK, this, onClick);
@@ -197,6 +197,7 @@ package bull.modules.BullHall.mediator
 		private function onShowHandler():void{
 			//记得添加一些事情
 			trace("Hall onShowHandler");
+			SoundManager.playMusic(SoundPath.Lobby_BGM, 0);
 			//startRoomList();
 		}
 		

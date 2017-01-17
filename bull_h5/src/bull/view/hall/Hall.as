@@ -16,7 +16,7 @@ package bull.view.hall
 	import com.lightUI.components.alert.Alert;
 	import bull.view.alert.AlertPanel;
 	
-	import bull.core.SoundPath;
+	
 	
 	import ui.ui.hall.hallUI;
 	
@@ -55,7 +55,7 @@ package bull.view.hall
 					this["_light_" + i].play(1);		
 				}			
 			}
-			//SoundManager.playMusic(SoundPath.Lobby_BGM, 100);
+			
 			
 			
 			

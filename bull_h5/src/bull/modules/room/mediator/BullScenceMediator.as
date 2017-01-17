@@ -980,7 +980,7 @@ package bull.modules.room.mediator
 			view.initSelectClip(hallData.join_room_idx);
 			
 			this.onCoinSelect(0);			
-			
+			SoundManager.playMusic(SoundPath.BackMiusc, 0);
 			
 			
 			

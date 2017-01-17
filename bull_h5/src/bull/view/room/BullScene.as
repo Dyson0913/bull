@@ -49,7 +49,8 @@ package bull.view.room
 			_betsBox = new Sprite();
 			addChildAt(_betsBox, getChildIndex(viewArea));
 			
-			trace("gameview init");
+			
+			
 		}
 		
 		public function showme():void{

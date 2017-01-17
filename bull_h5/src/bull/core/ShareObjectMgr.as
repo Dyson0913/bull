@@ -50,21 +50,27 @@ package bull.core
 		 * @param m 背景音乐是否开启
 		 * @param s 音效是否开启
 		 */		
-		public function setMusicSound( m:Boolean, s:Boolean ):void
+		public function setMusic( m:Boolean ):void
 		{
-			trace("设置音乐开关：music:",(data.isOpenMusic?"关":"开")," sound:",data.isOpenSound?"关":"开");
 			if( m != data.isOpenMusic )
 			{
 				data.isOpenMusic = m;
 				SoundManager.musicMuted = m;
 			}
+			trace("设置音乐开关：music:",(data.isOpenMusic?"关":"开")," sound:",data.isOpenSound?"关":"开");
+			if( _uid != "" )
+				LocalStorage.setJSON(musicKey,data);
+		}
+		public function setSound( s:Boolean ):void
+		{
 			if( s != data.isOpenSound )
 			{
 				data.isOpenSound = s;
 				SoundManager.soundMuted = s;
 				if( s )
-					SoundManager.stopAll();
+					SoundManager.stopAllSound();
 			}
+			trace("设置音乐开关：music:",(data.isOpenMusic?"关":"开")," sound:",data.isOpenSound?"关":"开");
 			if( _uid != "" )
 				LocalStorage.setJSON(musicKey,data);
 		}

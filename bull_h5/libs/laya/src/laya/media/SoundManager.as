@@ -230,6 +230,24 @@ package laya.media {
 				channel.stop();
 			}
 		}
+		
+		/**
+		 * 停止所有音效 
+		 * by saboo 这里不是引擎自带的。
+		 **/
+		public static function stopAllSound():void
+		{
+			var i:int;
+			var channel:SoundChannel;
+			for (i = _channels.length - 1; i >= 0; i--) {
+				channel = _channels[i];
+				if( channel.url != _tMusic )
+				{
+					channel.stop();
+				}
+			}
+		}
+		
 		/**
 		 * 停止背景音乐播放。
 		 * @param url  声音文件地址。

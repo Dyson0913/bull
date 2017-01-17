@@ -49,8 +49,8 @@ package bull.modules.common.mediator
 			addNotifiction(SHOW_MUSIC_SET_PANEL);
 			addNotifiction(HIDE_MUSIC_SET_PANEL);
 			addNotifiction(BullNotification.SCENCE_CHANGE);
-			view.musicButton.on(Event.CHANGE, this, onChange);
-			view.soundButton.on(Event.CHANGE, this, onChange);
+			view.musicButton.on(Event.CHANGE, this, onChangeMusic);
+			view.soundButton.on(Event.CHANGE, this, onChangeSound);
 		}
 		
 		override public function handler(notification:INotification):void
@@ -86,13 +86,24 @@ package bull.modules.common.mediator
 			view.close();
 		}
 		
+		
 		/**
 		 * 设置声音 
 		 */		
 		private function onChange():void
 		{
-			trace("设置音乐音效：music:",view.musicButton.selected," sound:",view.soundButton.selected);
-			ShareObjectMgr.get().setMusicSound(!view.musicButton.selected,!view.soundButton.selected);
+			//trace("设置音乐音效：music:",view.musicButton.selected," sound:",view.soundButton.selected);
+			//ShareObjectMgr.get().setMusicSound(!view.musicButton.selected, !view.soundButton.selected);
+			ShareObjectMgr.get().setMusic(!view.chkMusic.selected);
+		}
+		
+		private function onChangeMusic():void
+		{
+			ShareObjectMgr.get().setMusic(!view.musicButton.selected);
+		}
+		private function onChangeSound():void
+		{
+			ShareObjectMgr.get().setSound(!view.soundButton.selected);
 		}
 		
 	}

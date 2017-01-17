@@ -837,18 +837,24 @@ var Laya=window.Laya=(function(window,document){
 		*@param m 背景音乐是否开启
 		*@param s 音效是否开启
 		*/
-		__proto.setMusicSound=function(m,s){
-			console.log("设置音乐开关：music:",(this.data.isOpenMusic?"关":"开")," sound:",this.data.isOpenSound?"关":"开");
+		__proto.setMusic=function(m){
 			if(m !=this.data.isOpenMusic){
 				this.data.isOpenMusic=m;
 				SoundManager.musicMuted=m;
 			}
+			console.log("设置音乐开关：music:",(this.data.isOpenMusic?"关":"开")," sound:",this.data.isOpenSound?"关":"开");
+			if(this._uid !="")
+				LocalStorage.setJSON(this.musicKey,this.data);
+		}
+
+		__proto.setSound=function(s){
 			if(s !=this.data.isOpenSound){
 				this.data.isOpenSound=s;
 				SoundManager.soundMuted=s;
 				if(s)
-					SoundManager.stopAll();
+					SoundManager.stopAllSound();
 			}
+			console.log("设置音乐开关：music:",(this.data.isOpenMusic?"关":"开")," sound:",this.data.isOpenSound?"关":"开");
 			if(this._uid !="")
 				LocalStorage.setJSON(this.musicKey,this.data);
 		}
@@ -11021,6 +11027,17 @@ var Laya=window.Laya=(function(window,document){
 			for (i=SoundManager._channels.length-1;i >=0;i--){
 				channel=SoundManager._channels[i];
 				channel.stop();
+			}
+		}
+
+		SoundManager.stopAllSound=function(){
+			var i=0;
+			var channel;
+			for (i=SoundManager._channels.length-1;i >=0;i--){
+				channel=SoundManager._channels[i];
+				if(channel.url !=SoundManager._tMusic){
+					channel.stop();
+				}
 			}
 		}
 
@@ -29331,6 +29348,8 @@ var Laya=window.Laya=(function(window,document){
 			_super.prototype.setViewComponent.call(this,viewComponent);
 			this.hallData.addEventListener("change",this,this.onRoomListChange);
 			this.view.backLobby.on("click",this,this.onReturnClick);
+			this.view.on("uiHide",this,this.onHideHandler);
+			this.view.on("uiShow",this,this.onShowHandler);
 			this.view.helpBtn.on("click",this,this.onClick);
 			this.view.setupBtn.on("click",this,this.onClick);
 			this.view.optionBtn.on("click",this,this.onClick);
@@ -29432,6 +29451,7 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.onShowHandler=function(){
 			console.log("Hall onShowHandler");
+			SoundManager.playMusic(SoundPath.Lobby_BGM,0);
 		}
 
 		//startRoomList();
@@ -30311,8 +30331,8 @@ var Laya=window.Laya=(function(window,document){
 			this.addNotifiction("car.SHOW_MUSIC_SET_PANEL");
 			this.addNotifiction("car.HIDE_MUSIC_SET_PANEL");
 			this.addNotifiction("scenceChange");
-			this.view.musicButton.on("change",this,this.onChange);
-			this.view.soundButton.on("change",this,this.onChange);
+			this.view.musicButton.on("change",this,this.onChangeMusic);
+			this.view.soundButton.on("change",this,this.onChangeSound);
 		}
 
 		__proto.handler=function(notification){
@@ -30349,8 +30369,15 @@ var Laya=window.Laya=(function(window,document){
 		*设置声音
 		*/
 		__proto.onChange=function(){
-			console.log("设置音乐音效：music:",this.view.musicButton.selected," sound:",this.view.soundButton.selected);
-			ShareObjectMgr.get().setMusicSound(!this.view.musicButton.selected,!this.view.soundButton.selected);
+			ShareObjectMgr.get().setMusic(!this.view.chkMusic.selected);
+		}
+
+		__proto.onChangeMusic=function(){
+			ShareObjectMgr.get().setMusic(!this.view.musicButton.selected);
+		}
+
+		__proto.onChangeSound=function(){
+			ShareObjectMgr.get().setSound(!this.view.soundButton.selected);
 		}
 
 		__getset(0,__proto,'view',function(){
@@ -32163,6 +32190,7 @@ var Laya=window.Laya=(function(window,document){
 			this.roomData.initClipConfig();
 			this.view.initSelectClip(this.hallData.join_room_idx);
 			this.onCoinSelect(0);
+			SoundManager.playMusic(SoundPath.BackMiusc,0);
 		}
 
 		__proto.onUIHide=function(){
@@ -50429,13 +50457,13 @@ var Laya=window.Laya=(function(window,document){
 			this.helpBtn=null;
 			this.PlayerListBtn=null;
 			this.CarryInBtn=null;
-			this.bankerResultPanel=null;
 			this.viewArea=null;
 			this.viewPoker=null;
 			this.viewBetTime=null;
 			this.PokerTypePanel=null;
 			this.viewRecord=null;
 			this.ViewWinLostEffect=null;
+			this.bankerResultPanel=null;
 			this.viewResult=null;
 			this.viewNetConnect=null;
 			this.bg_board=null;
@@ -50451,14 +50479,14 @@ var Laya=window.Laya=(function(window,document){
 		__class(BullSceneUI,'ui.ui.room.BullSceneUI',_super);
 		var __proto=BullSceneUI.prototype;
 		__proto.createChildren=function(){
-			View.regComponent("bull.view.room.XiaZhuangPanel",XiaZhuangPanel);
+			View.regComponent("bull.view.room.BetAreaView",BetAreaView);
 			View.regComponent("bull.view.room.bankerBoard",bankerBoard);
-			View.regComponent("bull.view.room.Poker",Poker);
 			View.regComponent("bull.view.room.BetTimePanel",BetTimePanel);
 			View.regComponent("bull.view.room.PokerTypeBoard",PokerTypeBoard);
 			View.regComponent("bull.view.room.RecordPanel",RecordPanel);
 			View.regComponent("bull.view.room.WinLostEffect",WinLostEffect);
-			View.regComponent("bull.view.room.BetAreaView",BetAreaView);
+			View.regComponent("bull.view.room.XiaZhuangPanel",XiaZhuangPanel);
+			View.regComponent("bull.view.room.Poker",Poker);
 			View.regComponent("bull.view.room.NetConnectView",NetConnectView);
 			View.regComponent("bull.view.room.BetBtnGroup",BetBtnGroup);
 			View.regComponent("bull.view.room.SelectClipView",SelectClipView);
@@ -50470,7 +50498,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BullSceneUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"BetAreaView","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"visible":true,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"Image","props":{"y":800,"x":96,"var":"bg_board","skin":"res/gameScene/InfoBoard.png"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"},"child":[{"type":"Label","props":{"y":14.000000000000114,"x":873.0000000000002,"width":322,"var":"Hint","height":29,"fontSize":22,"color":"#f8f0ef","align":"center"}}]},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1400,"height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/bg.jpg"}},{"type":"Image","props":{"y":40,"x":1344,"width":71,"var":"btnBg","skin":"res/share/btn_bg.png","height":315,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":-1,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Button","props":{"y":1,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":84,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":149,"x":1345,"var":"helpBtn","skin":"res/alert/helpBtn.png"}},{"type":"Button","props":{"y":281,"x":1345,"var":"PlayerListBtn","skin":"res/gameScene/PlayerListBtn.png"}},{"type":"Button","props":{"y":216,"x":1344,"var":"CarryInBtn","skin":"res/gameScene/CarryInBtn.png"}},{"type":"BetAreaView","props":{"y":237,"x":223,"visible":false,"var":"viewArea","runtime":"bull.view.room.BetAreaView"}},{"type":"Poker","props":{"y":0,"x":0,"visible":false,"var":"viewPoker","runtime":"bull.view.room.Poker"}},{"type":"BetTimePanel","props":{"y":474,"x":645,"visible":false,"var":"viewBetTime","runtime":"bull.view.room.BetTimePanel"}},{"type":"PokerType","props":{"y":0,"x":0,"visible":true,"var":"PokerTypePanel","runtime":"bull.view.room.PokerTypeBoard"}},{"type":"RecordPanel","props":{"y":87,"x":-173,"var":"viewRecord","runtime":"bull.view.room.RecordPanel"}},{"type":"WinLostEffect","props":{"y":0,"x":0,"var":"ViewWinLostEffect","runtime":"bull.view.room.WinLostEffect"}},{"type":"BankerSettle","props":{"y":161,"x":274,"visible":false,"var":"bankerResultPanel","runtime":"bull.view.room.XiaZhuangPanel"}},{"type":"ResultPanel","props":{"y":170,"x":357,"visible":false,"var":"viewResult","runtime":"bull.view.room.ResultPanel"}},{"type":"NetConnectView","props":{"y":0,"x":0,"visible":false,"var":"viewNetConnect","runtime":"bull.view.room.NetConnectView"}},{"type":"Image","props":{"y":800,"x":96,"var":"bg_board","skin":"res/gameScene/InfoBoard.png"}},{"type":"BetBtnGroup","props":{"y":805,"x":987.0000000000002,"var":"ViewBetGroup","runtime":"bull.view.room.BetBtnGroup"}},{"type":"SelectClipView","props":{"y":803,"x":426,"var":"viewSelectClip","runtime":"bull.view.room.SelectClipView"}},{"type":"HeadView","props":{"y":816,"x":117,"var":"viewHead","runtime":"bull.view.room.HeadView"},"child":[{"type":"Label","props":{"y":14.000000000000114,"x":873.0000000000002,"width":322,"var":"Hint","height":29,"fontSize":22,"color":"#f8f0ef","align":"center"}}]},{"type":"PlayerList","props":{"y":2.000000000000016,"x":1132,"visible":false,"var":"ViewPlayerList","runtime":"bull.view.room.PlayerListPanel"}},{"type":"BankerPanel","props":{"y":-81,"x":347,"var":"viewBankerPanel","runtime":"bull.view.room.bankerBoard"}}]};}
 		]);
 		return BullSceneUI;
 	})(View)
@@ -52329,7 +52357,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(AlertPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":273},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_hint.png"}},{"type":"Button","props":{"y":0,"x":405,"var":"close_btn","skin":"res/alert/btn_close.png","name":"close_btn"}},{"type":"Button","props":{"y":232,"x":183,"var":"ok_btn","skin":"assetsIn/ok.png","name":"ok_btn"}},{"type":"Label","props":{"y":115,"x":20,"width":410,"var":"txt_label","text":"label","height":96,"color":"#f1ebea","align":"center"}},{"type":"Label","props":{"y":8,"x":190,"width":59,"text":"温馨提示","scaleY":1.5,"scaleX":1.5,"height":19,"color":"#f4e6e6"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":273},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_hint.png"}},{"type":"Button","props":{"y":0,"x":405,"var":"close_btn","skin":"res/alert/btn_close.png","name":"close_btn"}},{"type":"Button","props":{"y":232,"x":183,"var":"ok_btn","skin":"assetsIn/ok.png","name":"ok_btn"}},{"type":"Label","props":{"y":115,"x":20,"width":410,"var":"txt_label","text":"label","height":96,"fontSize":22,"color":"#f1ebea","align":"center"}},{"type":"Label","props":{"y":8,"x":190,"width":93,"text":"温馨提示","height":31,"fontSize":22,"color":"#f4e6e6"}}]};}
 		]);
 		return AlertPanelUI;
 	})(Dialog)
@@ -52353,7 +52381,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(SetPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":384,"height":267},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_seb_bg.png"}},{"type":"Label","props":{"y":92,"x":28,"width":108,"var":"txtName","text":"0.0.1","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"}},{"type":"CheckBox","props":{"y":205,"x":46,"var":"musicButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Button","props":{"y":0,"x":343,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"}},{"type":"CheckBox","props":{"y":205,"x":222,"var":"soundButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Label","props":{"y":9,"x":181,"width":36,"text":"设置","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#eed6d6"}},{"type":"Label","props":{"y":50,"x":24,"width":108,"text":"版本号","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"}},{"type":"Label","props":{"y":206,"x":82,"width":80,"text":"开启音乐","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":207,"x":256,"width":57,"text":"开启音效","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":384,"height":267},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_seb_bg.png"}},{"type":"Label","props":{"y":92,"x":28,"width":108,"var":"txtName","text":"0.0.1","height":28,"fontSize":22,"color":"#eed6d6"}},{"type":"CheckBox","props":{"y":205,"x":46,"var":"musicButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Button","props":{"y":0,"x":343,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"}},{"type":"CheckBox","props":{"y":205,"x":222,"var":"soundButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Label","props":{"y":9,"x":181,"width":36,"text":"设置","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#eed6d6"}},{"type":"Label","props":{"y":50,"x":24,"width":108,"text":"版本号","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#eed6d6"}},{"type":"Label","props":{"y":206,"x":82,"width":80,"text":"开启音乐","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":207,"x":256,"width":57,"text":"开启音效","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}}]};}
 		]);
 		return SetPanelUI;
 	})(Dialog)
@@ -52408,7 +52436,6 @@ var Laya=window.Laya=(function(window,document){
 
 		__class(Hall,'bull.view.hall.Hall',_super);
 		var __proto=Hall.prototype;
-		//SoundManager.playMusic(SoundPath.Lobby_BGM,100);
 		__proto.onLowEnter=function(e){
 			console.log("onLowEnter");
 		}
@@ -52934,7 +52961,6 @@ var Laya=window.Laya=(function(window,document){
 			this.off("added",this,this._$7_onAdded);
 			this._betsBox=new Sprite();
 			this.addChildAt(this._betsBox,this.getChildIndex(this.viewArea));
-			console.log("gameview init");
 		}
 
 		__proto.showme=function(){
