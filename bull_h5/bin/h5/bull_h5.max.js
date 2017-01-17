@@ -210,8 +210,8 @@ var Laya=window.Laya=(function(window,document){
 	Laya.interface('com.lightMVC.interfaces.IHandle');
 	Laya.interface('laya.webgl.canvas.save.ISaveData');
 	Laya.interface('com.lightMVC.interfaces.IConfigure');
-	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.lightMVC.interfaces.INotification');
+	Laya.interface('laya.webgl.resource.IMergeAtlasBitmap');
 	Laya.interface('com.iflash.interfaces.IEventDispatcher');
 	Laya.interface('com.lightUI.components.alert.IAlertWindow');
 	Laya.interface('laya.filters.IFilterActionGL','laya.filters.IFilterAction');
@@ -23041,6 +23041,23 @@ var Laya=window.Laya=(function(window,document){
 	})(Message)
 
 
+	//class msg.STryEnterTableRsp extends com.IProtobuf.Message
+	var STryEnterTableRsp=(function(_super){
+		function STryEnterTableRsp(){
+			this.error_code=1;
+			this.room_id=3;
+			this.net_address=null;
+			this.token=null;
+			STryEnterTableRsp.__super.call(this);
+		}
+
+		__class(STryEnterTableRsp,'msg.STryEnterTableRsp',_super);
+		var __proto=STryEnterTableRsp.prototype;
+		__proto.writeTo=function(value){}
+		return STryEnterTableRsp;
+	})(Message)
+
+
 	/**
 	*<code>Resource</code> 资源存取类。
 	*/
@@ -23273,23 +23290,6 @@ var Laya=window.Laya=(function(window,document){
 		Resource._isLoadedResourcesSorted=false;
 		return Resource;
 	})(EventDispatcher1)
-
-
-	//class msg.STryEnterTableRsp extends com.IProtobuf.Message
-	var STryEnterTableRsp=(function(_super){
-		function STryEnterTableRsp(){
-			this.error_code=1;
-			this.room_id=3;
-			this.net_address=null;
-			this.token=null;
-			STryEnterTableRsp.__super.call(this);
-		}
-
-		__class(STryEnterTableRsp,'msg.STryEnterTableRsp',_super);
-		var __proto=STryEnterTableRsp.prototype;
-		__proto.writeTo=function(value){}
-		return STryEnterTableRsp;
-	})(Message)
 
 
 	//class msg.TimeSyncReq extends com.IProtobuf.Message
@@ -29323,7 +29323,8 @@ var Laya=window.Laya=(function(window,document){
 			this.hallSocketService=null;
 			this.hallData=null;
 			this.userInfoData=null;
-			this.angel=-90;
+			this.angel=0;
+			this.diff=10;
 			this.timer=null;
 			this.num=0;
 			this.currentId=0;
@@ -29415,10 +29416,13 @@ var Laya=window.Laya=(function(window,document){
 		*/
 		__proto.onClick=function(e){
 			console.log("onClick:"+e.target);
-			this.angel+=10;
-			var sp=this.view.mcpic.mask;
-			console.log("sp ="+sp);
-			this.view.spp.graphics.drawPie(57,56,50,50,360);
+			this.angel+=this.diff;
+			console.log("===="+this.view.spp.getChildByName("jk"));
+			console.log("===="+this.view.spp.numChildren);
+			console.log("===="+this.view.spp._graphics.drawPie(-61,52,50,10,360));
+			if (this.angel >=180){
+				this.diff=-10;
+			}
 			console.log("angel ="+this.angel);
 			switch(e.target){
 				case this.view.helpBtn:
@@ -29450,7 +29454,6 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.onShowHandler=function(){
 			console.log("Hall onShowHandler");
-			SoundManager.playMusic(SoundPath.Lobby_BGM,0);
 		}
 
 		//startRoomList();
@@ -29504,6 +29507,49 @@ var Laya=window.Laya=(function(window,document){
 		HallMediator.NAME="hallMediator";
 		return HallMediator;
 	})(Mediator)
+
+
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			var roomData=this.getSingleton("roomData");
+			if(param.uid){
+				bullData.uid=param.uid;
+				roomData.uid=bullData.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if (param.access_token)bullData.token=param.access_token;
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
 
 
 	/**
@@ -29611,49 +29657,6 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
-
-
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			var roomData=this.getSingleton("roomData");
-			if(param.uid){
-				bullData.uid=param.uid;
-				roomData.uid=bullData.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if (param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -30260,6 +30263,42 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._already_in_msg=null;
+			this._already_in_room_idx=0;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+			this._already_in_room_idx=-1;
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
+
+
 	/**
 	*设置声音面板
 	*/
@@ -30343,42 +30382,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._already_in_msg=null;
-			this._already_in_room_idx=0;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-			this._already_in_room_idx=-1;
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
 	/**
 	*规则面板
 	*/
@@ -30445,26 +30448,6 @@ var Laya=window.Laya=(function(window,document){
 		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
 		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
 		return RuleMediator;
-	})(Mediator)
-
-
-	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
-	var SmallLoadingMediator=(function(_super){
-		function SmallLoadingMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
-		}
-
-		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
-		var __proto=SmallLoadingMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.loadingMask.lodingMask=viewComponent;
-		}
-
-		SmallLoadingMediator.NAME="smallLoadingMediator";
-		return SmallLoadingMediator;
 	})(Mediator)
 
 
@@ -30659,6 +30642,26 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
+	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
+	var SmallLoadingMediator=(function(_super){
+		function SmallLoadingMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
+		}
+
+		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
+		var __proto=SmallLoadingMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.loadingMask.lodingMask=viewComponent;
+		}
+
+		SmallLoadingMediator.NAME="smallLoadingMediator";
+		return SmallLoadingMediator;
+	})(Mediator)
+
+
 	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
 	var UserInfoData=(function(_super){
 		function UserInfoData(){
@@ -30741,6 +30744,53 @@ var Laya=window.Laya=(function(window,document){
 		BullProtoModel.NAME="bullProtoModel";
 		return BullProtoModel;
 	})(Model)
+
+
+	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
+	var TipsLoadMediator=(function(_super){
+		function TipsLoadMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			TipsLoadMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(TipsLoadMediator,'bull.modules.perload.mediator.TipsLoadMediator',_super);
+		var __proto=TipsLoadMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			_super.prototype.setViewComponent.call(this,viewComponent);
+			this.addNotifiction("loadDataMessage");
+			console.log("TipsLoadMediator setViewComponent");
+			var objData=Light.loader.getRes("tipText");
+			var tips=[];
+			for (var id in objData){
+				var value=objData[id];
+				console.log
+				tips.push(value.cn);
+			}
+			this.view.showTips(tips);
+		}
+
+		__proto.handler=function(noti){
+			if(noti.getName()=="loadDataMessage"){
+				this.view.show(noti.getBody().value);
+			}
+		}
+
+		__proto.onShowProgress=function(value){
+			console.log("this tips progress --- "+value);
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.viewComponent;
+		});
+
+		TipsLoadMediator.NAME="tipsLoadMediator";
+		return TipsLoadMediator;
+	})(Mediator)
 
 
 	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
@@ -30828,104 +30878,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return BankerNotifyCommand;
 	})(Command)
-
-
-	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
-	var TipsLoadMediator=(function(_super){
-		function TipsLoadMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			TipsLoadMediator.__super.call(this,mediatorName,viewComponent);
-		}
-
-		__class(TipsLoadMediator,'bull.modules.perload.mediator.TipsLoadMediator',_super);
-		var __proto=TipsLoadMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.getInjector=function(){
-			return [];
-		}
-
-		__proto.setViewComponent=function(viewComponent){
-			_super.prototype.setViewComponent.call(this,viewComponent);
-			this.addNotifiction("loadDataMessage");
-			console.log("TipsLoadMediator setViewComponent");
-			var objData=Light.loader.getRes("tipText");
-			var tips=[];
-			for (var id in objData){
-				var value=objData[id];
-				console.log
-				tips.push(value.cn);
-			}
-			this.view.showTips(tips);
-		}
-
-		__proto.handler=function(noti){
-			if(noti.getName()=="loadDataMessage"){
-				this.view.show(noti.getBody().value);
-			}
-		}
-
-		__proto.onShowProgress=function(value){
-			console.log("this tips progress --- "+value);
-		}
-
-		__getset(0,__proto,'view',function(){
-			return this.viewComponent;
-		});
-
-		TipsLoadMediator.NAME="tipsLoadMediator";
-		return TipsLoadMediator;
-	})(Mediator)
-
-
-	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
-	var WebService=(function(_super){
-		function WebService(modelName,data){
-			this.webApi=new KGH5();
-			WebService.__super.call(this,modelName,data);
-		}
-
-		__class(WebService,'bull.modules.common.services.WebService',_super);
-		var __proto=WebService.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
-		__proto.getInjector=function(){
-			return [];
-		}
-
-		__proto.getUserBalance=function(callback){
-			this.webApi.getUserBalance(callback);
-		}
-
-		__proto.getPlayerGuideStatus=function(callback){
-			this.webApi.getPlayerGuideStatus(callback);
-		}
-
-		__proto.recharge=function(type,callback){
-			this.webApi.rechargeShow(type,callback);
-		}
-
-		WebService.resolveBrowserParam=function(){
-			var browserStr=Browser.document.location.href.toString();
-			console.log("browserStr = "+browserStr);
-			var askIndex=browserStr.indexOf("?");
-			var paramAry=browserStr.substr(askIndex+1).split("&");
-			var param=new WebParam();
-			for (var i=0;i<paramAry.length;i++){
-				var ary=paramAry[i].split("=");
-				var key=ary[0];
-				var value=ary[1];
-				param[key]=value;
-				console.log("key: "+key+",  value: "+value);
-			}
-			if(!param.uid){
-				param.uid=1014495;
-				param.access_token="6908dfe04342b2458fb006435eab8e48";
-			}
-			return param;
-		}
-
-		WebService.NAME="WebService";
-		return WebService;
-	})(Model)
 
 
 	//class bull.modules.room.command.BetNotifyCommand extends com.lightMVC.parrerns.Command
@@ -31071,6 +31023,57 @@ var Laya=window.Laya=(function(window,document){
 
 		return BetNotifyCommand;
 	})(Command)
+
+
+	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
+	var WebService=(function(_super){
+		function WebService(modelName,data){
+			this.webApi=new KGH5();
+			WebService.__super.call(this,modelName,data);
+		}
+
+		__class(WebService,'bull.modules.common.services.WebService',_super);
+		var __proto=WebService.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IModel":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.getUserBalance=function(callback){
+			this.webApi.getUserBalance(callback);
+		}
+
+		__proto.getPlayerGuideStatus=function(callback){
+			this.webApi.getPlayerGuideStatus(callback);
+		}
+
+		__proto.recharge=function(type,callback){
+			this.webApi.rechargeShow(type,callback);
+		}
+
+		WebService.resolveBrowserParam=function(){
+			var browserStr=Browser.document.location.href.toString();
+			console.log("browserStr = "+browserStr);
+			var askIndex=browserStr.indexOf("?");
+			var paramAry=browserStr.substr(askIndex+1).split("&");
+			var param=new WebParam();
+			for (var i=0;i<paramAry.length;i++){
+				var ary=paramAry[i].split("=");
+				var key=ary[0];
+				var value=ary[1];
+				param[key]=value;
+				console.log("key: "+key+",  value: "+value);
+			}
+			if(!param.uid){
+				param.uid=1014495;
+				param.access_token="6908dfe04342b2458fb006435eab8e48";
+			}
+			return param;
+		}
+
+		WebService.NAME="WebService";
+		return WebService;
+	})(Model)
 
 
 	//class bull.modules.room.command.CarryInCommand extends com.lightMVC.parrerns.Command
@@ -33892,23 +33895,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
-
-
 	/**
 	*场景管理器
 	*@author light-k
@@ -34109,6 +34095,23 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
+
+
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -35248,32 +35251,6 @@ var Laya=window.Laya=(function(window,document){
 		RenderTarget2D.POOL=[];
 		return RenderTarget2D;
 	})(Texture)
-
-
-	//class com.iflash.net.Socket extends laya.net.Socket
-	var Socket1=(function(_super){
-		function Socket(host,port,byteClass){
-			this._outPut=null;
-			(port===void 0)&& (port=0);
-			byteClass=byteClass?byteClass:com.iflash.ByteArray;
-			Socket.__super.call(this,host,port,byteClass);
-		}
-
-		__class(Socket,'com.iflash.net.Socket',_super,'Socket1');
-		var __proto=Socket.prototype;
-		__proto.connectByUrl=function(url){
-			_super.prototype.connectByUrl.call(this,url);
-			this._outPut=this.output;
-		}
-
-		__proto.writeBytes=function(bytes,offset,length){
-			(offset===void 0)&& (offset=0);
-			(length===void 0)&& (length=0);
-			this._outPut.writeBytes(bytes,offset,length);
-		}
-
-		return Socket;
-	})(Socket)
 
 
 	//class laya.webgl.shader.d2.fillTexture.FillTextureSV extends laya.webgl.shader.d2.value.Value2D
@@ -50272,6 +50249,7 @@ var Laya=window.Laya=(function(window,document){
 			this._light_97=null;
 			this._light_96=null;
 			this._light_127=null;
+			this.bo=null;
 			this.spp=null;
 			this.mcpic=null;
 			hallUI.__super.call(this);
@@ -50285,7 +50263,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(hallUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Box","props":{"y":-1.9999999999999762,"x":0,"var":"Enter"},"child":[{"type":"Image","props":{"y":5.000000000000009,"x":564,"skin":"res/hall/logo.png"},"child":[{"type":"Box","props":{"y":-2.999999999999992,"x":-564},"child":[{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"width":65,"var":"helpBtn","skin":"res/alert/helpBtn.png","height":68}}]}]},{"type":"Button","props":{"y":1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Image","props":{"y":176,"x":159,"var":"init_box","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":175.99999999999997,"x":772,"var":"high_box","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":736,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":738,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":136,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"},"child":[{"type":"Sprite","props":{"y":2,"x":73,"width":565,"renderType":"mask","height":25},"child":[{"type":"Rect","props":{"y":-1,"x":4,"width":533,"lineWidth":1,"height":31,"fillColor":"#ff0000"}}]},{"type":"Label","props":{"y":3,"x":614,"var":"mqrqueue","text":"跑馬燈","fontSize":25,"color":"#eee7e7"}}]},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":736,"x":328,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":738,"x":956,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":425,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":424,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Label","props":{"y":433,"x":204,"width":54,"text":"房间限红:","height":15,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":816,"width":105,"text":"房间限红:","height":27,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":461,"x":190,"width":76,"text":"投注额:","height":30,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":462,"x":796,"width":71,"text":"投注额:","height":22,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":309,"width":78,"var":"LowRoomLimit","text":"2000","height":22,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":271,"width":78,"var":"LowRoomBet","text":"2000","height":15,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":431,"x":922,"width":78,"var":"HighRoomLimit","text":"2000","height":21,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":876,"width":78,"var":"HighRoomBet","text":"2000","height":20,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Animation","props":{"y":188,"x":166,"width":0,"var":"stateAni_1","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":187,"x":779,"width":0,"var":"stateAni_2","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":173,"x":163,"width":0,"var":"light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":176,"width":0,"var":"light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":191,"width":0,"var":"light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":206,"width":0,"var":"light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":224,"width":0,"var":"light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":240,"width":0,"var":"light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":256,"width":0,"var":"light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":271,"width":0,"var":"light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":287,"width":0,"var":"light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":302,"width":0,"var":"light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":318,"width":0,"var":"light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":333,"width":0,"var":"light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":350,"width":0,"var":"light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":367,"width":0,"var":"light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":383,"width":0,"var":"light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":399,"width":0,"var":"light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":414,"width":0,"var":"light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":429,"width":0,"var":"light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":446,"width":0,"var":"light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":462,"width":0,"var":"light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":477,"width":0,"var":"light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":494,"width":0,"var":"light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":511,"width":0,"var":"light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":527,"width":0,"var":"light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":543,"width":0,"var":"light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":558,"width":0,"var":"light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":573,"width":0,"var":"light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":591,"width":0,"var":"light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":606,"width":0,"var":"light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":623,"width":0,"var":"light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":640,"width":0,"var":"light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":184,"x":648,"width":0,"var":"light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":199,"x":651,"width":0,"var":"light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":214,"x":651,"width":0,"var":"light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":229,"x":651,"width":0,"var":"light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":651,"width":0,"var":"light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":651,"width":0,"var":"light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":651,"width":0,"var":"light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":294,"x":651,"width":0,"var":"light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":312,"x":651,"width":0,"var":"light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":328,"x":651,"width":0,"var":"light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":345,"x":651,"width":0,"var":"light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":361,"x":651,"width":0,"var":"light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":651,"width":0,"var":"light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":396,"x":651,"width":0,"var":"light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":651,"width":0,"var":"light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":651,"width":0,"var":"light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":651,"width":0,"var":"light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":462,"x":651,"width":0,"var":"light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":479,"x":651,"width":0,"var":"light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":495,"x":651,"width":0,"var":"light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":651,"width":0,"var":"light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":528,"x":651,"width":0,"var":"light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":545,"x":651,"width":0,"var":"light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":560,"x":651,"width":0,"var":"light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":576,"x":651,"width":0,"var":"light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":594,"x":651,"width":0,"var":"light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":610,"x":651,"width":0,"var":"light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":627,"x":651,"width":0,"var":"light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":643,"x":651,"width":0,"var":"light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":660,"x":651,"width":0,"var":"light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":676,"x":651,"width":0,"var":"light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":693,"x":651,"width":0,"var":"light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":708,"x":651,"width":0,"var":"light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":716,"x":641,"width":0,"var":"light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":259,"width":0,"var":"light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":274,"width":0,"var":"light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":290,"width":0,"var":"light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":305,"width":0,"var":"light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":321,"width":0,"var":"light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":336,"width":0,"var":"light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":353,"width":0,"var":"light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":370,"width":0,"var":"light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":386,"width":0,"var":"light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":402,"width":0,"var":"light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":417,"width":0,"var":"light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":432,"width":0,"var":"light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":449,"width":0,"var":"light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":465,"width":0,"var":"light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":480,"width":0,"var":"light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":497,"width":0,"var":"light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":514,"width":0,"var":"light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":530,"width":0,"var":"light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":546,"width":0,"var":"light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":561,"width":0,"var":"light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":576,"width":0,"var":"light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":594,"width":0,"var":"light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":609,"width":0,"var":"light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":626,"width":0,"var":"light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":181,"width":0,"var":"light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":197,"width":0,"var":"light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":213,"width":0,"var":"light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":228,"width":0,"var":"light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":244,"width":0,"var":"light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":714,"x":165,"width":0,"var":"light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":701,"x":156,"width":0,"var":"light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":197,"x":155,"width":0,"var":"light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":211,"x":156,"width":0,"var":"light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":226,"x":156,"width":0,"var":"light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":244,"x":156,"width":0,"var":"light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":156,"width":0,"var":"light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":274,"x":156,"width":0,"var":"light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":290,"x":156,"width":0,"var":"light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":308,"x":156,"width":0,"var":"light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":325,"x":156,"width":0,"var":"light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":342,"x":156,"width":0,"var":"light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":358,"x":156,"width":0,"var":"light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":375,"x":156,"width":0,"var":"light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":394,"x":156,"width":0,"var":"light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":410,"x":156,"width":0,"var":"light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":427,"x":156,"width":0,"var":"light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":445,"x":156,"width":0,"var":"light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":460,"x":156,"width":0,"var":"light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":477,"x":156,"width":0,"var":"light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":493,"x":156,"width":0,"var":"light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":511,"x":156,"width":0,"var":"light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":525,"x":156,"width":0,"var":"light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":541,"x":156,"width":0,"var":"light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":558,"x":156,"width":0,"var":"light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":573,"x":156,"width":0,"var":"light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":590,"x":156,"width":0,"var":"light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":607,"x":156,"width":0,"var":"light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":622,"x":156,"width":0,"var":"light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":637,"x":156,"width":0,"var":"light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":653,"x":156,"width":0,"var":"light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":670,"x":156,"width":0,"var":"light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":686,"x":156,"width":0,"var":"light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":156,"width":0,"var":"light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":778,"width":0,"var":"_light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":791,"width":0,"var":"_light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":806,"width":0,"var":"_light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":821,"width":0,"var":"_light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":839,"width":0,"var":"_light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":855,"width":0,"var":"_light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":871,"width":0,"var":"_light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":886,"width":0,"var":"_light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":902,"width":0,"var":"_light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":917,"width":0,"var":"_light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":933,"width":0,"var":"_light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":948,"width":0,"var":"_light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":965,"width":0,"var":"_light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":982,"width":0,"var":"_light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":998,"width":0,"var":"_light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1014,"width":0,"var":"_light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1029,"width":0,"var":"_light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1044,"width":0,"var":"_light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1061,"width":0,"var":"_light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1077,"width":0,"var":"_light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1092,"width":0,"var":"_light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1109,"width":0,"var":"_light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1126,"width":0,"var":"_light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1142,"width":0,"var":"_light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1158,"width":0,"var":"_light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1173,"width":0,"var":"_light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1188,"width":0,"var":"_light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1206,"width":0,"var":"_light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1221,"width":0,"var":"_light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1238,"width":0,"var":"_light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":1255,"width":0,"var":"_light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":1263,"width":0,"var":"_light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":200,"x":1266,"width":0,"var":"_light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":215,"x":1266,"width":0,"var":"_light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":230,"x":1266,"width":0,"var":"_light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":246,"x":1266,"width":0,"var":"_light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":1266,"width":0,"var":"_light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":276,"x":1266,"width":0,"var":"_light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":295,"x":1266,"width":0,"var":"_light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":313,"x":1266,"width":0,"var":"_light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":329,"x":1266,"width":0,"var":"_light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":346,"x":1266,"width":0,"var":"_light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":362,"x":1266,"width":0,"var":"_light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":377,"x":1266,"width":0,"var":"_light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":397,"x":1266,"width":0,"var":"_light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":412,"x":1266,"width":0,"var":"_light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":429,"x":1266,"width":0,"var":"_light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":447,"x":1266,"width":0,"var":"_light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":463,"x":1266,"width":0,"var":"_light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":480,"x":1266,"width":0,"var":"_light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":496,"x":1266,"width":0,"var":"_light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":513,"x":1266,"width":0,"var":"_light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":529,"x":1266,"width":0,"var":"_light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":546,"x":1266,"width":0,"var":"_light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":561,"x":1266,"width":0,"var":"_light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":577,"x":1266,"width":0,"var":"_light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":595,"x":1266,"width":0,"var":"_light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":611,"x":1266,"width":0,"var":"_light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":628,"x":1266,"width":0,"var":"_light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":644,"x":1266,"width":0,"var":"_light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":661,"x":1266,"width":0,"var":"_light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":677,"x":1266,"width":0,"var":"_light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":694,"x":1266,"width":0,"var":"_light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":709,"x":1266,"width":0,"var":"_light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":717,"x":1256,"width":0,"var":"_light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":874,"width":0,"var":"_light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":889,"width":0,"var":"_light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":905,"width":0,"var":"_light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":920,"width":0,"var":"_light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":936,"width":0,"var":"_light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":951,"width":0,"var":"_light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":968,"width":0,"var":"_light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":985,"width":0,"var":"_light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1001,"width":0,"var":"_light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1017,"width":0,"var":"_light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1032,"width":0,"var":"_light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1047,"width":0,"var":"_light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1064,"width":0,"var":"_light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1080,"width":0,"var":"_light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1095,"width":0,"var":"_light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1112,"width":0,"var":"_light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1129,"width":0,"var":"_light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1145,"width":0,"var":"_light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1161,"width":0,"var":"_light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1176,"width":0,"var":"_light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1191,"width":0,"var":"_light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1209,"width":0,"var":"_light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1224,"width":0,"var":"_light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1241,"width":0,"var":"_light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":796,"width":0,"var":"_light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":812,"width":0,"var":"_light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":828,"width":0,"var":"_light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":843,"width":0,"var":"_light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":859,"width":0,"var":"_light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":715,"x":780,"width":0,"var":"_light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":702,"x":771,"width":0,"var":"_light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":198,"x":770,"width":0,"var":"_light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":212,"x":771,"width":0,"var":"_light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":227,"x":771,"width":0,"var":"_light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":771,"width":0,"var":"_light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":771,"width":0,"var":"_light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":771,"width":0,"var":"_light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":291,"x":771,"width":0,"var":"_light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":309,"x":771,"width":0,"var":"_light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":326,"x":771,"width":0,"var":"_light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":343,"x":771,"width":0,"var":"_light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":359,"x":771,"width":0,"var":"_light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":771,"width":0,"var":"_light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":395,"x":771,"width":0,"var":"_light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":771,"width":0,"var":"_light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":771,"width":0,"var":"_light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":771,"width":0,"var":"_light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":461,"x":771,"width":0,"var":"_light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":478,"x":771,"width":0,"var":"_light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":494,"x":771,"width":0,"var":"_light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":771,"width":0,"var":"_light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":526,"x":771,"width":0,"var":"_light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":542,"x":771,"width":0,"var":"_light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":559,"x":771,"width":0,"var":"_light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":574,"x":771,"width":0,"var":"_light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":591,"x":771,"width":0,"var":"_light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":608,"x":771,"width":0,"var":"_light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":623,"x":771,"width":0,"var":"_light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":638,"x":771,"width":0,"var":"_light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":654,"x":771,"width":0,"var":"_light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":671,"x":771,"width":0,"var":"_light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":687,"x":771,"width":0,"var":"_light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":186,"x":771,"width":0,"var":"_light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}}]},{"type":"Box","props":{},"child":[{"type":"Sprite","props":{"y":195,"x":219,"var":"spp","rotation":-90,"renderType":"mask"},"child":[{"type":"Pie","props":{"y":73,"x":64,"startAngle":10,"radius":62.30836558201394,"lineWidth":1,"fillColor":"#ff0000","endAngle":360}}]},{"type":"Image","props":{"y":72,"x":234,"var":"mcpic","skin":"res/hall/倒计时02.png"}}]}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":1420,"text":"房间限红:","height":800},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/hall/bg.jpg","name":"bg"}},{"type":"Box","props":{"y":-1.9999999999999762,"x":0,"var":"Enter"},"child":[{"type":"Image","props":{"y":5.000000000000009,"x":564,"skin":"res/hall/logo.png"},"child":[{"type":"Box","props":{"y":-2.999999999999992,"x":-564},"child":[{"type":"Button","props":{"y":0,"x":0,"var":"backLobby","skin":"res/alert/backLobbyBtn.png"}},{"type":"Image","props":{"y":106,"x":1340,"width":79,"var":"btnBg","skin":"res/share/btn_bg.png","height":195,"sizeGrid":"14,27,16,21"}},{"type":"Button","props":{"y":75,"x":1333,"var":"optionBtn","skin":"res/alert/optionBtn.png"}},{"type":"Button","props":{"y":158,"x":1345,"var":"setupBtn","skin":"res/alert/setup.png"}},{"type":"Button","props":{"y":223,"x":1345,"width":65,"var":"helpBtn","skin":"res/alert/helpBtn.png","height":68}}]}]},{"type":"Button","props":{"y":1,"x":1046,"var":"GBtn","skin":"res/hall/GBtn.png"}},{"type":"Button","props":{"x":1232,"var":"MBtn","skin":"res/hall/MBtn.png"}},{"type":"Image","props":{"y":176,"x":159,"var":"init_box","skin":"res/hall/img_Ginit.png"}},{"type":"Image","props":{"y":175.99999999999997,"x":772,"var":"high_box","skin":"res/hall/img_GHigh.png"}},{"type":"Button","props":{"y":736,"x":328,"var":"GLowEnter","skin":"res/hall/GEnter.png"}},{"type":"Button","props":{"y":738,"x":956,"var":"GHighEnter","skin":"res/hall/GEnter.png"}},{"type":"Image","props":{"y":136,"x":377,"skin":"res/hall/borad_bg.png","name":"boardbg"},"child":[{"type":"Sprite","props":{"y":2,"x":73,"width":565,"renderType":"mask","height":25},"child":[{"type":"Rect","props":{"y":-1,"x":4,"width":533,"lineWidth":1,"height":31,"fillColor":"#ff0000"}}]},{"type":"Label","props":{"y":3,"x":614,"var":"mqrqueue","text":"跑馬燈","fontSize":25,"color":"#eee7e7"}}]},{"type":"Image","props":{"y":137,"x":418,"skin":"res/hall/LP.png","name":"Lp"}},{"type":"Button","props":{"y":736,"x":328,"var":"MLowEnter","skin":"res/hall/MEnter.png"}},{"type":"Button","props":{"y":738,"x":956,"var":"MHighEnter","skin":"res/hall/MEnter.png"}},{"type":"Image","props":{"y":425,"x":176,"skin":"res/share/tip_bg.png"}},{"type":"Image","props":{"y":424,"x":795,"skin":"res/share/tip_bg.png"}},{"type":"Label","props":{"y":433,"x":204,"width":54,"text":"房间限红:","height":15,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":816,"width":105,"text":"房间限红:","height":27,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":461,"x":190,"width":76,"text":"投注额:","height":30,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":462,"x":796,"width":71,"text":"投注额:","height":22,"fontSize":22,"color":"#d73936","bold":true}},{"type":"Label","props":{"y":433,"x":309,"width":78,"var":"LowRoomLimit","text":"2000","height":22,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":271,"width":78,"var":"LowRoomBet","text":"2000","height":15,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":431,"x":922,"width":78,"var":"HighRoomLimit","text":"2000","height":21,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Label","props":{"y":460,"x":876,"width":78,"var":"HighRoomBet","text":"2000","height":20,"fontSize":22,"color":"#f9f0ef","bold":false}},{"type":"Animation","props":{"y":188,"x":166,"width":0,"var":"stateAni_1","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":187,"x":779,"width":0,"var":"stateAni_2","source":"res/hall/1.png,res/hall/2.png,res/hall/3.png","height":0}},{"type":"Animation","props":{"y":173,"x":163,"width":0,"var":"light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":176,"width":0,"var":"light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":191,"width":0,"var":"light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":206,"width":0,"var":"light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":224,"width":0,"var":"light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":240,"width":0,"var":"light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":256,"width":0,"var":"light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":271,"width":0,"var":"light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":287,"width":0,"var":"light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":302,"width":0,"var":"light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":318,"width":0,"var":"light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":333,"width":0,"var":"light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":350,"width":0,"var":"light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":367,"width":0,"var":"light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":383,"width":0,"var":"light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":399,"width":0,"var":"light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":414,"width":0,"var":"light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":429,"width":0,"var":"light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":446,"width":0,"var":"light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":462,"width":0,"var":"light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":477,"width":0,"var":"light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":494,"width":0,"var":"light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":511,"width":0,"var":"light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":527,"width":0,"var":"light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":543,"width":0,"var":"light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":558,"width":0,"var":"light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":573,"width":0,"var":"light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":591,"width":0,"var":"light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":606,"width":0,"var":"light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":172,"x":623,"width":0,"var":"light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":640,"width":0,"var":"light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":184,"x":648,"width":0,"var":"light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":199,"x":651,"width":0,"var":"light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":214,"x":651,"width":0,"var":"light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":229,"x":651,"width":0,"var":"light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":651,"width":0,"var":"light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":651,"width":0,"var":"light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":651,"width":0,"var":"light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":294,"x":651,"width":0,"var":"light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":312,"x":651,"width":0,"var":"light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":328,"x":651,"width":0,"var":"light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":345,"x":651,"width":0,"var":"light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":361,"x":651,"width":0,"var":"light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":651,"width":0,"var":"light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":396,"x":651,"width":0,"var":"light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":651,"width":0,"var":"light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":651,"width":0,"var":"light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":651,"width":0,"var":"light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":462,"x":651,"width":0,"var":"light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":479,"x":651,"width":0,"var":"light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":495,"x":651,"width":0,"var":"light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":651,"width":0,"var":"light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":528,"x":651,"width":0,"var":"light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":545,"x":651,"width":0,"var":"light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":560,"x":651,"width":0,"var":"light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":576,"x":651,"width":0,"var":"light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":594,"x":651,"width":0,"var":"light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":610,"x":651,"width":0,"var":"light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":627,"x":651,"width":0,"var":"light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":643,"x":651,"width":0,"var":"light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":660,"x":651,"width":0,"var":"light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":676,"x":651,"width":0,"var":"light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":693,"x":651,"width":0,"var":"light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":708,"x":651,"width":0,"var":"light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":716,"x":641,"width":0,"var":"light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":259,"width":0,"var":"light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":274,"width":0,"var":"light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":290,"width":0,"var":"light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":305,"width":0,"var":"light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":321,"width":0,"var":"light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":336,"width":0,"var":"light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":353,"width":0,"var":"light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":370,"width":0,"var":"light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":386,"width":0,"var":"light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":402,"width":0,"var":"light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":417,"width":0,"var":"light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":432,"width":0,"var":"light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":449,"width":0,"var":"light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":465,"width":0,"var":"light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":480,"width":0,"var":"light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":497,"width":0,"var":"light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":514,"width":0,"var":"light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":530,"width":0,"var":"light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":546,"width":0,"var":"light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":561,"width":0,"var":"light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":576,"width":0,"var":"light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":594,"width":0,"var":"light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":609,"width":0,"var":"light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":626,"width":0,"var":"light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":181,"width":0,"var":"light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":197,"width":0,"var":"light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":213,"width":0,"var":"light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":228,"width":0,"var":"light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":718,"x":244,"width":0,"var":"light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":714,"x":165,"width":0,"var":"light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":701,"x":156,"width":0,"var":"light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":197,"x":155,"width":0,"var":"light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":211,"x":156,"width":0,"var":"light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":226,"x":156,"width":0,"var":"light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":244,"x":156,"width":0,"var":"light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":260,"x":156,"width":0,"var":"light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":274,"x":156,"width":0,"var":"light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":290,"x":156,"width":0,"var":"light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":308,"x":156,"width":0,"var":"light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":325,"x":156,"width":0,"var":"light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":342,"x":156,"width":0,"var":"light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":358,"x":156,"width":0,"var":"light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":375,"x":156,"width":0,"var":"light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":394,"x":156,"width":0,"var":"light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":410,"x":156,"width":0,"var":"light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":427,"x":156,"width":0,"var":"light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":445,"x":156,"width":0,"var":"light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":460,"x":156,"width":0,"var":"light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":477,"x":156,"width":0,"var":"light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":493,"x":156,"width":0,"var":"light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":511,"x":156,"width":0,"var":"light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":525,"x":156,"width":0,"var":"light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":541,"x":156,"width":0,"var":"light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":558,"x":156,"width":0,"var":"light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":573,"x":156,"width":0,"var":"light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":590,"x":156,"width":0,"var":"light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":607,"x":156,"width":0,"var":"light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":622,"x":156,"width":0,"var":"light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":637,"x":156,"width":0,"var":"light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":653,"x":156,"width":0,"var":"light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":670,"x":156,"width":0,"var":"light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":686,"x":156,"width":0,"var":"light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":156,"width":0,"var":"light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":778,"width":0,"var":"_light_0","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":791,"width":0,"var":"_light_1","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":806,"width":0,"var":"_light_2","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":821,"width":0,"var":"_light_3","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":839,"width":0,"var":"_light_4","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":855,"width":0,"var":"_light_5","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":871,"width":0,"var":"_light_6","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":886,"width":0,"var":"_light_7","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":902,"width":0,"var":"_light_8","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":917,"width":0,"var":"_light_9","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":933,"width":0,"var":"_light_10","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":948,"width":0,"var":"_light_11","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":965,"width":0,"var":"_light_12","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":982,"width":0,"var":"_light_13","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":998,"width":0,"var":"_light_14","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1014,"width":0,"var":"_light_15","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1029,"width":0,"var":"_light_16","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1044,"width":0,"var":"_light_17","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1061,"width":0,"var":"_light_18","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1077,"width":0,"var":"_light_19","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1092,"width":0,"var":"_light_20","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1109,"width":0,"var":"_light_21","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1126,"width":0,"var":"_light_22","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1142,"width":0,"var":"_light_23","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1158,"width":0,"var":"_light_24","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1173,"width":0,"var":"_light_25","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1188,"width":0,"var":"_light_26","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1206,"width":0,"var":"_light_27","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1221,"width":0,"var":"_light_28","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":173,"x":1238,"width":0,"var":"_light_29","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":174,"x":1255,"width":0,"var":"_light_30","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":185,"x":1263,"width":0,"var":"_light_31","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":200,"x":1266,"width":0,"var":"_light_32","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":215,"x":1266,"width":0,"var":"_light_33","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":230,"x":1266,"width":0,"var":"_light_34","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":246,"x":1266,"width":0,"var":"_light_35","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":1266,"width":0,"var":"_light_36","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":276,"x":1266,"width":0,"var":"_light_37","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":295,"x":1266,"width":0,"var":"_light_38","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":313,"x":1266,"width":0,"var":"_light_39","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":329,"x":1266,"width":0,"var":"_light_40","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":346,"x":1266,"width":0,"var":"_light_41","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":362,"x":1266,"width":0,"var":"_light_42","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":377,"x":1266,"width":0,"var":"_light_43","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":397,"x":1266,"width":0,"var":"_light_44","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":412,"x":1266,"width":0,"var":"_light_45","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":429,"x":1266,"width":0,"var":"_light_46","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":447,"x":1266,"width":0,"var":"_light_47","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":463,"x":1266,"width":0,"var":"_light_48","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":480,"x":1266,"width":0,"var":"_light_49","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":496,"x":1266,"width":0,"var":"_light_50","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":513,"x":1266,"width":0,"var":"_light_51","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":529,"x":1266,"width":0,"var":"_light_52","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":546,"x":1266,"width":0,"var":"_light_53","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":561,"x":1266,"width":0,"var":"_light_54","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":577,"x":1266,"width":0,"var":"_light_55","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":595,"x":1266,"width":0,"var":"_light_56","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":611,"x":1266,"width":0,"var":"_light_57","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":628,"x":1266,"width":0,"var":"_light_58","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":644,"x":1266,"width":0,"var":"_light_59","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":661,"x":1266,"width":0,"var":"_light_60","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":677,"x":1266,"width":0,"var":"_light_61","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":694,"x":1266,"width":0,"var":"_light_62","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":709,"x":1266,"width":0,"var":"_light_63","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":717,"x":1256,"width":0,"var":"_light_64","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":874,"width":0,"var":"_light_88","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":889,"width":0,"var":"_light_87","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":905,"width":0,"var":"_light_86","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":920,"width":0,"var":"_light_85","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":936,"width":0,"var":"_light_84","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":951,"width":0,"var":"_light_83","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":968,"width":0,"var":"_light_82","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":985,"width":0,"var":"_light_81","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1001,"width":0,"var":"_light_80","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1017,"width":0,"var":"_light_79","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1032,"width":0,"var":"_light_78","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1047,"width":0,"var":"_light_77","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1064,"width":0,"var":"_light_76","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1080,"width":0,"var":"_light_75","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1095,"width":0,"var":"_light_74","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1112,"width":0,"var":"_light_73","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1129,"width":0,"var":"_light_72","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1145,"width":0,"var":"_light_71","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1161,"width":0,"var":"_light_70","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1176,"width":0,"var":"_light_69","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1191,"width":0,"var":"_light_68","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1209,"width":0,"var":"_light_67","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1224,"width":0,"var":"_light_66","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":1241,"width":0,"var":"_light_65","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":796,"width":0,"var":"_light_93","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":812,"width":0,"var":"_light_92","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":828,"width":0,"var":"_light_91","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":843,"width":0,"var":"_light_90","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":719,"x":859,"width":0,"var":"_light_89","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":715,"x":780,"width":0,"var":"_light_94","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":702,"x":771,"width":0,"var":"_light_95","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":198,"x":770,"width":0,"var":"_light_126","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":212,"x":771,"width":0,"var":"_light_125","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":227,"x":771,"width":0,"var":"_light_124","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":245,"x":771,"width":0,"var":"_light_123","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":261,"x":771,"width":0,"var":"_light_122","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":275,"x":771,"width":0,"var":"_light_121","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":291,"x":771,"width":0,"var":"_light_120","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":309,"x":771,"width":0,"var":"_light_119","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":326,"x":771,"width":0,"var":"_light_118","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":343,"x":771,"width":0,"var":"_light_117","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":359,"x":771,"width":0,"var":"_light_116","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":376,"x":771,"width":0,"var":"_light_115","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":395,"x":771,"width":0,"var":"_light_114","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":411,"x":771,"width":0,"var":"_light_113","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":428,"x":771,"width":0,"var":"_light_112","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":446,"x":771,"width":0,"var":"_light_111","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":461,"x":771,"width":0,"var":"_light_110","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":478,"x":771,"width":0,"var":"_light_109","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":494,"x":771,"width":0,"var":"_light_108","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":512,"x":771,"width":0,"var":"_light_107","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":526,"x":771,"width":0,"var":"_light_106","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":542,"x":771,"width":0,"var":"_light_105","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":559,"x":771,"width":0,"var":"_light_104","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":574,"x":771,"width":0,"var":"_light_103","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":591,"x":771,"width":0,"var":"_light_102","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":608,"x":771,"width":0,"var":"_light_101","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":623,"x":771,"width":0,"var":"_light_100","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":638,"x":771,"width":0,"var":"_light_99","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":654,"x":771,"width":0,"var":"_light_98","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":671,"x":771,"width":0,"var":"_light_97","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":687,"x":771,"width":0,"var":"_light_96","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}},{"type":"Animation","props":{"y":186,"x":771,"width":0,"var":"_light_127","source":"res/hall/Lobby_light.png,res/hall/Lobby_light2.png","height":0}}]},{"type":"Box","props":{"y":154,"x":2,"var":"bo"},"child":[{"type":"Sprite","props":{"y":-16,"x":315,"var":"spp","rotation":-90,"renderType":"mask","name":"spp"},"child":[{"type":"Pie","props":{"y":-61.00000000000001,"x":51.99999999999999,"startAngle":50,"radius":62.30836558201394,"name":"jk","lineWidth":1,"fillColor":"#ff0000","endAngle":360}}]},{"type":"Image","props":{"y":-129,"x":198,"var":"mcpic","skin":"res/hall/倒计时02.png","name":"mcpic"}}]}]};}
 		]);
 		return hallUI;
 	})(View)
@@ -52390,6 +52368,7 @@ var Laya=window.Laya=(function(window,document){
 		function Hall(){
 			this.marqu_x=612;
 			this.sp=null;
+			this.pa=null;
 			Hall.__super.call(this);
 			this.GLowEnter.visible=this.GHighEnter.visible=true;
 			this.MLowEnter.visible=this.MHighEnter.visible=false;
@@ -52410,12 +52389,12 @@ var Laya=window.Laya=(function(window,document){
 					this["_light_"+i].play(1);
 				}
 			}
-			this.sp=new Sprite;
+			this.pa=new Sprite;
 		}
 
 		__class(Hall,'bull.view.hall.Hall',_super);
 		var __proto=Hall.prototype;
-		//addChild(sp);
+		//mcpic.mask=sp;
 		__proto.onLowEnter=function(e){
 			console.log("onLowEnter");
 		}
@@ -54280,25 +54259,6 @@ var Laya=window.Laya=(function(window,document){
 	*...
 	*@author ww
 	*/
-	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
-	var FindNodeSmall=(function(_super){
-		function FindNodeSmall(){
-			FindNodeSmall.__super.call(this);
-			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
-			this.createView(FindNodeSmallUI.uiView);
-		}
-
-		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
-		var __proto=FindNodeSmall.prototype;
-		__proto.createChildren=function(){}
-		return FindNodeSmall;
-	})(FindNodeSmallUI)
-
-
-	/**
-	*...
-	*@author ww
-	*/
 	//class laya.debug.view.nodeInfo.nodetree.FindNode extends laya.debug.ui.debugui.FindNodeUI
 	var FindNode=(function(_super){
 		function FindNode(){
@@ -54315,6 +54275,25 @@ var Laya=window.Laya=(function(window,document){
 
 		return FindNode;
 	})(FindNodeUI)
+
+
+	/**
+	*...
+	*@author ww
+	*/
+	//class laya.debug.view.nodeInfo.nodetree.FindNodeSmall extends laya.debug.ui.debugui.FindNodeSmallUI
+	var FindNodeSmall=(function(_super){
+		function FindNodeSmall(){
+			FindNodeSmall.__super.call(this);
+			Base64AtlasManager.replaceRes(FindNodeSmallUI.uiView);
+			this.createView(FindNodeSmallUI.uiView);
+		}
+
+		__class(FindNodeSmall,'laya.debug.view.nodeInfo.nodetree.FindNodeSmall',_super);
+		var __proto=FindNodeSmall.prototype;
+		__proto.createChildren=function(){}
+		return FindNodeSmall;
+	})(FindNodeSmallUI)
 
 
 	/**
@@ -55362,9 +55341,9 @@ var Laya=window.Laya=(function(window,document){
 
 
 /*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (66):warning:　i This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (67):warning:　i This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (68):warning:　i This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (69):warning:　i This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (70):warning:　i This variable is not defined.
+1 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (66):warning:　i This variable is not defined.
+2 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (67):warning:　i This variable is not defined.
+3 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (68):warning:　i This variable is not defined.
+4 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (69):warning:　i This variable is not defined.
+5 file:///E:/game_dev/laya/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (70):warning:　i This variable is not defined.
 */

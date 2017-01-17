@@ -37,8 +37,6 @@ package bull.modules.BullHall.mediator
 		public var hallData:HallData;
 		public var userInfoData:UserInfoData;		
 		
-		var angel:int = -90;
-		
 		public function HallMediator(mediatorName:String=null, viewComponent:Object=null)
 		{
 			mediatorName = mediatorName?mediatorName:NAME;
@@ -162,16 +160,7 @@ package bull.modules.BullHall.mediator
 		 */		
 		private function onClick(e:Event):void
 		{
-			trace("onClick:" + e.target);			
-			
-			angel += 10;
-			var sp:Sprite = view.mcpic.mask;
-			
-			trace("sp ="+sp);
-			
-			view.spp.graphics.drawPie(57, 56, 50, 50, 360);
-			trace("angel ="+angel);
-			
+			trace("onClick:" + e.target);	
 			switch(e.target)
 			{
 				case view.helpBtn:
@@ -207,7 +196,7 @@ package bull.modules.BullHall.mediator
 		private function onShowHandler():void{
 			//记得添加一些事情
 			trace("Hall onShowHandler");
-			SoundManager.playMusic(SoundPath.Lobby_BGM, 0);
+			//SoundManager.playMusic(SoundPath.Lobby_BGM, 0);
 			//startRoomList();
 		}
 		

@@ -4,6 +4,7 @@ package bull.view.hall
 	import conf.SRoomConfig;
 	import conf.SRoomInfo;
 	import conf.SRoomInfos;
+	import laya.display.Graphics;
 	import laya.display.Sprite;
 	import laya.events.Event;
 	import laya.ui.Image;
@@ -27,6 +28,7 @@ package bull.view.hall
 		var marqu_x:int = 612;	
 		
 		public var sp:Sprite;
+		public var pa:Sprite;
 		
 		public function Hall()
 		{
@@ -58,11 +60,16 @@ package bull.view.hall
 					this["_light_" + i].play(1);		
 				}			
 			}
-			
-			sp = new Sprite;
+			pa = new Sprite;
+			//pa.rotation = -90;
+		
+			//sp = new Sprite;
+			//sp.graphics.drawPie(57, 57, 50, 0, 0, "#FF0000");
+			//sp.pivot(57, 57);
+			//sp.rotation = -90;
+			//pa.addChild(sp);
+			//this.addChild(pa);
 			//mcpic.mask = sp;
-			//sp.graphics.drawPie(57, 56, 50, -90, -80);
-			//addChild(sp);
 		}
 		
 		private function onLowEnter(e:Event):void
