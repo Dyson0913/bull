@@ -4,8 +4,10 @@ package bull.modules.common.command
 	import com.lightMVC.interfaces.ICommand;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Command;
+	import conf.ENMoneyType;
 	import conf.SRoomConfig;
 	import conf.SRoomInfo;
+	import com.IProtobuf.Long;
 	
 	import com.lightUI.core.Light;
 	import com.lightUI.components.alert.Alert;
@@ -48,7 +50,7 @@ package bull.modules.common.command
 			var roominfo:SRoomInfo = bullData.hallData.roomList[bullData.hallData.join_room_idx] as SRoomInfo;
 			var config:SRoomConfig = roominfo.config;
 			out.enter_table_req.room_id = config.room_id;
-			out.enter_table_req.token = bullData.token;
+			out.enter_table_req.token = Long.fromNumber(parseFloat(bullData.token));
 						
 			
 			var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
@@ -82,7 +84,7 @@ package bull.modules.common.command
 					var config:SRoomConfig = roominfo.config;					
 					
 					//帶入前就指定;
-					roomData.Cash_Type = hallData.Cash_Type;
+					roomData.Cash_Type = hallData.Cash_Type as ENMoneyType;
 					trace("===================joinroom = "+config.room_type);
 					
 					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL,[config,roomData]);	

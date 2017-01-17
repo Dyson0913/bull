@@ -12,7 +12,8 @@ package bull.modules.common.command
 	
 	import com.lightUI.core.Light;
 	import com.lightUI.components.alert.Alert;
-	import bull.view.alert.AlertCancelPanel
+	import bull.view.alert.AlertCancelPanel;
+	import bull.view.alert.AlertPanel;
 	
 	import bull.modules.common.model.BullProtoModel;
 	import bull.modules.common.model.data.Data;	

@@ -60,17 +60,18 @@ package bull.modules.room.command
 			//取回頭像資訊
 			for (var i:int = 0; i< roomData.player_List_ob.length; i++)
 			{
-				var data:Object = roomData.player_List_ob[i];
+				var info:Object = roomData.player_List_ob[i];
 				
-				sentNotification(ENCSType.CS_TYPE_GET_PLAYER_INFO_REQ.toString(), [data.uid.toNumber()]);
+				sentNotification(ENCSType.CS_TYPE_GET_PLAYER_INFO_REQ.toString(), [info.uid.toNumber()]);
 			}
 			
 			//等一下再發送更新,確保玩家資訊都取回
-			Tween.to(this, {}, 500,Ease.cubicOut,Handler.create(this,infoHandler));			
+			Tween.to(this, {}, 1000,Ease.cubicOut,Handler.create(this,infoHandler));			
 		}
 		
 		public function infoHandler():void
 		{			
+			trace("--------------------玩家列表刷新");
 			sentNotification(BullNotification.USER_NOTIFY);
 		}
 		
@@ -97,11 +98,11 @@ package bull.modules.room.command
 			var color:String;
 			if ( data.win_money.toNumber() > 0) {
 				color = "#e0e814";
-				win_str = "赢" + roomData.appearMoney(roomData.GetMoney(data.win_money));
+				win_str = "赢" + roomData.appearMoney(roomData.GetMoney(data.win_money.toNumber()));
 			}
 			else if ( data.win_money.toNumber() < 0)
 			{
-				win_str = "输" + roomData.appearMoney(roomData.GetMoney(-data.win_money));
+				win_str = "输" + roomData.appearMoney(roomData.GetMoney(-data.win_money.toNumber()));
 				color = "#e81c13";
 			}
 			else
@@ -144,12 +145,16 @@ package bull.modules.room.command
 				}
 				
 				var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
-				roomData.attch_to_player_List_ob(info);				
+				roomData.attch_to_player_List_ob(info);
 				
-				if (roomData.user_info_callback != null)
-				{
-					roomData.user_info_callback.method.apply(roomData.user_info_callback.args);					
-				}
+				//trace("info.uid ="+info.uid);
+				//trace("info.name ="+info.username);
+				//trace("info.avatar ="+info.avatar);
+				//msg =uid = 1014461
+			//msg =username = dy***3
+			// msg =nickname = 
+			// msg =avatar = http://statics.kgame63.com/common/images/avatars/1.png		
+				
 			}
 		}
 		

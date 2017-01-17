@@ -15,6 +15,7 @@ package bull.modules.room.mediator
 	import conf.SBullMoney;
 	import conf.SRoomInfo;
 	import conf.SUserInfo;
+	import laya.maths.Point;
 	import laya.ui.Image;
 	import laya.utils.Browser;
 	
@@ -123,10 +124,10 @@ package bull.modules.room.mediator
 			view.btn_display(false);			
 			
 			//TEST CMD			
-			if ( view["TestPanel"] != undefined)
-			{				
-				view.TestPanel.on(LightEvent.ITEM_CLICK, this, ontest);
-			}
+			//if ( view["TestPanel"] != undefined)
+			//{				
+				//view.TestPanel.on(LightEvent.ITEM_CLICK, this, ontest);
+			//}
 			
 			//notify
 			addNotifiction(BullNotification.STATE_CHANGE);
@@ -306,7 +307,7 @@ package bull.modules.room.mediator
 					{
 						chip = new Chip();
 						betInfo = temp.chips[j];
-						chipVO = new ChipVO(true,chipsVO[i].type,betInfo.value);
+						chipVO = new ChipVO(true,arr_chipsVO[i].type,betInfo.value);
 						chip.vo = chipVO;
 						pos = BetAreaUtil.getRandomByRectangle(chipVO.type,betArea.getBounds());
 						view.flayChipOther(chip,pos);
@@ -384,7 +385,7 @@ package bull.modules.room.mediator
 				
 				var self_head:String = roomData.find_self("avatar");				
 				
-				var mymoney:String = roomData.appearMoney( roomData.GetMoney(roomData.settle_hand_money));
+				var mymoney:String = roomData.appearMoney( roomData.GetMoney(roomData.settle_hand_money.toNumber()));
 				var mywin:String;
 				if ( roomData.settle_win_money.toNumber() >= 0)
 				{

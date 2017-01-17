@@ -38,7 +38,6 @@ package bull.view.room
 			
 			_Name = getChildByName("Name") as Label;
 			_Money = getChildByName("Money") as Label;
-			index = 0;
 			
 			hideAllState();
 		}
@@ -67,8 +66,7 @@ package bull.view.room
 			_Money.color = data["color"];
 			
 			_Name.text = data["username"];
-			_Head.visible = true;
-			
+			_Head.visible = true;			
 			_Head.loadImage(data["avatar"], 0, 0, 45, 45);
 			//_Vip			
 		}

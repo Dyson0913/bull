@@ -31,6 +31,8 @@ package bull.modules.common.mediator
 	{
 		public static const NAME:String = "assetInMediator";
 		
+		public var roomData:RoomData;
+		
 		private var roomSocketService:RoomSocketService;
 		private var first:Boolean;
 		public var perLoadService:PreLoadService;
@@ -49,7 +51,7 @@ package bull.modules.common.mediator
 		}
 		
 		override public function getInjector():Array{
-			return [];// ["roomSocketService", "perLoadService"];
+			return ["roomData"];
 		}
 		
 		private function getAssetsPanel():AssetsInPanel{
@@ -144,7 +146,6 @@ package bull.modules.common.mediator
 		private function GotoRecharge(data:int,flg:String):void{
 			if (flg == "ok_btn")
 			{
-				var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 				trace("ok_btn");
 				//去充值頁面
 				var ws:WebService = getModel(WebService.NAME) as WebService;

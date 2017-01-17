@@ -1,6 +1,7 @@
 package bull.view.room 
 {
 	import com.lightUI.events.LightEvent;
+	import conf.ENBullType;
 	import conf.SDealInfo;
 	import laya.ui.Image;
 	
@@ -99,20 +100,24 @@ package bull.view.room
 			
 			this["pokerType_" + i].visible = true;
 			this["pokerType_" + i].filters = [];
-			
-			this["pokerType_" + i]["multi"].x = multi_x;
-			this["pokerType_" + i]["multi"].scaleX = 1.5;
-			this["pokerType_" + i]["multi"].scaleY = 1.5;
 			this["pokerType_" + i]["multi"].alpha = 0;
-			
-			Tween.to(this["pokerType_" + i]["multi"], { scaleX:1, scaleY:1, alpha:1 }, 500, Ease.cubicOut);	
-			
-			//this["pokerType_" + i]["odds"].x = odd_x;
-			this["pokerType_" + i]["odds"].scaleX = 1.5;
-			this["pokerType_" + i]["odds"].scaleY = 1.5;
 			this["pokerType_" + i]["odds"].alpha = 0;
-			this["pokerType_" + i]["odds"].text = odd.toString();;
-			Tween.to(this["pokerType_" + i]["odds"], {scaleX:1,scaleY:1,alpha:1}, 500, Ease.cubicOut,null,2);
+			
+			trace("ENBullType.BULL_TYPE_NOP i=" + type);			
+			if ( type > ENBullType.BULL_TYPE_NOP)
+			{
+				this["pokerType_" + i]["multi"].x = multi_x;
+				this["pokerType_" + i]["multi"].scaleX = 1.5;
+				this["pokerType_" + i]["multi"].scaleY = 1.5;				
+				
+				Tween.to(this["pokerType_" + i]["multi"], { scaleX:1, scaleY:1, alpha:1 }, 500, Ease.cubicOut);	
+				
+				this["pokerType_" + i]["odds"].x = odd_x;
+				this["pokerType_" + i]["odds"].scaleX = 1.5;
+				this["pokerType_" + i]["odds"].scaleY = 1.5;				
+				this["pokerType_" + i]["odds"].text = odd.toString();;
+				Tween.to(this["pokerType_" + i]["odds"], { scaleX:1, scaleY:1, alpha:1 }, 500, Ease.cubicOut, null, 2);
+			}
 			
 			//庄家報完牌型			
 			if (i == 4)

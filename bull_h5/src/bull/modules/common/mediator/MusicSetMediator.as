@@ -74,8 +74,8 @@ package bull.modules.common.mediator
 		
 		private function onShow():void{
 			trace("MusicSetMediator onShow()");
-			view.chkMusic.selected =  !ShareObjectMgr.get().music; 
-			view.chkVoice.selected = !ShareObjectMgr.get().sound;
+			view.musicButton.selected =  !ShareObjectMgr.get().music; 
+			view.soundButton.selected = !ShareObjectMgr.get().sound;
 			Light.layer.top.addChild(view);
 			view.visible = true;
 		}
@@ -91,8 +91,8 @@ package bull.modules.common.mediator
 		 */		
 		private function onChange():void
 		{
-			trace("设置音乐音效：music:",view.chkMusic.selected," sound:",view.chkVoice.selected);
-			ShareObjectMgr.get().setMusicSound(!view.chkMusic.selected,!view.chkVoice.selected);
+			trace("设置音乐音效：music:",view.musicButton.selected," sound:",view.soundButton.selected);
+			ShareObjectMgr.get().setMusicSound(!view.musicButton.selected,!view.soundButton.selected);
 		}
 		
 	}
