@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":8,
+    "selecteID":11,
     "props":{"width":1400,"sceneColor":"#000000","height":800},
     "nodeParent":-1,
     "label":"View",
@@ -23,7 +23,7 @@
             "x":15,
             "type":"UIView",
             "source":"ui/room/PokerEffect.ui",
-            "props":{"y":515,"x":73,"visible":false,"var":"pokerType_0"},
+            "props":{"y":516,"x":60,"visible":false,"var":"pokerType_0"},
             "nodeParent":1,
             "label":"UIView(pokerType_0)",
             "isDirectory":false,
@@ -38,13 +38,14 @@
                 }],
             "compId":3,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"UIView",
             "source":"ui/room/PokerEffect.ui",
-            "props":{"y":522,"x":337,"visible":false,"var":"pokerType_1"},
+            "props":{"y":515,"x":325,"visible":false,"var":"pokerType_1"},
             "nodeParent":1,
             "label":"UIView(pokerType_1)",
             "isDirectory":false,
@@ -59,13 +60,14 @@
                 }],
             "compId":4,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"UIView",
             "source":"ui/room/PokerEffect.ui",
-            "props":{"y":515,"x":589,"visible":false,"var":"pokerType_2"},
+            "props":{"y":515,"x":580,"visible":false,"var":"pokerType_2"},
             "nodeParent":1,
             "label":"UIView(pokerType_2)",
             "isDirectory":false,
@@ -80,13 +82,14 @@
                 }],
             "compId":5,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"UIView",
             "source":"ui/room/PokerEffect.ui",
-            "props":{"y":515,"x":863,"visible":false,"var":"pokerType_3"},
+            "props":{"y":519,"x":840,"visible":false,"var":"pokerType_3"},
             "nodeParent":1,
             "label":"UIView(pokerType_3)",
             "isDirectory":false,
@@ -101,7 +104,8 @@
                 }],
             "compId":6,
             "child":[
-                ]
+                ],
+            "$HIDDEN":false
         },
         {
             "x":15,

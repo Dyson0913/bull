@@ -40,7 +40,7 @@ package bull.view.room
 			Showing_Recode.visible = true;
 			Hidding_Recode.visible = false;
 			
-			viewNetState.y = 424;
+			viewNetState.y = 414;
 		}
 		
 		public function histroy_notify(win:Array,lost:Array,result:Array):void

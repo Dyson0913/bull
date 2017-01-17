@@ -44,6 +44,8 @@ package bull.view.room
 			this.hide();			
 			
 			var order:Array = [1, 2, 3, 4, 0];
+			var fix_po:Array = [210, 475, 730, 990, 617];			
+			
 			for (var i:int = 0; i < 5; i++)
 			{
 				this["pokerType_" + i].filters = [blurFilter];
@@ -71,8 +73,11 @@ package bull.view.room
 				
 				this["pokerType_" + i]["Type"].index = type_idx
 				
+				
+				
 				var de:int = i * 1500;				
-				Tween.to(this["pokerType_" + i], { x:this["pokerType_" + i].x+150}, 500, Ease.quintInOut,Handler.create(this,onCompleteHandler,[i,info.odds,info.bull_type]),de);
+				Tween.to(this["pokerType_" + i], { x:fix_po[i] }, 500, Ease.quintInOut, Handler.create(this, onCompleteHandler, [i, info.odds, info.bull_type]), de);			
+				
 			}
 			
 			
@@ -82,7 +87,7 @@ package bull.view.room
 		{
 			var multi_x:int = 0;
 			var odd_x:int = 0;
-			if (type == 11 || type == 25)
+			if (type == 11 || type == 25 || type ==10)
 			{
 				multi_x = 171;
 				odd_x = 202;
@@ -100,10 +105,10 @@ package bull.view.room
 			
 			this["pokerType_" + i].visible = true;
 			this["pokerType_" + i].filters = [];
+			
 			this["pokerType_" + i]["multi"].alpha = 0;
 			this["pokerType_" + i]["odds"].alpha = 0;
-			
-			trace("ENBullType.BULL_TYPE_NOP i=" + type);			
+								
 			if ( type > ENBullType.BULL_TYPE_NOP)
 			{
 				this["pokerType_" + i]["multi"].x = multi_x;
@@ -159,7 +164,7 @@ package bull.view.room
 		
 		public function hide():void
 		{			
-			var init_po:Array = [81, 368, 651, 904, 467];
+			var init_po:Array = [60, 325, 580, 840,467];
 			for(var i:int =0;i< 5;i++)
 			{
 				this["pokerType_" + i].visible = false;
