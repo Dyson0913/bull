@@ -302,15 +302,15 @@ package bull.view.room
 		private function updata_topThree(idx:int):void
 		{
 			if ( _zone_topthree.length == 0) 
-			{
-				this["Rankp_" + idx]["Text_NoOne_bet"] = "无人下注，请下注。";				
+			{				
 				return;
 			}
 			
 			var data:Array  = _zone_topthree[idx];
-			
+			trace("data =" + data.length);
 			//提示字消失
-			if (data.length != 0) this["Rankp_" + idx]["Text_NoOne_bet"] = "";
+			if (data.length != 0) this["Rankp_" + idx]["Text_NoOne_bet"].text = "";
+			else this["Rankp_" + idx]["Text_NoOne_bet"].text = "无人下注，请下注。";
 			
 			for (var i:int = 0; i < data.length; i++)
 			{

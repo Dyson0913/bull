@@ -1208,7 +1208,7 @@
             "x":15,
             "type":"UIView",
             "source":"ui/room/NetStatusPanel.ui",
-            "props":{"y":414,"x":9,"var":"viewNetState","runtime":"bull.view.room.NetStatusPanel"},
+            "props":{"y":412,"x":9,"var":"viewNetState","runtime":"bull.view.room.NetStatusPanel"},
             "nodeParent":1,
             "label":"UIView(viewNetState)",
             "isDirectory":false,
