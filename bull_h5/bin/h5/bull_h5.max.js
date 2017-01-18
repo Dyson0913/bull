@@ -31989,6 +31989,7 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case 4:
 					this.view.betCheck();
+					if (this.view.pop_window)this.view.pop_window.event("close");
 					break ;
 				case 5:
 					this.view.deal();
@@ -32196,7 +32197,7 @@ var Laya=window.Laya=(function(window,document){
 						Alert.show(Light.language.getSrting("alert_msg13"),"",AlertCancelPanel,null,Handler.create(this,this.exitRoomCall));
 					}
 					if (this.roomData.State==3){
-						Alert.show(Light.language.getSrting("alert_msg14"),"",AlertCancelPanel,null,Handler.create(this,this.exitRoomCall));
+						this.view.pop_window=Alert.show(Light.language.getSrting("alert_msg14"),"",AlertCancelPanel,null,Handler.create(this,this.exitRoomCall));
 					}
 				}
 			}
@@ -32206,6 +32207,9 @@ var Laya=window.Laya=(function(window,document){
 			console.log("flg = "+flg);
 			if(flg=="ok_btn"){
 				this.exitRoom();
+			}
+			else{
+				this.view.pop_window=null;
 			}
 		}
 
@@ -52943,6 +52947,10 @@ var Laya=window.Laya=(function(window,document){
 			this._selfChips=[];
 			this._otherChips=[];
 			this._betsBox=null;
+			this.pop_window=null;
+			this._check_dot_msg="确认下注中";
+			this._check_dot_diplay_msg="";
+			this._check_dot_times=3;
 			BullScene.__super.call(this);
 			this.on("added",this,this._$7_onAdded);
 		}
@@ -53047,20 +53055,32 @@ var Laya=window.Laya=(function(window,document){
 			this.viewPoker.hide();
 			this.viewArea.disable_zone();
 			this.ViewBetGroup.disapear();
-			this.phase_tip("等待发牌",1);
+			this._check_dot_diplay_msg=this._check_dot_msg;
+			this.phase_tip(this._check_dot_diplay_msg,0);
+			this._check_dot_times=3;
+			Laya.timer.loop(1000,this,this.timerHandler);
 		}
 
-		//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Game_BetCheck_forclose));
+		__proto.timerHandler=function(){
+			this._check_dot_times-=1;
+			this._check_dot_diplay_msg+=".";
+			this.phase_tip(this._check_dot_diplay_msg,0);
+			if (this._check_dot_times==0){
+				Laya.timer.clear(this,this.timerHandler);
+			}
+		}
+
 		__proto.deal=function(){
 			console.log("deal");
+			this._check_dot_diplay_msg=this._check_dot_msg;
 			this.ViewWinLostEffect.hide();
 			this.viewBetTime.hide();
 			this.viewPoker.hide();
 			this.viewArea.disable_zone();
 			this.ViewBetGroup.disapear();
+			this.phase_tip("開牌中",0);
 		}
 
-		//TODO ... over
 		__proto.end=function(){
 			console.log("end");
 			this.phase_tip("本局结束，即将开始下一局！",0);
@@ -53068,7 +53088,6 @@ var Laya=window.Laya=(function(window,document){
 			this.viewArea.disable_zone();
 		}
 
-		__proto.onReturnClick=function(e){}
 		__proto.phase_tip=function(msg,sec){
 			(sec===void 0)&& (sec=0.5);
 			this.Hint.alpha=0;

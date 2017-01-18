@@ -36,7 +36,10 @@ package bull.view.room
 		private var _otherChips:Array = [];////////////////////记录自己的筹码   每次下注结束后清零
 		private var _betsBox:Sprite;
 		
-		
+		public var pop_window:Sprite = null;
+		private var _check_dot_msg:String = "确认下注中";
+		private var _check_dot_diplay_msg:String = "";
+		private var _check_dot_times:int = 3;
 		
 		public function BullScene()
 		{
@@ -199,9 +202,6 @@ package bull.view.room
 		public function betCheck():void
 		{
 			trace("betCheck");
-			
-			
-			
 			ViewBetGroup.disapear();
 			
 			//中途進入元件處理
@@ -212,21 +212,34 @@ package bull.view.room
 			ViewBetGroup.disapear();
 			
 			
-			//斷線重連 元件還原			
-			phase_tip("等待发牌", 1);
-			//TODO ...
-			//game.viewArea.comfirming(appMedel.dataCurTime);
+			//TODO ...						
+			_check_dot_diplay_msg = _check_dot_msg;
+			phase_tip(_check_dot_diplay_msg, 0);	
+			_check_dot_times = 3;
+			Laya.timer.loop(1000, this, timerHandler);
 			
 			
-			//TODO檢查是否彈出離開窗
-			//evt.dispatchEvent(new NewNewGameEvent(NewNewGameEvent.Game_BetCheck_forclose));
-						
+		}
+		
+		public function timerHandler():void
+		{
+			_check_dot_times -= 1;	
+			
+			_check_dot_diplay_msg += ".";
+			
+			phase_tip(_check_dot_diplay_msg, 0);
+			if (_check_dot_times == 0)
+			{
+				Laya.timer.clear(this, timerHandler);
+			}
 			
 		}
 		
 		public function deal():void
 		{
 			trace("deal");			
+			
+			_check_dot_diplay_msg = _check_dot_msg;
 			
 			//中途進入元件處理
 			ViewWinLostEffect.hide();
@@ -235,7 +248,7 @@ package bull.view.room
 			viewArea.disable_zone();
 			ViewBetGroup.disapear();
 			
-			//TODO ... over
+			phase_tip("開牌中", 0);
 		}
 		
 		public function end():void
@@ -245,13 +258,8 @@ package bull.view.room
 			phase_tip("本局结束，即将开始下一局！",0);
 			
 			//中途進入元件處理
-			viewBetTime.hide();			
+			viewBetTime.hide();
 			viewArea.disable_zone();
-			
-		}
-		
-		private function onReturnClick(e:Event):void
-		{			
 			
 		}
 		

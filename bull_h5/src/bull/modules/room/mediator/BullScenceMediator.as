@@ -18,6 +18,7 @@ package bull.modules.room.mediator
 	import laya.maths.Point;
 	import laya.ui.Image;
 	import laya.utils.Browser;
+	import com.lightUI.events.WindowEvent;
 	
 	import msg.CS;
 	import msg.SBetNotify_Bet;
@@ -672,6 +673,10 @@ package bull.modules.room.mediator
 				break;
 				case RoomData.BET_CHECK:
 					view.betCheck();
+					
+					//檢查是否彈出離開窗
+					if ( view.pop_window) view.pop_window.event(WindowEvent.CLOSE);				
+					
 				break;
 				case RoomData.DEAL:
 					view.deal();
@@ -1013,7 +1018,7 @@ package bull.modules.room.mediator
 					}
 					if ( roomData.State == RoomData.BET)
 					{
-						Alert.show(Light.language.getSrting("alert_msg14"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
+						view.pop_window = Alert.show(Light.language.getSrting("alert_msg14"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
 					}
 				}
 				
@@ -1022,10 +1027,14 @@ package bull.modules.room.mediator
 				
 		}
 		
-		private function exitRoomCall(data:int, flg:String):void {
+		public function exitRoomCall(data:int, flg:String):void {
 			trace("flg = "+flg);
 			if(flg == "ok_btn"){
 				exitRoom();
+			}
+			else
+			{
+				view.pop_window = null;
 			}
 		}
 		
