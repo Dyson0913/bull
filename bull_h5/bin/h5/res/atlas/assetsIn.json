@@ -4,26 +4,26 @@
             "frame": {
                 "x": 0,
                 "y": 0,
-                "w": 265,
-                "h": 11,
+                "w": 25,
+                "h": 8,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 265,
-                "h": 11
+                "w": 25,
+                "h": 8
             },
             "sourceSize": {
-                "w": 265,
-                "h": 11
+                "w": 25,
+                "h": 8
             },
             "rotated": false,
             "trimed": false
         },
         "Btn_bg.png": {
             "frame": {
-                "x": 267,
+                "x": 27,
                 "y": 0,
                 "w": 147,
                 "h": 147,
@@ -44,7 +44,7 @@
         },
         "carryInFont.png": {
             "frame": {
-                "x": 416,
+                "x": 176,
                 "y": 0,
                 "w": 75,
                 "h": 17,
@@ -65,7 +65,7 @@
         },
         "closeBtn.png": {
             "frame": {
-                "x": 493,
+                "x": 253,
                 "y": 0,
                 "w": 41,
                 "h": 123,
@@ -86,7 +86,7 @@
         },
         "highest.png": {
             "frame": {
-                "x": 416,
+                "x": 176,
                 "y": 19,
                 "w": 74,
                 "h": 114,
@@ -107,21 +107,21 @@
         },
         "hslider$bar.png": {
             "frame": {
-                "x": 536,
-                "y": 0,
-                "w": 44,
-                "h": 135,
+                "x": 252,
+                "y": 125,
+                "w": 27,
+                "h": 93,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 44,
-                "h": 135
+                "w": 27,
+                "h": 93
             },
             "sourceSize": {
-                "w": 44,
-                "h": 135
+                "w": 27,
+                "h": 93
             },
             "rotated": false,
             "trimed": false
@@ -129,27 +129,27 @@
         "hslider.png": {
             "frame": {
                 "x": 0,
-                "y": 13,
-                "w": 265,
-                "h": 11,
+                "y": 10,
+                "w": 22,
+                "h": 8,
                 "idx": 0
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 265,
-                "h": 11
+                "w": 22,
+                "h": 8
             },
             "sourceSize": {
-                "w": 265,
-                "h": 11
+                "w": 22,
+                "h": 8
             },
             "rotated": false,
             "trimed": false
         },
         "lowest.png": {
             "frame": {
-                "x": 416,
+                "x": 176,
                 "y": 135,
                 "w": 53,
                 "h": 81,
@@ -171,7 +171,7 @@
         "smallPanel.png": {
             "frame": {
                 "x": 0,
-                "y": 218,
+                "y": 220,
                 "w": 445,
                 "h": 363,
                 "idx": 0
@@ -189,31 +189,10 @@
             "rotated": false,
             "trimed": false
         },
-        "split.png": {
-            "frame": {
-                "x": 0,
-                "y": 583,
-                "w": 11,
-                "h": 2,
-                "idx": 0
-            },
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 11,
-                "h": 2
-            },
-            "sourceSize": {
-                "w": 11,
-                "h": 2
-            },
-            "rotated": false,
-            "trimed": false
-        },
         "warn2.png": {
             "frame": {
-                "x": 492,
-                "y": 125,
+                "x": 0,
+                "y": 149,
                 "w": 30,
                 "h": 24,
                 "idx": 0

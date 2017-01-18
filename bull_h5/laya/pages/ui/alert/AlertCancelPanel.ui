@@ -2,7 +2,7 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":5,
+    "selecteID":10,
     "props":{"width":445,"sceneColor":"#000000","height":273},
     "nodeParent":-1,
     "label":"Dialog",
@@ -62,7 +62,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":232,"x":89,"var":"ok_btn","skin":"assetsIn/ok.png","name":"ok_btn"},
+            "props":{"y":220,"x":58,"var":"ok_btn","skin":"assetsIn/Btn_bg.png","name":"ok_btn"},
             "nodeParent":1,
             "label":"Button(ok_btn)",
             "isDirectory":false,
@@ -82,7 +82,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":232,"x":290,"var":"cancel_btn","skin":"assetsIn/cancel.png","name":"cancel_btn"},
+            "props":{"y":220,"x":238,"var":"cancel_btn","skin":"assetsIn/Btn_bg.png","name":"cancel_btn"},
             "nodeParent":1,
             "label":"Button(cancel_btn)",
             "isOpen":true,
@@ -137,6 +137,46 @@
                     "__InPool":false
                 }],
             "compId":7,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":228,"x":104,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"},
+            "nodeParent":1,
+            "label":"Label",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":9,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":228,"x":282,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"},
+            "nodeParent":1,
+            "label":"Label",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "frames":[
+                {
+                    "type":1,
+                    "props":{"text":"label"},
+                    "frame":0,
+                    "__InPool":false
+                }],
+            "compId":10,
             "child":[
                 ]
         }],
