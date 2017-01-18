@@ -74,7 +74,7 @@ package bull.view.room
 			
 			//前三名面牌
 			this["Rankp_" + idx].visible = true;
-			//updata_topThree(idx);
+			updata_topThree(idx);
 			_moveIn_zone_idx = idx;
 			
 			//跟隨ocin

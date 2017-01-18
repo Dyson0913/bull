@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":33,
+    "selecteID":19,
     "props":{"width":679,"sceneColor":"#000000","height":416},
     "nodeParent":-1,
     "label":"View",
@@ -82,7 +82,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":366,"x":308,"width":43,"text":"确  定","mouseEnabled":false,"height":16,"fontSize":25,"color":"#f6ebea","bold":true},
+            "props":{"y":366,"x":308,"width":64,"text":"确  定","mouseEnabled":false,"height":32,"fontSize":25,"color":"#f6ebea","bold":true},
             "nodeParent":1,
             "label":"Label",
             "isDirectory":false,

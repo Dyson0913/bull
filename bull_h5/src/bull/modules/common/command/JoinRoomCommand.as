@@ -64,6 +64,9 @@ package bull.modules.common.command
 				var hallData:HallData = getSingleton(HallData.NAME) as HallData;				
 				var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 				
+				//帶入前就指定
+				roomData.Cash_Type = hallData.Cash_Type as ENMoneyType;
+					
 				//更新用戶訊息
 				sentNotification(ENCSType.CS_TYPE_GET_PLAYER_INFO_REQ.toString(), [roomData.uid]);
 				
@@ -71,6 +74,10 @@ package bull.modules.common.command
 				if ( e.enter_table_rsp.user_info != null && e.enter_table_rsp.user_info.money != null)
 				{
 					trace("==============half in=====" + e.enter_table_rsp.user_info.money);
+					trace("==============half in cash=====" + e.enter_table_rsp.user_info.money.cash);
+					trace("==============half in bg=====" + e.enter_table_rsp.user_info.money.gb);
+					trace("==============half in =====" + e.enter_table_rsp.user_info.money.nm);
+					trace("==============roomData.IsMoney() =====" + roomData.IsMoney());
 					
 					//金額處理
 					if (roomData.IsMoney() ) roomData.Total_money = e.enter_table_rsp.user_info.money.cash.toNumber();
@@ -87,8 +94,7 @@ package bull.modules.common.command
 					var roominfo:SRoomInfo = hallData.roomList[hallData.join_room_idx] as SRoomInfo;					
 					var config:SRoomConfig = roominfo.config;					
 					
-					//帶入前就指定
-					roomData.Cash_Type = hallData.Cash_Type as ENMoneyType;
+					
 					trace("===================joinroom = "+config.room_type);
 					
 					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL);
