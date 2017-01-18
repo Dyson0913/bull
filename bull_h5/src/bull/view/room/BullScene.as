@@ -121,13 +121,8 @@ package bull.view.room
 			ViewBetGroup.disapear();
 			DisplayUtil.removeAllChildren(_betsBox);
 			
-			//有人下注再播
-			var total:Number = 0;
-			for ( var i:int = 0; i < _roomData.Zone_Total_bet.length; i++)
-			{
-				total += _roomData.Zone_Total_bet[i];
-			}
-			if( total >0) SoundManager.playSound(SoundPath.Coin);
+			//有人下注再播			
+			if( roomData.is_someOnebet() ) SoundManager.playSound(SoundPath.Coin);
 		}
 		
 		public function banker():void

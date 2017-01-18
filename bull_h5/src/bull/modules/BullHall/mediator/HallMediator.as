@@ -196,7 +196,7 @@ package bull.modules.BullHall.mediator
 		private function onShowHandler():void{
 			//记得添加一些事情
 			trace("Hall onShowHandler");
-			//SoundManager.playMusic(SoundPath.Lobby_BGM, 0);
+			SoundManager.playMusic(SoundPath.Lobby_BGM, 0);
 			//startRoomList();
 		}
 		

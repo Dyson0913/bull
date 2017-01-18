@@ -256,6 +256,29 @@ package bull.modules.common.model.data
 			}
 		}
 		
+		public function is_someOnebet():Boolean
+		{
+			var total:Number = 0;
+			for ( var i:int = 0; i < Zone_Total_bet.length; i++)
+			{
+				total += Zone_Total_bet[i];
+			}
+			if ( total > 0) return true;
+			
+			return false;
+		}
+		
+		public function is_mybet():Boolean
+		{
+			var total:Number = 0;
+			for ( var i:int = 0; i < Zone_self_bet.length; i++)
+			{
+				total += Zone_self_bet[i];
+			}
+			if ( total > 0) return true;
+			
+			return false;
+		}
 		
 		
 		/**

@@ -995,26 +995,25 @@ package bull.modules.room.mediator
 		}
 		
 		private function onReturnClick():void{
-			trace("onReturnClick exit room");
-			var banker:Boolean = false;
-			var self_totalbet:Number = 0;
-			if (banker)
+			trace("onReturnClick exit room");					
+			
+			if (roomData.IsSelfBanker())
 			{
-				Alert.show(Light.language.getSrting("alert_msg10"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
+				Alert.show(Light.language.getSrting("alert_msg15"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
 			}
 			else
 			{
-				//沒下注直接離開
-				if( self_totalbet==0)exitRoom();				
+				//沒下注直接離開				
+				if( !roomData.is_mybet()) exitRoom();				
 				else
 				{
 					if ( roomData.State == RoomData.DEAL)
 					{
-						Alert.show(Light.language.getSrting("alert_msg10"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
+						Alert.show(Light.language.getSrting("alert_msg13"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
 					}
 					if ( roomData.State == RoomData.BET)
 					{
-						Alert.show(Light.language.getSrting("alert_msg10"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
+						Alert.show(Light.language.getSrting("alert_msg14"),"",AlertCancelPanel, null, Handler.create(this, exitRoomCall));
 					}
 				}
 				
@@ -1023,7 +1022,8 @@ package bull.modules.room.mediator
 				
 		}
 		
-		private function exitRoomCall(data:int,flg:String):void{
+		private function exitRoomCall(data:int, flg:String):void {
+			trace("flg = "+flg);
 			if(flg == "ok_btn"){
 				exitRoom();
 			}
@@ -1044,7 +1044,7 @@ package bull.modules.room.mediator
 		
 		private function dispose():void{
 			//roomData.clear();
-			//roomSocketService.close();
+			roomSocketService.close();
 			//clearTimer();
 			view.clear();
 		}

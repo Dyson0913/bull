@@ -71,7 +71,12 @@ package bull.modules.common.command
 				//己在遊戲內不帶入
 				if ( e.enter_table_rsp.user_info != null && e.enter_table_rsp.user_info.money != null)
 				{
+					trace("==============half in=====" + e.enter_table_rsp.user_info.money);
+					
 					//TODO 金額處理
+					if (roomData.IsMoney() ) roomData.Total_money = e.enter_table_rsp.user_info.money.cash.toNumber();
+					else roomData.Total_money = e.enter_table_rsp.user_info.money.gb.toNumber();
+					
 					//更新個人金額
 					sentNotification(BullNotification.CASH_TAKEIN_RESPONES);
 				

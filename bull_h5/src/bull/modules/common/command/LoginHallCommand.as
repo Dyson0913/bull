@@ -95,15 +95,6 @@ package bull.modules.common.command
 			var roomService:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;			
 			roomService.sentMsg(out);
 			
-			return;
-			
-			//var proto:CarProtoModel = getModel(CarProtoModel.NAME) as CarProtoModel;
-			//var out:CS = proto.msg_proto.getCS();
-			//out.msg_type = ENCSType.CS_TYPE_RETURN_HALL_REQ;
-			//var req:ReturnHallReq = proto.msg_proto.getReturnHallReq();
-			//out.return_hall_req = req;
-			//var socket:HallSocketService = getModel(HallSocketService.NAME) as HallSocketService;
-			//socket.sentMsg(out);
 		}
 		
 		private function exit_game(cs:CS):void
@@ -114,13 +105,7 @@ package bull.modules.common.command
 				case 0:
 					trace("============exit_game ok"  );
 					sentNotification(BullNotification.Change_to_Lobby);
-					//sentNotification(ENCSType.CS_TYPE_GET_TABLE_LIST_REQ.toString());
-//					sentNotification(ENCSType.CS_TYPE_GET_PLAYER_ENTER_STATE_REQ.toString());
-					//break;
-				//default:
-					//trace("returnHallRsp ........... errorCode:" + rsp.result);
-					//
-					//break;
+				break;
 			}
 		}
 		
