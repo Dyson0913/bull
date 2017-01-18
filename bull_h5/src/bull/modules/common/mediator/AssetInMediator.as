@@ -125,9 +125,24 @@ package bull.modules.common.mediator
 		
 		private function onCancelCarryIn(e:AssetsInEvent):void
 		{
-			//TODO 帶入
-			//1.首次帶入取消 -> 變觀局,不可下注,帶0
-			//2.遊戲內帶入 取消->  
+			
+			if ( !roomData.panel_alreay_slider_in) 
+			{
+				//1.首次帶入取消 -> 變觀局,不可下注,帶0
+				var vo:AssetsVO = new AssetsVO();
+				vo.amount_cash = 0;
+				vo.amount_nm = 0;
+				vo.amount_coin = 0;
+				vo.amount_total = 0;
+				
+				trace("amountCash: "+vo.amount_cash+"amount_nm: "+vo.amount_nm+"amount_total: "+vo.amount_total);
+				sentNotification(ENCSType.CS_TYPE_CARRY_IN_REQ.toString(), vo);				
+			}
+			else
+			{
+				//2.遊戲內帶入 取消->  不處理
+				
+			}
 			
 			getAssetsPanel().close();
 		}

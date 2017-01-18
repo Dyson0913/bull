@@ -67,12 +67,12 @@ package bull.modules.common.command
 				//更新用戶訊息
 				sentNotification(ENCSType.CS_TYPE_GET_PLAYER_INFO_REQ.toString(), [roomData.uid]);
 				
-				//己在遊戲內不帶入
+				//己在遊戲內不用帶入
 				if ( e.enter_table_rsp.user_info != null && e.enter_table_rsp.user_info.money != null)
 				{
 					trace("==============half in=====" + e.enter_table_rsp.user_info.money);
 					
-					//TODO 金額處理
+					//金額處理
 					if (roomData.IsMoney() ) roomData.Total_money = e.enter_table_rsp.user_info.money.cash.toNumber();
 					else roomData.Total_money = e.enter_table_rsp.user_info.money.gb.toNumber();
 					
@@ -91,7 +91,7 @@ package bull.modules.common.command
 					roomData.Cash_Type = hallData.Cash_Type as ENMoneyType;
 					trace("===================joinroom = "+config.room_type);
 					
-					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL);	
+					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL);
 				}
 				
 				

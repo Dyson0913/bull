@@ -1,6 +1,7 @@
 package bull.view.room
 {
 	import laya.events.Event;
+	import com.lightUI.events.LightEvent;
 	
 	import laya.utils.Handler;
 	import ui.ui.room.HeadViewUI
@@ -22,15 +23,15 @@ package bull.view.room
 			mcMoneyIcon.visible = false;
 			mcVip.visible = false;
 			
-			bp_vip.text = "";			
+			bp_vip.text = "";						
 			btnAdd.on(Event.CLICK, this, onClick);
 			btnAdd.on(Event.MOUSE_OVER, this, onOver);
 			btnAdd.on(Event.MOUSE_OUT, this, onOut);
 		}
 		
-		protected function onClick(event:Event):void
+		protected function onClick(e:Event):void
 		{
-			
+			event(LightEvent.ITEM_CLICK);
 		}		
 		
 		protected function onOver(event:Event):void

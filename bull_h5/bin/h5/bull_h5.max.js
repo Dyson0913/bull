@@ -29309,8 +29309,13 @@ var Laya=window.Laya=(function(window,document){
 			else{
 				roomData.player_Money={"cash":10000,",coin":10000,"nm":0 };
 			}
-			this.sentNotification("Close_BGM");
-			this.sentNotification("enterRoom");
+			if (this._firstEnter){
+				this.sentNotification("Close_BGM");
+				this.sentNotification("enterRoom");
+			}
+			else{
+				this.sentNotification("show_carry_in_panel");
+			}
 		}
 
 		return UserBalanceCommand;
@@ -30066,7 +30071,6 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.joinRoomRqsHandler=function(){
-			console.log("try joinRoomRqsHandler");
 			var proto=this.getModel("bullProtoModel");
 			var out=proto.msg_proto.getCS();
 			out.msg_type=13;
@@ -30080,7 +30084,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.joinRoomRspHandler=function(e){
-			console.log("try joinRoomRspHandler",e);
+			console.log("try joinRoomRspHandler");
 			if (e.try_enter_table_rsp.error_code==0){
 				var hallData=this.getSingleton("hallData");
 				hallData.ip=e.try_enter_table_rsp.net_address.ip;
@@ -30221,6 +30225,17 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onCancelCarryIn=function(e){
+			if (!this.roomData.panel_alreay_slider_in){
+				var vo=new AssetsVO();
+				vo.amount_cash=0;
+				vo.amount_nm=0;
+				vo.amount_coin=0;
+				vo.amount_total=0;
+				console.log("amountCash: "+vo.amount_cash+"amount_nm: "+vo.amount_nm+"amount_total: "+vo.amount_total);
+				this.sentNotification(ENCSType.CS_TYPE_CARRY_IN_REQ.toString(),vo);
+			}
+			else{
+			}
 			this.getAssetsPanel().close();
 		}
 
@@ -30477,6 +30492,7 @@ var Laya=window.Laya=(function(window,document){
 			this.State=0;
 			this.RoundID=null;
 			this.LeftTime=0;
+			this.panel_alreay_slider_in=false;
 			this.history_Win_info=null;
 			this.history_lost_info=null;
 			this.history_result_info=null;
@@ -30508,8 +30524,15 @@ var Laya=window.Laya=(function(window,document){
 			this.dataSelectClips=null;
 			RoomData.__super.call(this);
 			this.chipTool=new BetSplit();
+			this.clear();
+		}
+
+		__class(RoomData,'bull.modules.common.model.data.RoomData',_super);
+		var __proto=RoomData.prototype;
+		__proto.clear=function(){
 			this.user_name="";
 			this.user_head="";
+			this.panel_alreay_slider_in=false;
 			this.history_Win_info=[];
 			this.history_lost_info=[];
 			this.history_result_info=[];
@@ -30530,8 +30553,6 @@ var Laya=window.Laya=(function(window,document){
 			this.banker_calcu_info=[];
 		}
 
-		__class(RoomData,'bull.modules.common.model.data.RoomData',_super);
-		var __proto=RoomData.prototype;
 		__proto.IsMoney=function(){
 			return (this.Cash_Type !=2)==true ? true :false;
 		}
@@ -31132,7 +31153,9 @@ var Laya=window.Laya=(function(window,document){
 				console.log("carryIn rsp: gb ="+rsp.money.gb+" cash = "+rsp.money.cash+" nm = "+rsp.money.nm);
 				console.log("carryIn rsp: total money ="+roomData.Total_money);
 				this.sentNotification("CASH_TAKEIN_RESPONES");
-				this.sentNotification("view_init");
+				if (!roomData.panel_alreay_slider_in){
+					this.sentNotification("view_init");
+				}
 				}else{
 				Alert.show(Light.error.getError(rsp.error_code.toString()),"",AlertPanel);
 			}
@@ -31635,6 +31658,11 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.onCarryClick=function(){
 			SoundManager.playSound(SoundPath.press);
+			if (this.roomData.IsSelfBanker()){
+				Alert.show("上庄玩家不能再帶入資金","",AlertPanel);
+				return;
+			}
+			this.sentNotification("getUserBalance",false);
 		}
 
 		__proto.onCoinSelect=function(select){
@@ -31902,6 +31930,11 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case this.view.CarryInBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
+					if (this.roomData.IsSelfBanker()){
+						Alert.show("上庄玩家不能再帶入資金","",AlertPanel);
+						return;
+					}
+					this.sentNotification("getUserBalance",false);
 					break ;
 				case this.view.PlayerListBtn:
 					this.view.btn_display(!this.view.btnBg.visible);
@@ -32004,6 +32037,7 @@ var Laya=window.Laya=(function(window,document){
 			this.view.viewHead.setName(this.roomData.user_name);
 			this.view.viewHead.setMoneyT(this.roomData.IsMoney());
 			this.view.viewHead.setHead(this.roomData.user_head);
+			this.roomData.panel_alreay_slider_in=true;
 		}
 
 		__proto.betRepHandler=function(){
@@ -32222,6 +32256,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.dispose=function(){
+			this.roomData.clear();
 			this.roomSocketService.close();
 			this.clearTimer();
 			this.view.clear();
@@ -51024,7 +51059,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BankerListHintUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":310,"height":400},"child":[{"type":"Image","props":{"y":0,"x":0,"width":310,"var":"bg","skin":"res/gameScene/特殊tips底板.png","height":392,"sizeGrid":"44,22,51,20"}},{"type":"Label","props":{"y":8,"x":91,"width":140,"text":"等待坐庄队列","height":23,"fontSize":20,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":40,"x":116,"width":57,"var":"BankerLimit","text":"9999","scaleY":1.7,"scaleX":1.7,"height":15,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":41,"x":202,"width":94,"text":" 可申请]","height":28,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":41,"x":21,"width":85,"var":"title","text":"[现金达到","height":25,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Image","props":{"y":69,"x":15,"var":"NextPoint","skin":"res/gameScene/next.png"}},{"type":"Label","props":{"y":80,"x":43,"width":141,"var":"NoPlayer","text":"暂时没有等待上庄的玩家","scaleY":1.6,"scaleX":1.6,"height":15,"color":"#7d7d7a","bold":true,"align":"center"}},{"type":"Label","props":{"y":350,"x":116,"width":97,"var":"Page","text":"1/10","height":30,"fontSize":20,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":66,"x":87,"width":210,"var":"player_0","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":95,"x":88,"width":210,"var":"player_1","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":123,"x":87,"width":210,"var":"player_2","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":152,"x":87,"width":210,"var":"player_3","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":180,"x":87,"width":210,"var":"player_4","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":209,"x":87,"width":210,"var":"player_5","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":237,"x":88,"width":210,"var":"player_6","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":266,"x":88,"width":210,"var":"player_7","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":294,"x":88,"width":210,"var":"player_8","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":323,"x":88,"width":210,"var":"player_9","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Image","props":{"y":379,"x":-149,"width":623,"var":"limitHint","skin":"res/gameScene/tips小底板.png","height":78,"sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":20,"x":11,"width":601,"text":"玩家带入金余额必须大于等于本牌桌限红的11倍，才可以进入等待坐庄队列","height":25,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}}]}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":310,"height":400},"child":[{"type":"Image","props":{"y":0,"x":0,"width":310,"var":"bg","skin":"res/gameScene/特殊tips底板.png","height":392,"sizeGrid":"44,22,51,20"}},{"type":"Label","props":{"y":8,"x":91,"width":140,"text":"等待坐庄队列","height":23,"fontSize":20,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":40,"x":116,"width":99,"var":"BankerLimit","text":"9999","height":24,"fontSize":22,"color":"#b6c325","bold":true,"align":"center"}},{"type":"Label","props":{"y":41,"x":202,"width":94,"text":" 可申请]","height":28,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":41,"x":21,"width":85,"var":"title","text":"[现金达到","height":25,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Image","props":{"y":69,"x":15,"var":"NextPoint","skin":"res/gameScene/next.png"}},{"type":"Label","props":{"y":80,"x":30,"width":258,"var":"NoPlayer","text":"暂时没有等待上庄的玩家","height":32,"fontSize":22,"color":"#7d7d7a","bold":true,"align":"center"}},{"type":"Label","props":{"y":350,"x":116,"width":97,"var":"Page","text":"1/10","height":30,"fontSize":20,"color":"#f4f4f1","bold":false,"align":"center"}},{"type":"Label","props":{"y":66,"x":87,"width":210,"var":"player_0","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":95,"x":88,"width":210,"var":"player_1","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":123,"x":87,"width":210,"var":"player_2","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":152,"x":87,"width":210,"var":"player_3","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":180,"x":87,"width":210,"var":"player_4","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":209,"x":87,"width":210,"var":"player_5","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":237,"x":88,"width":210,"var":"player_6","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":266,"x":88,"width":210,"var":"player_7","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":294,"x":88,"width":210,"var":"player_8","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Label","props":{"y":323,"x":88,"width":210,"var":"player_9","text":"1 等待上庄的玩家","height":27,"fontSize":20,"color":"#7d7d7a","bold":true,"align":"left"}},{"type":"Image","props":{"y":379,"x":-149,"width":623,"var":"limitHint","skin":"res/gameScene/tips小底板.png","height":78,"sizeGrid":"18,25,30,22"},"child":[{"type":"Label","props":{"y":20,"x":11,"width":601,"text":"玩家带入金余额必须大于等于本牌桌限红的11倍，才可以进入等待坐庄队列","height":25,"fontSize":18,"color":"#f4f4f1","bold":false,"align":"center"}}]}]};}
 		]);
 		return BankerListHintUI;
 	})(View)
@@ -52373,7 +52408,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(SetPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":384,"height":267},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_seb_bg.png"}},{"type":"Label","props":{"y":92,"x":28,"width":108,"var":"txtName","text":"0.0.1","height":28,"fontSize":22,"color":"#eed6d6"}},{"type":"CheckBox","props":{"y":205,"x":46,"var":"musicButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Button","props":{"y":0,"x":343,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"}},{"type":"CheckBox","props":{"y":205,"x":222,"var":"soundButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Label","props":{"y":9,"x":181,"width":36,"text":"设置","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#eed6d6"}},{"type":"Label","props":{"y":206,"x":82,"width":80,"text":"开启音乐","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":207,"x":256,"width":57,"text":"开启音效","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":47,"x":24,"width":108,"var":"txtName","text":"版本号","height":28,"fontSize":22,"color":"#eed6d6"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":384,"height":267},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_seb_bg.png"}},{"type":"Label","props":{"y":92,"x":28,"width":108,"var":"txtName","text":"0.0.2","height":28,"fontSize":22,"color":"#eed6d6"}},{"type":"CheckBox","props":{"y":205,"x":46,"var":"musicButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Button","props":{"y":0,"x":343,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"}},{"type":"CheckBox","props":{"y":205,"x":222,"var":"soundButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Label","props":{"y":9,"x":181,"width":36,"text":"设置","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#eed6d6"}},{"type":"Label","props":{"y":206,"x":82,"width":80,"text":"开启音乐","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":207,"x":256,"width":57,"text":"开启音效","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":47,"x":24,"width":108,"var":"txtName","text":"版本号","height":28,"fontSize":22,"color":"#eed6d6"}}]};}
 		]);
 		return SetPanelUI;
 	})(Dialog)
@@ -53211,7 +53246,10 @@ var Laya=window.Laya=(function(window,document){
 			this.btnAdd.on("mouseout",this,this.onOut);
 		}
 
-		__proto.onClick=function(event){}
+		__proto.onClick=function(e){
+			this.event("item_click");
+		}
+
 		__proto.onOver=function(event){
 			this.carry_tips.visible=true;
 		}

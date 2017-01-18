@@ -60,6 +60,8 @@ package bull.modules.common.model.data
 		public var RoundID:String;			//局ID
 		public var LeftTime:int;     //剩余时间 SEC
 		
+		public var panel_alreay_slider_in:Boolean;
+		
 		//hisotry
 		public var history_Win_info:Array;
 		public var history_lost_info:Array;
@@ -113,8 +115,15 @@ package bull.modules.common.model.data
 		public function RoomData()
 		{			
 			
+			clear();
+		}
+		
+		public function clear():void
+		{
 			user_name = "";
 			user_head = "";
+			
+			panel_alreay_slider_in = false;
 			
 			history_Win_info = [];
 			history_lost_info = [];

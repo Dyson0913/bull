@@ -57,7 +57,7 @@ package bull.modules.room.command
 		
 		private function onCarryInResponse(cs:CS):void
 		{			
-			//var userInfo:UserInfoData = getSingleton(UserInfoData.NAME) as UserInfoData;
+			
 			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
 			var rsp:SCarryInRsp = cs.carry_in_rsp;
 			if(rsp.error_code == ENError.ERROR_OK ){
@@ -77,8 +77,12 @@ package bull.modules.room.command
 				//更新個人金額
 				sentNotification(BullNotification.CASH_TAKEIN_RESPONES);
 				
-				//介面滑入
-				sentNotification(BullNotification.VIEW_INIT);
+				if ( !roomData.panel_alreay_slider_in) 
+				{
+					//介面滑入
+					sentNotification(BullNotification.VIEW_INIT);
+				}
+				
 			}else{
 				//提示错误
 				Alert.show(Light.error.getError(rsp.error_code.toString()),"",AlertPanel);

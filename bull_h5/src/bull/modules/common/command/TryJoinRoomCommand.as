@@ -37,8 +37,8 @@ package bull.modules.common.command
 			}
 		}
 		
-		private function joinRoomRqsHandler():void{
-			trace("try joinRoomRqsHandler");
+		private function joinRoomRqsHandler():void {
+			
 			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
 			var out:CS = proto.msg_proto.getCS();
 			out.msg_type = ENCSType.CS_TYPE_TRY_ENTER_TABLE_REQ;
@@ -55,27 +55,17 @@ package bull.modules.common.command
 		}
 		
 		private function joinRoomRspHandler(e:CS):void{
-			trace("try joinRoomRspHandler",e);
+			trace("try joinRoomRspHandler");
 			
 			if (e.try_enter_table_rsp.error_code  == ENError.ERROR_OK) {
 				
 				var hallData:HallData = getSingleton(HallData.NAME) as HallData;
 				hallData.ip = e.try_enter_table_rsp.net_address.ip;
-				hallData.port = e.try_enter_table_rsp.net_address.hport;
-				//hallData.Token = e.try_enter_table_rsp.token;
+				hallData.port = e.try_enter_table_rsp.net_address.hport;				
 				
-				sentNotification(BullNotification.GET_USER_BALANCE, true);		
-				
-				//TEST
-				//var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;				
-				//roomData.player_Money = { "cash":10000, ",coin":10000, "nm":0 };					
-				//
-				//關閉大廳音樂
-				//sentNotification(BullNotification.Close_BGM);				
-				//sentNotification(BullNotification.ENTER_ROOM);
-				
-						
+				sentNotification(BullNotification.GET_USER_BALANCE, true);						
 				(getModel(HallSocketService.NAME) as HallSocketService).close();
+				
 			}else{
 				trace("error code: " + e.try_enter_table_rsp.error_code);
 				Alert.show(Light.error.getError(e.try_enter_table_rsp.error_code.toString()),"",AlertPanel);

@@ -60,10 +60,19 @@ package bull.modules.BullHall.command
 				roomData.player_Money = { "cash":10000, ",coin":10000, "nm":0 };
 			}
 			
-			//關閉大廳音樂
-			sentNotification(BullNotification.Close_BGM);
-			
-			sentNotification(BullNotification.ENTER_ROOM);
+			if ( _firstEnter)
+			{
+				//由大廳進入,走登入流程
+				//關閉大廳音樂
+				sentNotification(BullNotification.Close_BGM);			
+				sentNotification(BullNotification.ENTER_ROOM);
+			}
+			else
+			{
+				//遊戲內帶入 單純彈出面版,不走登入流程
+				sentNotification(BullNotification.SHOW_CARRY_IN_PANEL);
+				
+			}
 		}
 	}
 }

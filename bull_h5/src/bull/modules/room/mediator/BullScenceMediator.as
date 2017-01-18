@@ -174,6 +174,14 @@ package bull.modules.room.mediator
 		private function onCarryClick():void
 		{
 			SoundManager.playSound(SoundPath.press);
+			
+			if ( roomData.IsSelfBanker())
+			{
+				Alert.show("上庄玩家不能再帶入資金", "", AlertPanel);
+				return;
+			}
+			
+			sentNotification(BullNotification.GET_USER_BALANCE, false);
 		}
 		
 		private function onCoinSelect(select:int):void
@@ -568,7 +576,15 @@ package bull.modules.room.mediator
 				break;
 				
 				case view.CarryInBtn:
-					view.btn_display(!view.btnBg.visible);					
+					view.btn_display(!view.btnBg.visible);
+					
+					if ( roomData.IsSelfBanker())
+					{		
+						Alert.show("上庄玩家不能再帶入資金","", AlertPanel);
+						return;
+					}
+					
+					sentNotification(BullNotification.GET_USER_BALANCE, false);
 				break;
 				
 				case view.PlayerListBtn:
@@ -695,6 +711,8 @@ package bull.modules.room.mediator
 			view.viewHead.setName(roomData.user_name);
 			view.viewHead.setMoneyT(roomData.IsMoney());
 			view.viewHead.setHead(roomData.user_head);
+			
+			roomData.panel_alreay_slider_in = true;
 		}
 		
 		private function betRepHandler():void
@@ -1041,7 +1059,7 @@ package bull.modules.room.mediator
 		}
 		
 		private function dispose():void{
-			//roomData.clear();
+			roomData.clear();
 			roomSocketService.close();
 			clearTimer();
 			view.clear();
