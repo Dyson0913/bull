@@ -39,8 +39,7 @@ package bull.modules.common.command
 			}
 		}
 		
-		private function joinRoomRqsHandler():void{
-			trace("joinRoomRqsHandler");
+		private function joinRoomRqsHandler():void{			
 			var proto:BullProtoModel = getModel(BullProtoModel.NAME) as BullProtoModel;
 			var out:CS = proto.msg_proto.getCS();
 			out.msg_type = ENCSType.CS_TYPE_ENTER_TABLE_REQ;
@@ -58,7 +57,7 @@ package bull.modules.common.command
 		}
 		
 		private function joinRoomRspHandler(e:CS):void{
-			trace("joinRoomRspHandler",e);
+			trace("加入房間");
 			
 			if (e.enter_table_rsp.error_code  == ENError.ERROR_OK) {
 				
@@ -88,11 +87,11 @@ package bull.modules.common.command
 					var roominfo:SRoomInfo = hallData.roomList[hallData.join_room_idx] as SRoomInfo;					
 					var config:SRoomConfig = roominfo.config;					
 					
-					//帶入前就指定;
+					//帶入前就指定
 					roomData.Cash_Type = hallData.Cash_Type as ENMoneyType;
 					trace("===================joinroom = "+config.room_type);
 					
-					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL,[config,roomData]);	
+					sentNotification(BullNotification.SHOW_CARRY_IN_PANEL);	
 				}
 				
 				

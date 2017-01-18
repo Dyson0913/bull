@@ -56,23 +56,6 @@ package bull.modules.common.command
 			
 			var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
 			socket.sentMsg(out);
-			
-			
-			//var carData:CarData = getSingleton(CarData.NAME) as CarData;
-			//carData.roomLogin = true;
-			//var userInfoData:UserInfoData = getSingleton(UserInfoData.NAME) as UserInfoData;
-			//userInfoData.uid = carData.uid;
-			//var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
-			//var proto:CarProtoModel = getModel(CarProtoModel.NAME) as CarProtoModel;
-			//var out:CS = proto.msg_proto.getCS();
-			//out.msg_type = ENCSType.CS_TYPE_LOGIN_REQ;
-			//out.login_req = proto.msg_proto.getLoginReq();
-			//out.login_req.uid = Long.fromNumber(carData.uid);
-			//out.login_req.verify_sig = carData.token;
-			//
-			//var socket:RoomSocketService = getModel(RoomSocketService.NAME) as RoomSocketService;
-			//socket.sentMsg(out);
-			//roomData.login = true;
 		}
 		
 		private function onLoginRoomRsp(cs:CS):void{
@@ -96,30 +79,7 @@ package bull.modules.common.command
 			(getMediator(BullScenceMediator.NAME) as BullScenceMediator).sendHeartBeat();
 			
 			//請求加入房間
-			sentNotification(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString());						
-			return;
-			
-			//var carData:CarData = getSingleton(CarData.NAME) as CarData;
-			//if(!carData.roomLogin) return;
-			//carData.roomLogin = false;
-			//var rsp:LoginRsp = cs.login_rsp;
-			//if(rsp.result != ENError.ERROR_OK){
-				//Alert.show(Light.error.getError(rsp.result.toString()),"",AlertPanel);
-			//}else{
-				//var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;
-				//if(!roomData.login) return;
-				//roomData.login = false;
-				//roomData.coin  = rsp.currency.coin;
-				//roomData.nm  = rsp.currency.nm;
-				//roomData.cash  = rsp.currency.cash;
-				//var userInfoData:UserInfoData = getSingleton(UserInfoData.NAME) as UserInfoData;
-				//userInfoData.headIcon = rsp.head_icon;
-				//userInfoData.name = rsp.uname;
-				//
-				//(getMediator(CarScenceMediator.NAME) as CarScenceMediator).sendHeartBeat();
-				//获取用户余额
-				//sentNotification(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString());
-			//}
+			sentNotification(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString());
 		}
 	}
 }

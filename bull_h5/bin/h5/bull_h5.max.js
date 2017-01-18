@@ -29744,7 +29744,6 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.joinRoomRqsHandler=function(){
-			console.log("joinRoomRqsHandler");
 			var proto=this.getModel("bullProtoModel");
 			var out=proto.msg_proto.getCS();
 			out.msg_type=21;
@@ -29759,7 +29758,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.joinRoomRspHandler=function(e){
-			console.log("joinRoomRspHandler",e);
+			console.log("加入房間");
 			if (e.enter_table_rsp.error_code==0){
 				var hallData=this.getSingleton("hallData");
 				var roomData=this.getSingleton("roomData");
@@ -29776,7 +29775,7 @@ var Laya=window.Laya=(function(window,document){
 					var config=roominfo.config;
 					roomData.Cash_Type=hallData.Cash_Type;
 					console.log("===================joinroom = "+config.room_type);
-					this.sentNotification("show_carry_in_panel",[config,roomData]);
+					this.sentNotification("show_carry_in_panel");
 				}
 				}else{
 				console.log("error code: "+e.enter_table_rsp.error_code);
@@ -29852,10 +29851,13 @@ var Laya=window.Laya=(function(window,document){
 			var rsp=cs.exit_table_rsp;
 			switch(rsp.error_code){
 				case 0:
-					console.log("============exit_game ok");
-					this.sentNotification("Change_to_Lobby");
+					Laya.timer.once(500,this,this.timerHandler);
 					break ;
 				}
+		}
+
+		__proto.timerHandler=function(){
+			this.sentNotification("Change_to_Lobby");
 		}
 
 		return LoginHallCommand;
@@ -29893,7 +29895,6 @@ var Laya=window.Laya=(function(window,document){
 			socket.sentMsg(out);
 		}
 
-		//roomData.login=true;
 		__proto.onLoginRoomRsp=function(cs){
 			console.log("room onLoginRoomRsp"+cs);
 			var hallData=this.getSingleton("hallData");
@@ -29907,7 +29908,6 @@ var Laya=window.Laya=(function(window,document){
 			roomData.room_info=config;
 			(this.getMediator("BullScenceMediator")).sendHeartBeat();
 			this.sentNotification(ENCSType.CS_TYPE_ENTER_TABLE_REQ.toString());
-			return;
 		}
 
 		return LoginRoomCommand;
@@ -30184,13 +30184,12 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.handler=function(notification){
 			if(notification.getName()=="show_carry_in_panel"){
-				this.carryInPanelShow(notification.getBody());
+				this.carryInPanelShow();
 			}
 		}
 
-		__proto.carryInPanelShow=function(data){
-			var config=data[0];
-			var roomData=data[1];
+		__proto.carryInPanelShow=function(){
+			var config=this.roomData.room_info;
 			var money_type=config.room_type==1 ? 1 :2;
 			console.log("==============money_type "+money_type);
 			var betMin=NaN;
@@ -30199,18 +30198,18 @@ var Laya=window.Laya=(function(window,document){
 			var hint;
 			if (money_type==1){
 				betMin=config.min_bet *10;
-				betMax=roomData.player_Money.coin;
+				betMax=this.roomData.player_Money.coin;
 			}
 			else if(money_type==2){
 				betMin=(config.min_bet / 100)*10;
-				betMax=(roomData.player_Money.cash)/ 100;
+				betMax=(this.roomData.player_Money.cash)/ 100;
 				nm=0;
 				hint="玩家上庄桌，不允许带入拟码。";
 			}
 			else{
 				betMin=(config.min_bet / 100)*10;
-				betMax=(roomData.player_Money.cash+roomData.player_Money.nm)/ 100;
-				nm=roomData.player_Money.nm;
+				betMax=(this.roomData.player_Money.cash+this.roomData.player_Money.nm)/ 100;
+				nm=this.roomData.player_Money.nm;
 				hint="投注优先扣除拟码";
 			}
 			if (betMax < betMin){
@@ -30218,7 +30217,7 @@ var Laya=window.Laya=(function(window,document){
 				return;
 			}
 			this.getAssetsPanel().roomName=config.room_name;
-			this.getAssetsPanel().assetsIn(betMin,betMax,money_type,betMin,roomData.player_Money.cash,roomData.player_Money.coin,nm);
+			this.getAssetsPanel().assetsIn(betMin,betMax,money_type,betMin,this.roomData.player_Money.cash,this.roomData.player_Money.coin,nm);
 		}
 
 		__proto.onCancelCarryIn=function(e){
@@ -32204,7 +32203,6 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.exitRoomCall=function(data,flg){
-			console.log("flg = "+flg);
 			if(flg=="ok_btn"){
 				this.exitRoom();
 			}
@@ -32218,12 +32216,14 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.real_exit_room=function(){
+			console.log("leaveing room");
 			this.perLoadService.loadHall();
 			this.dispose();
 		}
 
 		__proto.dispose=function(){
 			this.roomSocketService.close();
+			this.clearTimer();
 			this.view.clear();
 		}
 
@@ -53022,7 +53022,6 @@ var Laya=window.Laya=(function(window,document){
 			console.log("bet");
 			this._roomData.Zone_self_bet=[0,0,0,0];
 			this._roomData.Zone_Total_bet=[0,0,0,0];
-			console.log("roomData.banker_id.toNumber() == roomData.uid = "+this.roomData.banker_id.toNumber()==this.roomData.uid);
 			if(this.roomData.banker_id.toNumber()==this.roomData.uid){
 				this.phase_tip("等待其他玩家下注！",0);
 				this.viewSelectClip.set_gray(true);
@@ -53130,17 +53129,14 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onFlySelfCompleteHandler=function(chip){
-			console.log("onFlySelfCompleteHandler ");
 			this.addChip(chip);
 		}
 
-		//if(chip.vo.isSelf)roomData.xutou=false;
 		__proto.addChip=function(chip){
 			if(chip.vo.isSelf)this._selfChips.push(chip);
 		}
 
 		__proto.flySelfChipBack=function(){
-			console.log("flySelfChipBack",this._selfChips.length);
 			var chip;
 			for (var i=0;i < this._selfChips.length;i++){
 				chip=this._selfChips[i];
@@ -53154,7 +53150,6 @@ var Laya=window.Laya=(function(window,document){
 			this._selfChips=[];
 		}
 
-		//cz_btn.disabled=true;
 		__proto.flayChipOther=function(chip,pos){
 			chip.x=1419;
 			chip.y=194;

@@ -52,11 +52,6 @@ package bull.view.room
 			
 			_betsBox = new Sprite();
 			addChildAt(_betsBox, getChildIndex(viewArea));
-			
-			
-			
-			
-			
 		}
 		
 		public function showme():void{
@@ -150,8 +145,7 @@ package bull.view.room
 			_roomData.Zone_self_bet = [0, 0, 0, 0];
 			_roomData.Zone_Total_bet = [0, 0, 0, 0];
 			
-			//自己坐庄 
-			trace("roomData.banker_id.toNumber() == roomData.uid = "+roomData.banker_id.toNumber() == roomData.uid);
+			//自己坐庄 			
 			if( roomData.banker_id.toNumber() == roomData.uid)
 			{
 				phase_tip("等待其他玩家下注！",0);
@@ -310,22 +304,14 @@ package bull.view.room
 		public function flySelfChip(chip:Chip,pos:Point):void{
 			chip.x = 657;
 			chip.y = 647;
-			_betsBox.addChild(chip);
-			//_betsBox.addChildAt(chip,getChildIndex(viewArea));
+			_betsBox.addChild(chip);			
 			Tween.to(chip,{x:viewArea.x + pos.x,y:viewArea.y+pos.y},500,Ease.cubicOut,Handler.create(this,onFlySelfCompleteHandler,[chip]));
 			
 			SoundManager.playSound(SoundPath.Coin);			
 		}
 		
-		private function onFlySelfCompleteHandler(chip:Chip):void {
-			trace("onFlySelfCompleteHandler ");
-			//updateMyBetAmountByID(chip.vo.type);
-			//updateTotalBetAmountByID(chip.vo.type);
-			addChip(chip);
-			//updateBtnStatus();
-			
-			//如果是自己投的解开状态
-			//if(chip.vo.isSelf) roomData.xutou = false;
+		private function onFlySelfCompleteHandler(chip:Chip):void {			
+			addChip(chip);		
 		}
 		
 		public function addChip(chip:Chip):void{			
@@ -333,7 +319,6 @@ package bull.view.room
 		}
 		
 		public function flySelfChipBack():void{
-			trace("flySelfChipBack", _selfChips.length);
 			var chip:Chip;
 			for (var i:int = 0; i < _selfChips.length; i++) 
 			{
@@ -346,8 +331,6 @@ package bull.view.room
 		private function onFlySelfBackCompleteHandler(chip:Chip):void{
 			if(chip.parent) chip.parent.removeChild(chip);
 			_selfChips = [];
-			//updateBtnStatus();
-			//cz_btn.disabled = true;
 		}
 		
 		public function flayChipOther(chip:Chip,pos:Point):void
@@ -362,13 +345,8 @@ package bull.view.room
 		
 		private function onFlyOtherCompleteHandler(chip:Chip):void {
 			trace("onFlyOtherCompleteHandler");
-			//显示总的下注额变动
-			//updateTotalBetAmountByID(chip.vo.type);
-			
-			//if(!chip.vo.isSelf)
 			addOthersChip(chip);
 		}
-				
 		
 		private function addOthersChip(chip:Chip):void{
 			_otherChips.push(chip);

@@ -103,10 +103,15 @@ package bull.modules.common.command
 			switch(rsp.error_code)
 			{
 				case 0:
-					trace("============exit_game ok"  );
-					sentNotification(BullNotification.Change_to_Lobby);
+					//等500毫秒再離開,讓SERVER有時間通知大廳該玩家己經離開
+					Laya.timer.once(500, this, timerHandler);
 				break;
 			}
+		}
+		
+		public function timerHandler():void
+		{
+			sentNotification(BullNotification.Change_to_Lobby);
 		}
 		
 	}

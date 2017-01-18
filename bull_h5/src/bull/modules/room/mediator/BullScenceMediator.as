@@ -975,23 +975,13 @@ package bull.modules.room.mediator
 		
 		private function onUIShow():void {			
 			
-			//先别影藏 等数据请求回来再显示
-			//if ( hallData.join_room_idx <= 2)
-			//{
-				//roomData.Cash_Type = ENMoneyType.MONEY_TYPE_COIN;
-			//}
-			//else roomData.Cash_Type = ENMoneyType.MONEY_TYPE_CASH;
-			
+			//先别影藏 等数据请求回来再显示			
 			view.roomData = roomData;			
 			roomData.initClipConfig();
 			view.initSelectClip(hallData.join_room_idx);
 			
 			this.onCoinSelect(0);			
 			SoundManager.playMusic(SoundPath.BackMiusc, 0);
-			
-			
-			
-			
 		}
 		
 		private function onUIHide():void{
@@ -1028,7 +1018,7 @@ package bull.modules.room.mediator
 		}
 		
 		public function exitRoomCall(data:int, flg:String):void {
-			trace("flg = "+flg);
+			
 			if(flg == "ok_btn"){
 				exitRoom();
 			}
@@ -1038,15 +1028,14 @@ package bull.modules.room.mediator
 			}
 		}
 		
-		public function exitRoom():void {
-				
-			
-			sentNotification(BullNotification.Leave_Game);
-			
+		public function exitRoom():void 
+		{
+			sentNotification(BullNotification.Leave_Game);			
 		}
 		
 		public function real_exit_room()
 		{
+			trace("leaveing room");
 			perLoadService.loadHall();
 			dispose();
 		}
@@ -1054,7 +1043,7 @@ package bull.modules.room.mediator
 		private function dispose():void{
 			//roomData.clear();
 			roomSocketService.close();
-			//clearTimer();
+			clearTimer();
 			view.clear();
 		}
 		

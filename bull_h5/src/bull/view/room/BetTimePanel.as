@@ -43,6 +43,7 @@ package bull.view.room
 			bt_txt.text = _time.toString();			
 			Laya.timer.loop(1000, this, timerHandler);
 			
+			
 		}
 		
 		public function timerHandler():void
@@ -56,8 +57,7 @@ package bull.view.room
 			
 			if( _time <=3)
 			{
-				//TODO 閃光提示 ,倒數
-				//mcshine.gotoAndPlay(2);
+				//TODO 閃光提示				
 				SoundManager.playSound(SoundPath.CountTick);
 			}
 		}

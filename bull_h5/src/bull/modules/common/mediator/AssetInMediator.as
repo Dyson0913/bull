@@ -71,17 +71,17 @@ package bull.modules.common.mediator
 		
 		override public function handler(notification:INotification):void{
 			if(notification.getName() == BullNotification.SHOW_CARRY_IN_PANEL){				
-				carryInPanelShow(notification.getBody() as Array);
+				carryInPanelShow();
 			}
 		}		
-		private function carryInPanelShow(data:Array):void{
-			var config:SRoomConfig = data[0];			
-			var roomData:RoomData = data[1];
+		private function carryInPanelShow():void {
+			
+			var config:SRoomConfig = roomData.room_info;			
 			
 			
 			//房間類型
 			var money_type:Number = config.room_type == ENRoomType.ROOM_TYPE_COIN ? CurrencyType.COIN : CurrencyType.CASHANDNM;
-			trace("==============money_type " + money_type);			
+			trace("==============money_type " + money_type);
 			var betMin:Number;
 			var betMax:Number;
 			var nm:Number;
@@ -110,8 +110,7 @@ package bull.modules.common.mediator
 			
 			//錢不夠最低帶入,直接提示
 			if ( betMax < betMin)
-			{
-				
+			{				
 				Alert.show(Light.language.getSrting("alert_msg7"), "", AlertCancelPanel, null, Handler.create(this, GotoRecharge));
 				return;				
 			}
@@ -126,11 +125,9 @@ package bull.modules.common.mediator
 		
 		private function onCancelCarryIn(e:AssetsInEvent):void
 		{
-			//退出房间消息
-			//if(first){
-				//roomSocketService.close();
-				//perLoadService.loadHall();
-			//}
+			//TODO 帶入
+			//1.首次帶入取消 -> 變觀局,不可下注,帶0
+			//2.遊戲內帶入 取消->  
 			
 			getAssetsPanel().close();
 		}
