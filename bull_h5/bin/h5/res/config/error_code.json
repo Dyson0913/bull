@@ -24,7 +24,7 @@
 "26":{"value":"上庄队列已满","error":"ERROR_BANKER_FULL","key":"26"},
 "27":{"value":"不在上庄列表,并且也不是庄家","error":"ERROR_NOT_IN_BANKER","key":"27"},
 "28":{"value":"不够最小下注","error":"ERROR_MIN_BET","key":"28"},
-"29":{"value":"赔不起(10倍下注超过手里的钱)","error":"ERROR_CANT_COMPENSATE","key":"29"},
+"29":{"value":"余额不足最低下注额10倍，无法下注。","error":"ERROR_CANT_COMPENSATE","key":"29"},
 "27":{"value":"不在上庄列表,并且也不是庄家","error":"ERROR_NOT_IN_BANKER","key":"27"},
 "58":{"value":"即将停服","error":"ERROR_SERVER_STOPPING","key":"58"},
 "59":{"value":"被封停","error":"ERROR_FORBBIDEN","key":"59"},

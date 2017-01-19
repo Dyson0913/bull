@@ -262,6 +262,10 @@ package bull.view.room
 				this["Scene_" + i].off(Event.MOUSE_OUT, this, onSceneOut);
 				
 				this["Rankp_" + i].visible = false;
+				this["Rankp_" + i]["rank_info_" + 0].visible = false;
+				this["Rankp_" + i]["rank_info_" + 1].visible = false;
+				this["Rankp_" + i]["rank_info_" + 2].visible = false;
+				this["Rankp_" + i]["Text_NoOne_bet"].text = "无人下注，请下注。";
 				
 			}	
 			
@@ -297,38 +301,53 @@ package bull.view.room
 		public function set_zoneTopThree(data:Array):void
 		{
 			_zone_topthree = data;
-		}
-		
-		private function updata_topThree(idx:int):void
-		{
-			if ( _zone_topthree.length == 0) 
-			{				
-				return;
-			}
 			
-			var data:Array  = _zone_topthree[idx];
-			trace("data =" + data.length);
-			//提示字消失
-			if (data.length != 0) this["Rankp_" + idx]["Text_NoOne_bet"].text = "";
-			else this["Rankp_" + idx]["Text_NoOne_bet"].text = "无人下注，请下注。";
-			
-			for (var i:int = 0; i < data.length; i++)
+			trace("==========set_zoneTopThree==========="+ _zone_topthree.length);
+			for (var i:int = 0; i < 4; i++)
 			{
-				//沒資料hide
-				if ( i >= data.length)
+				
+				if (_zone_topthree[i].length == 0)				
 				{
-					this["Rankp_" + idx]["rank_info_" + i].visible = false;
+					//只顥示無人才注
+					
+					for (var j:int = 0; j < 3; j++) this["Rankp_" + i]["rank_info_" + j].visible = false;
+					this["Rankp_" + i]["Text_NoOne_bet"].text = "无人下注，请下注。";
 				}
 				else
 				{
-					var ob:Object = data[i];
-					this["Rankp_" + idx]["rank_info_" + i].visible = true;
-					this["Rankp_" + idx]["rank_info_" + i]["rank"].index = i;
-					this["Rankp_" + idx]["rank_info_" + i]["Vip"].visible = false;
-					this["Rankp_" + idx]["rank_info_" + i]["Name"].text = ob["name"];
-					this["Rankp_" + idx]["rank_info_" + i]["Light"].visible = ob["light"];
-					this["Rankp_" + idx]["rank_info_" + i]["Money"].text = ob["money"];					
+					this["Rankp_" + i]["Text_NoOne_bet"].text = "";
+					
+					var data:Array  = _zone_topthree[i];					
+					for (var j:int = 0; j < 3; j++)
+					{
+						if ( j >= data.length) 
+						{
+							this["Rankp_" + i]["rank_info_" + j].visible = false;							
+						}
+						else
+						{						
+							
+							var ob:Object = data[j];
+							this["Rankp_" + i]["rank_info_" + j].visible = true;
+							this["Rankp_" + i]["rank_info_" + j]["rank"].index = j;
+							this["Rankp_" + i]["rank_info_" + j]["Vip"].visible = false;
+							this["Rankp_" + i]["rank_info_" + j]["Name"].text = ob["name"];
+							this["Rankp_" + i]["rank_info_" + j]["Light"].visible = ob["light"];
+							this["Rankp_" + i]["rank_info_" + j]["Money"].text = ob["money"];	
+						}
+					}
 				}
+				
+				
+			}
+		}
+		
+		private function updata_topThree(idx:int):void
+		{			
+			for (var i:int = 0; i < 4; i++)
+			{
+				if ( idx == i) this["Rankp_" + i].visible = true;
+				else this["Rankp_" + i].visible = false;
 			}
 			
 		}
