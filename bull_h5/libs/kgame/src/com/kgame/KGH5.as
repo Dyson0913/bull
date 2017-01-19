@@ -45,7 +45,7 @@ package com.kgame
 		 * 
 		 */		
 		public function rechargeShow(type:String,callBack:Handler):void{
-			__JS__("this.KGAPI.rechargeShow(callBack.method.bind(callBack.caller))");
+			__JS__("this.KGAPI.rechargeShow(callBack.method.bind(callBack.caller),type)");
 		}
 	}
 }

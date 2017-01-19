@@ -17,14 +17,39 @@ package com.lightUI.KGameComponents.assetsInPanel
 			max_btn.on(Event.MOUSE_DOWN,this,maxHandler);
 			//Light.timer.setTimeout(this,test,10,null);
 			slider.on(Event.CHANGE,this, onChange);
+			
 			callLater(test);
 			slider_bar.width = 0;
+			
+			//slider.bar.on(Event.MOUSE_DOWN, this, onBarMouseDown);
+			slider.on("barMove",this,onMove);
 		}
+		
+		private function onMove(value:Number):void{
+			slider_bar.width = (value - slider.min)/(slider.max - slider.min)*slider.width;
+		}
+		
+//		private function onBarMouseDown(e:Event):void {
+//			Laya.stage.on(Event.MOUSE_MOVE, this, mouseMove);
+//			Laya.stage.once(Event.MOUSE_UP, this, mouseUp);
+//		}
+//		
+//		private function mouseMove(e:Event):void {
+//			trace("slider mouseMove")
+//			var _value:Number = slider_bar.x / _maxMove * (_max - _min) + _min;
+//			
+//			slider_bar.width = (slider.value - slider.min)/(slider.max - slider.min)*188;
+//			trace(slider_bar.width)
+//		}
+//		
+//		private function mouseUp(e:Event):void {
+//			Laya.stage.off(Event.MOUSE_MOVE, this, mouseMove);
+//		}
 		
 		private function onChange():void{
 //			trace("AssetsInSlideronChange",slider.value,slider.max,slider.min)
 //			trace("AssetsInSlideronChange",slider.tick)
-			slider_bar.width = (slider.value - slider.min)/(slider.max - slider.min)*188;
+			slider_bar.width = (slider.value - slider.min)/(slider.max - slider.min)*slider.width;
 		}
 		
 		private function test():void{

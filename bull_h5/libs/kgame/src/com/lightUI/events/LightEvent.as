@@ -12,6 +12,7 @@ package com.lightUI.events
 		public static const ITEM_CLICK:String = "item_click";
 		public static const CREATCOMPLETE:String = "creatComplete";
 		public static const CHANGE:String = "change";
+		public static const USERINFO_CHANGE:String = "userinfo_change";
 		public static const COMPLETE:String = "complete";
 		public static const TIME_OUT:String = "timeOut";
 		

@@ -101,20 +101,20 @@ package com.lightUI.KGameComponents.assetsInPanel
 			vo = null;
 		}
 		
-//		public function set tip(value:String):void{
-//			largePanel.tip = value;
-//		}
-//		public function get tip():String{
-//			return largePanel.tip;
-//		}
+		public function set tip(value:String):void{
+			largePanel.tip = value;
+		}
+		public function get tip():String{
+			return largePanel.tip;
+		}
 		
 		public function set roomName(value:String):void{
-			//largePanel.roomName = value;
+			largePanel.roomName = value;
 			smallPanel.roomName = value;
 		}
 		public function get roomName():String{
 			//return roomName_txt.text;
-			//return largePanel.roomName;
+			return largePanel.roomName;
 			return smallPanel.roomName;
 		}
 		

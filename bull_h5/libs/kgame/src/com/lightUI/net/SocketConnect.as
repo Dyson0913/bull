@@ -5,6 +5,7 @@ package com.lightUI.net
 	
 	import laya.events.Event;
 	import laya.net.Socket;
+	import laya.utils.Browser;
 	import laya.utils.Byte;
 
 	public class SocketConnect extends EventDispatcher
@@ -24,7 +25,9 @@ package com.lightUI.net
 		public var isReConnect:Boolean = false;//////////////////////标记是否为重连
 		public var name:String;
 		
-		private var _isConnectError:Boolean = false;
+		private var _isConnectingError:Boolean = false;
+		private var _isClose:Boolean = false;
+		private var _isConneced:Boolean = false;
 		
 		public function SocketConnect()
 		{
@@ -48,7 +51,19 @@ package com.lightUI.net
 		private function onConnectError():void
 		{
 			trace("onConnectError");
-			_isConnectError = true;
+			
+			_isConnectingError = true;
+			//连接失败  会触发erro 和close  但顺序不能保证     所以当两个灯点燃后 再发送连接失败事件
+
+			if(_isConnectingError && _isClose){
+				sentEvent();
+			}
+		}
+		
+		private function sentEvent():void{
+			trace("连接失败");
+			_isConnectingError = false;
+			_isClose = false;
 			this.dispatchEvent(new SocketConnectEvent(SocketConnectEvent.CONNECT_FAIL));
 		}
 		
@@ -63,10 +78,14 @@ package com.lightUI.net
 			_host = host;
 			_port = port;
 			
+			_isConnectingError = false;
+			_isClose = false;
+			
 			trace("[SocketConnect] ","connect",host,port,_currRetryTimes,_retryTimes);
 			_socket.connect(host,port);
 			
 			_currRetryTimes++;
+			
 			
 		}
 		
@@ -98,7 +117,7 @@ package com.lightUI.net
 			if (message is String) {
 				trace("is String");
 			} else if (message is ArrayBuffer) {
-				
+				trace("is ArrayBuffer");
 				
 				
 				_dataByte = new Byte(message);
@@ -113,25 +132,30 @@ package com.lightUI.net
 		private function onSocketOpen(evt:Event = null):void
 		{
 			trace('Socket connect success！',_port);
+			
+			_isConneced = true;
 			_currRetryTimes = 0;
 			this.dispatchEvent(new SocketConnectEvent(SocketConnectEvent.CONNECT));
 		}
 		
 		private function onSocketClose(evt:Event = null):void
 		{
-			trace("onSocketClose")
+			_isClose = true;
 			
-			if(_isConnectError){
-				_isConnectError = false;
-				return;
+			trace("SocketConnect onSocketClose",_socket.connected,_isConnectingError,_isClose)
+			
+			if(_isConneced){
+				trace("关闭连接");
+				clear();
+				this.dispatchEvent(new SocketConnectEvent(SocketConnectEvent.CLOSE));
+				this.dispatchEvent(new SocketConnectEvent(SocketConnectEvent.DROPPED));
+			}else{
+				if(_isConnectingError && _isClose){
+					sentEvent();
+				}
 			}
 			
-			//trace("close: ",evt);
-			clear();
-			this.dispatchEvent(new SocketConnectEvent(SocketConnectEvent.CLOSE));
-			this.dispatchEvent(new SocketConnectEvent(SocketConnectEvent.DROPPED));
-			//setTimeout(connect, _interval, _host, _port);
-			//reconnect();
+			_isConneced = false;
 		}
 		
 		private function clear():void{

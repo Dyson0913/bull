@@ -144,10 +144,9 @@ package com.lightUI.comman.bet
 		public function getMinChip():BetInfoVO{
 			return _betConfig[0];
 		}
-		public function getChip(value):BetInfoVO {
-			
+		public function getChip(value):BetInfoVO{
 			for (var i:int = 0; i < _betConfig.length; i++) 
-			{			
+			{
 				if((_betConfig[i] as BetInfoVO).value == value) return _betConfig[i];
 			}
 			return null;

@@ -43,10 +43,12 @@ package com.lightUI.manager
 				sp.mouseEnabled = true;
 				
 				
-				objDic[window] = sp;
+				//objDic[window] = sp;
+				objDic.set(window,sp);
 			}else{
 				parent.addChild(window);
-				objDic[window] = window;
+				//objDic[window] = window;
+				objDic.set(window,sp);
 			}
 		}
 		
@@ -56,8 +58,10 @@ package com.lightUI.manager
 		
 		public static function removePopUp(popUp:Sprite):void
 		{
-			var sp:Sprite = objDic[popUp];
-			delete objDic[popUp];
+			//var sp:Sprite = objDic[popUp];
+			var sp:Sprite = objDic.get(popUp);
+			objDic.remove(popUp);
+			//delete objDic[popUp];
 			if(popUp.parent) {
 				popUp.parent.removeChild(popUp);
 			}
