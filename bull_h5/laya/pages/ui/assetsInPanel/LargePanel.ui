@@ -2,7 +2,7 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":20,
+    "selecteID":24,
     "props":{"width":445,"sceneColor":"#000000","height":573},
     "nodeParent":-1,
     "label":"Dialog",
@@ -38,13 +38,13 @@
             "compId":4,
             "child":[
                 ],
-            "$LOCKED":false,
+            "$LOCKED":true,
             "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Button",
-            "props":{"y":512,"x":233,"var":"btn_canel","skin":"assetsIn/Btn_bg.png"},
+            "props":{"y":517,"x":243,"var":"btn_canel","skin":"assetsIn/常用按钮.png"},
             "nodeParent":1,
             "label":"Button(btn_canel)",
             "isDirectory":false,
@@ -64,7 +64,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":511,"x":51,"var":"btn_ok","skin":"assetsIn/Btn_bg.png"},
+            "props":{"y":517,"x":88,"var":"btn_ok","skin":"assetsIn/常用按钮.png"},
             "nodeParent":1,
             "label":"Button(btn_ok)",
             "isDirectory":false,
@@ -104,7 +104,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":-2,"x":405,"var":"btnClose","skin":"assetsIn/closeBtn.png"},
+            "props":{"y":3,"x":410,"var":"btnClose","skin":"assetsIn/关闭02.png"},
             "nodeParent":1,
             "label":"Button(btnClose)",
             "isDirectory":false,
@@ -466,7 +466,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":521,"x":277,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"},
+            "props":{"y":522,"x":270,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"},
             "nodeParent":1,
             "label":"Label",
             "isDirectory":false,
@@ -486,7 +486,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":520,"x":97,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"},
+            "props":{"y":522,"x":116,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"},
             "nodeParent":1,
             "label":"Label",
             "isDirectory":false,

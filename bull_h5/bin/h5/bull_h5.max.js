@@ -19430,7 +19430,7 @@ var Laya=window.Laya=(function(window,document){
 		*
 		*/
 		__proto.rechargeShow=function(type,callBack){
-			this.KGAPI.rechargeShow(callBack.method.bind(callBack.caller));
+			this.KGAPI.rechargeShow(callBack.method.bind(callBack.caller),type);
 		}
 
 		return KGH5;
@@ -20435,16 +20435,16 @@ var Laya=window.Laya=(function(window,document){
 				sp.width=Light.root.stage.width;
 				sp.height=Light.root.stage.height;
 				sp.mouseEnabled=true;
-				PopupManager.objDic[window]=sp;
+				PopupManager.objDic.set(window,sp);
 				}else{
 				parent.addChild(window);
-				PopupManager.objDic[window]=window;
+				PopupManager.objDic.set(window,sp);
 			}
 		}
 
 		PopupManager.removePopUp=function(popUp){
-			var sp=PopupManager.objDic[popUp];
-			delete PopupManager.objDic[popUp];
+			var sp=PopupManager.objDic.get(popUp);
+			PopupManager.objDic.remove(popUp);
 			if(popUp.parent){
 				popUp.parent.removeChild(popUp);
 			}
@@ -30212,13 +30212,13 @@ var Laya=window.Laya=(function(window,document){
 				betMin=(config.min_bet / 100)*10;
 				betMax=(this.roomData.player_Money.cash)/ 100;
 				nm=0;
-				hint="玩家上庄桌，不允许带入拟码。";
+				this.getAssetsPanel().tip="玩家上庄桌，不允许带入拟码。";
 			}
 			else{
 				betMin=(config.min_bet / 100)*10;
 				betMax=(this.roomData.player_Money.cash+this.roomData.player_Money.nm)/ 100;
 				nm=this.roomData.player_Money.nm;
-				hint="投注优先扣除拟码";
+				this.getAssetsPanel().tip="投注优先扣除拟码";
 			}
 			if (betMax < betMin){
 				Alert.show(Light.language.getSrting("alert_msg7"),"",AlertCancelPanel,null,Handler.create(this,this.GotoRecharge));
@@ -33943,6 +33943,7 @@ var Laya=window.Laya=(function(window,document){
 		LightEvent.ITEM_CLICK="item_click";
 		LightEvent.CREATCOMPLETE="creatComplete";
 		LightEvent.CHANGE="change";
+		LightEvent.USERINFO_CHANGE="userinfo_change";
 		LightEvent.COMPLETE="complete";
 		LightEvent.TIME_OUT="timeOut";
 		return LightEvent;
@@ -34182,7 +34183,9 @@ var Laya=window.Laya=(function(window,document){
 			this._interval=3000;
 			this.isReConnect=false;
 			this.name=null;
-			this._isConnectError=false;
+			this._isConnectingError=false;
+			this._isClose=false;
+			this._isConneced=false;
 			this._lengthNeedReceived=0;
 			this._hasReededHead=false;
 			this._dataByte=null;
@@ -34205,7 +34208,16 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.onConnectError=function(){
 			console.log("onConnectError");
-			this._isConnectError=true;
+			this._isConnectingError=true;
+			if(this._isConnectingError && this._isClose){
+				this.sentEvent();
+			}
+		}
+
+		__proto.sentEvent=function(){
+			console.log("连接失败");
+			this._isConnectingError=false;
+			this._isClose=false;
 			this.dispatchEvent(new SocketConnectEvent("connectFail"));
 		}
 
@@ -34218,6 +34230,8 @@ var Laya=window.Laya=(function(window,document){
 		__proto.connect=function(host,port){
 			this._host=host;
 			this._port=port;
+			this._isConnectingError=false;
+			this._isClose=false;
 			console.log("[SocketConnect] ","connect",host,port,this._currRetryTimes,this._retryTimes);
 			this._socket.connect(host,port);
 			this._currRetryTimes++;
@@ -34247,6 +34261,7 @@ var Laya=window.Laya=(function(window,document){
 			if ((typeof message=='string')){
 				console.log("is String");
 				}else if ((message instanceof ArrayBuffer)){
+				console.log("is ArrayBuffer");
 				this._dataByte=new Byte(message);
 				this._dataByte.endian="bigEndian";
 				this.dispatchEvent(new SocketConnectEvent("receive",this._dataByte));
@@ -34255,22 +34270,27 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.onSocketOpen=function(evt){
 			console.log('Socket connect success！',this._port);
+			this._isConneced=true;
 			this._currRetryTimes=0;
 			this.dispatchEvent(new SocketConnectEvent("connect"));
 		}
 
 		__proto.onSocketClose=function(evt){
-			console.log("onSocketClose")
-			if(this._isConnectError){
-				this._isConnectError=false;
-				return;
+			this._isClose=true;
+			console.log("SocketConnect onSocketClose",this._socket.connected,this._isConnectingError,this._isClose)
+			if(this._isConneced){
+				console.log("关闭连接");
+				this.clear();
+				this.dispatchEvent(new SocketConnectEvent("close"));
+				this.dispatchEvent(new SocketConnectEvent("connection dropped"));
+				}else{
+				if(this._isConnectingError && this._isClose){
+					this.sentEvent();
+				}
 			}
-			this.clear();
-			this.dispatchEvent(new SocketConnectEvent("close"));
-			this.dispatchEvent(new SocketConnectEvent("connection dropped"));
+			this._isConneced=false;
 		}
 
-		//reconnect();
 		__proto.clear=function(){
 			this._currRetryTimes=0;
 		}
@@ -51026,7 +51046,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(AssetsInSliderUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":430,"runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider","height":45},"child":[{"type":"HSlider","props":{"y":17,"x":89,"width":251,"var":"slider","skin":"assetsIn/hslider.png","showLabel":false,"height":50}},{"type":"Button","props":{"y":1,"x":0,"var":"min_btn","skin":"assetsIn/highest.png"}},{"type":"Button","props":{"y":-2,"x":350,"var":"max_btn","skin":"assetsIn/highest.png"}},{"type":"Label","props":{"y":7,"x":363,"width":49,"text":"最 高","mouseEnabled":false,"height":28,"fontSize":20,"color":"#f6ebea"}},{"type":"Label","props":{"y":9,"x":14,"width":49,"text":"最 低","mouseEnabled":false,"height":28,"fontSize":20,"color":"#f6ebea"}},{"type":"Image","props":{"y":15,"x":82,"width":24,"var":"slider_bar","skin":"assetsIn/bar_hslider.png","sizeGrid":"1,7,1,4","height":12}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":430,"runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider","height":45},"child":[{"type":"HSlider","props":{"y":17,"x":81,"width":265,"var":"slider","skin":"assetsIn/hslider.png","showLabel":false,"height":50}},{"type":"Button","props":{"y":1,"x":0,"var":"min_btn","skin":"assetsIn/标签按钮常态.png"}},{"type":"Button","props":{"y":1,"x":350,"var":"max_btn","skin":"assetsIn/标签按钮常态.png"}},{"type":"Label","props":{"y":9,"x":364,"width":49,"text":"最 高","mouseEnabled":false,"height":28,"fontSize":20,"color":"#f6ebea"}},{"type":"Label","props":{"y":9,"x":14,"width":49,"text":"最 低","mouseEnabled":false,"height":28,"fontSize":20,"color":"#f6ebea"}},{"type":"Image","props":{"y":16,"x":88,"width":259,"var":"slider_bar","skin":"assetsIn/bar_hslider.png","sizeGrid":"1,7,1,4","height":12}}]};}
 		]);
 		return AssetsInSliderUI;
 	})(View)
@@ -54220,7 +54240,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(LargePanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":573},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"assetsIn/longPanel.png"}},{"type":"Button","props":{"y":512,"x":233,"var":"btn_canel","skin":"assetsIn/Btn_bg.png"}},{"type":"Button","props":{"y":511,"x":51,"var":"btn_ok","skin":"assetsIn/Btn_bg.png"}},{"type":"Label","props":{"y":478,"x":68,"width":300,"var":"tips_txt","text":"拟码无法在 JackPot 和 Bonus 上使用!","height":30,"fontSize":15,"font":"微软雅黑","color":"#FF6511","align":"left"}},{"type":"Button","props":{"y":-2,"x":405,"var":"btnClose","skin":"assetsIn/closeBtn.png"}},{"type":"Label","props":{"y":53,"x":17,"width":412,"var":"roomName_txt","text":"新手桌","height":35,"fontSize":25,"color":"#b5b5b5","align":"center"}},{"type":"Label","props":{"y":102,"x":56,"width":106,"text":"带入范围：","height":33,"fontSize":20,"font":"微软雅黑","color":"#aeaeae","align":"center"}},{"type":"Label","props":{"y":105,"x":232,"width":196,"var":"range_txt","text":"0.3-0.7","height":26,"fontSize":20,"color":"#FFFFFF","align":"right"}},{"type":"Label","props":{"y":146,"x":59,"width":99,"text":"可用现金：","height":30,"fontSize":20,"font":"微软雅黑","color":"#aeaeae","align":"center"}},{"type":"Label","props":{"y":252,"x":55,"width":99,"text":"可用拟码：","name":"roomName_txt","height":33,"fontSize":20,"font":"微软雅黑","color":"#aeaeae","align":"center"}},{"type":"Label","props":{"y":366,"x":115,"width":168,"var":"amount_total_txt","text":"0.3-0.7","height":20,"fontSize":18,"color":"#FFFFFF","align":"left"}},{"type":"Label","props":{"y":148,"x":268,"width":161,"var":"total_cash_txt","text":"0.3-0.7","height":27,"fontSize":20,"color":"#FFFFFF","align":"right"}},{"type":"Label","props":{"y":421,"x":40,"width":61,"text":"拟 码：","height":30,"fontSize":18,"font":"微软雅黑","color":"#aeaeae","bold":false,"align":"left"}},{"type":"Label","props":{"y":362,"x":40,"width":58,"text":"总 计：","height":25,"fontSize":18,"font":"微软雅黑","color":"#aeaeae","align":"left"}},{"type":"Label","props":{"y":391,"x":40,"width":58,"text":"现 金：","height":28,"fontSize":18,"font":"微软雅黑","color":"#aeaeae","align":"left"}},{"type":"Label","props":{"y":257,"x":345,"width":85,"var":"total_nm_txt","text":"0.3-0.7","height":30,"fontSize":20,"color":"#FFFFFF","align":"right"}},{"type":"Label","props":{"y":395,"x":115,"width":171,"var":"cash_txt","text":"0.3-0.7","height":16,"fontSize":18,"color":"#FFFFFF","align":"left"}},{"type":"Label","props":{"y":425,"x":115,"width":169,"var":"nm_txt","text":"0.3-0.7","height":16,"fontSize":18,"color":"#FFFFFF","align":"left"}},{"type":"Image","props":{"y":474,"x":16,"skin":"assetsIn/warn2.png"}},{"type":"AssetsInSlider","props":{"y":187,"x":10,"var":"cash_slider","runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider"}},{"type":"AssetsInSlider","props":{"y":295,"x":10,"var":"nm_slider","runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider"}},{"type":"Label","props":{"y":5,"x":160,"width":135,"text":"带入金设置","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}},{"type":"Label","props":{"y":521,"x":277,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}},{"type":"Label","props":{"y":520,"x":97,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":573},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"assetsIn/longPanel.png"}},{"type":"Button","props":{"y":517,"x":243,"var":"btn_canel","skin":"assetsIn/常用按钮.png"}},{"type":"Button","props":{"y":517,"x":88,"var":"btn_ok","skin":"assetsIn/常用按钮.png"}},{"type":"Label","props":{"y":478,"x":68,"width":300,"var":"tips_txt","text":"拟码无法在 JackPot 和 Bonus 上使用!","height":30,"fontSize":15,"font":"微软雅黑","color":"#FF6511","align":"left"}},{"type":"Button","props":{"y":3,"x":410,"var":"btnClose","skin":"assetsIn/关闭02.png"}},{"type":"Label","props":{"y":53,"x":17,"width":412,"var":"roomName_txt","text":"新手桌","height":35,"fontSize":25,"color":"#b5b5b5","align":"center"}},{"type":"Label","props":{"y":102,"x":56,"width":106,"text":"带入范围：","height":33,"fontSize":20,"font":"微软雅黑","color":"#aeaeae","align":"center"}},{"type":"Label","props":{"y":105,"x":232,"width":196,"var":"range_txt","text":"0.3-0.7","height":26,"fontSize":20,"color":"#FFFFFF","align":"right"}},{"type":"Label","props":{"y":146,"x":59,"width":99,"text":"可用现金：","height":30,"fontSize":20,"font":"微软雅黑","color":"#aeaeae","align":"center"}},{"type":"Label","props":{"y":252,"x":55,"width":99,"text":"可用拟码：","name":"roomName_txt","height":33,"fontSize":20,"font":"微软雅黑","color":"#aeaeae","align":"center"}},{"type":"Label","props":{"y":366,"x":115,"width":168,"var":"amount_total_txt","text":"0.3-0.7","height":20,"fontSize":18,"color":"#FFFFFF","align":"left"}},{"type":"Label","props":{"y":148,"x":268,"width":161,"var":"total_cash_txt","text":"0.3-0.7","height":27,"fontSize":20,"color":"#FFFFFF","align":"right"}},{"type":"Label","props":{"y":421,"x":40,"width":61,"text":"拟 码：","height":30,"fontSize":18,"font":"微软雅黑","color":"#aeaeae","bold":false,"align":"left"}},{"type":"Label","props":{"y":362,"x":40,"width":58,"text":"总 计：","height":25,"fontSize":18,"font":"微软雅黑","color":"#aeaeae","align":"left"}},{"type":"Label","props":{"y":391,"x":40,"width":58,"text":"现 金：","height":28,"fontSize":18,"font":"微软雅黑","color":"#aeaeae","align":"left"}},{"type":"Label","props":{"y":257,"x":345,"width":85,"var":"total_nm_txt","text":"0.3-0.7","height":30,"fontSize":20,"color":"#FFFFFF","align":"right"}},{"type":"Label","props":{"y":395,"x":115,"width":171,"var":"cash_txt","text":"0.3-0.7","height":16,"fontSize":18,"color":"#FFFFFF","align":"left"}},{"type":"Label","props":{"y":425,"x":115,"width":169,"var":"nm_txt","text":"0.3-0.7","height":16,"fontSize":18,"color":"#FFFFFF","align":"left"}},{"type":"Image","props":{"y":474,"x":16,"skin":"assetsIn/warn2.png"}},{"type":"AssetsInSlider","props":{"y":187,"x":10,"var":"cash_slider","runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider"}},{"type":"AssetsInSlider","props":{"y":295,"x":10,"var":"nm_slider","runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider"}},{"type":"Label","props":{"y":5,"x":160,"width":135,"text":"带入金设置","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}},{"type":"Label","props":{"y":522,"x":270,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}},{"type":"Label","props":{"y":522,"x":116,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}}]};}
 		]);
 		return LargePanelUI;
 	})(Dialog)
@@ -54252,7 +54272,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(SmallPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":363},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"assetsIn/smallPanel.png"}},{"type":"Button","props":{"y":304,"x":242,"var":"cancel_btn","skin":"assetsIn/Btn_bg.png"}},{"type":"Button","props":{"y":304,"x":66,"var":"ok_btn","skin":"assetsIn/Btn_bg.png"}},{"type":"Label","props":{"y":247,"x":353,"width":82,"var":"maxmum_txt","text":"(1700)","height":30,"fontSize":20,"font":"微软雅黑","color":"#FFFFFF","align":"right"}},{"type":"Label","props":{"y":247,"x":21,"width":82,"var":"minmum_txt","text":"(700)","height":32,"fontSize":20,"font":"微软雅黑","color":"#FFFFFF","align":"left"}},{"type":"Label","props":{"y":145,"x":44,"width":112,"var":"amount_describe_txt","text":"带入金额：","height":28,"fontSize":22,"font":"微软雅黑","color":"#b5b5b5"}},{"type":"Label","props":{"y":106,"x":246,"width":179,"var":"total_txt","text":"¥4512，567，57","height":29,"fontSize":20,"font":"微软雅黑","color":"#E8D07A","align":"right"}},{"type":"Label","props":{"y":104,"x":43,"width":109,"var":"total_describe_txt","text":"可用G 币：","height":28,"fontSize":22,"font":"微软雅黑","color":"#b5b5b5"}},{"type":"Label","props":{"y":56,"x":24,"width":390,"var":"roomName_txt","text":"新手场1桌","height":33,"fontSize":20,"color":"#b5b5b5","align":"center"}},{"type":"Image","props":{"y":7,"x":182,"width":98,"skin":"assetsIn/carryInFont.png","height":24}},{"type":"Button","props":{"y":-2,"x":408,"var":"close_btn","skin":"assetsIn/closeBtn.png"}},{"type":"Label","props":{"y":151,"x":264,"width":162,"var":"amount_txt","text":"¥4512，567，57","height":26,"fontSize":20,"font":"微软雅黑","color":"#E8D07A","align":"right"}},{"type":"AssetsInSlider","props":{"y":192,"x":9,"var":"slider","runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider"}},{"type":"Label","props":{"y":313,"x":111,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}},{"type":"Label","props":{"y":313,"x":286,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":363},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"assetsIn/smallPanel.png"}},{"type":"Button","props":{"y":304,"x":258,"var":"cancel_btn","skin":"assetsIn/常用按钮.png"}},{"type":"Button","props":{"y":305,"x":81,"var":"ok_btn","skin":"assetsIn/常用按钮.png"}},{"type":"Label","props":{"y":247,"x":353,"width":82,"var":"maxmum_txt","text":"(1700)","height":30,"fontSize":20,"font":"微软雅黑","color":"#FFFFFF","align":"right"}},{"type":"Label","props":{"y":247,"x":21,"width":82,"var":"minmum_txt","text":"(700)","height":32,"fontSize":20,"font":"微软雅黑","color":"#FFFFFF","align":"left"}},{"type":"Label","props":{"y":145,"x":44,"width":112,"var":"amount_describe_txt","text":"带入金额：","height":28,"fontSize":22,"font":"微软雅黑","color":"#b5b5b5"}},{"type":"Label","props":{"y":106,"x":246,"width":179,"var":"total_txt","text":"¥4512，567，57","height":29,"fontSize":20,"font":"微软雅黑","color":"#E8D07A","align":"right"}},{"type":"Label","props":{"y":104,"x":43,"width":109,"var":"total_describe_txt","text":"可用G 币：","height":28,"fontSize":22,"font":"微软雅黑","color":"#b5b5b5"}},{"type":"Label","props":{"y":56,"x":24,"width":390,"var":"roomName_txt","text":"新手场1桌","height":33,"fontSize":20,"color":"#b5b5b5","align":"center"}},{"type":"Image","props":{"y":7,"x":182,"width":98,"skin":"assetsIn/carryInFont.png","height":24}},{"type":"Button","props":{"y":3,"x":410,"var":"close_btn","skin":"assetsIn/关闭02.png"}},{"type":"Label","props":{"y":151,"x":264,"width":162,"var":"amount_txt","text":"¥4512，567，57","height":26,"fontSize":20,"font":"微软雅黑","color":"#E8D07A","align":"right"}},{"type":"AssetsInSlider","props":{"y":192,"x":9,"var":"slider","runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider"}},{"type":"Label","props":{"y":310,"x":109,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}},{"type":"Label","props":{"y":309,"x":286,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}}]};}
 		]);
 		return SmallPanelUI;
 	})(Dialog)
@@ -54996,10 +55016,17 @@ var Laya=window.Laya=(function(window,document){
 			this.smallPanel.clear();
 		}
 
-		// }
+		__getset(0,__proto,'tip',function(){
+			return this.largePanel.tip;
+			},function(value){
+			this.largePanel.tip=value;
+		});
+
 		__getset(0,__proto,'roomName',function(){
+			return this.largePanel.roomName;
 			return this.smallPanel.roomName;
 			},function(value){
+			this.largePanel.roomName=value;
 			this.smallPanel.roomName=value;
 		});
 
@@ -55017,12 +55044,18 @@ var Laya=window.Laya=(function(window,document){
 			this.slider.on("change",this,this.onChange);
 			this.callLater(this.test);
 			this.slider_bar.width=0;
+			this.slider.on("barMove",this,this.onMove);
 		}
 
 		__class(AssetsInSlider,'com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider',_super);
 		var __proto=AssetsInSlider.prototype;
+		__proto.onMove=function(value){
+			this.slider_bar.width=(value-this.slider.min)/(this.slider.max-this.slider.min)*this.slider.width;
+		}
+
+		// }
 		__proto.onChange=function(){
-			this.slider_bar.width=(this.slider.value-this.slider.min)/(this.slider.max-this.slider.min)*188;
+			this.slider_bar.width=(this.slider.value-this.slider.min)/(this.slider.max-this.slider.min)*this.slider.width;
 		}
 
 		__proto.test=function(){

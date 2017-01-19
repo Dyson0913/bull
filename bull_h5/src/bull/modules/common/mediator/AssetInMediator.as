@@ -97,15 +97,15 @@ package bull.modules.common.mediator
 				betMin = (config.min_bet / 100) * 10;
 				betMax = (roomData.player_Money.cash) / 100;
 				
-				nm = 0;
-				hint = "玩家上庄桌，不允许带入拟码。";
+				nm = 0;				
+				getAssetsPanel().tip = "玩家上庄桌，不允许带入拟码。";
 			}
 			else
 			{
 				betMin = (config.min_bet / 100) * 10;
 				betMax = (roomData.player_Money.cash + roomData.player_Money.nm) / 100;
 				nm = roomData.player_Money.nm;
-				hint = "投注优先扣除拟码";
+				getAssetsPanel().tip = "投注优先扣除拟码";
 			}
 			
 			//錢不夠最低帶入,直接提示
@@ -119,7 +119,8 @@ package bull.modules.common.mediator
 			
 			//现金带入需要把步长设成0.01	
 			//getAssetsPanel().assetsIn(param.betMin, param.betMax, param.carrayType, param.betMin, param.cash, param.coin, param.nm, 0.01);
-			getAssetsPanel().assetsIn(betMin, betMax,money_type,betMin,roomData.player_Money.cash, roomData.player_Money.coin,nm);
+			getAssetsPanel().assetsIn(betMin, betMax, money_type, betMin, roomData.player_Money.cash, roomData.player_Money.coin, nm);
+			
 			
 		}
 		
