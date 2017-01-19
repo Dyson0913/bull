@@ -964,6 +964,7 @@ var Laya=window.Laya=(function(window,document){
 		BullNotification.ROUND_COMMIT_RSP="roundCommitRsp";
 		BullNotification.ROUND_SETTLEMENT_RSP="roundSettlementRsp";
 		BullNotification.Change_Scene="car.Change_Scene";
+		BullNotification.ROUND_INFO_UPATE="Round_info_upate";
 		BullNotification.Scene_Hall="Scene_Hall";
 		BullNotification.Scene_Game="Scene_Game";
 		BullNotification.RoomSocketClose="RoomSocketClose";
@@ -30280,6 +30281,7 @@ var Laya=window.Laya=(function(window,document){
 	//class bull.modules.common.mediator.MusicSetMediator extends com.lightMVC.parrerns.Mediator
 	var MusicSetMediator=(function(_super){
 		function MusicSetMediator(mediatorName,viewComponent){
+			this.roomData=null;
 			(mediatorName===void 0)&& (mediatorName="");
 			MusicSetMediator.__super.call(this,mediatorName,viewComponent);
 		}
@@ -30288,7 +30290,7 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=MusicSetMediator.prototype;
 		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
 		__proto.getInjector=function(){
-			return [];
+			return ["roomData"];
 		}
 
 		__proto.setViewComponent=function(viewComponent){
@@ -30301,6 +30303,7 @@ var Laya=window.Laya=(function(window,document){
 			this.addNotifiction("car.SHOW_MUSIC_SET_PANEL");
 			this.addNotifiction("car.HIDE_MUSIC_SET_PANEL");
 			this.addNotifiction("scenceChange");
+			this.addNotifiction("Round_info_upate");
 			this.view.musicButton.on("change",this,this.onChangeMusic);
 			this.view.soundButton.on("change",this,this.onChangeSound);
 		}
@@ -30312,6 +30315,9 @@ var Laya=window.Laya=(function(window,document){
 					break ;
 				case "car.HIDE_MUSIC_SET_PANEL":
 					this.onClose();
+					break ;
+				case "Round_info_upate":
+					this.update_round_id();
 					break ;
 				case "scenceChange":;
 					var curScene=notification.getBody();
@@ -30328,11 +30334,18 @@ var Laya=window.Laya=(function(window,document){
 			this.view.soundButton.selected=!ShareObjectMgr.get().sound;
 			Light.layer.top.addChild(this.view);
 			this.view.visible=true;
+			this.update_round_id();
 		}
 
 		__proto.onClose=function(e){
 			console.log("MusicSetMediator onClose()");
 			this.view.close();
+		}
+
+		__proto.update_round_id=function(){
+			if (this.roomData !=null){
+				this.view.txt_RoundID.text=this.roomData.RoundID;
+			}
 		}
 
 		/**
@@ -30536,6 +30549,7 @@ var Laya=window.Laya=(function(window,document){
 		__proto.clear=function(){
 			this.user_name="";
 			this.user_head="";
+			this.RoundID="";
 			this.panel_alreay_slider_in=false;
 			this.history_Win_info=[];
 			this.history_lost_info=[];
@@ -31055,6 +31069,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.betnotify=function(cs){
+			console.log("betnotify +",cs);
 			var data=cs.bet_notify;
 			var roomData=this.getSingleton("roomData");
 			var m1=data.m1;
@@ -31712,10 +31727,9 @@ var Laya=window.Laya=(function(window,document){
 		__proto.get_coin_info=function(amount,zone,is_my){
 			var bet=amount;
 			var chip=this.roomData.chipTool.getChip(bet);
-			bet=this.roomData.Cash_Type==2 ? bet :bet / 100;
 			var chips=[];
 			var chipVO;
-			if(!chip){
+			if (!chip){
 				var temp=this.roomData.chipTool.splitBet(bet);
 				for (var i=0;i < temp.chips.length;i++){
 					chip=temp.chips[i];
@@ -32016,6 +32030,7 @@ var Laya=window.Laya=(function(window,document){
 			switch(this.roomData.State){
 				case 1:
 					this.view.start();
+					this.sentNotification("Round_info_upate");
 					break ;
 				case 2:
 					this.view.banker();
@@ -32107,6 +32122,7 @@ var Laya=window.Laya=(function(window,document){
 				betinfo=bet_info[i];
 				var self=betinfo.uid.toNumber()==myuid;
 				var bet=this.roomData.GetMoney(betinfo.value);
+				console.log("bet = "+bet);
 				var po=betinfo.position-1;
 				if (self){
 					if (bet < 0){
@@ -34261,7 +34277,6 @@ var Laya=window.Laya=(function(window,document){
 			if ((typeof message=='string')){
 				console.log("is String");
 				}else if ((message instanceof ArrayBuffer)){
-				console.log("is ArrayBuffer");
 				this._dataByte=new Byte(message);
 				this._dataByte.endian="bigEndian";
 				this.dispatchEvent(new SocketConnectEvent("receive",this._dataByte));
@@ -50377,7 +50392,6 @@ var Laya=window.Laya=(function(window,document){
 			this.mc_bankerAni=null;
 			this.Head=null;
 			this.mcHintBoard=null;
-			this.txt_RoundID=null;
 			this.textFix_text_0=null;
 			BankerPanelUI.__super.call(this);
 		}
@@ -50392,7 +50406,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BankerPanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"renderType":"mask","height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":125,"var":"txtname","text":"吉胜游戏平台","height":32,"fontSize":20,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":433,"width":68,"var":"BankerTimes","text":"1/15次","height":24,"fontSize":20,"color":"#eee7e7","align":"center"}},{"type":"Button","props":{"y":9,"x":527,"var":"btndeBanker","stateNum":"3","skin":"res/gameScene/deBanker.png","name":"btndeBanker"}},{"type":"Button","props":{"y":8,"x":527,"var":"btnBanker","stateNum":"3","skin":"res/gameScene/applyBanker.png","name":"btnBanker"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Point","text":"999999","height":18,"fontSize":20,"color":"#eee7e7"}},{"type":"BankerNotify_ani","props":{"y":5,"x":563,"visible":false,"var":"mc_bankerAni","scaleY":0.3,"scaleX":0.3,"runtime":"ui.ui.room.BankerNotify_aniUI"}},{"type":"Image","props":{"y":11,"x":44,"width":60,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","height":60},"child":[{"type":"Sprite","props":{"y":-2,"x":-6,"renderType":"mask"},"child":[{"type":"Circle","props":{"y":33,"x":37,"radius":30,"lineWidth":1,"fillColor":"#ff0000"}}]}]},{"type":"BankerListHint","props":{"y":84,"x":473,"var":"mcHintBoard","runtime":"ui.ui.room.BankerListHintUI"}},{"type":"Label","props":{"y":38,"x":-96,"width":87,"var":"txt_RoundID","text":"5868acad101fa","mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":38,"x":-126,"width":33,"text":"局ID:","mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":34,"x":375,"width":48,"var":"textFix_text_0","text":"坐庄:","height":21,"fontSize":20,"color":"#98d10c"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":723,"renderType":"mask","height":87},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/BankerBoard.png"}},{"type":"Label","props":{"y":34,"x":120,"width":125,"var":"txtname","text":"吉胜游戏平台","height":32,"fontSize":20,"color":"#eee7e7"}},{"type":"Label","props":{"y":34,"x":433,"width":68,"var":"BankerTimes","text":"1/15次","height":24,"fontSize":20,"color":"#eee7e7","align":"center"}},{"type":"Button","props":{"y":9,"x":527,"var":"btndeBanker","stateNum":"3","skin":"res/gameScene/deBanker.png","name":"btndeBanker"}},{"type":"Button","props":{"y":8,"x":527,"var":"btnBanker","stateNum":"3","skin":"res/gameScene/applyBanker.png","name":"btnBanker"}},{"type":"Label","props":{"y":35,"x":277,"width":56,"var":"Point","text":"999999","height":18,"fontSize":20,"color":"#eee7e7"}},{"type":"BankerNotify_ani","props":{"y":5,"x":563,"visible":false,"var":"mc_bankerAni","scaleY":0.3,"scaleX":0.3,"runtime":"ui.ui.room.BankerNotify_aniUI"}},{"type":"Image","props":{"y":11,"x":44,"width":60,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","height":60},"child":[{"type":"Sprite","props":{"y":-2,"x":-6,"renderType":"mask"},"child":[{"type":"Circle","props":{"y":33,"x":37,"radius":30,"lineWidth":1,"fillColor":"#ff0000"}}]}]},{"type":"BankerListHint","props":{"y":84,"x":473,"var":"mcHintBoard","runtime":"ui.ui.room.BankerListHintUI"}},{"type":"Label","props":{"y":34,"x":375,"width":48,"var":"textFix_text_0","text":"坐庄:","height":21,"fontSize":20,"color":"#98d10c"}}]};}
 		]);
 		return BankerPanelUI;
 	})(View)
@@ -52384,7 +52398,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(AlertCancelPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":273},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_hint.png"}},{"type":"Button","props":{"y":-2,"x":406,"var":"close_btn","skin":"res/alert/btn_close.png","name":"close_btn"}},{"type":"Button","props":{"y":220,"x":58,"var":"ok_btn","skin":"assetsIn/Btn_bg.png","name":"ok_btn"}},{"type":"Button","props":{"y":220,"x":238,"var":"cancel_btn","skin":"assetsIn/Btn_bg.png","name":"cancel_btn"}},{"type":"Label","props":{"y":114,"x":20,"width":410,"var":"txt_label","text":"label","height":96,"color":"#f1ebea","align":"center"}},{"type":"Label","props":{"y":7,"x":194,"width":59,"text":"温馨提示","scaleY":1.5,"scaleX":1.5,"height":19,"color":"#f4e6e6"}},{"type":"Label","props":{"y":228,"x":104,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}},{"type":"Label","props":{"y":228,"x":282,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":273},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_hint.png"}},{"type":"Button","props":{"y":-2,"x":406,"var":"close_btn","skin":"res/alert/btn_close.png","name":"close_btn"}},{"type":"Button","props":{"y":226,"x":73,"var":"ok_btn","skin":"assetsIn/常用按钮.png","name":"ok_btn"}},{"type":"Button","props":{"y":227,"x":250,"var":"cancel_btn","skin":"assetsIn/常用按钮.png","name":"cancel_btn"}},{"type":"Label","props":{"y":114,"x":20,"width":410,"var":"txt_label","text":"label","height":96,"color":"#f1ebea","align":"center"}},{"type":"Label","props":{"y":7,"x":194,"width":59,"text":"温馨提示","scaleY":1.5,"scaleX":1.5,"height":19,"color":"#f4e6e6"}},{"type":"Label","props":{"y":231,"x":103,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}},{"type":"Label","props":{"y":231,"x":282,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}}]};}
 		]);
 		return AlertCancelPanelUI;
 	})(Dialog)
@@ -52407,7 +52421,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(AlertPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":273},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_hint.png"}},{"type":"Button","props":{"y":0,"x":405,"var":"close_btn","skin":"res/alert/btn_close.png","name":"close_btn"}},{"type":"Button","props":{"y":219,"x":149,"var":"ok_btn","skin":"assetsIn/Btn_bg.png","name":"ok_btn"}},{"type":"Label","props":{"y":115,"x":20,"width":410,"var":"txt_label","text":"label","height":96,"fontSize":22,"color":"#f1ebea","align":"center"}},{"type":"Label","props":{"y":6,"x":180,"width":93,"text":"温馨提示","height":31,"fontSize":22,"color":"#f4e6e6"}},{"type":"Label","props":{"y":227,"x":193,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":273},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_hint.png"}},{"type":"Button","props":{"y":0,"x":405,"var":"close_btn","skin":"res/alert/btn_close.png","name":"close_btn"}},{"type":"Button","props":{"y":225,"x":164,"var":"ok_btn","skin":"assetsIn/常用按钮.png","name":"ok_btn"}},{"type":"Label","props":{"y":115,"x":20,"width":410,"var":"txt_label","text":"label","height":96,"fontSize":22,"color":"#f1ebea","align":"center"}},{"type":"Label","props":{"y":6,"x":180,"width":93,"text":"温馨提示","height":31,"fontSize":22,"color":"#f4e6e6"}},{"type":"Label","props":{"y":230,"x":194,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}}]};}
 		]);
 		return AlertPanelUI;
 	})(Dialog)
@@ -52421,6 +52435,7 @@ var Laya=window.Laya=(function(window,document){
 			this.btnClose=null;
 			this.soundButton=null;
 			this.txtName=null;
+			this.txt_RoundID=null;
 			SetPanelUI.__super.call(this);
 		}
 
@@ -52432,7 +52447,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(SetPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":384,"height":267},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_seb_bg.png"}},{"type":"Label","props":{"y":92,"x":28,"width":108,"var":"txtName","text":"0.0.2","height":28,"fontSize":22,"color":"#eed6d6"}},{"type":"CheckBox","props":{"y":205,"x":46,"var":"musicButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Button","props":{"y":0,"x":343,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"}},{"type":"CheckBox","props":{"y":205,"x":222,"var":"soundButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Label","props":{"y":9,"x":181,"width":36,"text":"设置","scaleY":1.5,"scaleX":1.5,"height":17,"color":"#eed6d6"}},{"type":"Label","props":{"y":206,"x":82,"width":80,"text":"开启音乐","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":207,"x":256,"width":57,"text":"开启音效","scaleY":1.5,"scaleX":1.5,"height":18,"color":"#c8d75a"}},{"type":"Label","props":{"y":47,"x":24,"width":108,"var":"txtName","text":"版本号","height":28,"fontSize":22,"color":"#eed6d6"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":384,"height":267},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_seb_bg.png"}},{"type":"Label","props":{"y":92,"x":28,"width":108,"var":"txtName","text":"0.2.0","height":28,"fontSize":22,"color":"#eed6d6"}},{"type":"CheckBox","props":{"y":205,"x":46,"var":"musicButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Button","props":{"y":0,"x":343,"var":"btnClose","stateNum":"3","skin":"res/alert/btn_close.png"}},{"type":"CheckBox","props":{"y":205,"x":222,"var":"soundButton","stateNum":"3","skin":"res/alert/checkbox.png"}},{"type":"Label","props":{"y":4,"x":162,"width":62,"text":"设置","height":31,"fontSize":25,"color":"#eed6d6","bold":true}},{"type":"Label","props":{"y":202,"x":82,"width":105,"text":"开启音乐","height":33,"fontSize":25,"color":"#c8d75a"}},{"type":"Label","props":{"y":202,"x":256,"width":104,"text":"开启音效","height":33,"fontSize":25,"color":"#c8d75a"}},{"type":"Label","props":{"y":47,"x":24,"width":108,"var":"txtName","text":"版本号","height":28,"fontSize":22,"color":"#eed6d6"}},{"type":"Label","props":{"y":150,"x":81,"width":172,"var":"txt_RoundID","text":"5868acad101fa","mouseEnabled":false,"height":29,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":150,"x":24,"width":58,"text":"局ID:","mouseEnabled":false,"height":30,"fontSize":22,"color":"#f6ebea","bold":false}}]};}
 		]);
 		return SetPanelUI;
 	})(Dialog)
@@ -52454,7 +52469,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(RulePanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":833,"text":"规则说明","height":612},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_rule.png"}},{"type":"Button","props":{"y":-1,"x":793,"var":"btnClose","skin":"res/alert/btn_close.png"}},{"type":"TextArea","props":{"y":7,"x":408,"width":66,"text":"规则说明","scaleY":1.5,"scaleX":1.5,"height":26,"color":"#f3e9e9"}},{"type":"List","props":{"y":59,"x":11,"width":816,"var":"List","height":515},"child":[{"type":"Box","props":{"y":-1,"x":-3,"width":813,"name":"render","height":983},"child":[{"type":"Image","props":{"y":6,"x":12,"skin":"res/alert/img_rule_1.png"}},{"type":"Image","props":{"y":120,"x":14,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":143,"x":3,"skin":"res/alert/img_rule_2.png"}},{"type":"Image","props":{"y":431,"x":5,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":442,"x":5,"skin":"res/alert/img_rule_3.png"}},{"type":"Label","props":{"y":45,"x":17,"width":756,"text":"    百人牛牛是牛牛游戏的升级版，是可以提供100人及以上玩家同时进行的简\\n单\"押注类\"克游戏，玩家可坐庄，闲家分别与庄家比较牌型大小来定输赢。","height":65,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":181,"x":31,"width":756,"text":"进入游戏 ：百人牛牛是随到随玩，您可以随时进入或退出游戏。","height":29,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":215,"x":30,"width":756,"text":"申请坐庄 ：玩家如果满足游戏坐庄条件，就能申请坐庄，进入申请上庄列表。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":202,"x":-58}},{"type":"Label","props":{"y":252,"x":30,"width":756,"text":"闲家下注 ：下注分为四个下注区，游戏开始后，除庄家外，所有玩家都可以\\n下注。 ","height":52,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":308,"x":29,"width":756,"text":"发牌：加注时间结束后，系统将同时发出五副手牌。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":345,"x":23,"width":756,"text":" 结算：每位闲家赢得自己下注的金额，庄家赢闲家所输掉的下注金额，不同牌\\n型倍数不一，\\n结算时玩家的下注筹码乘上牌型倍数即为结算金额。","height":74,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":484,"x":30,"width":756,"text":"无牛：五张牌中，任意三张牌点数之和都不能组成10的倍数。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":517,"x":30,"width":756,"text":"牛一：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是1，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":550,"x":31,"width":756,"text":"牛二：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是2，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":579,"x":30,"width":756,"text":"牛三：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是3，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":608,"x":30,"width":756,"text":"牛四：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是4，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":642,"x":29,"width":756,"text":"牛五：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是5，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":673,"x":29,"width":756,"text":"牛六：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是6，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":703,"x":29,"width":756,"text":"牛七：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是7，赔二倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":735,"x":30,"width":756,"text":"牛八：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是8，赔三倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":765,"x":29,"width":756,"text":"牛九：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是9，赔四倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":796,"x":28,"width":756,"text":"牛牛：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是0，赔五倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":828,"x":29,"width":756,"text":"五小牛：五张牌中，都小于或等于五，且五张牌点数之和小于或等于10，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":859,"x":29,"width":756,"text":"四炸：即五张牌中有四张一样的牌，此时无需有牛赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":888,"x":29,"width":756,"text":"五花牛：五张十以上的花牌（不包括十）组成的牛牛，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":916,"x":32,"width":772,"text":"牌型大小：五花牛>四炸>五小牛>牛牛>牛九>牛八>牛七>牛六>牛五>牛四>牛三>牛二>牛一>没牛。 ","height":34,"fontSize":18,"color":"#f1f6ef"}},{"type":"Label","props":{"y":948,"x":32,"width":772,"text":"如牌型大小一样，则比较最大单张牌的牌点：K>Q>J>10>9>8>7>6>5>4>3>2>A。","height":34,"fontSize":18,"color":"#f1f6ef"}}]},{"type":"VScrollBar","props":{"y":-0.9999999999999858,"x":798.0000000000002,"width":17,"skin":"res/gameScene/vscroll.png","name":"scrollBar","height":508}}]}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":833,"text":"规则说明","height":612},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_rule.png"}},{"type":"Button","props":{"y":-1,"x":793,"var":"btnClose","skin":"res/alert/btn_close.png"}},{"type":"TextArea","props":{"y":4,"x":387,"width":115,"text":"规则说明","height":34,"fontSize":25,"color":"#f3e9e9","bold":true}},{"type":"List","props":{"y":59,"x":11,"width":816,"var":"List","height":515},"child":[{"type":"Box","props":{"y":-1,"x":-3,"width":813,"name":"render","height":983},"child":[{"type":"Image","props":{"y":6,"x":12,"skin":"res/alert/img_rule_1.png"}},{"type":"Image","props":{"y":120,"x":14,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":143,"x":3,"skin":"res/alert/img_rule_2.png"}},{"type":"Image","props":{"y":431,"x":5,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":442,"x":5,"skin":"res/alert/img_rule_3.png"}},{"type":"Label","props":{"y":45,"x":17,"width":756,"text":"    百人牛牛是牛牛游戏的升级版，是可以提供100人及以上玩家同时进行的简\\n单\"押注类\"克游戏，玩家可坐庄，闲家分别与庄家比较牌型大小来定输赢。","height":65,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":181,"x":31,"width":756,"text":"进入游戏 ：百人牛牛是随到随玩，您可以随时进入或退出游戏。","height":29,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":215,"x":30,"width":756,"text":"申请坐庄 ：玩家如果满足游戏坐庄条件，就能申请坐庄，进入申请上庄列表。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":202,"x":-58}},{"type":"Label","props":{"y":252,"x":30,"width":756,"text":"闲家下注 ：下注分为四个下注区，游戏开始后，除庄家外，所有玩家都可以\\n下注。 ","height":52,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":308,"x":29,"width":756,"text":"发牌：加注时间结束后，系统将同时发出五副手牌。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":345,"x":23,"width":756,"text":" 结算：每位闲家赢得自己下注的金额，庄家赢闲家所输掉的下注金额，不同牌\\n型倍数不一，\\n结算时玩家的下注筹码乘上牌型倍数即为结算金额。","height":74,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":484,"x":30,"width":756,"text":"无牛：五张牌中，任意三张牌点数之和都不能组成10的倍数。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":517,"x":30,"width":756,"text":"牛一：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是1，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":550,"x":31,"width":756,"text":"牛二：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是2，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":579,"x":30,"width":756,"text":"牛三：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是3，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":608,"x":30,"width":756,"text":"牛四：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是4，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":642,"x":29,"width":756,"text":"牛五：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是5，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":673,"x":29,"width":756,"text":"牛六：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是6，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":703,"x":29,"width":756,"text":"牛七：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是7，赔二倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":735,"x":30,"width":756,"text":"牛八：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是8，赔三倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":765,"x":29,"width":756,"text":"牛九：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是9，赔四倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":796,"x":28,"width":756,"text":"牛牛：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是0，赔五倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":828,"x":29,"width":756,"text":"五小牛：五张牌中，都小于或等于五，且五张牌点数之和小于或等于10，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":859,"x":29,"width":756,"text":"四炸：即五张牌中有四张一样的牌，此时无需有牛赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":888,"x":29,"width":756,"text":"五花牛：五张十以上的花牌（不包括十）组成的牛牛，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":916,"x":32,"width":772,"text":"牌型大小：五花牛>四炸>五小牛>牛牛>牛九>牛八>牛七>牛六>牛五>牛四>牛三>牛二>牛一>没牛。 ","height":34,"fontSize":18,"color":"#f1f6ef"}},{"type":"Label","props":{"y":948,"x":32,"width":772,"text":"如牌型大小一样，则比较最大单张牌的牌点：K>Q>J>10>9>8>7>6>5>4>3>2>A。","height":34,"fontSize":18,"color":"#f1f6ef"}}]},{"type":"VScrollBar","props":{"y":-0.9999999999999858,"x":798.0000000000002,"width":17,"skin":"res/gameScene/vscroll.png","name":"scrollBar","height":508}}]}]};}
 		]);
 		return RulePanelUI;
 	})(Dialog)
@@ -52660,10 +52675,6 @@ var Laya=window.Laya=(function(window,document){
 		__proto.apply_banker=function(value){
 			this.btnBanker.visible=value;
 			this.btndeBanker.visible=!value;
-		}
-
-		__proto.setRoundID=function(id){
-			this.txt_RoundID.text=id;
 		}
 
 		__proto.test=function(){}
@@ -53055,7 +53066,6 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.start=function(){
 			console.log("start")
-			this.viewBankerPanel.setRoundID(this._roomData.RoundID);
 			if(!this._roomData.IsSysBanker()&& (this._roomData.banker_id.toNumber()!=this._roomData.uid)){
 				this.phase_tip("等待玩家连庄",1);
 			}
@@ -54272,7 +54282,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(SmallPanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":363},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"assetsIn/smallPanel.png"}},{"type":"Button","props":{"y":304,"x":258,"var":"cancel_btn","skin":"assetsIn/常用按钮.png"}},{"type":"Button","props":{"y":305,"x":81,"var":"ok_btn","skin":"assetsIn/常用按钮.png"}},{"type":"Label","props":{"y":247,"x":353,"width":82,"var":"maxmum_txt","text":"(1700)","height":30,"fontSize":20,"font":"微软雅黑","color":"#FFFFFF","align":"right"}},{"type":"Label","props":{"y":247,"x":21,"width":82,"var":"minmum_txt","text":"(700)","height":32,"fontSize":20,"font":"微软雅黑","color":"#FFFFFF","align":"left"}},{"type":"Label","props":{"y":145,"x":44,"width":112,"var":"amount_describe_txt","text":"带入金额：","height":28,"fontSize":22,"font":"微软雅黑","color":"#b5b5b5"}},{"type":"Label","props":{"y":106,"x":246,"width":179,"var":"total_txt","text":"¥4512，567，57","height":29,"fontSize":20,"font":"微软雅黑","color":"#E8D07A","align":"right"}},{"type":"Label","props":{"y":104,"x":43,"width":109,"var":"total_describe_txt","text":"可用G 币：","height":28,"fontSize":22,"font":"微软雅黑","color":"#b5b5b5"}},{"type":"Label","props":{"y":56,"x":24,"width":390,"var":"roomName_txt","text":"新手场1桌","height":33,"fontSize":20,"color":"#b5b5b5","align":"center"}},{"type":"Image","props":{"y":7,"x":182,"width":98,"skin":"assetsIn/carryInFont.png","height":24}},{"type":"Button","props":{"y":3,"x":410,"var":"close_btn","skin":"assetsIn/关闭02.png"}},{"type":"Label","props":{"y":151,"x":264,"width":162,"var":"amount_txt","text":"¥4512，567，57","height":26,"fontSize":20,"font":"微软雅黑","color":"#E8D07A","align":"right"}},{"type":"AssetsInSlider","props":{"y":192,"x":9,"var":"slider","runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider"}},{"type":"Label","props":{"y":310,"x":109,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}},{"type":"Label","props":{"y":309,"x":286,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":445,"height":363},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"assetsIn/smallPanel.png"}},{"type":"Button","props":{"y":304,"x":258,"var":"cancel_btn","skin":"assetsIn/常用按钮.png"}},{"type":"Button","props":{"y":305,"x":81,"var":"ok_btn","skin":"assetsIn/常用按钮.png"}},{"type":"Label","props":{"y":246,"x":311,"width":127,"var":"maxmum_txt","text":"(1700)","height":30,"fontSize":20,"font":"微软雅黑","color":"#FFFFFF","align":"right"}},{"type":"Label","props":{"y":247,"x":21,"width":108,"var":"minmum_txt","text":"(700)","height":32,"fontSize":20,"font":"微软雅黑","color":"#FFFFFF","align":"left"}},{"type":"Label","props":{"y":145,"x":44,"width":112,"var":"amount_describe_txt","text":"带入金额：","height":28,"fontSize":22,"font":"微软雅黑","color":"#b5b5b5"}},{"type":"Label","props":{"y":106,"x":246,"width":179,"var":"total_txt","text":"¥4512，567，57","height":29,"fontSize":20,"font":"微软雅黑","color":"#E8D07A","align":"right"}},{"type":"Label","props":{"y":104,"x":43,"width":109,"var":"total_describe_txt","text":"可用G 币：","height":28,"fontSize":22,"font":"微软雅黑","color":"#b5b5b5"}},{"type":"Label","props":{"y":56,"x":24,"width":390,"var":"roomName_txt","text":"新手场1桌","height":33,"fontSize":20,"color":"#b5b5b5","align":"center"}},{"type":"Image","props":{"y":7,"x":182,"width":98,"skin":"assetsIn/carryInFont.png","height":24}},{"type":"Button","props":{"y":3,"x":410,"var":"close_btn","skin":"assetsIn/关闭02.png"}},{"type":"Label","props":{"y":151,"x":245,"width":181,"var":"amount_txt","text":"¥4512，567，57","height":26,"fontSize":20,"font":"微软雅黑","color":"#E8D07A","align":"right"}},{"type":"AssetsInSlider","props":{"y":192,"x":9,"var":"slider","runtime":"com.lightUI.KGameComponents.assetsInPanel.AssetsInSlider"}},{"type":"Label","props":{"y":310,"x":109,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}},{"type":"Label","props":{"y":309,"x":286,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"}}]};}
 		]);
 		return SmallPanelUI;
 	})(Dialog)

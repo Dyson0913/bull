@@ -100,9 +100,7 @@ package bull.view.room
 		
 		public function start():void
 		{
-			trace("start")
-			
-			viewBankerPanel.setRoundID(_roomData.RoundID);
+			trace("start")			
 			
 			//其它玩家當庄,非系統
 			//TODO CHECK

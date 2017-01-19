@@ -1,5 +1,6 @@
 package bull.modules.common.mediator
 {
+	import bull.modules.common.model.data.RoomData;
 	import com.lightMVC.interfaces.IMediator;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Mediator;
@@ -21,6 +22,9 @@ package bull.modules.common.mediator
 		public static const SHOW_MUSIC_SET_PANEL:String = "car.SHOW_MUSIC_SET_PANEL";
 		public static const HIDE_MUSIC_SET_PANEL:String = "car.HIDE_MUSIC_SET_PANEL";
 		
+		
+		public var roomData:RoomData;
+		
 		public function MusicSetMediator(mediatorName:String="", viewComponent:Object=null)
 		{
 			super(mediatorName, viewComponent);
@@ -28,7 +32,7 @@ package bull.modules.common.mediator
 		
 		override public function getInjector():Array
 		{
-			return [];
+			return ["roomData"];
 		}
 		
 		public function get view():MusicSetPanel
@@ -49,6 +53,7 @@ package bull.modules.common.mediator
 			addNotifiction(SHOW_MUSIC_SET_PANEL);
 			addNotifiction(HIDE_MUSIC_SET_PANEL);
 			addNotifiction(BullNotification.SCENCE_CHANGE);
+			addNotifiction(BullNotification.ROUND_INFO_UPATE);
 			view.musicButton.on(Event.CHANGE, this, onChangeMusic);
 			view.soundButton.on(Event.CHANGE, this, onChangeSound);
 		}
@@ -63,6 +68,9 @@ package bull.modules.common.mediator
 				case HIDE_MUSIC_SET_PANEL:
 					onClose();
 					break;
+				case BullNotification.ROUND_INFO_UPATE:
+					update_round_id();
+				break;
 				case BullNotification.SCENCE_CHANGE:
 					var curScene:String = notification.getBody() as String;
 					trace("MusicSetMediator 切换到游戏场景:"+curScene);
@@ -78,6 +86,9 @@ package bull.modules.common.mediator
 			view.soundButton.selected = !ShareObjectMgr.get().sound;
 			Light.layer.top.addChild(view);
 			view.visible = true;
+			
+			update_round_id();
+			
 		}
 		
 		private function onClose(e:Event=null):void
@@ -86,6 +97,14 @@ package bull.modules.common.mediator
 			view.close();
 		}
 		
+		private function update_round_id():void
+		{
+			if ( roomData != null) 
+			{				
+				view.txt_RoundID.text = roomData.RoundID;
+			}			
+			
+		}
 		
 		/**
 		 * 设置声音 

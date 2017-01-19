@@ -81,7 +81,7 @@ package bull.events
 		public static const ROUND_SETTLEMENT_RSP:String="roundSettlementRsp";
 		public static const Change_Scene:String = "car.Change_Scene"; //切换场景，主要是用于大厅和游戏场景切换
 		
-		
+		public static const ROUND_INFO_UPATE:String = "Round_info_upate"; //切换场景，主要是用于大厅和游戏场景切换
 		
 		
 		public static const Scene_Hall:String = "Scene_Hall"; 	//大厅场景

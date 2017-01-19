@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":13,
+    "selecteID":23,
     "props":{"width":723,"sceneColor":"#000000","renderType":"mask","height":87},
     "nodeParent":-1,
     "label":"View",
@@ -246,46 +246,6 @@
                     "__InPool":false
                 }],
             "compId":20,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Label",
-            "props":{"y":38,"x":-96,"width":87,"var":"txt_RoundID","text":"5868acad101fa","mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
-            "nodeParent":1,
-            "label":"Label(txt_RoundID)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"text":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":22,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Label",
-            "props":{"y":38,"x":-126,"width":33,"text":"局ID:","mouseEnabled":false,"height":16,"color":"#f6ebea","bold":false},
-            "nodeParent":1,
-            "label":"Label",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"text":"label"},
-                    "frame":0,
-                    "__InPool":false
-                }],
-            "compId":23,
             "child":[
                 ]
         },

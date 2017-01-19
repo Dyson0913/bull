@@ -117,7 +117,7 @@ package com.lightUI.net
 			if (message is String) {
 				trace("is String");
 			} else if (message is ArrayBuffer) {
-				trace("is ArrayBuffer");
+				//trace("is ArrayBuffer");
 				
 				
 				_dataByte = new Byte(message);

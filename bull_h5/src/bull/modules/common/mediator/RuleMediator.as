@@ -1,5 +1,5 @@
 package bull.modules.common.mediator
-{
+{	
 	import com.lightMVC.interfaces.IMediator;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Mediator;
@@ -18,7 +18,7 @@ package bull.modules.common.mediator
 	{
 		public static const NAME:String = "ruleMediator";
 		public static const SHOW_RULE_PANEL:String ="car.SHOW_RULE_PANEL";//显示规则说明面板事件
-		public static const HIDE_RULE_PANEL:String ="car.HIDE_RULE_PANEL";//显示规则说明面板事件
+		public static const HIDE_RULE_PANEL:String ="car.HIDE_RULE_PANEL";//显示规则说明面板事件		
 		
 		public function RuleMediator(mediatorName:String="", viewComponent:Object=null)
 		{
@@ -71,7 +71,7 @@ package bull.modules.common.mediator
 		private function onShow():void{
 			trace("RuleMediator onShow()");
 			Light.layer.top.addChild(view);
-			view.visible = true;
+			view.visible = true;			
 		}
 		
 		private function onClose(e:Event=null):void

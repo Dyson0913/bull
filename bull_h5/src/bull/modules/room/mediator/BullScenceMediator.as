@@ -238,14 +238,15 @@ package bull.modules.room.mediator
 		
 		private function get_coin_info(amount:Number,zone:int,is_my:Boolean):Array
 		{
+			//bet 己經調整過了,直接拿值
 			var bet:Number = amount;
-			var chip:BetInfoVO = roomData.chipTool.getChip(bet);
-			bet = roomData.Cash_Type == ENMoneyType.MONEY_TYPE_COIN ? bet : bet / 100;							
+			var chip:BetInfoVO = roomData.chipTool.getChip(bet);			
 			var chips:Array = [];
 			var chipVO:ChipVO;						
-			if(!chip){
+			if (!chip) {
+				
 				//找不倒 一个整的筹码  需要拆分				
-				var temp:BetSlipParam = roomData.chipTool.splitBet(bet);
+				var temp:BetSlipParam = roomData.chipTool.splitBet(bet);				
 				for (var i:int = 0; i < temp.chips.length; i++) 
 				{
 					chip = temp.chips[i];
@@ -680,6 +681,7 @@ package bull.modules.room.mediator
 			{
 				case RoomData.START:
 					view.start();
+					sentNotification(BullNotification.ROUND_INFO_UPATE);
 				break;
 				case RoomData.BANKER:
 					view.banker();
@@ -815,6 +817,7 @@ package bull.modules.room.mediator
 				betinfo = bet_info[i];
 				var self:Boolean = betinfo.uid.toNumber() == myuid;
 				var bet:Number = roomData.GetMoney(betinfo.value);
+				trace("bet = "+bet);
 				var po:int = betinfo.position - 1;				
 				if (self)
 				{

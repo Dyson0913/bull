@@ -2,7 +2,7 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":10,
+    "selecteID":9,
     "props":{"width":445,"sceneColor":"#000000","height":273},
     "nodeParent":-1,
     "label":"Dialog",
@@ -62,7 +62,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":220,"x":58,"var":"ok_btn","skin":"assetsIn/Btn_bg.png","name":"ok_btn"},
+            "props":{"y":226,"x":73,"var":"ok_btn","skin":"assetsIn/常用按钮.png","name":"ok_btn"},
             "nodeParent":1,
             "label":"Button(ok_btn)",
             "isDirectory":false,
@@ -82,7 +82,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":220,"x":238,"var":"cancel_btn","skin":"assetsIn/Btn_bg.png","name":"cancel_btn"},
+            "props":{"y":227,"x":250,"var":"cancel_btn","skin":"assetsIn/常用按钮.png","name":"cancel_btn"},
             "nodeParent":1,
             "label":"Button(cancel_btn)",
             "isOpen":true,
@@ -143,7 +143,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":228,"x":104,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"},
+            "props":{"y":231,"x":103,"width":62,"text":"确 定","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"},
             "nodeParent":1,
             "label":"Label",
             "isDirectory":false,
@@ -163,7 +163,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":228,"x":282,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"},
+            "props":{"y":231,"x":282,"width":62,"text":"取 消","mouseEnabled":false,"height":29,"fontSize":25,"color":"#f6ebea"},
             "nodeParent":1,
             "label":"Label",
             "isDirectory":false,

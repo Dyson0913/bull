@@ -122,6 +122,7 @@ package bull.modules.common.model.data
 		{
 			user_name = "";
 			user_head = "";
+			RoundID = "";
 			
 			panel_alreay_slider_in = false;
 			

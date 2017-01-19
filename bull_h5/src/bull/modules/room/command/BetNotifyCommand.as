@@ -149,7 +149,8 @@ package bull.modules.room.command
 		}
 		
 		private function betnotify(cs:CS):void
-		{			
+		{	
+			trace("betnotify +",cs);
 			var data:SBetNotify = cs.bet_notify;
 			
 			var roomData:RoomData = getSingleton(RoomData.NAME) as RoomData;			
