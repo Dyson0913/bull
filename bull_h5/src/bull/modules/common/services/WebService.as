@@ -70,5 +70,12 @@ package bull.modules.common.services
 			}
 			return param;
 		}
+		
+		/**
+		 * 返回大厅
+		 */
+		public function goback(callback:Handler):void{
+			webApi.goBack(callback)
+		}
 	}
 }

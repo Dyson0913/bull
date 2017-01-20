@@ -181,8 +181,12 @@ package bull.modules.room.command
 				var n:int = list[i].user_info_s.length;
 				var zone_list:Array =[];
 				for (var j:int =0;j< n;j++)
-				{
+				{					
 					var info:SUserInfo =  list[i].user_info_s[j];
+					
+					//撤消下注,bet 為零
+					if ( info.bet_money.toNumber() == 0) continue;
+					
 					var name:String = roomData.find_player("username", info.uid as Number);
 					var money:String  = roomData.appearMoney(roomData.GetMoney(info.bet_money.toNumber()));
 					var one:Object = { "name":name, "light":info.is_light, "money":money};

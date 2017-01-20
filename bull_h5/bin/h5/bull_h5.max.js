@@ -29373,8 +29373,11 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.onReturnClick=function(e){
 			this.dispose();
+			var ws=this.getModel("WebService");
+			ws.goback(Handler.create(this,this.onGoback));
 		}
 
+		__proto.onGoback=function(){}
 		__proto.onGBtnClick=function(e){
 			this.hallData.Cash_Type=2;
 			this.view.showRoomList([this.hallData.roomList[0],this.hallData.roomList[1]]);
@@ -29843,6 +29846,7 @@ var Laya=window.Laya=(function(window,document){
 				console.log("hall 在遊戲 return");
 				return;
 			}
+			(this.getMediator("hallMediator")).sendHeartBeat();
 			this.sentNotification(ENCSType.CS_TYPE_GET_ROOM_LIST_REQ.toString());
 		}
 
@@ -30955,6 +30959,13 @@ var Laya=window.Laya=(function(window,document){
 			this.webApi.rechargeShow(type,callback);
 		}
 
+		/**
+		*返回大厅
+		*/
+		__proto.goback=function(callback){
+			this.webApi.goBack(callback)
+		}
+
 		WebService.resolveBrowserParam=function(){
 			var browserStr=Browser.document.location.href.toString();
 			console.log("browserStr = "+browserStr);
@@ -31091,6 +31102,7 @@ var Laya=window.Laya=(function(window,document){
 				var zone_list=[];
 				for (var j=0;j< n;j++){
 					var info=list[i].user_info_s[j];
+					if (info.bet_money.toNumber()==0)continue ;
 					var name=roomData.find_player("username",info.uid);
 					var money=roomData.appearMoney(roomData.GetMoney(info.bet_money.toNumber()));
 					var one={"name":name,"light":info.is_light,"money":money};
@@ -32158,6 +32170,10 @@ var Laya=window.Laya=(function(window,document){
 				this.view.viewArea.update_total(i,this.roomData.Zone_Total_bet[i],this.roomData.appearMoney(this.roomData.Zone_Total_bet[i]));
 				this.view.viewArea.update_self(i,this.roomData.Zone_self_bet[i],this.roomData.appearMoney(this.roomData.Zone_self_bet[i]));
 			}
+			console.log("roomData.first_three_info = "+this.roomData.first_three_info[0]);
+			console.log("roomData.first_three_info = "+this.roomData.first_three_info[1]);
+			console.log("roomData.first_three_info = "+this.roomData.first_three_info[2]);
+			console.log("roomData.first_three_info = "+this.roomData.first_three_info[3]);
 			this.view.viewArea.set_zoneTopThree(this.roomData.first_three_info);
 			console.log("限紅 = "+this.roomData.rest_betlimit);
 			console.log("剩餘限紅 = "+this.roomData.rest_betlimit);
@@ -52886,7 +52902,17 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.set_zoneTopThree=function(data){
 			this._zone_topthree=data;
-			console.log("==========set_zoneTopThree==========="+this._zone_topthree.length);
+			this.flush();
+		}
+
+		__proto.updata_topThree=function(idx){
+			for (var i=0;i < 4;i++){
+				if (idx==i)this["Rankp_"+i].visible=true;
+				else this["Rankp_"+i].visible=false;
+			}
+		}
+
+		__proto.flush=function(){
 			for (var i=0;i < 4;i++){
 				if (this._zone_topthree[i].length==0){
 					for (var j=0;j < 3;j++)this["Rankp_"+i]["rank_info_"+j].visible=false;
@@ -52910,13 +52936,6 @@ var Laya=window.Laya=(function(window,document){
 						}
 					}
 				}
-			}
-		}
-
-		__proto.updata_topThree=function(idx){
-			for (var i=0;i < 4;i++){
-				if (idx==i)this["Rankp_"+i].visible=true;
-				else this["Rankp_"+i].visible=false;
 			}
 		}
 

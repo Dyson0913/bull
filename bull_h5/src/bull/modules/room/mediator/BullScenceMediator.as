@@ -881,6 +881,10 @@ package bull.modules.room.mediator
 			}			
 			
 			//前三名名單更新 
+			trace("roomData.first_three_info = "+roomData.first_three_info[0]);
+			trace("roomData.first_three_info = "+roomData.first_three_info[1]);
+			trace("roomData.first_three_info = "+roomData.first_three_info[2]);
+			trace("roomData.first_three_info = "+roomData.first_three_info[3]);
 			view.viewArea.set_zoneTopThree(roomData.first_three_info);
 			
 			//限額更新			

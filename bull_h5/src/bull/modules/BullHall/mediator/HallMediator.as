@@ -1,5 +1,6 @@
 package bull.modules.BullHall.mediator
 {
+	import bull.modules.common.services.WebService;
 	import com.lightMVC.interfaces.IMediator;
 	import com.lightMVC.interfaces.INotification;
 	import com.lightMVC.parrerns.Mediator;
@@ -97,9 +98,15 @@ package bull.modules.BullHall.mediator
 		}
 		
 		private function onReturnClick(e:Event):void
-		{
-			
+		{			
 			dispose();
+			//返回平台
+			var ws:WebService = getModel(WebService.NAME) as WebService;
+			ws.goback(Handler.create(this, onGoback));
+		}
+		
+		private function onGoback():void{
+			
 		}
 		
 		private function onGBtnClick(e:Event):void

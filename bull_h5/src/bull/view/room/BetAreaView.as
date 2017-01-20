@@ -302,7 +302,21 @@ package bull.view.room
 		{
 			_zone_topthree = data;
 			
-			trace("==========set_zoneTopThree==========="+ _zone_topthree.length);
+			flush();
+		}
+		
+		private function updata_topThree(idx:int):void
+		{						
+			for (var i:int = 0; i < 4; i++)
+			{
+				if ( idx == i) this["Rankp_" + i].visible = true;
+				else this["Rankp_" + i].visible = false;
+			}
+			
+		}
+		
+		private function flush():void
+		{
 			for (var i:int = 0; i < 4; i++)
 			{
 				
@@ -336,20 +350,8 @@ package bull.view.room
 							this["Rankp_" + i]["rank_info_" + j]["Money"].text = ob["money"];	
 						}
 					}
-				}
-				
-				
+				}				
 			}
-		}
-		
-		private function updata_topThree(idx:int):void
-		{			
-			for (var i:int = 0; i < 4; i++)
-			{
-				if ( idx == i) this["Rankp_" + i].visible = true;
-				else this["Rankp_" + i].visible = false;
-			}
-			
 		}
 		
 		
