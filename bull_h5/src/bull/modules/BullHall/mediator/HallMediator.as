@@ -38,6 +38,8 @@ package bull.modules.BullHall.mediator
 		public var hallData:HallData;
 		public var userInfoData:UserInfoData;		
 		
+		private var percent:Number = -90;
+		
 		public function HallMediator(mediatorName:String=null, viewComponent:Object=null)
 		{
 			mediatorName = mediatorName?mediatorName:NAME;
@@ -167,7 +169,8 @@ package bull.modules.BullHall.mediator
 		 */		
 		private function onClick(e:Event):void
 		{
-			trace("onClick:" + e.target);	
+			trace("onClick:" + e.target);				
+			
 			switch(e.target)
 			{
 				case view.helpBtn:

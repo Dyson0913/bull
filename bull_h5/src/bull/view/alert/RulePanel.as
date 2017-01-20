@@ -16,8 +16,7 @@ package bull.view.alert
 		
 		
 		public function update_data(data:Array):void
-		{
-			trace("RulePanel ================steeing");
+		{			
 			list.array = data;
 		}
 	}

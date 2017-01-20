@@ -25,10 +25,7 @@ package bull.view.hall
 	public class Hall extends hallUI
 	{
 		
-		var marqu_x:int = 612;	
-		
-		public var sp:Sprite;
-		public var pa:Sprite;
+		var marqu_x:int = 612;		
 		
 		public function Hall()
 		{
@@ -60,11 +57,11 @@ package bull.view.hall
 					this["_light_" + i].play(1);		
 				}			
 			}
-			pa = new Sprite;
+			//pa = new Sprite;
 			//pa.rotation = -90;
 		
 			//sp = new Sprite;
-			//sp.graphics.drawPie(57, 57, 50, 0, 0, "#FF0000");
+			//sp.graphics.drawPie(57, 57, 50, -80, 270, "#FF0000");
 			//sp.pivot(57, 57);
 			//sp.rotation = -90;
 			//pa.addChild(sp);

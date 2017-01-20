@@ -97,7 +97,7 @@ package bull.view.room
 			//網速太慢,直接提醒用戶			
 			if ( _status == 3)			
 			{					
-				_timer_idx = Light.timer.setInterval(this, tip_apear, 1000, null);				
+				_timer_idx = Light.timer.setInterval(this, tip_apear, 1000, null);
 			}
 		}
 		
@@ -105,7 +105,7 @@ package bull.view.room
 		{
 			tip_bg.visible = true;	
 			showTxt();
-			Light.timer.clearInterval(_timer_idx);			
+			Light.timer.clearInterval(_timer_idx);
 			
 			_timer_idx = Light.timer.setInterval(this, tip_disaper, 1000, null);					
 		}

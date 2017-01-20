@@ -29329,6 +29329,7 @@ var Laya=window.Laya=(function(window,document){
 			this.hallSocketService=null;
 			this.hallData=null;
 			this.userInfoData=null;
+			this.percent=-90;
 			this.timer=null;
 			this.num=0;
 			this.currentId=0;
@@ -30458,14 +30459,12 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.onShow=function(){
-			console.log("RuleMediator onShow()");
 			Light.layer.top.addChild(this.view);
 			this.view.visible=true;
 			this.view.update_data([1]);
 		}
 
 		__proto.onClose=function(e){
-			console.log("RuleMediator onClose()");
 			this.view.close();
 		}
 
@@ -52517,8 +52516,6 @@ var Laya=window.Laya=(function(window,document){
 	var Hall=(function(_super){
 		function Hall(){
 			this.marqu_x=612;
-			this.sp=null;
-			this.pa=null;
 			Hall.__super.call(this);
 			this.GLowEnter.visible=this.GHighEnter.visible=true;
 			this.MLowEnter.visible=this.MHighEnter.visible=false;
@@ -52539,7 +52536,6 @@ var Laya=window.Laya=(function(window,document){
 					this["_light_"+i].play(1);
 				}
 			}
-			this.pa=new Sprite;
 		}
 
 		__class(Hall,'bull.view.hall.Hall',_super);
@@ -53026,6 +53022,9 @@ var Laya=window.Laya=(function(window,document){
 	var BetTimePanel=(function(_super){
 		function BetTimePanel(){
 			this._time=0;
+			this._per_sec_value=NaN;
+			this._start_angel=NaN;
+			this._timer_idx=0;
 			BetTimePanel.__super.call(this);
 		}
 
@@ -53045,7 +53044,22 @@ var Laya=window.Laya=(function(window,document){
 			this.visible=true;
 			this._time=data[0];
 			this.bt_txt.text=this._time.toString();
+			this._start_angel=-90;
+			this._per_sec_value=360 / (this._time *10);
+			var sp=new Sprite();
+			sp.graphics.drawPie(57,57,52,this._start_angel,270,"#FF0000");
+			this.mcbg.mask=sp;
 			Laya.timer.loop(1000,this,this.timerHandler);
+			this._timer_idx=Light.timer.setInterval(this,this.pie,100,null);
+		}
+
+		__proto.pie=function(){
+			this._start_angel+=this._per_sec_value;
+			console.log("_start_angel = "+this._start_angel);
+			var sp=new Sprite();
+			this.mcbg.mask=null;
+			sp.graphics.drawPie(57,57,52,this._start_angel ,270,"#FF0000");
+			this.mcbg.mask=sp;
 		}
 
 		__proto.timerHandler=function(){
@@ -53053,6 +53067,7 @@ var Laya=window.Laya=(function(window,document){
 			this.bt_txt.text=this._time.toString();
 			if (this._time==0){
 				Laya.timer.clear(this,this.timerHandler);
+				Light.timer.clearInterval(this._timer_idx);
 			}
 			if(this._time <=3){
 				SoundManager.playSound(SoundPath.CountTick);
@@ -55263,7 +55278,6 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.update_data=function(data){
-			console.log("RulePanel ================steeing");
 			this.list.array=data;
 		}
 
