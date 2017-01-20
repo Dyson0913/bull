@@ -19,4 +19,5 @@
    <item name="assetsIn/longPanel.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
    <item name="assetsIn/常用按钮.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
    <item name="assetsIn/标签按钮常态.png" type="Image" compress="0" pack="1" quality="80" props="" picType="0"/>
+   <item name="res/gameScene/vscroll.png" type="VScrollBar" compress="0" pack="0" quality="80" props="sizeGrid=0,3,0,2" picType="0"/>
 </res>

@@ -72,6 +72,8 @@ package bull.modules.common.mediator
 			trace("RuleMediator onShow()");
 			Light.layer.top.addChild(view);
 			view.visible = true;			
+			
+			view.update_data([1]);
 		}
 		
 		private function onClose(e:Event=null):void

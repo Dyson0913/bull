@@ -272,6 +272,90 @@
             },
             "rotated": false,
             "trimed": false
+        },
+        "vscroll$bar.png": {
+            "frame": {
+                "x": 29,
+                "y": 397,
+                "w": 17,
+                "h": 29,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 17,
+                "h": 29
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 29
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "vscroll$down.png": {
+            "frame": {
+                "x": 29,
+                "y": 428,
+                "w": 17,
+                "h": 27,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 17,
+                "h": 27
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 27
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "vscroll$up.png": {
+            "frame": {
+                "x": 45,
+                "y": 269,
+                "w": 17,
+                "h": 27,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 17,
+                "h": 27
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 27
+            },
+            "rotated": false,
+            "trimed": false
+        },
+        "vscroll.png": {
+            "frame": {
+                "x": 45,
+                "y": 298,
+                "w": 17,
+                "h": 29,
+                "idx": 0
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 17,
+                "h": 29
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 29
+            },
+            "rotated": false,
+            "trimed": false
         }
     },
     "meta": {

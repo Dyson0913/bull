@@ -8,5 +8,17 @@ package bull.view.alert
 		{
 			super();
 		}
+		
+		override protected function createChildren():void
+		{
+			super.createChildren();				
+		}
+		
+		
+		public function update_data(data:Array):void
+		{
+			trace("RulePanel ================steeing");
+			list.array = data;
+		}
 	}
 }

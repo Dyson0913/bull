@@ -29509,6 +29509,49 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
+	var ConnectHallCommand=(function(_super){
+		function ConnectHallCommand(){
+			ConnectHallCommand.__super.call(this);
+		}
+
+		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
+		var __proto=ConnectHallCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()=="hallSocketConnect"){
+				this.hallConnectHandler();
+				}else if(notification.getName()=="hallSocketConnectComplete"){
+				this.hallConnectCompleteHandler();
+				}else if(notification.getName()=="hallSocketConnectFailed"){
+				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
+			}
+		}
+
+		__proto.hallConnectHandler=function(){
+			var config=this.getSingleton("ConfigData");
+			var hallSocketService=this.getModel("hallSocketService");
+			hallSocketService.connect(config.ip,config.port);
+		}
+
+		__proto.hallConnectCompleteHandler=function(){
+			console.log("hallConnectCompleteHandler");
+			var param=WebService.resolveBrowserParam();
+			var bullData=this.getSingleton("Data");
+			var roomData=this.getSingleton("roomData");
+			if(param.uid){
+				bullData.uid=param.uid;
+				roomData.uid=bullData.uid;
+				ShareObjectMgr.get().init(param.uid.toString());
+			}
+			if (param.access_token)bullData.token=param.access_token;
+			this.sentNotification("loginHallRequest");
+		}
+
+		return ConnectHallCommand;
+	})(Command)
+
+
 	/**
 	*这里处理大厅的socket连接
 	*@author light-k
@@ -29614,49 +29657,6 @@ var Laya=window.Laya=(function(window,document){
 		HallSocketService.NAME="hallSocketService";
 		return HallSocketService;
 	})(Model)
-
-
-	//class bull.modules.common.command.ConnectHallCommand extends com.lightMVC.parrerns.Command
-	var ConnectHallCommand=(function(_super){
-		function ConnectHallCommand(){
-			ConnectHallCommand.__super.call(this);
-		}
-
-		__class(ConnectHallCommand,'bull.modules.common.command.ConnectHallCommand',_super);
-		var __proto=ConnectHallCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()=="hallSocketConnect"){
-				this.hallConnectHandler();
-				}else if(notification.getName()=="hallSocketConnectComplete"){
-				this.hallConnectCompleteHandler();
-				}else if(notification.getName()=="hallSocketConnectFailed"){
-				console.log("connect failed:"+notification.getName()+" body: "+notification.getBody());
-			}
-		}
-
-		__proto.hallConnectHandler=function(){
-			var config=this.getSingleton("ConfigData");
-			var hallSocketService=this.getModel("hallSocketService");
-			hallSocketService.connect(config.ip,config.port);
-		}
-
-		__proto.hallConnectCompleteHandler=function(){
-			console.log("hallConnectCompleteHandler");
-			var param=WebService.resolveBrowserParam();
-			var bullData=this.getSingleton("Data");
-			var roomData=this.getSingleton("roomData");
-			if(param.uid){
-				bullData.uid=param.uid;
-				roomData.uid=bullData.uid;
-				ShareObjectMgr.get().init(param.uid.toString());
-			}
-			if (param.access_token)bullData.token=param.access_token;
-			this.sentNotification("loginHallRequest");
-		}
-
-		return ConnectHallCommand;
-	})(Command)
 
 
 	//class bull.modules.common.command.ConnectRoomCommand extends com.lightMVC.parrerns.Command
@@ -30279,6 +30279,42 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
+	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
+	var HallData=(function(_super){
+		function HallData(){
+			this._roomList=null;
+			this._already_in_msg=null;
+			this._already_in_room_idx=0;
+			this._join_room_idx=0;
+			this.ip=null;
+			this.port=0;
+			this.Token=null;
+			this.Cash_Type=0;
+			this.ViewIn="Lobby";
+			HallData.__super.call(this);
+			this._already_in_room_idx=-1;
+		}
+
+		__class(HallData,'bull.modules.common.model.data.HallData',_super);
+		var __proto=HallData.prototype;
+		__getset(0,__proto,'roomList',function(){
+			return this._roomList;
+			},function(value){
+			this._roomList=value;
+			this.dispatchEvent(new LightEvent("change"));
+		});
+
+		__getset(0,__proto,'join_room_idx',function(){
+			return this._join_room_idx;
+			},function(value){
+			this._join_room_idx=value;
+		});
+
+		HallData.NAME="hallData";
+		return HallData;
+	})(EventDispatcher)
+
+
 	/**
 	*设置声音面板
 	*/
@@ -30374,42 +30410,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Mediator)
 
 
-	//class bull.modules.common.model.data.HallData extends com.iflash.events.EventDispatcher
-	var HallData=(function(_super){
-		function HallData(){
-			this._roomList=null;
-			this._already_in_msg=null;
-			this._already_in_room_idx=0;
-			this._join_room_idx=0;
-			this.ip=null;
-			this.port=0;
-			this.Token=null;
-			this.Cash_Type=0;
-			this.ViewIn="Lobby";
-			HallData.__super.call(this);
-			this._already_in_room_idx=-1;
-		}
-
-		__class(HallData,'bull.modules.common.model.data.HallData',_super);
-		var __proto=HallData.prototype;
-		__getset(0,__proto,'roomList',function(){
-			return this._roomList;
-			},function(value){
-			this._roomList=value;
-			this.dispatchEvent(new LightEvent("change"));
-		});
-
-		__getset(0,__proto,'join_room_idx',function(){
-			return this._join_room_idx;
-			},function(value){
-			this._join_room_idx=value;
-		});
-
-		HallData.NAME="hallData";
-		return HallData;
-	})(EventDispatcher)
-
-
 	/**
 	*规则面板
 	*/
@@ -30461,6 +30461,7 @@ var Laya=window.Laya=(function(window,document){
 			console.log("RuleMediator onShow()");
 			Light.layer.top.addChild(this.view);
 			this.view.visible=true;
+			this.view.update_data([1]);
 		}
 
 		__proto.onClose=function(e){
@@ -30476,26 +30477,6 @@ var Laya=window.Laya=(function(window,document){
 		RuleMediator.SHOW_RULE_PANEL="car.SHOW_RULE_PANEL";
 		RuleMediator.HIDE_RULE_PANEL="car.HIDE_RULE_PANEL";
 		return RuleMediator;
-	})(Mediator)
-
-
-	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
-	var SmallLoadingMediator=(function(_super){
-		function SmallLoadingMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
-		}
-
-		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
-		var __proto=SmallLoadingMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.setViewComponent=function(viewComponent){
-			this.viewComponent=viewComponent;
-			Light.layer.loadingMask.lodingMask=viewComponent;
-		}
-
-		SmallLoadingMediator.NAME="smallLoadingMediator";
-		return SmallLoadingMediator;
 	})(Mediator)
 
 
@@ -30715,6 +30696,26 @@ var Laya=window.Laya=(function(window,document){
 	})(EventDispatcher)
 
 
+	//class bull.modules.common.mediator.SmallLoadingMediator extends com.lightMVC.parrerns.Mediator
+	var SmallLoadingMediator=(function(_super){
+		function SmallLoadingMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			SmallLoadingMediator.__super.call(this,"smallLoadingMediator",viewComponent);
+		}
+
+		__class(SmallLoadingMediator,'bull.modules.common.mediator.SmallLoadingMediator',_super);
+		var __proto=SmallLoadingMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.setViewComponent=function(viewComponent){
+			this.viewComponent=viewComponent;
+			Light.layer.loadingMask.lodingMask=viewComponent;
+		}
+
+		SmallLoadingMediator.NAME="smallLoadingMediator";
+		return SmallLoadingMediator;
+	})(Mediator)
+
+
 	//class bull.modules.common.model.data.UserInfoData extends com.iflash.events.EventDispatcher
 	var UserInfoData=(function(_super){
 		function UserInfoData(){
@@ -30797,6 +30798,53 @@ var Laya=window.Laya=(function(window,document){
 		BullProtoModel.NAME="bullProtoModel";
 		return BullProtoModel;
 	})(Model)
+
+
+	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
+	var TipsLoadMediator=(function(_super){
+		function TipsLoadMediator(mediatorName,viewComponent){
+			(mediatorName===void 0)&& (mediatorName="");
+			TipsLoadMediator.__super.call(this,mediatorName,viewComponent);
+		}
+
+		__class(TipsLoadMediator,'bull.modules.perload.mediator.TipsLoadMediator',_super);
+		var __proto=TipsLoadMediator.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
+		__proto.getInjector=function(){
+			return [];
+		}
+
+		__proto.setViewComponent=function(viewComponent){
+			_super.prototype.setViewComponent.call(this,viewComponent);
+			this.addNotifiction("loadDataMessage");
+			console.log("TipsLoadMediator setViewComponent");
+			var objData=Light.loader.getRes("tipText");
+			var tips=[];
+			for (var id in objData){
+				var value=objData[id];
+				console.log
+				tips.push(value.cn);
+			}
+			this.view.showTips(tips);
+		}
+
+		__proto.handler=function(noti){
+			if(noti.getName()=="loadDataMessage"){
+				this.view.show(noti.getBody().value);
+			}
+		}
+
+		__proto.onShowProgress=function(value){
+			console.log("this tips progress --- "+value);
+		}
+
+		__getset(0,__proto,'view',function(){
+			return this.viewComponent;
+		});
+
+		TipsLoadMediator.NAME="tipsLoadMediator";
+		return TipsLoadMediator;
+	})(Mediator)
 
 
 	//class bull.modules.room.command.BankerNotifyCommand extends com.lightMVC.parrerns.Command
@@ -30884,53 +30932,6 @@ var Laya=window.Laya=(function(window,document){
 
 		return BankerNotifyCommand;
 	})(Command)
-
-
-	//class bull.modules.perload.mediator.TipsLoadMediator extends com.lightMVC.parrerns.Mediator
-	var TipsLoadMediator=(function(_super){
-		function TipsLoadMediator(mediatorName,viewComponent){
-			(mediatorName===void 0)&& (mediatorName="");
-			TipsLoadMediator.__super.call(this,mediatorName,viewComponent);
-		}
-
-		__class(TipsLoadMediator,'bull.modules.perload.mediator.TipsLoadMediator',_super);
-		var __proto=TipsLoadMediator.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.IMediator":true})
-		__proto.getInjector=function(){
-			return [];
-		}
-
-		__proto.setViewComponent=function(viewComponent){
-			_super.prototype.setViewComponent.call(this,viewComponent);
-			this.addNotifiction("loadDataMessage");
-			console.log("TipsLoadMediator setViewComponent");
-			var objData=Light.loader.getRes("tipText");
-			var tips=[];
-			for (var id in objData){
-				var value=objData[id];
-				console.log
-				tips.push(value.cn);
-			}
-			this.view.showTips(tips);
-		}
-
-		__proto.handler=function(noti){
-			if(noti.getName()=="loadDataMessage"){
-				this.view.show(noti.getBody().value);
-			}
-		}
-
-		__proto.onShowProgress=function(value){
-			console.log("this tips progress --- "+value);
-		}
-
-		__getset(0,__proto,'view',function(){
-			return this.viewComponent;
-		});
-
-		TipsLoadMediator.NAME="tipsLoadMediator";
-		return TipsLoadMediator;
-	})(Mediator)
 
 
 	//class bull.modules.common.services.WebService extends com.lightMVC.parrerns.Model
@@ -31196,6 +31197,44 @@ var Laya=window.Laya=(function(window,document){
 	})(Command)
 
 
+	//class bull.modules.room.command.DealCardNotifyCommand extends com.lightMVC.parrerns.Command
+	var DealCardNotifyCommand=(function(_super){
+		function DealCardNotifyCommand(){
+			DealCardNotifyCommand.__super.call(this);
+		}
+
+		__class(DealCardNotifyCommand,'bull.modules.room.command.DealCardNotifyCommand',_super);
+		var __proto=DealCardNotifyCommand.prototype;
+		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
+		__proto.handler=function(notification){
+			if(notification.getName()==ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString()){
+				this.deal(notification.getBody());
+			}
+		}
+
+		__proto.deal=function(cs){
+			console.log("============================發牌資訊");
+			var roomData=this.getSingleton("roomData");
+			roomData.card_info.length=0;
+			roomData.card_info.push(cs.deal_card_notify.banker);
+			roomData.card_info.push(cs.deal_card_notify._1);
+			roomData.card_info.push(cs.deal_card_notify._2);
+			roomData.card_info.push(cs.deal_card_notify._3);
+			roomData.card_info.push(cs.deal_card_notify._4);
+			roomData.each_zone_win.length=0;
+			roomData.each_zone_display.length=0;
+			for (var i=1;i < roomData.card_info.length;i++){
+				var deal=roomData.card_info[i];
+				roomData.each_zone_display.push(roomData.appearMoney(roomData.GetMoney(deal.player_win.toNumber())));
+				roomData.each_zone_win.push(deal.player_win);
+			}
+			this.sentNotification("cardnotify");
+		}
+
+		return DealCardNotifyCommand;
+	})(Command)
+
+
 	//class bull.modules.perload.services.PreLoadService extends com.lightMVC.parrerns.Model
 	var PreLoadService=(function(_super){
 		function PreLoadService(proxyName){
@@ -31347,44 +31386,6 @@ var Laya=window.Laya=(function(window,document){
 		PreLoadService.NAME="perLoadService";
 		return PreLoadService;
 	})(Model)
-
-
-	//class bull.modules.room.command.DealCardNotifyCommand extends com.lightMVC.parrerns.Command
-	var DealCardNotifyCommand=(function(_super){
-		function DealCardNotifyCommand(){
-			DealCardNotifyCommand.__super.call(this);
-		}
-
-		__class(DealCardNotifyCommand,'bull.modules.room.command.DealCardNotifyCommand',_super);
-		var __proto=DealCardNotifyCommand.prototype;
-		Laya.imps(__proto,{"com.lightMVC.interfaces.ICommand":true})
-		__proto.handler=function(notification){
-			if(notification.getName()==ENCSType.CS_TYPE_DEAL_CARD_NOTIFY.toString()){
-				this.deal(notification.getBody());
-			}
-		}
-
-		__proto.deal=function(cs){
-			console.log("============================發牌資訊");
-			var roomData=this.getSingleton("roomData");
-			roomData.card_info.length=0;
-			roomData.card_info.push(cs.deal_card_notify.banker);
-			roomData.card_info.push(cs.deal_card_notify._1);
-			roomData.card_info.push(cs.deal_card_notify._2);
-			roomData.card_info.push(cs.deal_card_notify._3);
-			roomData.card_info.push(cs.deal_card_notify._4);
-			roomData.each_zone_win.length=0;
-			roomData.each_zone_display.length=0;
-			for (var i=1;i < roomData.card_info.length;i++){
-				var deal=roomData.card_info[i];
-				roomData.each_zone_display.push(roomData.appearMoney(roomData.GetMoney(deal.player_win.toNumber())));
-				roomData.each_zone_win.push(deal.player_win);
-			}
-			this.sentNotification("cardnotify");
-		}
-
-		return DealCardNotifyCommand;
-	})(Command)
 
 
 	//class bull.modules.room.command.EnterRoomCommand extends com.lightMVC.parrerns.Command
@@ -33982,23 +33983,6 @@ var Laya=window.Laya=(function(window,document){
 	})(Event)
 
 
-	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
-	var WindowEvent=(function(_super){
-		function WindowEvent(type,data,bubbles,cancelable){
-			this.data=null;
-			(data===void 0)&& (data="");
-			(bubbles===void 0)&& (bubbles=false);
-			(cancelable===void 0)&& (cancelable=false);
-			this.data=data;
-			WindowEvent.__super.call(this,type,bubbles,cancelable);
-		}
-
-		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
-		WindowEvent.CLOSE="close";
-		return WindowEvent;
-	})(Event)
-
-
 	/**
 	*场景管理器
 	*@author light-k
@@ -34199,6 +34183,23 @@ var Laya=window.Laya=(function(window,document){
 
 		return ScenceManager;
 	})(EventDispatcher)
+
+
+	//class com.lightUI.events.WindowEvent extends com.iflash.events.Event
+	var WindowEvent=(function(_super){
+		function WindowEvent(type,data,bubbles,cancelable){
+			this.data=null;
+			(data===void 0)&& (data="");
+			(bubbles===void 0)&& (bubbles=false);
+			(cancelable===void 0)&& (cancelable=false);
+			this.data=data;
+			WindowEvent.__super.call(this,type,bubbles,cancelable);
+		}
+
+		__class(WindowEvent,'com.lightUI.events.WindowEvent',_super);
+		WindowEvent.CLOSE="close";
+		return WindowEvent;
+	})(Event)
 
 
 	//class com.lightUI.net.SocketConnect extends com.iflash.events.EventDispatcher
@@ -44240,6 +44241,25 @@ var Laya=window.Laya=(function(window,document){
 	})(Box)
 
 
+	//class bull.view.room.RuleRender extends laya.ui.Box
+	var RuleRender=(function(_super){
+		function RuleRender(){
+			RuleRender.__super.call(this);
+			this.once("added",this,this._$5_onAdded);
+		}
+
+		__class(RuleRender,'bull.view.room.RuleRender',_super);
+		var __proto=RuleRender.prototype;
+		__proto._$5_onAdded=function(){}
+		__getset(0,__proto,'dataSource',_super.prototype._$get_dataSource,function(value){
+			if (value==null)return;
+			console.log("data");
+		});
+
+		return RuleRender;
+	})(Box)
+
+
 	//class bull.view.room.Chip extends laya.ui.Image
 	var Chip=(function(_super){
 		function Chip(isSelf,type,value,skin){
@@ -50688,7 +50708,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(PlayerListUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":288,"height":670},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/桌内玩家列表底板.png"}},{"type":"Label","props":{"y":646,"x":129,"var":"total_txt","text":"1/10","scaleY":1.5,"scaleX":1.5,"color":"#eee3e2"}},{"type":"List","props":{"y":36,"x":12,"width":266,"var":"list","height":610},"child":[{"type":"Box","props":{"y":-1,"x":1,"runtime":"bull.view.room.PlayerListRender","name":"render"},"child":[{"type":"Animation","props":{"y":1,"x":-2,"visible":true,"var":"bg","source":"res/gameScene/玩家信息底板.png,res/gameScene/玩家信息底板02.png","name":"bg"}},{"type":"Image","props":{"y":4,"x":207,"visible":true,"var":"light","skin":"res/share/Light.png","name":"light"}},{"type":"Image","props":{"y":3,"x":-1,"width":45,"visible":true,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","name":"Head","height":45}},{"type":"Image","props":{"y":6,"x":46,"visible":true,"var":"Vip","skin":"res/gameScene/miniVIP底板.png","name":"Vip"},"child":[{"type":"Image","props":{"y":2.000000000000023,"x":1.999999999999993,"visible":true,"skin":"res/gameScene/miniV.png"}},{"type":"Label","props":{"y":2,"x":7,"width":32,"var":"Level","text":"99","height":15,"font":"smallvip","align":"center"}}]},{"type":"Label","props":{"y":7,"x":49,"width":155,"visible":true,"var":"Name","text":"天涯歌女爱与仇","name":"Name","height":21,"fontSize":18,"color":"#f8f0ef","align":"left"}},{"type":"Label","props":{"y":30,"x":46,"width":95,"visible":true,"var":"Money","text":"+999999999","name":"Money","height":19,"fontSize":15,"color":"#f3ebea","align":"left"}}]},{"type":"VScrollBar","props":{"y":0,"x":248,"width":17,"skin":"res/gameScene/vscroll.png","name":"scrollBar","height":610}}]},{"type":"Button","props":{"y":-3,"x":250,"var":"clostBtn","skin":"res/gameScene/PlayerListCloseBtn.png"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":288,"height":670},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/桌内玩家列表底板.png"}},{"type":"Label","props":{"y":646,"x":129,"var":"total_txt","text":"1/10","scaleY":1.5,"scaleX":1.5,"color":"#eee3e2"}},{"type":"List","props":{"y":36,"x":12,"width":266,"var":"list","height":610},"child":[{"type":"Box","props":{"y":-1,"x":1,"runtime":"bull.view.room.PlayerListRender","name":"render"},"child":[{"type":"Animation","props":{"y":1,"x":-2,"visible":true,"var":"bg","source":"res/gameScene/玩家信息底板.png,res/gameScene/玩家信息底板02.png","name":"bg"}},{"type":"Image","props":{"y":4,"x":207,"visible":true,"var":"light","skin":"res/share/Light.png","name":"light"}},{"type":"Image","props":{"y":3,"x":-1,"width":45,"visible":true,"var":"Head","skin":"res/gameScene/HeadIcon.jpg","name":"Head","height":45}},{"type":"Image","props":{"y":6,"x":46,"visible":true,"var":"Vip","skin":"res/gameScene/miniVIP底板.png","name":"Vip"},"child":[{"type":"Image","props":{"y":2.000000000000023,"x":1.999999999999993,"visible":true,"skin":"res/gameScene/miniV.png"}},{"type":"Label","props":{"y":2,"x":7,"width":32,"var":"Level","text":"99","height":15,"font":"smallvip","align":"center"}}]},{"type":"Label","props":{"y":7,"x":49,"width":155,"visible":true,"var":"Name","text":"天涯歌女爱与仇","name":"Name","height":21,"fontSize":18,"color":"#f8f0ef","align":"left"}},{"type":"Label","props":{"y":30,"x":46,"width":95,"visible":true,"var":"Money","text":"+999999999","name":"Money","height":19,"fontSize":15,"color":"#f3ebea","align":"left"}}]},{"type":"VScrollBar","props":{"y":0,"x":248,"width":17,"skin":"res/gameScene/vscroll.png","name":"scrollBar","height":610,"sizeGrid":"0,3,0,2"}}]},{"type":"Button","props":{"y":-3,"x":250,"var":"clostBtn","skin":"res/gameScene/PlayerListCloseBtn.png"}}]};}
 		]);
 		return PlayerListUI;
 	})(View)
@@ -50980,7 +51000,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BankerSettleUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":836,"height":453},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/下庄结算底板.png"}},{"type":"Button","props":{"y":396,"x":349,"var":"ok_btn","skin":"res/gameScene/Btn_bg.png"}},{"type":"Label","props":{"y":405,"x":390,"width":67,"text":"确  定","mouseEnabled":false,"height":32,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":4,"x":365,"width":107,"text":"下庄结算","mouseEnabled":false,"height":32,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":363,"x":13,"width":61,"text":"结算","mouseEnabled":false,"height":33,"fontSize":25,"color":"#ecec1a","bold":false}},{"type":"Label","props":{"y":359,"x":545,"width":119,"var":"total_txt","text":"99999999","mouseEnabled":false,"height":25,"fontSize":25,"color":"#ecec1a","bold":false,"align":"center"}},{"type":"Button","props":{"y":-1,"x":798,"var":"close_btn","skin":"res/gameScene/closeBtn.png"}},{"type":"List","props":{"y":87,"x":9,"width":816,"var":"xiazhuang_list","height":265},"child":[{"type":"Box","props":{"y":0,"x":0,"width":814,"runtime":"bull.view.room.XiaZhuangListRender","name":"render","height":28},"child":[{"type":"Animation","props":{"y":2,"x":-3,"var":"bg","source":"res/gameScene/下庄结算横条01.png,res/gameScene/下庄结算横条02.png","name":"bg"}},{"type":"Label","props":{"y":3,"x":457,"width":50,"var":"player3_txt","text":"牛一","name":"player3_txt","mouseEnabled":false,"height":26,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":373,"width":52,"var":"player2_txt","text":"牛一","name":"player2_txt","mouseEnabled":false,"height":24,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":287,"width":47,"var":"player1_txt","text":"牛一","name":"player1_txt","mouseEnabled":false,"height":23,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":0,"x":643,"width":158,"var":"rundID_txt","text":"5868acad101fa","name":"rundID_txt","mouseEnabled":false,"height":31,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":513,"width":104,"var":"amount_txt","text":"9999999","name":"amount_txt","mouseEnabled":false,"height":31,"fontSize":22,"color":"#f6ebea","bold":false,"align":"center"}},{"type":"Label","props":{"y":2,"x":202,"width":50,"var":"player0_txt","text":"牛一","name":"player0_txt","mouseEnabled":false,"height":29,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":97,"width":44,"var":"bankerType_txt","text":"牛一","name":"bankerType_txt","mouseEnabled":false,"height":27,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":2,"width":54,"var":"index_txt","text":"第1局","name":"index_txt","mouseEnabled":false,"height":27,"fontSize":20,"color":"#f6ebea","bold":false}}]},{"type":"VScrollBar","props":{"y":2,"x":802,"width":17,"skin":"res/gameScene/vscroll.png","name":"scrollBar","height":266}}]}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":836,"height":453},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/下庄结算底板.png"}},{"type":"Button","props":{"y":396,"x":349,"var":"ok_btn","skin":"res/gameScene/Btn_bg.png"}},{"type":"Label","props":{"y":405,"x":390,"width":67,"text":"确  定","mouseEnabled":false,"height":32,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":4,"x":365,"width":107,"text":"下庄结算","mouseEnabled":false,"height":32,"fontSize":25,"color":"#f6ebea","bold":true}},{"type":"Label","props":{"y":363,"x":13,"width":61,"text":"结算","mouseEnabled":false,"height":33,"fontSize":25,"color":"#ecec1a","bold":false}},{"type":"Label","props":{"y":359,"x":545,"width":119,"var":"total_txt","text":"99999999","mouseEnabled":false,"height":25,"fontSize":25,"color":"#ecec1a","bold":false,"align":"center"}},{"type":"Button","props":{"y":-1,"x":798,"var":"close_btn","skin":"res/gameScene/closeBtn.png"}},{"type":"List","props":{"y":87,"x":9,"width":816,"var":"xiazhuang_list","height":265},"child":[{"type":"Box","props":{"y":0,"x":0,"width":814,"runtime":"bull.view.room.XiaZhuangListRender","name":"render","height":28},"child":[{"type":"Animation","props":{"y":2,"x":-3,"var":"bg","source":"res/gameScene/下庄结算横条01.png,res/gameScene/下庄结算横条02.png","name":"bg"}},{"type":"Label","props":{"y":3,"x":457,"width":50,"var":"player3_txt","text":"牛一","name":"player3_txt","mouseEnabled":false,"height":26,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":373,"width":52,"var":"player2_txt","text":"牛一","name":"player2_txt","mouseEnabled":false,"height":24,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":287,"width":47,"var":"player1_txt","text":"牛一","name":"player1_txt","mouseEnabled":false,"height":23,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":0,"x":643,"width":158,"var":"rundID_txt","text":"5868acad101fa","name":"rundID_txt","mouseEnabled":false,"height":31,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":513,"width":104,"var":"amount_txt","text":"9999999","name":"amount_txt","mouseEnabled":false,"height":31,"fontSize":22,"color":"#f6ebea","bold":false,"align":"center"}},{"type":"Label","props":{"y":2,"x":202,"width":50,"var":"player0_txt","text":"牛一","name":"player0_txt","mouseEnabled":false,"height":29,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":97,"width":44,"var":"bankerType_txt","text":"牛一","name":"bankerType_txt","mouseEnabled":false,"height":27,"fontSize":22,"color":"#f6ebea","bold":false}},{"type":"Label","props":{"y":3,"x":2,"width":54,"var":"index_txt","text":"第1局","name":"index_txt","mouseEnabled":false,"height":27,"fontSize":20,"color":"#f6ebea","bold":false}}]},{"type":"VScrollBar","props":{"y":2,"x":802,"width":17,"skin":"res/gameScene/vscroll.png","name":"scrollBar","height":266,"sizeGrid":"0,3,0,2"}}]}]};}
 		]);
 		return BankerSettleUI;
 	})(View)
@@ -52473,19 +52493,21 @@ var Laya=window.Laya=(function(window,document){
 	var RulePanelUI=(function(_super){
 		function RulePanelUI(){
 			this.btnClose=null;
-			this.List=null;
+			this.list=null;
 			RulePanelUI.__super.call(this);
 		}
 
 		__class(RulePanelUI,'ui.ui.alert.RulePanelUI',_super);
 		var __proto=RulePanelUI.prototype;
 		__proto.createChildren=function(){
+			View.regComponent("bull.view.alert.RulePanel",RulePanel);
+			View.regComponent("bull.view.room.RuleRender",RuleRender);
 			laya.ui.Component.prototype.createChildren.call(this);
 			this.createView(RulePanelUI.uiView);
 		}
 
 		__static(RulePanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":833,"text":"规则说明","height":612},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_rule.png"}},{"type":"Button","props":{"y":-1,"x":793,"var":"btnClose","skin":"res/alert/btn_close.png"}},{"type":"TextArea","props":{"y":4,"x":387,"width":115,"text":"规则说明","height":34,"fontSize":25,"color":"#f3e9e9","bold":true}},{"type":"List","props":{"y":59,"x":11,"width":816,"var":"List","height":515},"child":[{"type":"Box","props":{"y":-1,"x":-3,"width":813,"name":"render","height":983},"child":[{"type":"Image","props":{"y":6,"x":12,"skin":"res/alert/img_rule_1.png"}},{"type":"Image","props":{"y":120,"x":14,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":143,"x":3,"skin":"res/alert/img_rule_2.png"}},{"type":"Image","props":{"y":431,"x":5,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":442,"x":5,"skin":"res/alert/img_rule_3.png"}},{"type":"Label","props":{"y":45,"x":17,"width":756,"text":"    百人牛牛是牛牛游戏的升级版，是可以提供100人及以上玩家同时进行的简\\n单\"押注类\"克游戏，玩家可坐庄，闲家分别与庄家比较牌型大小来定输赢。","height":65,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":181,"x":31,"width":756,"text":"进入游戏 ：百人牛牛是随到随玩，您可以随时进入或退出游戏。","height":29,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":215,"x":30,"width":756,"text":"申请坐庄 ：玩家如果满足游戏坐庄条件，就能申请坐庄，进入申请上庄列表。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":202,"x":-58}},{"type":"Label","props":{"y":252,"x":30,"width":756,"text":"闲家下注 ：下注分为四个下注区，游戏开始后，除庄家外，所有玩家都可以\\n下注。 ","height":52,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":308,"x":29,"width":756,"text":"发牌：加注时间结束后，系统将同时发出五副手牌。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":345,"x":23,"width":756,"text":" 结算：每位闲家赢得自己下注的金额，庄家赢闲家所输掉的下注金额，不同牌\\n型倍数不一，\\n结算时玩家的下注筹码乘上牌型倍数即为结算金额。","height":74,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":484,"x":30,"width":756,"text":"无牛：五张牌中，任意三张牌点数之和都不能组成10的倍数。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":517,"x":30,"width":756,"text":"牛一：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是1，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":550,"x":31,"width":756,"text":"牛二：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是2，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":579,"x":30,"width":756,"text":"牛三：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是3，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":608,"x":30,"width":756,"text":"牛四：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是4，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":642,"x":29,"width":756,"text":"牛五：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是5，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":673,"x":29,"width":756,"text":"牛六：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是6，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":703,"x":29,"width":756,"text":"牛七：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是7，赔二倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":735,"x":30,"width":756,"text":"牛八：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是8，赔三倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":765,"x":29,"width":756,"text":"牛九：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是9，赔四倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":796,"x":28,"width":756,"text":"牛牛：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是0，赔五倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":828,"x":29,"width":756,"text":"五小牛：五张牌中，都小于或等于五，且五张牌点数之和小于或等于10，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":859,"x":29,"width":756,"text":"四炸：即五张牌中有四张一样的牌，此时无需有牛赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":888,"x":29,"width":756,"text":"五花牛：五张十以上的花牌（不包括十）组成的牛牛，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":916,"x":32,"width":772,"text":"牌型大小：五花牛>四炸>五小牛>牛牛>牛九>牛八>牛七>牛六>牛五>牛四>牛三>牛二>牛一>没牛。 ","height":34,"fontSize":18,"color":"#f1f6ef"}},{"type":"Label","props":{"y":948,"x":32,"width":772,"text":"如牌型大小一样，则比较最大单张牌的牌点：K>Q>J>10>9>8>7>6>5>4>3>2>A。","height":34,"fontSize":18,"color":"#f1f6ef"}}]},{"type":"VScrollBar","props":{"y":-0.9999999999999858,"x":798.0000000000002,"width":17,"skin":"res/gameScene/vscroll.png","name":"scrollBar","height":508}}]}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":833,"text":"规则说明","runtime":"bull.view.alert.RulePanel","height":612},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_rule.png"}},{"type":"Button","props":{"y":-1,"x":793,"var":"btnClose","skin":"res/alert/btn_close.png"}},{"type":"TextArea","props":{"y":4,"x":387,"width":115,"text":"规则说明","height":34,"fontSize":25,"color":"#f3e9e9","bold":true}},{"type":"List","props":{"y":50,"x":5,"width":825,"var":"list","height":515},"child":[{"type":"Box","props":{"y":-1,"x":-3,"width":806,"runtime":"bull.view.room.RuleRender","name":"render","height":994},"child":[{"type":"Image","props":{"y":6,"x":12,"skin":"res/alert/img_rule_1.png"}},{"type":"Image","props":{"y":120,"x":14,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":143,"x":3,"skin":"res/alert/img_rule_2.png"}},{"type":"Image","props":{"y":431,"x":5,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":442,"x":5,"skin":"res/alert/img_rule_3.png"}},{"type":"Label","props":{"y":45,"x":17,"width":756,"text":"    百人牛牛是牛牛游戏的升级版，是可以提供100人及以上玩家同时进行的简\\n单\"押注类\"克游戏，玩家可坐庄，闲家分别与庄家比较牌型大小来定输赢。","height":65,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":181,"x":31,"width":756,"text":"进入游戏 ：百人牛牛是随到随玩，您可以随时进入或退出游戏。","height":29,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":215,"x":30,"width":756,"text":"申请坐庄 ：玩家如果满足游戏坐庄条件，就能申请坐庄，进入申请上庄列表。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":202,"x":-58}},{"type":"Label","props":{"y":252,"x":30,"width":756,"text":"闲家下注 ：下注分为四个下注区，游戏开始后，除庄家外，所有玩家都可以\\n下注。 ","height":52,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":308,"x":29,"width":756,"text":"发牌：加注时间结束后，系统将同时发出五副手牌。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":345,"x":23,"width":756,"text":" 结算：每位闲家赢得自己下注的金额，庄家赢闲家所输掉的下注金额，不同牌\\n型倍数不一，\\n结算时玩家的下注筹码乘上牌型倍数即为结算金额。","height":74,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":484,"x":30,"width":756,"text":"无牛：五张牌中，任意三张牌点数之和都不能组成10的倍数。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":517,"x":30,"width":756,"text":"牛一：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是1，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":550,"x":31,"width":756,"text":"牛二：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是2，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":579,"x":30,"width":756,"text":"牛三：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是3，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":608,"x":30,"width":756,"text":"牛四：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是4，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":642,"x":29,"width":756,"text":"牛五：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是5，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":673,"x":29,"width":756,"text":"牛六：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是6，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":703,"x":29,"width":756,"text":"牛七：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是7，赔二倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":735,"x":30,"width":756,"text":"牛八：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是8，赔三倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":765,"x":29,"width":756,"text":"牛九：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是9，赔四倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":796,"x":28,"width":756,"text":"牛牛：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是0，赔五倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":828,"x":29,"width":756,"text":"五小牛：五张牌中，都小于或等于五，且五张牌点数之和小于或等于10，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":859,"x":29,"width":756,"text":"四炸：即五张牌中有四张一样的牌，此时无需有牛赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":888,"x":29,"width":756,"text":"五花牛：五张十以上的花牌（不包括十）组成的牛牛，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":916,"x":32,"width":772,"text":"牌型大小：五花牛>四炸>五小牛>牛牛>牛九>牛八>牛七>牛六>牛五>牛四>牛三>牛二>牛一>没牛。 ","height":34,"fontSize":18,"color":"#f1f6ef"}},{"type":"Label","props":{"y":948,"x":32,"width":772,"text":"如牌型大小一样，则比较最大单张牌的牌点：K>Q>J>10>9>8>7>6>5>4>3>2>A。","height":34,"fontSize":18,"color":"#f1f6ef"}}]},{"type":"VScrollBar","props":{"y":9,"x":803,"width":17,"skin":"res/alert/vscroll.png","name":"scrollBar","height":506}}]}]};}
 		]);
 		return RulePanelUI;
 	})(Dialog)
@@ -55235,6 +55257,16 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__class(RulePanel,'bull.view.alert.RulePanel',_super);
+		var __proto=RulePanel.prototype;
+		__proto.createChildren=function(){
+			_super.prototype.createChildren.call(this);
+		}
+
+		__proto.update_data=function(data){
+			console.log("RulePanel ================steeing");
+			this.list.array=data;
+		}
+
 		return RulePanel;
 	})(RulePanelUI)
 
