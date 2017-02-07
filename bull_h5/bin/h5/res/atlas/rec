@@ -133,7 +133,6 @@ res\gameScene\chip_5000000.png:1482212097
 res\gameScene\chip_max.png:1482212097
 res\gameScene\closeBtn.png:1483252225
 res\gameScene\deBanker.png:1483061760
-res\gameScene\diamand_A.png:1484028506
 res\gameScene\HeadIcon.jpg:1479464515
 res\gameScene\InfoBoard.png:1482212097
 res\gameScene\limitFont.png:1484546121
@@ -169,6 +168,11 @@ res\gameScene\人民币￥底板.png:1482212095
 res\gameScene\倒计时01.png:1483327345
 res\gameScene\倒计时02.png:1483327345
 res\gameScene\倒计时03.png:1483327345
+res\gameScene\光01.png:1486371808
+res\gameScene\光02.png:1486371808
+res\gameScene\光03.png:1486371808
+res\gameScene\光04.png:1486371808
+res\gameScene\光05.png:1486371808
 res\gameScene\前三名.png:1482212097
 res\gameScene\吉胜游戏平台.png:1482212097
 res\gameScene\四炸.png:1484556383
@@ -185,7 +189,6 @@ res\gameScene\本桌限红.png:1483594539
 res\gameScene\桌内玩家列表底板.png:1482212099
 res\gameScene\梅花底条.png:1482212097
 res\gameScene\牌背.png:1483327530
-res\gameScene\牌面.png:1484026904
 res\gameScene\牛一.png:1484556383
 res\gameScene\牛七.png:1484556383
 res\gameScene\牛三.png:1484556383

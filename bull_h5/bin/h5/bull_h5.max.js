@@ -29426,11 +29426,11 @@ var Laya=window.Laya=(function(window,document){
 			console.log("onClick:"+e.target);
 			switch(e.target){
 				case this.view.helpBtn:
-					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
+					this.sentNotification("car.SHOW_RULE_PANEL");
 					this.showOrHideBtnGroup(!this.view.btnBg.visible);
 					break ;
 				case this.view.setupBtn:
-					this.sentNotification("car.SHOW_RULE_PANEL");
+					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
 					this.showOrHideBtnGroup(!this.view.btnBg.visible);
 					break ;
 				case this.view.optionBtn:
@@ -29866,7 +29866,7 @@ var Laya=window.Laya=(function(window,document){
 			var rsp=cs.exit_table_rsp;
 			switch(rsp.error_code){
 				case 0:
-					Laya.timer.once(500,this,this.timerHandler);
+					Laya.timer.once(100,this,this.timerHandler);
 					break ;
 				}
 		}
@@ -31951,11 +31951,11 @@ var Laya=window.Laya=(function(window,document){
 			SoundManager.playSound(SoundPath.press);
 			switch(e.target){
 				case this.view.helpBtn:
-					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
+					this.sentNotification("car.SHOW_RULE_PANEL");
 					this.view.btn_display(!this.view.btnBg.visible);
 					break ;
 				case this.view.setupBtn:
-					this.sentNotification("car.SHOW_RULE_PANEL");
+					this.sentNotification("car.SHOW_MUSIC_SET_PANEL");
 					this.view.btn_display(!this.view.btnBg.visible);
 					break ;
 				case this.view.CarryInBtn:
@@ -50529,6 +50529,7 @@ var Laya=window.Laya=(function(window,document){
 		function BetTimePanelUI(){
 			this.mcbg=null;
 			this.bt_txt=null;
+			this.light=null;
 			BetTimePanelUI.__super.call(this);
 		}
 
@@ -50540,7 +50541,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(BetTimePanelUI,
-		['uiView',function(){return this.uiView={"type":"View","props":{"width":123,"height":123},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/倒计时03.png"}},{"type":"Image","props":{"y":1,"x":4,"var":"mcbg","skin":"res/gameScene/倒计时02.png"}},{"type":"Image","props":{"y":10,"x":10,"skin":"res/gameScene/倒计时01.png"}},{"type":"Label","props":{"y":46,"x":38,"width":48,"var":"bt_txt","text":"10","height":24,"fontSize":22,"color":"#ece7e7","align":"center"}}]};}
+		['uiView',function(){return this.uiView={"type":"View","props":{"width":123,"height":123},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/gameScene/倒计时03.png"}},{"type":"Image","props":{"y":2,"x":4,"var":"mcbg","skin":"res/gameScene/倒计时02.png"}},{"type":"Image","props":{"y":11,"x":8,"skin":"res/gameScene/倒计时01.png"}},{"type":"Label","props":{"y":43,"x":38,"width":48,"var":"bt_txt","text":"10","height":24,"fontSize":22,"color":"#ece7e7","align":"center"}},{"type":"Animation","props":{"y":59,"x":60,"width":1,"var":"light","source":"res/gameScene/光01.png,res/gameScene/光02.png,res/gameScene/光03.png,res/gameScene/光04.png,res/gameScene/光05.png","rotation":-90,"pivotY":33,"pivotX":-30,"height":1}}]};}
 		]);
 		return BetTimePanelUI;
 	})(View)
@@ -52506,7 +52507,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__static(RulePanelUI,
-		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":833,"text":"规则说明","runtime":"bull.view.alert.RulePanel","height":612},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_rule.png"}},{"type":"Button","props":{"y":-1,"x":793,"var":"btnClose","skin":"res/alert/btn_close.png"}},{"type":"TextArea","props":{"y":4,"x":387,"width":115,"text":"规则说明","height":34,"fontSize":25,"color":"#f3e9e9","bold":true}},{"type":"List","props":{"y":50,"x":5,"width":825,"var":"list","height":515},"child":[{"type":"Box","props":{"y":-1,"x":-3,"width":806,"runtime":"bull.view.room.RuleRender","name":"render","height":994},"child":[{"type":"Image","props":{"y":6,"x":12,"skin":"res/alert/img_rule_1.png"}},{"type":"Image","props":{"y":120,"x":14,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":143,"x":3,"skin":"res/alert/img_rule_2.png"}},{"type":"Image","props":{"y":431,"x":5,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":442,"x":5,"skin":"res/alert/img_rule_3.png"}},{"type":"Label","props":{"y":45,"x":17,"width":756,"text":"    百人牛牛是牛牛游戏的升级版，是可以提供100人及以上玩家同时进行的简\\n单\"押注类\"克游戏，玩家可坐庄，闲家分别与庄家比较牌型大小来定输赢。","height":65,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":181,"x":31,"width":756,"text":"进入游戏 ：百人牛牛是随到随玩，您可以随时进入或退出游戏。","height":29,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":215,"x":30,"width":756,"text":"申请坐庄 ：玩家如果满足游戏坐庄条件，就能申请坐庄，进入申请上庄列表。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":202,"x":-58}},{"type":"Label","props":{"y":252,"x":30,"width":756,"text":"闲家下注 ：下注分为四个下注区，游戏开始后，除庄家外，所有玩家都可以\\n下注。 ","height":52,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":308,"x":29,"width":756,"text":"发牌：加注时间结束后，系统将同时发出五副手牌。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":345,"x":23,"width":756,"text":" 结算：每位闲家赢得自己下注的金额，庄家赢闲家所输掉的下注金额，不同牌\\n型倍数不一，\\n结算时玩家的下注筹码乘上牌型倍数即为结算金额。","height":74,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":484,"x":30,"width":756,"text":"无牛：五张牌中，任意三张牌点数之和都不能组成10的倍数。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":517,"x":30,"width":756,"text":"牛一：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是1，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":550,"x":31,"width":756,"text":"牛二：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是2，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":579,"x":30,"width":756,"text":"牛三：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是3，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":608,"x":30,"width":756,"text":"牛四：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是4，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":642,"x":29,"width":756,"text":"牛五：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是5，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":673,"x":29,"width":756,"text":"牛六：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是6，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":703,"x":29,"width":756,"text":"牛七：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是7，赔二倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":735,"x":30,"width":756,"text":"牛八：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是8，赔三倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":765,"x":29,"width":756,"text":"牛九：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是9，赔四倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":796,"x":28,"width":756,"text":"牛牛：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是0，赔五倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":828,"x":29,"width":756,"text":"五小牛：五张牌中，都小于或等于五，且五张牌点数之和小于或等于10，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":859,"x":29,"width":756,"text":"四炸：即五张牌中有四张一样的牌，此时无需有牛赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":888,"x":29,"width":756,"text":"五花牛：五张十以上的花牌（不包括十）组成的牛牛，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":916,"x":32,"width":772,"text":"牌型大小：五花牛>四炸>五小牛>牛牛>牛九>牛八>牛七>牛六>牛五>牛四>牛三>牛二>牛一>没牛。 ","height":34,"fontSize":18,"color":"#f1f6ef"}},{"type":"Label","props":{"y":948,"x":32,"width":772,"text":"如牌型大小一样，则比较最大单张牌的牌点：K>Q>J>10>9>8>7>6>5>4>3>2>A。","height":34,"fontSize":18,"color":"#f1f6ef"}}]},{"type":"VScrollBar","props":{"y":9,"x":803,"width":17,"skin":"res/alert/vscroll.png","name":"scrollBar","height":506}}]}]};}
+		['uiView',function(){return this.uiView={"type":"Dialog","props":{"width":833,"text":"规则说明","runtime":"bull.view.alert.RulePanel","height":612},"child":[{"type":"Image","props":{"y":0,"x":0,"skin":"res/alert/img_rule.png"}},{"type":"Button","props":{"y":-1,"x":793,"var":"btnClose","skin":"res/alert/btn_close.png"}},{"type":"TextArea","props":{"y":4,"x":352,"width":115,"text":"规则说明","height":34,"fontSize":25,"color":"#f3e9e9","bold":true}},{"type":"List","props":{"y":50,"x":5,"width":825,"var":"list","height":515},"child":[{"type":"Box","props":{"y":-1,"x":-3,"width":806,"runtime":"bull.view.room.RuleRender","name":"render","height":994},"child":[{"type":"Image","props":{"y":6,"x":12,"skin":"res/alert/img_rule_1.png"}},{"type":"Image","props":{"y":120,"x":14,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":143,"x":3,"skin":"res/alert/img_rule_2.png"}},{"type":"Image","props":{"y":431,"x":5,"skin":"res/alert/img_rule_line.png"}},{"type":"Image","props":{"y":442,"x":5,"skin":"res/alert/img_rule_3.png"}},{"type":"Label","props":{"y":45,"x":17,"width":756,"text":"    百人牛牛是牛牛游戏的升级版，是可以提供100人及以上玩家同时进行的简\\n单\"押注类\"克游戏，玩家可坐庄，闲家分别与庄家比较牌型大小来定输赢。","height":65,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":181,"x":31,"width":756,"text":"进入游戏 ：百人牛牛是随到随玩，您可以随时进入或退出游戏。","height":29,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":215,"x":30,"width":756,"text":"申请坐庄 ：玩家如果满足游戏坐庄条件，就能申请坐庄，进入申请上庄列表。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":202,"x":-58}},{"type":"Label","props":{"y":252,"x":30,"width":756,"text":"闲家下注 ：下注分为四个下注区，游戏开始后，除庄家外，所有玩家都可以\\n下注。 ","height":52,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":308,"x":29,"width":756,"text":"发牌：加注时间结束后，系统将同时发出五副手牌。","height":30,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":345,"x":23,"width":756,"text":" 结算：每位闲家赢得自己下注的金额，庄家赢闲家所输掉的下注金额，不同牌\\n型倍数不一，\\n结算时玩家的下注筹码乘上牌型倍数即为结算金额。","height":74,"fontSize":22,"color":"#f1f6ef"}},{"type":"Label","props":{"y":484,"x":30,"width":756,"text":"无牛：五张牌中，任意三张牌点数之和都不能组成10的倍数。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":517,"x":30,"width":756,"text":"牛一：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是1，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":550,"x":31,"width":756,"text":"牛二：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是2，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":579,"x":30,"width":756,"text":"牛三：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是3，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":608,"x":30,"width":756,"text":"牛四：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是4，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":642,"x":29,"width":756,"text":"牛五：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是5，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":673,"x":29,"width":756,"text":"牛六：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是6，赔一倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":703,"x":29,"width":756,"text":"牛七：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是7，赔二倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":735,"x":30,"width":756,"text":"牛八：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是8，赔三倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":765,"x":29,"width":756,"text":"牛九：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是9，赔四倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":796,"x":28,"width":756,"text":"牛牛：三张牌的点数之和组成10的倍数，剩余两张点数之和的个位数字是0，赔五倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":828,"x":29,"width":756,"text":"五小牛：五张牌中，都小于或等于五，且五张牌点数之和小于或等于10，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":859,"x":29,"width":756,"text":"四炸：即五张牌中有四张一样的牌，此时无需有牛赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":888,"x":29,"width":756,"text":"五花牛：五张十以上的花牌（不包括十）组成的牛牛，赔十倍。 ","height":34,"fontSize":20,"color":"#f1f6ef"}},{"type":"Label","props":{"y":916,"x":32,"width":772,"text":"牌型大小：五花牛>四炸>五小牛>牛牛>牛九>牛八>牛七>牛六>牛五>牛四>牛三>牛二>牛一>没牛。 ","height":34,"fontSize":18,"color":"#f1f6ef"}},{"type":"Label","props":{"y":948,"x":32,"width":772,"text":"如牌型大小一样，则比较最大单张牌的牌点：K>Q>J>10>9>8>7>6>5>4>3>2>A。","height":34,"fontSize":18,"color":"#f1f6ef"}}]},{"type":"VScrollBar","props":{"y":9,"x":803,"width":17,"skin":"res/alert/vscroll.png","name":"scrollBar","height":506}}]}]};}
 		]);
 		return RulePanelUI;
 	})(Dialog)
@@ -53025,6 +53026,7 @@ var Laya=window.Laya=(function(window,document){
 			this._per_sec_value=NaN;
 			this._start_angel=NaN;
 			this._timer_idx=0;
+			this._sp=null;
 			BetTimePanel.__super.call(this);
 		}
 
@@ -53032,6 +53034,7 @@ var Laya=window.Laya=(function(window,document){
 		var __proto=BetTimePanel.prototype;
 		__proto.createChildren=function(){
 			_super.prototype.createChildren.call(this);
+			this._sp=new Sprite();
 		}
 
 		__proto.hide=function(){
@@ -53042,43 +53045,62 @@ var Laya=window.Laya=(function(window,document){
 
 		__proto.set_data=function(data){
 			this.visible=true;
-			this._time=data[0];
+			this._time=data[0]-1;
 			this.bt_txt.text=this._time.toString();
+			this.light.interval=100;
+			this.light.x=60;
+			this.light.y=59;
+			this.light.visible=true;
+			this.light.play();
+			this.light.pivotX=-30;
+			this.light.pivotY=33;
 			this._start_angel=-90;
 			this._per_sec_value=360 / (this._time *10);
 			var sp=new Sprite();
+			this.mcbg.mask=null;
 			sp.graphics.drawPie(57,57,52,this._start_angel,270,"#FF0000");
 			this.mcbg.mask=sp;
 			Laya.timer.loop(1000,this,this.timerHandler);
-			this._timer_idx=Light.timer.setInterval(this,this.pie,100,null);
+			Laya.timer.loop(100,this,this.pie);
 		}
 
 		__proto.pie=function(){
 			this._start_angel+=this._per_sec_value;
-			console.log("_start_angel = "+this._start_angel);
+			if (this._start_angel >=360)this._start_angel=362;
 			var sp=new Sprite();
 			this.mcbg.mask=null;
 			sp.graphics.drawPie(57,57,52,this._start_angel ,270,"#FF0000");
 			this.mcbg.mask=sp;
+			var de=this._start_angel;
+			this.light.rotation=de;
 		}
 
 		__proto.timerHandler=function(){
 			this._time-=1;
+			if (this._time <=0)this._time=0;
 			this.bt_txt.text=this._time.toString();
 			if (this._time==0){
+				this.light.visible=false;
 				Laya.timer.clear(this,this.timerHandler);
-				Light.timer.clearInterval(this._timer_idx);
-			}
+				Tween.to(this,{},100,Ease.cubicOut,Handler.create(this,/*no*/this.ani_ok));};
+		}
+
+		BetTimePanel.__init$=function(){
 			if(this._time <=3){
 				SoundManager.playSound(SoundPath.CountTick);
 			}
 		}
 
-		__proto.test=function(){}
 		return BetTimePanel;
 	})(BetTimePanelUI)
 
 
+	ani_ok=function(){
+		Laya.timer.clearAll(this);
+	}
+
+
+	test=function(){}
 	//class bull.view.room.BullScene extends ui.ui.room.BullSceneUI
 	var BullScene=(function(_super){
 		function BullScene(){
@@ -55542,16 +55564,17 @@ var Laya=window.Laya=(function(window,document){
 	})(SmallPanelUI)
 
 
-	Laya.__init([EventDispatcher1,Dialog,LocalStorage,Timer,Browser,Proxy,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,WebGLFilter,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile]);
+	Laya.__init([EventDispatcher1,Dialog,LocalStorage,Timer,Browser,Proxy,BetTimePanel,ShareObjectMgr,Render,WebGLContext,View,WebGLContext2D,WebGLFilter,LoaderManager,AtlasGrid,RenderTargetMAX,DrawText,ShaderCompile]);
 	new Main();
 
 })(window,document,Laya);
 
 
 /*
-1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (66):warning:　i This variable is not defined.
-2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (67):warning:　i This variable is not defined.
-3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (68):warning:　i This variable is not defined.
-4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (69):warning:　i This variable is not defined.
-5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (70):warning:　i This variable is not defined.
+1 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/BetTimePanel.as (101):warning:ani_ok This variable is not defined.
+2 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (66):warning:　i This variable is not defined.
+3 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (67):warning:　i This variable is not defined.
+4 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (68):warning:　i This variable is not defined.
+5 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (69):warning:　i This variable is not defined.
+6 file:///E:/dyson_working/openSource/bull/bull_h5/src/bull/view/room/PokerTypeBoard.as (70):warning:　i This variable is not defined.
 */

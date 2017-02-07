@@ -568,11 +568,11 @@ package bull.modules.room.mediator
 			switch(e.target)
 			{
 				case view.helpBtn:
-					sentNotification(MusicSetMediator.SHOW_MUSIC_SET_PANEL);
+					sentNotification(RuleMediator.SHOW_RULE_PANEL);
 					view.btn_display(!view.btnBg.visible);
 				break;					
-				case view.setupBtn:
-					sentNotification(RuleMediator.SHOW_RULE_PANEL);
+				case view.setupBtn:					
+					sentNotification(MusicSetMediator.SHOW_MUSIC_SET_PANEL);
 					view.btn_display(!view.btnBg.visible);
 				break;
 				

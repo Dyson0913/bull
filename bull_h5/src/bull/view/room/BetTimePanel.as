@@ -27,6 +27,7 @@ package bull.view.room
 		private var _start_angel:Number;		
 				
 		private var _timer_idx:int;
+		private var _sp:Sprite;
 		
 		public function BetTimePanel()
 		{
@@ -36,6 +37,7 @@ package bull.view.room
 		override protected function createChildren():void
 		{
 			super.createChildren();
+			_sp = new Sprite();	
 		}
 		
 		public function hide():void
@@ -43,45 +45,64 @@ package bull.view.room
 			this.visible = false;
 			_time = 0;
 			Laya.timer.clear(this, timerHandler);
+			
+			
 		}
 		
 		public function set_data(data:Array):void
 		{
 			this.visible = true;
-			_time = data[0];
+			_time = data[0] -1;
 			bt_txt.text = _time.toString();			
 			
+			light.interval = 100;
+			light.x = 60;
+			light.y = 59;
+			light.visible = true;
+			light.play();
+			
+			light.pivotX = -30;
+			light.pivotY = 33;
 			
 			_start_angel = -90;
 			//360度 / 秒數 =  每100毫需要減少的角度
 			_per_sec_value = 360 / (_time * 10);
-			
+			//trace("_per_sec_value = "+_per_sec_value);
 			var sp:Sprite = new Sprite();			
+			mcbg.mask = null;
 			sp.graphics.drawPie(57, 57, 52, _start_angel, 270, "#FF0000");
 			mcbg.mask = sp;
 			
 			Laya.timer.loop(1000, this, timerHandler);			
-			_timer_idx = Light.timer.setInterval(this, pie, 100, null);
+			Laya.timer.loop(100, this, pie);			
+			
+			
 		}
 		
 		public function pie():void
 		{
 			_start_angel += _per_sec_value;
-			trace("_start_angel = " + _start_angel);
+			//trace("_start_angel = " + _start_angel);
+			if ( _start_angel >= 360) _start_angel = 362;
 			var sp:Sprite = new Sprite();
 			mcbg.mask = null;
 			sp.graphics.drawPie(57, 57, 52, _start_angel , 270, "#FF0000");
-			mcbg.mask = sp;
+			mcbg.mask = sp;			
+			
+			var de:Number = _start_angel;		
+			light.rotation = de;
 		}
 		
 		public function timerHandler():void
 		{
 			_time -= 1;	
+			if ( _time <= 0) _time = 0;
 			bt_txt.text = _time.toString();
 			if (_time == 0)
-			{
+			{				
+				light.visible =  false;
 				Laya.timer.clear(this, timerHandler);
-				Light.timer.clearInterval(_timer_idx);
+				Tween.to(this, { }, 100, Ease.cubicOut,Handler.create(this,ani_ok)););
 			}
 			
 			if( _time <=3)
@@ -89,6 +110,12 @@ package bull.view.room
 				//TODO 閃光提示				
 				SoundManager.playSound(SoundPath.CountTick);
 			}
+		}
+		
+		private function ani_ok():void
+		{
+			
+			Laya.timer.clearAll(this);
 		}
 		
 		private function test():void

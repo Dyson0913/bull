@@ -103,8 +103,8 @@ package bull.modules.common.command
 			switch(rsp.error_code)
 			{
 				case 0:
-					//等500毫秒再離開,讓SERVER有時間通知大廳該玩家己經離開
-					Laya.timer.once(500, this, timerHandler);
+					//等100毫秒再離開,讓SERVER有時間通知大廳該玩家己經離開
+					Laya.timer.once(100, this, timerHandler);
 				break;
 			}
 		}

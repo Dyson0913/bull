@@ -174,11 +174,11 @@ package bull.modules.BullHall.mediator
 			switch(e.target)
 			{
 				case view.helpBtn:
-					sentNotification(MusicSetMediator.SHOW_MUSIC_SET_PANEL);
+					sentNotification(RuleMediator.SHOW_RULE_PANEL);					
 					showOrHideBtnGroup(!view.btnBg.visible);
 				break;					
 				case view.setupBtn:
-					sentNotification(RuleMediator.SHOW_RULE_PANEL);
+					sentNotification(MusicSetMediator.SHOW_MUSIC_SET_PANEL);
 					showOrHideBtnGroup(!view.btnBg.visible);
 				break;
 				case view.optionBtn:
