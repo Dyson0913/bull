@@ -99,6 +99,7 @@ package bull
 			registerCommand(BullNotification.HALL_HEART_BEAT.toString(),  HallHeartBeatCommand);
 			registerCommand(ENCSType.CS_TYPE_HEART_BEAT_RSP.toString(),  HallHeartBeatCommand);
 			
+			//離開遊戲
 			registerCommand(BullNotification.Leave_Game, LoginHallCommand);
 			registerCommand(ENCSType.CS_TYPE_EXIT_TABLE_RSP.toString(), LoginHallCommand);
 			
@@ -176,7 +177,6 @@ package bull
 			registerModel(new RoomSocketService(RoomSocketService.NAME));
 			
 			registerModel(new WebService(WebService.NAME));
-			//registerModel(new CarModel(CarModel.NAME,new CarData()));
 			
 			
 			

@@ -57,7 +57,7 @@ package bull.modules.common.command
 		}
 		
 		private function joinRoomRspHandler(e:CS):void{
-			trace("加入房間");
+			trace("加入房間",e);
 			
 			if (e.enter_table_rsp.error_code  == ENError.ERROR_OK) {
 				
@@ -69,6 +69,11 @@ package bull.modules.common.command
 					
 				//更新用戶訊息
 				sentNotification(ENCSType.CS_TYPE_GET_PLAYER_INFO_REQ.toString(), [roomData.uid]);
+				
+				trace("======e.enter_table_rsp.user_info========"+e.enter_table_rsp.user_info);
+				trace("======e.enter_table_rsp.user_info.money========"+e.enter_table_rsp.user_info.money);
+				trace("======e.enter_table_rsp.user_info.bet_money========"+e.enter_table_rsp.user_info.bet_money);
+				trace("======e.enter_table_rsp.user_info.win_money========"+e.enter_table_rsp.user_info.win_money);
 				
 				//己在遊戲內不用帶入
 				if ( e.enter_table_rsp.user_info != null && e.enter_table_rsp.user_info.money != null)

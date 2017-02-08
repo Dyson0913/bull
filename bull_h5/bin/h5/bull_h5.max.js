@@ -29768,12 +29768,16 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.joinRoomRspHandler=function(e){
-			console.log("加入房間");
+			console.log("加入房間",e);
 			if (e.enter_table_rsp.error_code==0){
 				var hallData=this.getSingleton("hallData");
 				var roomData=this.getSingleton("roomData");
 				roomData.Cash_Type=hallData.Cash_Type;
 				this.sentNotification(ENCSType.CS_TYPE_GET_PLAYER_INFO_REQ.toString(),[roomData.uid]);
+				console.log("======e.enter_table_rsp.user_info========"+e.enter_table_rsp.user_info);
+				console.log("======e.enter_table_rsp.user_info.money========"+e.enter_table_rsp.user_info.money);
+				console.log("======e.enter_table_rsp.user_info.bet_money========"+e.enter_table_rsp.user_info.bet_money);
+				console.log("======e.enter_table_rsp.user_info.win_money========"+e.enter_table_rsp.user_info.win_money);
 				if (e.enter_table_rsp.user_info !=null && e.enter_table_rsp.user_info.money !=null){
 					console.log("==============half in====="+e.enter_table_rsp.user_info.money);
 					console.log("==============half in cash====="+e.enter_table_rsp.user_info.money.cash);
