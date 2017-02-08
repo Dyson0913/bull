@@ -84,12 +84,12 @@ package bull.view.room
 					{					
 						var p:Array = list[j];
 						var sc:Array = _scale[i];
-						Tween.to(this["poker_" + i + "_" + j], { x:p[0] , y:p[1],scaleX:sc[0], scaleY:sc[1],rotation :0 }, 10, Ease.cubicOut);
-					}		
-					
-					var info:SDealInfo = _pokerdata[i];
-					var idx:int =info["card" + (j + 1)];
-					this["poker_" + i + "_" + j].index = idx;					
+						Tween.to(this["poker_" + i + "_" + j], { x:p[0] , y:p[1], scaleX:sc[0], scaleY:sc[1], rotation :0 }, 10, Ease.cubicOut);
+						
+						var info:SDealInfo = _pokerdata[i];
+						var idx:int =info["card" + (j + 1)];
+						this["poker_" + i + "_" + j].index = idx;		
+					}									
 					
 				}			
 				return;

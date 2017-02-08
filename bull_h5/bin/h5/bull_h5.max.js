@@ -53341,7 +53341,12 @@ var Laya=window.Laya=(function(window,document){
 			}
 		}
 
-		__proto.clear=function(){}
+		__proto.clear=function(){
+			this._selfChips.length=0;
+			this._otherChips.length=0;
+			DisplayUtil.removeAllChildren(this._betsBox);
+		}
+
 		__getset(0,__proto,'roomData',function(){
 			return this._roomData;
 			},function(value){
@@ -53658,10 +53663,10 @@ var Laya=window.Laya=(function(window,document){
 						var p=list[j];
 						var sc=this._scale[i];
 						Tween.to(this["poker_"+i+"_"+j],{x:p[0] ,y:p[1],scaleX:sc[0],scaleY:sc[1],rotation :0 },10,Ease.cubicOut);
-					};
-					var info=this._pokerdata[i];
-					var idx=info["card"+(j+1)];
-					this["poker_"+i+"_"+j].index=idx;
+						var info=this._pokerdata[i];
+						var idx=info["card"+(j+1)];
+						this["poker_"+i+"_"+j].index=idx;
+					}
 				}
 				return;
 			}

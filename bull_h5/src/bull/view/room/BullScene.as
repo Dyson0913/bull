@@ -377,7 +377,11 @@ package bull.view.room
 		}
 		
 		public function clear():void {
-		
+			
+			//自己有下注,不清
+			_selfChips.length = 0;					
+			_otherChips.length = 0;
+			DisplayUtil.removeAllChildren(_betsBox);
 		}
 		
 	}
