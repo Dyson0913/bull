@@ -24,7 +24,7 @@ package bull.view.room
 		                         ];
 		private var _scale:Array = [[0.43, 0.42], [0.46, 0.46], [0.46, 0.46], [0.46, 0.46], [0.46, 0.46]];
 		
-		private var _is_playing:Boolean;
+		private var _is_playing:Boolean = false;
 		
 		public function Poker() 
 		{
