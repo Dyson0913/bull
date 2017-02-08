@@ -785,7 +785,7 @@ package bull.modules.room.mediator
 			if( roomData.State == RoomData.DEAL)
 			{
 				view.viewPoker.set_data(roomData.card_info,view.PokerTypePanel,view.ViewWinLostEffect,roomData.each_zone_display,roomData.each_zone_win);
-				view.viewPoker.play();
+				view.viewPoker.play(roomData.LeftTime);
 			}
 			else
 			{

@@ -24,6 +24,8 @@ package bull.view.room
 		                         ];
 		private var _scale:Array = [[0.43, 0.42], [0.46, 0.46], [0.46, 0.46], [0.46, 0.46], [0.46, 0.46]];
 		
+		private var _is_playing:Boolean;
+		
 		public function Poker() 
 		{
 			super();
@@ -36,7 +38,10 @@ package bull.view.room
 		}
 		
 		public function set_data(data:Array,pokertype:PokerTypeBoard,Wineffect:WinLostEffect,win_diplay:Array,winlose_data:Array):void
-		{
+		{		
+			//正在播放,不要再播放
+			if ( this._is_playing) return;
+			
 			_pokerdata = data;
 			_PokerType = pokertype;
 			_PokerType.hide();						
@@ -59,11 +64,39 @@ package bull.view.room
 					this["poker_" + i + "_" + j].skewX = p[2];
 				}
 			}
+			
+			this._is_playing = false;
 		}
 		
-		public function play():void
+		public function play(rest_sce:int):void
 		{
 			this.visible = true;
+			
+			this._is_playing = true;
+			
+			//非完整時間(即中途進入),不做動畫,直接開到牌到定位
+			if ( rest_sce < 13)
+			{
+				for (var i:int = 0; i < 5; i++)
+				{
+					var list:Array = _po[i];
+					for (var j = 0; j < 5; j++)
+					{					
+						var p:Array = list[j];
+						var sc:Array = _scale[i];
+						Tween.to(this["poker_" + i + "_" + j], { x:p[0] , y:p[1],scaleX:sc[0], scaleY:sc[1],rotation :0 }, 10, Ease.cubicOut);
+					}		
+					
+					var info:SDealInfo = _pokerdata[i];
+					var idx:int =info["card" + (j + 1)];
+					this["poker_" + i + "_" + j].index = idx;					
+					
+				}			
+				return;
+			}
+			
+			
+			
 			for (var i:int = 0; i < 5; i++)
 			{
 				var list:Array = _po[i];
@@ -75,6 +108,7 @@ package bull.view.room
 				}				 
 			}
 		}
+		 
 		
 		private function onCompleteHandler(idx_i:int, idx_j:int):void 
 		{
@@ -156,6 +190,8 @@ package bull.view.room
 					Tween.to(this["poker_" + i + "_" + j], { x:649,y:-156}, 500, Ease.cubicOut);						
 				}
 			}
+			
+			this._is_playing = false;
 		}
 		
 		public function hide():void

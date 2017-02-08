@@ -70,7 +70,7 @@ package bull.view.room
 			//trace("_per_sec_value = "+_per_sec_value);
 			var sp:Sprite = new Sprite();			
 			mcbg.mask = null;
-			sp.graphics.drawPie(57, 57, 52, _start_angel, 270, "#FF0000");
+			sp.graphics.drawPie(60, 60, 60, _start_angel, 270, "#FF0000");
 			mcbg.mask = sp;
 			
 			Laya.timer.loop(1000, this, timerHandler);			

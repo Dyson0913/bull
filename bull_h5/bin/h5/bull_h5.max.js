@@ -32112,7 +32112,7 @@ var Laya=window.Laya=(function(window,document){
 		__proto.onDealDataHandler=function(){
 			if(this.roomData.State==5){
 				this.view.viewPoker.set_data(this.roomData.card_info,this.view.PokerTypePanel,this.view.ViewWinLostEffect,this.roomData.each_zone_display,this.roomData.each_zone_win);
-				this.view.viewPoker.play();
+				this.view.viewPoker.play(this.roomData.LeftTime);
 			}
 			else{
 				console.log("======================deal poker in ");
@@ -53058,7 +53058,7 @@ var Laya=window.Laya=(function(window,document){
 			this._per_sec_value=360 / (this._time *10);
 			var sp=new Sprite();
 			this.mcbg.mask=null;
-			sp.graphics.drawPie(57,57,52,this._start_angel,270,"#FF0000");
+			sp.graphics.drawPie(60,60,60,this._start_angel,270,"#FF0000");
 			this.mcbg.mask=sp;
 			Laya.timer.loop(1000,this,this.timerHandler);
 			Laya.timer.loop(100,this,this.pie);
@@ -53615,6 +53615,7 @@ var Laya=window.Laya=(function(window,document){
 			[[733,445,0],[764,445,0],[793,445,0],[823,445,0],[854,445,0]],
 			[[987,445,1],[1018,445,3],[1047,445,3],[1078,445,3],[1109,445,3]]];
 			this._scale=[[0.43,0.42],[0.46,0.46],[0.46,0.46],[0.46,0.46],[0.46,0.46]];
+			this._is_playing=false;
 			Poker.__super.call(this);
 		}
 
@@ -53625,6 +53626,7 @@ var Laya=window.Laya=(function(window,document){
 		}
 
 		__proto.set_data=function(data,pokertype,Wineffect,win_diplay,winlose_data){
+			if (this._is_playing)return;
 			this._pokerdata=data;
 			this._PokerType=pokertype;
 			this._PokerType.hide();
@@ -53643,10 +53645,26 @@ var Laya=window.Laya=(function(window,document){
 					this["poker_"+i+"_"+j].skewX=p[2];
 				}
 			}
+			this._is_playing=false;
 		}
 
-		__proto.play=function(){
+		__proto.play=function(rest_sce){
 			this.visible=true;
+			this._is_playing=true;
+			if (rest_sce < 13){
+				for (var i=0;i < 5;i++){
+					var list=this._po[i];
+					for (var j=0;j < 5;j++){
+						var p=list[j];
+						var sc=this._scale[i];
+						Tween.to(this["poker_"+i+"_"+j],{x:p[0] ,y:p[1],scaleX:sc[0],scaleY:sc[1],rotation :0 },10,Ease.cubicOut);
+					};
+					var info=this._pokerdata[i];
+					var idx=info["card"+(j+1)];
+					this["poker_"+i+"_"+j].index=idx;
+				}
+				return;
+			}
 			for (var i=0;i < 5;i++){
 				var list=this._po[i];
 				for (var j=0;j < 5;j++){
@@ -53709,6 +53727,7 @@ var Laya=window.Laya=(function(window,document){
 					Tween.to(this["poker_"+i+"_"+j],{x:649,y:-156},500,Ease.cubicOut);
 				}
 			}
+			this._is_playing=false;
 		}
 
 		__proto.hide=function(){
