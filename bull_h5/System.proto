@@ -1,0 +1,48 @@
+// 系统级别协议
+
+// 登录请求 
+message C0000001 {
+    int32  MsgID = 1;               //消息ID
+    string Cipher = 2;              //认证串
+    int32 PlatFormID = 3;           //平台ID
+    string Username = 4;            //用户名
+}
+// 登录回应
+message S0000001 {
+    int32  MsgID = 1;               //消息ID
+    int32 RetCode = 2;              //返回码
+    int32 UserID = 3;                   //id
+    int32 HeatTimes = 4;            //心跳时间
+    string Error = 5;
+}
+
+// 获取游戏种类请求 
+message C0000002 {
+    int32  MsgID = 1;               //消息ID
+    int32 UserID = 2;                   //用户ID
+    int32 PlatFormID = 3;          //平台ID
+}
+
+// 获取游戏种类响应
+message S0000002 {
+    message KindType {
+        int32   KindID = 1;                 //种类ID
+        string  KindName =2;                //种类名称
+        int32   Status = 3;                 //状态
+    }
+    int32  MsgID = 1;               //消息ID
+    int32 RetCode = 2;                      //返回吗
+    repeated KindType KindTypes = 3;        //种类列表
+}
+
+// 心跳包请求
+message C0000003 {
+
+}
+
+// 心跳包响应
+message S0000003 {
+
+}
+
+// 
