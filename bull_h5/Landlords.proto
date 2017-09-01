@@ -2,7 +2,6 @@
 
 // 请求斗地主游戏房间
 message C3010001 {
-    int32  MsgID = 1;               //消息ID
     int32 GameKindID = 2;           // 游戏类型
 }
 
@@ -15,14 +14,12 @@ message S3010001 {
         int64 MaxEnterAmount = 4;  
         int32 RoomType = 5;     
     }
-    int32  MsgID = 1;               //消息ID
     repeated RoomInfo Rooms = 2;
     int32 RetCode = 3;
 }
 
 // 进入房间
 message C3010002 {
-    int32  MsgID = 1;               //消息ID
     int32 RoomID = 2;
     string Token = 3;
     int32 UserID = 4;
@@ -30,7 +27,6 @@ message C3010002 {
 
 //响应进入房间消息
 message S3010002 {
-    int32  MsgID = 1;               //消息ID
     int32 RetCode = 2;
     int32 RoomID = 3;
     int32 TableID = 4;
