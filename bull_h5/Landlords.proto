@@ -2,7 +2,7 @@
 
 // 请求斗地主游戏房间
 message C3010001 {
-    int32 GameKindID = 2;           // 游戏类型
+    int32 GameKindID = 1;           // 游戏类型
 }
 
 // 响应斗地主房间
@@ -14,22 +14,50 @@ message S3010001 {
         int64 MaxEnterAmount = 4;  
         int32 RoomType = 5;     
     }
-    repeated RoomInfo Rooms = 2;
-    int32 RetCode = 3;
+    repeated RoomInfo Rooms = 1;
+    int32 RetCode = 2;
 }
 
 // 进入房间
 message C3010002 {
-    int32 RoomID = 2;
-    string Token = 3;
-    int32 UserID = 4;
+    int32 RoomID = 1;
+    string Token = 2;
+    int32 UserID = 3;
 }
 
 //响应进入房间消息
 message S3010002 {
-    int32 RetCode = 2;
-    int32 RoomID = 3;
-    int32 TableID = 4;
-    int32 SeatNo = 5;
-    int32 SeatNums = 6;
+    int32 RetCode = 1;
+    int32 RoomID = 2;
+    int32 TableID = 3;
+    int32 SeatNo = 4;
+    int32 SeatNums = 5;
+    int32 StartTime = 6;
 }
+
+// 用户通知准备开始游戏
+message N3010001 {
+    int32 UserID = 1;
+    int32 TableID = 2;
+    int32 SeatNo = 3;
+}
+
+
+// 服务端推送用户准备成功消息
+message P3010001 {
+    int32 UserID = 1;
+    int32 TableID = 2;
+    int32 SeatNo = 3;  
+    string UserName = 4;
+    float UserAmount = 5;
+}
+
+// 服务端推送游戏开始消息
+message P3010002 {
+    string roundCode = 1;
+    int32 TableID = 2;
+}
+
+
+
+
