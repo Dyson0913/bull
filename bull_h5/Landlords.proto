@@ -58,6 +58,57 @@ message P3010002 {
     int32 TableID = 2;
 }
 
+// 通知玩家叫庄
+message P3010003 {
+    int32 UserID = 1;
+    int32 SeatNo = 2;
+}
 
+// 玩家叫庄回應
+message N3010004 {
+    int32 UserID = 1;
+    int32 SeatNo = 2;
+}
+
+// 叫庄結果通知，
+message P3010005 {
+    int32 UserID = 1;
+    int32 SeatNo = 2;
+    int32 State = 3;
+}
+
+// 三張牌及誰為庄
+message P3010006 {
+    int32 UserID = 1;
+    int32 SeatNo = 2;
+    int32 State = 3;
+}
+
+//通知玩家出牌 隨機挑一家出牌
+message P3010007 {
+    int32 UserID = 1;
+    int32 SeatNo = 2;
+}
+
+//玩家出牌回應
+message N3010008 {
+    int32 UserID = 1;
+    int32 SeatNo = 2;
+    repeated int32 Poker = 3;
+}
+
+//出牌通知
+message P3010009 {
+    int32 UserID = 1;
+    int32 SeatNo = 2;
+    repeated int32 Poker = 3;
+    int32 type = 4
+}
+
+//結算通知
+message P301000A {
+    int32 whowin = 1;
+    repeated float winlose = 2
+}
 
 
